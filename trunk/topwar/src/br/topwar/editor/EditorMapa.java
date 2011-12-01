@@ -1,7 +1,6 @@
 package br.topwar.editor;
 
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -10,33 +9,43 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
+import br.nnpe.ExampleFileFilter;
+import br.nnpe.Util;
 import br.topwar.recursos.CarregadorRecursos;
 import br.topwar.recursos.idiomas.Lang;
+import br.topwar.serial.MapaTopWar;
 
 public class EditorMapa {
 	private JFrame frame;
 	private JMenuBar bar;
 	private JMenu menuEditor;
 	private boolean appletStand;
-	private JPanel jPanel;
+	private JPanel painelEditor;
 	private JScrollPane scrollPane;
 	private BufferedImage backGround;
 	private String backGroundName;
+	private MapaTopWar mapaTopWar;
 
 	public EditorMapa() {
 		frame = new JFrame();
-		jPanel = new JPanel() {
+		painelEditor = new JPanel() {
 			protected void paintComponent(java.awt.Graphics g) {
 				super.paintComponent(g);
 				EditorMapa.this.paintComponent((Graphics2D) g);
@@ -46,11 +55,11 @@ public class EditorMapa {
 				if (backGround == null) {
 					return super.getPreferredSize();
 				}
-				return new Dimension(backGround.getWidth(),
-						backGround.getHeight());
+				return new Dimension(backGround.getWidth(), backGround
+						.getHeight());
 			}
 		};
-		scrollPane = new JScrollPane(jPanel,
+		scrollPane = new JScrollPane(painelEditor,
 				JScrollPane.VERTICAL_SCROLLBAR_NEVER,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		frame.getContentPane().add(scrollPane);
@@ -74,7 +83,7 @@ public class EditorMapa {
 		criarMenu();
 		frame.pack();
 		frame.setVisible(true);
-		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		frame.setSize(new Dimension(800, 600));
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 	}
 
@@ -88,7 +97,7 @@ public class EditorMapa {
 				if (p.y + frame.getHeight() > (backGround.getHeight())) {
 					return;
 				}
-				jPanel.repaint();
+				painelEditor.repaint();
 				scrollPane.getViewport().setViewPosition(p);
 
 			}
@@ -104,7 +113,7 @@ public class EditorMapa {
 				if (p.y < 0) {
 					return;
 				}
-				jPanel.repaint();
+				painelEditor.repaint();
 				scrollPane.getViewport().setViewPosition(p);
 
 			}
@@ -121,7 +130,7 @@ public class EditorMapa {
 				if (p.x + frame.getWidth() > (backGround.getWidth())) {
 					return;
 				}
-				jPanel.repaint();
+				painelEditor.repaint();
 				scrollPane.getViewport().setViewPosition(p);
 
 			}
@@ -138,7 +147,7 @@ public class EditorMapa {
 				if (p.x < 0) {
 					return;
 				}
-				jPanel.repaint();
+				painelEditor.repaint();
 				scrollPane.getViewport().setViewPosition(p);
 			}
 		});
@@ -166,35 +175,133 @@ public class EditorMapa {
 
 		};
 		bar.add(menuEditor);
-		JMenuItem carregarImg = new JMenuItem() {
+		JMenuItem novoMapa = new JMenuItem() {
 			public String getText() {
-				return Lang.msg("carregarImg");
+				return Lang.msg("novoMapa");
 			}
 
 		};
-		menuEditor.add(carregarImg);
-		carregarImg.addActionListener(new ActionListener() {
+		menuEditor.add(novoMapa);
+		novoMapa.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JFileChooser fileChooser = new JFileChooser(
-						CarregadorRecursos.class.getResource(
-								"CarregadorRecursos.class").getFile());
-				fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				novoMapa();
+			}
 
-				int result = fileChooser.showOpenDialog(null);
+		});
+		JMenuItem abrirMapa = new JMenuItem() {
+			public String getText() {
+				return Lang.msg("abrirMapa");
+			}
 
-				if (result == JFileChooser.CANCEL_OPTION) {
-					return;
+		};
+		menuEditor.add(abrirMapa);
+		abrirMapa.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					abrirMapa();
+				} catch (Exception e1) {
+					e1.printStackTrace();
 				}
+			}
+		});
+		JMenuItem salvarMapa = new JMenuItem() {
+			public String getText() {
+				return Lang.msg("salvarMapa");
+			}
 
-				File file = fileChooser.getSelectedFile();
-				backGroundName = file.getName();
-				backGround = CarregadorRecursos.carregaBackGround(
-						backGroundName, jPanel);
+		};
+		menuEditor.add(salvarMapa);
+		salvarMapa.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					salvarMapa();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 			}
 		});
 
+	}
+
+	protected void salvarMapa() throws IOException {
+		JFileChooser fileChooser = new JFileChooser(CarregadorRecursos.class
+				.getResource("CarregadorRecursos.class").getFile());
+		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		ExampleFileFilter exampleFileFilter = new ExampleFileFilter("topwar");
+		fileChooser.setFileFilter(exampleFileFilter);
+		int result = fileChooser.showOpenDialog(null);
+		if (result == JFileChooser.CANCEL_OPTION) {
+			return;
+		}
+		File file = fileChooser.getSelectedFile();
+		String fileName = file.getCanonicalFile().toString();
+		if (!fileName.endsWith(".topwar")) {
+			fileName += ".topwar";
+		}
+		file = new File(fileName);
+		FileOutputStream fileOutputStream = new FileOutputStream(file);
+		ObjectOutputStream oos = new ObjectOutputStream(fileOutputStream);
+		oos.writeObject(mapaTopWar);
+		oos.flush();
+		fileOutputStream.close();
+	}
+
+	protected void abrirMapa() throws IOException, ClassNotFoundException {
+		JFileChooser fileChooser = new JFileChooser(CarregadorRecursos.class
+				.getResource("CarregadorRecursos.class").getFile());
+		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+		ExampleFileFilter exampleFileFilter = new ExampleFileFilter("topwar");
+		fileChooser.setFileFilter(exampleFileFilter);
+
+		int result = fileChooser.showOpenDialog(null);
+
+		if (result == JFileChooser.CANCEL_OPTION) {
+			return;
+		}
+
+		FileInputStream inputStream = new FileInputStream(fileChooser
+				.getSelectedFile());
+		ObjectInputStream ois = new ObjectInputStream(inputStream);
+
+		mapaTopWar = (MapaTopWar) ois.readObject();
+		frame.setTitle(mapaTopWar.getNome());
+
+		backGround = CarregadorRecursos.carregaBackGround(mapaTopWar
+				.getBackGround(), painelEditor);
+	}
+
+	private void novoMapa() {
+		String nomeMapa = JOptionPane.showInputDialog(frame, Lang
+				.msg("nomeDoMapa"));
+		if (Util.isNullOrEmpty(nomeMapa)) {
+			JOptionPane.showMessageDialog(frame, Lang.msg("nomeInvalido"), Lang
+					.msg("erro"), JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
+		JFileChooser fileChooser = new JFileChooser(CarregadorRecursos.class
+				.getResource("CarregadorRecursos.class").getFile());
+		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+		int result = fileChooser.showOpenDialog(null);
+
+		if (result == JFileChooser.CANCEL_OPTION) {
+			return;
+		}
+
+		File file = fileChooser.getSelectedFile();
+		backGroundName = file.getName();
+		backGround = CarregadorRecursos.carregaBackGround(backGroundName,
+				painelEditor);
+		mapaTopWar = new MapaTopWar();
+		mapaTopWar.setNome(nomeMapa);
+		mapaTopWar.setBackGround(backGroundName);
+		frame.setTitle(nomeMapa);
 	}
 
 	public static void main(String[] args) {
