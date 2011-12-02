@@ -3,61 +3,81 @@ package br.topwar.serial;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Polygon;
 import java.awt.Rectangle;
+import java.awt.Shape;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.GeneralPath;
 import java.io.Serializable;
+import java.util.Iterator;
+import java.util.List;
 
-public abstract class ObjetoMapa implements Serializable {
+import br.nnpe.GeoUtil;
 
-	private boolean pintaEmcima;
+public class ObjetoMapa implements Serializable {
+
 	private Color corPimaria;
 	private Color corSecundaria;
 	private int transparencia;
-	private int altura;
-	private int largura;
 	private double angulo;
-	private Point posicaoQuina;
-	private String nome;
+	private Shape forma;
 
-	public String getNome() {
-		return nome;
+	public ObjetoMapa(List<Point> pontos) {
+		Polygon polygon = new Polygon();
+		for (Iterator iterator = pontos.iterator(); iterator.hasNext();) {
+			Point point = (Point) iterator.next();
+			polygon.addPoint(point.x, point.y);
+		}
+		forma = polygon;
 	}
 
-	public void setNome(String nome) {
-		this.nome = nome;
+	public Shape getForma() {
+		return forma;
 	}
 
-	@Override
-	public String toString() {
-		return getNome() + " " + getClass().getSimpleName();
+	public void setForma(Shape forma) {
+		this.forma = forma;
 	}
 
-	public int getAltura() {
-		return altura;
+	public void mover(Point p) {
+		Point center = new Point((int) forma.getBounds().getCenterX(),
+				(int) forma.getBounds().getCenterY());
+		AffineTransform affineTransform = AffineTransform
+				.getScaleInstance(1, 1);
+		GeneralPath generalPath = new GeneralPath(forma);
+		generalPath.transform(affineTransform);
+		int x = 0;
+		int y = 0;
+		if (center.x < p.x) {
+			x = 2;
+		}
+		if (center.x > p.x) {
+			x = -2;
+		}
+		if (center.y < p.y) {
+			y = 2;
+		}
+		if (center.y > p.y) {
+			y = -2;
+		}
+		affineTransform.setToTranslation(x, y);
+		forma = generalPath.createTransformedShape(affineTransform);
 	}
 
-	public void setAltura(int altura) {
-		this.altura = altura;
+	public void desenha(Graphics2D g2d, double zoom) {
+
+		// g2d.setColor(new Color(getCorPimaria().getRed(), getCorPimaria()
+		// .getGreen(), getCorPimaria().getBlue(), getTransparencia()));
+		// double rad = Math.toRadians((double) getAngulo());
+		// AffineTransform affineTransform = AffineTransform
+		// .getScaleInstance(1, 1);
+		// affineTransform.setToRotation(rad, polygon.getBounds().getCenterX(),
+		// polygon.getBounds().getCenterY());
+		// GeneralPath generalPath = new GeneralPath(polygon);
+		// generalPath.transform(affineTransform);
+		// affineTransform.setToScale(zoom, zoom);
+		// g2d.fill(generalPath.createTransformedShape(affineTransform));
 	}
-
-	public int getLargura() {
-		return largura;
-	}
-
-	public void setLargura(int largura) {
-		this.largura = largura;
-	}
-
-	public Point getPosicaoQuina() {
-		return posicaoQuina;
-	}
-
-	public void setPosicaoQuina(Point posicaoQuina) {
-		this.posicaoQuina = posicaoQuina;
-	}
-
-	public abstract void desenha(Graphics2D g2d, double zoom);
-
-	public abstract Rectangle obterArea();
 
 	public double getAngulo() {
 		return angulo;
@@ -65,14 +85,6 @@ public abstract class ObjetoMapa implements Serializable {
 
 	public void setAngulo(double angulo) {
 		this.angulo = angulo;
-	}
-
-	public boolean isPintaEmcima() {
-		return pintaEmcima;
-	}
-
-	public void setPintaEmcima(boolean pintaEmcima) {
-		this.pintaEmcima = pintaEmcima;
 	}
 
 	public Color getCorPimaria() {

@@ -7,6 +7,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,6 +17,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -31,8 +37,10 @@ import br.nnpe.Util;
 import br.topwar.recursos.CarregadorRecursos;
 import br.topwar.recursos.idiomas.Lang;
 import br.topwar.serial.MapaTopWar;
+import br.topwar.serial.ObjetoMapa;
 
 public class EditorMapa {
+	private static final String NOVO_OBJETO = "NOVO_OBJETO";
 	private JFrame frame;
 	private JMenuBar bar;
 	private JMenu menuEditor;
@@ -42,6 +50,8 @@ public class EditorMapa {
 	private BufferedImage backGround;
 	private String backGroundName;
 	private MapaTopWar mapaTopWar;
+	private String clickState;
+	private List<Point> pontosNovoObj;
 
 	public EditorMapa() {
 		frame = new JFrame();
@@ -85,6 +95,66 @@ public class EditorMapa {
 		frame.setVisible(true);
 		frame.setSize(new Dimension(800, 600));
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		painelEditor.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				clickDoMouse(e);
+				super.mouseClicked(e);
+			}
+
+			@Override
+			public void mouseMoved(MouseEvent e) {
+
+			}
+
+		});
+		painelEditor.addMouseMotionListener(new MouseAdapter() {
+
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				arrastarDoMouse(e);
+				super.mouseMoved(e);
+			}
+		});
+	}
+
+	protected void arrastarDoMouse(MouseEvent e) {
+		Point point = e.getPoint();
+		if (mapaTopWar == null) {
+			return;
+		}
+		ObjetoMapa objetoMapaSel = null;
+		List<ObjetoMapa> objetoMapaList = mapaTopWar.getObjetoMapaList();
+		for (Iterator iterator = objetoMapaList.iterator(); iterator.hasNext();) {
+			ObjetoMapa objetoMapa = (ObjetoMapa) iterator.next();
+			if (objetoMapa.getForma().contains(point)) {
+				objetoMapaSel = objetoMapa;
+				break;
+			}
+		}
+		if (objetoMapaSel != null) {
+			objetoMapaSel.mover(point);
+			painelEditor.repaint();
+		}
+
+	}
+
+	protected void clickDoMouse(MouseEvent e) {
+		if (NOVO_OBJETO.equals(clickState)) {
+			if (MouseEvent.BUTTON1 == e.getButton()) {
+				pontosNovoObj.add(e.getPoint());
+				painelEditor.repaint();
+			} else {
+				if (pontosNovoObj != null && mapaTopWar != null) {
+					ObjetoMapa objetoMapa = new ObjetoMapa(pontosNovoObj);
+					mapaTopWar.getObjetoMapaList().add(objetoMapa);
+					clickState = null;
+					pontosNovoObj = null;
+					painelEditor.repaint();
+				}
+			}
+		}
+
 	}
 
 	protected void baixo() {
@@ -93,7 +163,6 @@ public class EditorMapa {
 			public void run() {
 				Point p = scrollPane.getViewport().getViewPosition();
 				p.y += 40;
-				System.out.println("p.y " + p.y);
 				if (p.y + frame.getHeight() > (backGround.getHeight())) {
 					return;
 				}
@@ -159,6 +228,27 @@ public class EditorMapa {
 			return;
 		}
 		g2d.drawImage(backGround, 0, 0, null);
+		if (pontosNovoObj != null) {
+			Point ptAnt = null;
+			for (Iterator iterator = pontosNovoObj.iterator(); iterator
+					.hasNext();) {
+				Point ptAtual = (Point) iterator.next();
+				if (ptAnt != null) {
+					g2d.drawLine(ptAnt.x, ptAnt.y, ptAtual.x, ptAtual.y);
+				}
+				ptAnt = ptAtual;
+
+			}
+		}
+
+		if (mapaTopWar != null) {
+			List<ObjetoMapa> objetoMapaList = mapaTopWar.getObjetoMapaList();
+			for (Iterator iterator = objetoMapaList.iterator(); iterator
+					.hasNext();) {
+				ObjetoMapa objetoMapa = (ObjetoMapa) iterator.next();
+				g2d.draw(objetoMapa.getForma());
+			}
+		}
 	}
 
 	private void criarMenu() {
@@ -225,6 +315,25 @@ public class EditorMapa {
 			}
 		});
 
+		JMenuItem novoObj = new JMenuItem() {
+			public String getText() {
+				return Lang.msg("novoObj");
+			}
+
+		};
+		menuEditor.add(novoObj);
+		novoObj.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				novoObj();
+			}
+		});
+
+	}
+
+	protected void novoObj() {
+		clickState = NOVO_OBJETO;
+		pontosNovoObj = new ArrayList<Point>();
 	}
 
 	protected void salvarMapa() throws IOException {
