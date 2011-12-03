@@ -16,11 +16,10 @@ import br.nnpe.GeoUtil;
 
 public class ObjetoMapa implements Serializable {
 
-	private Color corPimaria;
-	private Color corSecundaria;
-	private int transparencia;
+	private int transparencia = 125;
 	private double angulo;
 	private Shape forma;
+	private double zoom;
 
 	public ObjetoMapa(List<Point> pontos) {
 		Polygon polygon = new Polygon();
@@ -48,59 +47,45 @@ public class ObjetoMapa implements Serializable {
 		generalPath.transform(affineTransform);
 		int x = 0;
 		int y = 0;
+		int value = (int) GeoUtil.distaciaEntrePontos(p, center);
+
 		if (center.x < p.x) {
-			x = 2;
+			x = value;
 		}
 		if (center.x > p.x) {
-			x = -2;
+			x = -value;
 		}
 		if (center.y < p.y) {
-			y = 2;
+			y = value;
 		}
 		if (center.y > p.y) {
-			y = -2;
+			y = -value;
 		}
 		affineTransform.setToTranslation(x, y);
 		forma = generalPath.createTransformedShape(affineTransform);
 	}
 
-	public void desenha(Graphics2D g2d, double zoom) {
-
-		// g2d.setColor(new Color(getCorPimaria().getRed(), getCorPimaria()
-		// .getGreen(), getCorPimaria().getBlue(), getTransparencia()));
-		// double rad = Math.toRadians((double) getAngulo());
-		// AffineTransform affineTransform = AffineTransform
-		// .getScaleInstance(1, 1);
-		// affineTransform.setToRotation(rad, polygon.getBounds().getCenterX(),
-		// polygon.getBounds().getCenterY());
-		// GeneralPath generalPath = new GeneralPath(polygon);
-		// generalPath.transform(affineTransform);
-		// affineTransform.setToScale(zoom, zoom);
-		// g2d.fill(generalPath.createTransformedShape(affineTransform));
+	public void maisAngulo() {
+		angulo = 1;
+		girar();
 	}
 
-	public double getAngulo() {
-		return angulo;
+	public void menosAngulo() {
+		angulo = -1;
+		girar();
 	}
 
-	public void setAngulo(double angulo) {
-		this.angulo = angulo;
-	}
-
-	public Color getCorPimaria() {
-		return corPimaria;
-	}
-
-	public void setCorPimaria(Color corPimaria) {
-		this.corPimaria = corPimaria;
-	}
-
-	public Color getCorSecundaria() {
-		return corSecundaria;
-	}
-
-	public void setCorSecundaria(Color corSecundaria) {
-		this.corSecundaria = corSecundaria;
+	private void girar() {
+		Point center = new Point((int) forma.getBounds().getCenterX(),
+				(int) forma.getBounds().getCenterY());
+		AffineTransform affineTransform = AffineTransform
+				.getScaleInstance(1, 1);
+		GeneralPath generalPath = new GeneralPath(forma);
+		generalPath.transform(affineTransform);
+		System.out.println("angulo " + angulo);
+		double rad = Math.toRadians((double) angulo);
+		affineTransform.setToRotation(rad, center.x, center.y);
+		forma = generalPath.createTransformedShape(affineTransform);
 	}
 
 	public int getTransparencia() {
@@ -115,6 +100,39 @@ public class ObjetoMapa implements Serializable {
 			transparencia = 255;
 		}
 		this.transparencia = transparencia;
+	}
+
+	public void maisTransparencia() {
+		setTransparencia(getTransparencia() + 1);
+
+	}
+
+	public void menosTransparencia() {
+		setTransparencia(getTransparencia() - 1);
+	}
+
+	public void menosZoom() {
+		zoom = 0.99;
+		esticar();
+	}
+
+	public void maisZoom() {
+		zoom = 1.01;
+		esticar();
+	}
+
+	private void esticar() {
+		AffineTransform affineTransform = AffineTransform.getScaleInstance(
+				zoom, zoom);
+		GeneralPath generalPath = new GeneralPath(forma);
+		generalPath.transform(affineTransform);
+		if (zoom == 1.01) {
+			affineTransform.setToTranslation(-7, -6);
+		}
+		if (zoom == 0.99) {
+			affineTransform.setToTranslation(7, 6);
+		}
+		forma = generalPath.createTransformedShape(affineTransform);
 	}
 
 }

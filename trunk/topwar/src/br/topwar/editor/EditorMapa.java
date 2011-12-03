@@ -1,8 +1,10 @@
 package br.topwar.editor;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.color.ColorSpace;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -52,6 +54,7 @@ public class EditorMapa {
 	private MapaTopWar mapaTopWar;
 	private String clickState;
 	private List<Point> pontosNovoObj;
+	private ObjetoMapa objetoMapaSelecionado;
 
 	public EditorMapa() {
 		frame = new JFrame();
@@ -65,8 +68,8 @@ public class EditorMapa {
 				if (backGround == null) {
 					return super.getPreferredSize();
 				}
-				return new Dimension(backGround.getWidth(), backGround
-						.getHeight());
+				return new Dimension(backGround.getWidth(),
+						backGround.getHeight());
 			}
 		};
 		scrollPane = new JScrollPane(painelEditor,
@@ -87,6 +90,22 @@ public class EditorMapa {
 					cima();
 				} else if (keyCoode == KeyEvent.VK_DOWN) {
 					baixo();
+				} else if (keyCoode == KeyEvent.VK_PAGE_UP) {
+					maisAnguloObj();
+				} else if (keyCoode == KeyEvent.VK_PAGE_DOWN) {
+					menosAnguloObj();
+				} else if (keyCoode == KeyEvent.VK_MINUS) {
+					menosTransparencia();
+				} else if (keyCoode == KeyEvent.VK_EQUALS) {
+					maisTransparencia();
+				} else if (keyCoode == KeyEvent.VK_INSERT) {
+					novoObjeto();
+				} else if (keyCoode == KeyEvent.VK_DELETE) {
+					apagaObjeto();
+				} else if (keyCoode == KeyEvent.VK_HOME) {
+					maisZoom();
+				} else if (keyCoode == KeyEvent.VK_END) {
+					menosZoom();
 				}
 			}
 		});
@@ -118,42 +137,107 @@ public class EditorMapa {
 		});
 	}
 
+	protected void menosZoom() {
+		if (objetoMapaSelecionado == null) {
+			return;
+		}
+		objetoMapaSelecionado.menosZoom();
+		painelEditor.repaint();
+	}
+
+	protected void maisZoom() {
+		if (objetoMapaSelecionado == null) {
+			return;
+		}
+		objetoMapaSelecionado.maisZoom();
+		painelEditor.repaint();
+	}
+
+	protected void apagaObjeto() {
+		if (objetoMapaSelecionado == null) {
+			return;
+		}
+		List<ObjetoMapa> objetoMapaList = mapaTopWar.getObjetoMapaList();
+		for (Iterator iterator = objetoMapaList.iterator(); iterator.hasNext();) {
+			ObjetoMapa objetoMapa = (ObjetoMapa) iterator.next();
+			if (objetoMapa.equals(objetoMapaSelecionado)) {
+				iterator.remove();
+				break;
+			}
+		}
+		painelEditor.repaint();
+	}
+
+	protected void maisTransparencia() {
+		if (objetoMapaSelecionado == null) {
+			return;
+		}
+		objetoMapaSelecionado.maisTransparencia();
+		painelEditor.repaint();
+
+	}
+
+	protected void menosTransparencia() {
+		if (objetoMapaSelecionado == null) {
+			return;
+		}
+		objetoMapaSelecionado.menosTransparencia();
+		painelEditor.repaint();
+
+	}
+
 	protected void arrastarDoMouse(MouseEvent e) {
 		Point point = e.getPoint();
 		if (mapaTopWar == null) {
 			return;
 		}
-		ObjetoMapa objetoMapaSel = null;
 		List<ObjetoMapa> objetoMapaList = mapaTopWar.getObjetoMapaList();
-		for (Iterator iterator = objetoMapaList.iterator(); iterator.hasNext();) {
-			ObjetoMapa objetoMapa = (ObjetoMapa) iterator.next();
-			if (objetoMapa.getForma().contains(point)) {
-				objetoMapaSel = objetoMapa;
-				break;
+		if (objetoMapaSelecionado == null) {
+			for (Iterator iterator = objetoMapaList.iterator(); iterator
+					.hasNext();) {
+				ObjetoMapa objetoMapa = (ObjetoMapa) iterator.next();
+				if (objetoMapa.getForma().contains(point)) {
+					objetoMapaSelecionado = objetoMapa;
+					break;
+				}
 			}
 		}
-		if (objetoMapaSel != null) {
-			objetoMapaSel.mover(point);
+		if (objetoMapaSelecionado != null) {
+			objetoMapaSelecionado.mover(point);
 			painelEditor.repaint();
 		}
 
 	}
 
 	protected void clickDoMouse(MouseEvent e) {
+		Point point = e.getPoint();
 		if (NOVO_OBJETO.equals(clickState)) {
 			if (MouseEvent.BUTTON1 == e.getButton()) {
 				pontosNovoObj.add(e.getPoint());
-				painelEditor.repaint();
 			} else {
 				if (pontosNovoObj != null && mapaTopWar != null) {
 					ObjetoMapa objetoMapa = new ObjetoMapa(pontosNovoObj);
 					mapaTopWar.getObjetoMapaList().add(objetoMapa);
 					clickState = null;
 					pontosNovoObj = null;
-					painelEditor.repaint();
+					objetoMapaSelecionado = objetoMapa;
+				}
+			}
+		} else if (mapaTopWar != null) {
+			List<ObjetoMapa> objetoMapaList = mapaTopWar.getObjetoMapaList();
+			for (Iterator iterator = objetoMapaList.iterator(); iterator
+					.hasNext();) {
+				ObjetoMapa objetoMapa = (ObjetoMapa) iterator.next();
+				if (objetoMapa.getForma().contains(point)) {
+					objetoMapaSelecionado = objetoMapa;
+					break;
 				}
 			}
 		}
+		if (MouseEvent.BUTTON1 != e.getButton()) {
+			objetoMapaSelecionado = null;
+		}
+		painelEditor.repaint();
 
 	}
 
@@ -243,10 +327,18 @@ public class EditorMapa {
 
 		if (mapaTopWar != null) {
 			List<ObjetoMapa> objetoMapaList = mapaTopWar.getObjetoMapaList();
-			for (Iterator iterator = objetoMapaList.iterator(); iterator
-					.hasNext();) {
-				ObjetoMapa objetoMapa = (ObjetoMapa) iterator.next();
+			for (int i = objetoMapaList.size() - 1; i >= 0; i--) {
+				ObjetoMapa objetoMapa = (ObjetoMapa) objetoMapaList.get(i);
+				if (objetoMapa.equals(objetoMapaSelecionado)) {
+					g2d.setColor(Color.YELLOW);
+				} else {
+					g2d.setColor(Color.BLACK);
+				}
 				g2d.draw(objetoMapa.getForma());
+				Color color = new Color(255, 255, 255,
+						objetoMapa.getTransparencia());
+				g2d.setColor(color);
+				g2d.fill(objetoMapa.getForma());
 			}
 		}
 	}
@@ -325,15 +417,45 @@ public class EditorMapa {
 		novoObj.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				novoObj();
+				novoObjeto();
+			}
+		});
+		JMenuItem girarObj = new JMenuItem() {
+			public String getText() {
+				return Lang.msg("girar");
+			}
+
+		};
+		menuEditor.add(girarObj);
+		girarObj.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				maisAnguloObj();
 			}
 		});
 
 	}
 
-	protected void novoObj() {
+	protected void maisAnguloObj() {
+		if (objetoMapaSelecionado == null) {
+			return;
+		}
+		objetoMapaSelecionado.maisAngulo();
+		painelEditor.repaint();
+	}
+
+	protected void menosAnguloObj() {
+		if (objetoMapaSelecionado == null) {
+			return;
+		}
+		objetoMapaSelecionado.menosAngulo();
+		painelEditor.repaint();
+	}
+
+	protected void novoObjeto() {
 		clickState = NOVO_OBJETO;
 		pontosNovoObj = new ArrayList<Point>();
+		objetoMapaSelecionado = null;
 	}
 
 	protected void salvarMapa() throws IOException {
@@ -373,23 +495,23 @@ public class EditorMapa {
 			return;
 		}
 
-		FileInputStream inputStream = new FileInputStream(fileChooser
-				.getSelectedFile());
+		FileInputStream inputStream = new FileInputStream(
+				fileChooser.getSelectedFile());
 		ObjectInputStream ois = new ObjectInputStream(inputStream);
 
 		mapaTopWar = (MapaTopWar) ois.readObject();
 		frame.setTitle(mapaTopWar.getNome());
 
-		backGround = CarregadorRecursos.carregaBackGround(mapaTopWar
-				.getBackGround(), painelEditor);
+		backGround = CarregadorRecursos.carregaBackGround(
+				mapaTopWar.getBackGround(), painelEditor);
 	}
 
 	private void novoMapa() {
-		String nomeMapa = JOptionPane.showInputDialog(frame, Lang
-				.msg("nomeDoMapa"));
+		String nomeMapa = JOptionPane.showInputDialog(frame,
+				Lang.msg("nomeDoMapa"));
 		if (Util.isNullOrEmpty(nomeMapa)) {
-			JOptionPane.showMessageDialog(frame, Lang.msg("nomeInvalido"), Lang
-					.msg("erro"), JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(frame, Lang.msg("nomeInvalido"),
+					Lang.msg("erro"), JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 
