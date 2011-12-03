@@ -1,10 +1,7 @@
 package br.topwar.serial;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
-import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
@@ -82,7 +79,6 @@ public class ObjetoMapa implements Serializable {
 				.getScaleInstance(1, 1);
 		GeneralPath generalPath = new GeneralPath(forma);
 		generalPath.transform(affineTransform);
-		System.out.println("angulo " + angulo);
 		double rad = Math.toRadians((double) angulo);
 		affineTransform.setToRotation(rad, center.x, center.y);
 		forma = generalPath.createTransformedShape(affineTransform);

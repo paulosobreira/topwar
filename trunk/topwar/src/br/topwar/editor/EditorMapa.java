@@ -45,7 +45,7 @@ public class EditorMapa {
 	private static final String NOVO_OBJETO = "NOVO_OBJETO";
 	private JFrame frame;
 	private JMenuBar bar;
-	private JMenu menuEditor;
+	private JMenu menuMapa;
 	private boolean appletStand;
 	private JPanel painelEditor;
 	private JScrollPane scrollPane;
@@ -55,6 +55,7 @@ public class EditorMapa {
 	private String clickState;
 	private List<Point> pontosNovoObj;
 	private ObjetoMapa objetoMapaSelecionado;
+	private JMenu menuObjetos;
 
 	public EditorMapa() {
 		frame = new JFrame();
@@ -95,17 +96,19 @@ public class EditorMapa {
 				} else if (keyCoode == KeyEvent.VK_PAGE_DOWN) {
 					menosAnguloObj();
 				} else if (keyCoode == KeyEvent.VK_MINUS) {
-					menosTransparencia();
+					menosTransparenciaObj();
 				} else if (keyCoode == KeyEvent.VK_EQUALS) {
-					maisTransparencia();
+					maisTransparenciaObj();
 				} else if (keyCoode == KeyEvent.VK_INSERT) {
 					novoObjeto();
 				} else if (keyCoode == KeyEvent.VK_DELETE) {
-					apagaObjeto();
+					apagarObjeto();
 				} else if (keyCoode == KeyEvent.VK_HOME) {
-					maisZoom();
+					maisZoomObj();
 				} else if (keyCoode == KeyEvent.VK_END) {
-					menosZoom();
+					menosZoomObj();
+				} else if (keyCoode == KeyEvent.VK_ESCAPE) {
+					excluirUltimoNo();
 				}
 			}
 		});
@@ -137,7 +140,15 @@ public class EditorMapa {
 		});
 	}
 
-	protected void menosZoom() {
+	protected void excluirUltimoNo() {
+		if (pontosNovoObj != null && !pontosNovoObj.isEmpty()) {
+			pontosNovoObj.remove(pontosNovoObj.size() - 1);
+			painelEditor.repaint();
+		}
+
+	}
+
+	protected void menosZoomObj() {
 		if (objetoMapaSelecionado == null) {
 			return;
 		}
@@ -145,7 +156,7 @@ public class EditorMapa {
 		painelEditor.repaint();
 	}
 
-	protected void maisZoom() {
+	protected void maisZoomObj() {
 		if (objetoMapaSelecionado == null) {
 			return;
 		}
@@ -153,7 +164,7 @@ public class EditorMapa {
 		painelEditor.repaint();
 	}
 
-	protected void apagaObjeto() {
+	protected void apagarObjeto() {
 		if (objetoMapaSelecionado == null) {
 			return;
 		}
@@ -168,7 +179,7 @@ public class EditorMapa {
 		painelEditor.repaint();
 	}
 
-	protected void maisTransparencia() {
+	protected void maisTransparenciaObj() {
 		if (objetoMapaSelecionado == null) {
 			return;
 		}
@@ -177,7 +188,7 @@ public class EditorMapa {
 
 	}
 
-	protected void menosTransparencia() {
+	protected void menosTransparenciaObj() {
 		if (objetoMapaSelecionado == null) {
 			return;
 		}
@@ -206,7 +217,6 @@ public class EditorMapa {
 			objetoMapaSelecionado.mover(point);
 			painelEditor.repaint();
 		}
-
 	}
 
 	protected void clickDoMouse(MouseEvent e) {
@@ -318,15 +328,18 @@ public class EditorMapa {
 					.hasNext();) {
 				Point ptAtual = (Point) iterator.next();
 				if (ptAnt != null) {
+					g2d.setColor(Color.CYAN);
 					g2d.drawLine(ptAnt.x, ptAnt.y, ptAtual.x, ptAtual.y);
 				}
 				ptAnt = ptAtual;
-
+				g2d.setColor(Color.YELLOW);
+				g2d.fillOval(ptAtual.x - 2, ptAtual.y - 2, 4, 4);
 			}
 		}
-
+		g2d.setColor(Color.BLACK);
 		if (mapaTopWar != null) {
 			List<ObjetoMapa> objetoMapaList = mapaTopWar.getObjetoMapaList();
+			int cont = 0;
 			for (int i = objetoMapaList.size() - 1; i >= 0; i--) {
 				ObjetoMapa objetoMapa = (ObjetoMapa) objetoMapaList.get(i);
 				if (objetoMapa.equals(objetoMapaSelecionado)) {
@@ -334,6 +347,10 @@ public class EditorMapa {
 				} else {
 					g2d.setColor(Color.BLACK);
 				}
+				int x = objetoMapa.getForma().getBounds().x;
+				int y = objetoMapa.getForma().getBounds().y;
+				g2d.drawString("C:" + cont++, x, y);
+				g2d.drawString("T:" + objetoMapa.getTransparencia(), x, y + 10);
 				g2d.draw(objetoMapa.getForma());
 				Color color = new Color(255, 255, 255,
 						objetoMapa.getTransparencia());
@@ -350,20 +367,20 @@ public class EditorMapa {
 		} else {
 			frame.setJMenuBar(bar);
 		}
-		menuEditor = new JMenu() {
+		menuMapa = new JMenu() {
 			public String getText() {
-				return Lang.msg("editor");
+				return Lang.msg("menuMapa");
 			}
 
 		};
-		bar.add(menuEditor);
+		bar.add(menuMapa);
 		JMenuItem novoMapa = new JMenuItem() {
 			public String getText() {
 				return Lang.msg("novoMapa");
 			}
 
 		};
-		menuEditor.add(novoMapa);
+		menuMapa.add(novoMapa);
 		novoMapa.addActionListener(new ActionListener() {
 
 			@Override
@@ -378,7 +395,7 @@ public class EditorMapa {
 			}
 
 		};
-		menuEditor.add(abrirMapa);
+		menuMapa.add(abrirMapa);
 		abrirMapa.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -395,7 +412,7 @@ public class EditorMapa {
 			}
 
 		};
-		menuEditor.add(salvarMapa);
+		menuMapa.add(salvarMapa);
 		salvarMapa.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -407,33 +424,121 @@ public class EditorMapa {
 			}
 		});
 
+		menuObjetos = new JMenu() {
+			public String getText() {
+				return Lang.msg("menuObjetos");
+			}
+
+		};
+		bar.add(menuObjetos);
+
 		JMenuItem novoObj = new JMenuItem() {
 			public String getText() {
 				return Lang.msg("novoObj");
 			}
 
 		};
-		menuEditor.add(novoObj);
 		novoObj.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				novoObjeto();
 			}
 		});
-		JMenuItem girarObj = new JMenuItem() {
+		menuObjetos.add(novoObj);
+
+		JMenuItem apagarObj = new JMenuItem() {
 			public String getText() {
-				return Lang.msg("girar");
+				return Lang.msg("apagarObj");
 			}
 
 		};
-		menuEditor.add(girarObj);
-		girarObj.addActionListener(new ActionListener() {
+		apagarObj.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				apagarObjeto();
+			}
+		});
+		menuObjetos.add(apagarObj);
+
+		JMenuItem maisAngulo = new JMenuItem() {
+			public String getText() {
+				return Lang.msg("maisAngulo");
+			}
+
+		};
+		menuObjetos.add(maisAngulo);
+		maisAngulo.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				maisAnguloObj();
 			}
 		});
+		JMenuItem menosAngulo = new JMenuItem() {
+			public String getText() {
+				return Lang.msg("menosAngulo");
+			}
 
+		};
+		menuObjetos.add(menosAngulo);
+		maisAngulo.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				menosAnguloObj();
+			}
+		});
+
+		JMenuItem maisZoom = new JMenuItem() {
+			public String getText() {
+				return Lang.msg("maisZoom");
+			}
+
+		};
+		menuObjetos.add(maisZoom);
+		maisZoom.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				maisZoomObj();
+			}
+		});
+		JMenuItem menosZoom = new JMenuItem() {
+			public String getText() {
+				return Lang.msg("menosZoom");
+			}
+
+		};
+		menuObjetos.add(menosZoom);
+		maisZoom.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				menosZoomObj();
+			}
+		});
+		JMenuItem maisTransparencia = new JMenuItem() {
+			public String getText() {
+				return Lang.msg("maisTransparencia");
+			}
+
+		};
+		menuObjetos.add(maisTransparencia);
+		maisTransparencia.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				maisTransparenciaObj();
+			}
+		});
+		JMenuItem menosTransparencia = new JMenuItem() {
+			public String getText() {
+				return Lang.msg("menosTransparencia");
+			}
+
+		};
+		menuObjetos.add(menosTransparencia);
+		maisTransparencia.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				menosTransparenciaObj();
+			}
+		});
 	}
 
 	protected void maisAnguloObj() {
