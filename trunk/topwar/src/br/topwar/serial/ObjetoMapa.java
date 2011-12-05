@@ -17,6 +17,15 @@ public class ObjetoMapa implements Serializable {
 	private double angulo;
 	private Shape forma;
 	private double zoom;
+	private String efeito;
+
+	public String getEfeito() {
+		return efeito;
+	}
+
+	public void setEfeito(String efeito) {
+		this.efeito = efeito;
+	}
 
 	public ObjetoMapa(List<Point> pontos) {
 		Polygon polygon = new Polygon();

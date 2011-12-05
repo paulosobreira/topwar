@@ -1,9 +1,12 @@
 package br.topwar.editor;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Shape;
 import java.awt.color.ColorSpace;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,7 +15,13 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Area;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.io.Console;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -35,7 +44,9 @@ import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 import br.nnpe.ExampleFileFilter;
+import br.nnpe.GeoUtil;
 import br.nnpe.Util;
+import br.topwar.Constantes;
 import br.topwar.recursos.CarregadorRecursos;
 import br.topwar.recursos.idiomas.Lang;
 import br.topwar.serial.MapaTopWar;
@@ -69,8 +80,8 @@ public class EditorMapa {
 				if (backGround == null) {
 					return super.getPreferredSize();
 				}
-				return new Dimension(backGround.getWidth(),
-						backGround.getHeight());
+				return new Dimension(backGround.getWidth(), backGround
+						.getHeight());
 			}
 		};
 		scrollPane = new JScrollPane(painelEditor,
@@ -109,6 +120,8 @@ public class EditorMapa {
 					menosZoomObj();
 				} else if (keyCoode == KeyEvent.VK_ESCAPE) {
 					excluirUltimoNo();
+				} else if (keyCoode == KeyEvent.VK_3) {
+					efeitoGrade();
 				}
 			}
 		});
@@ -138,6 +151,15 @@ public class EditorMapa {
 				super.mouseMoved(e);
 			}
 		});
+	}
+
+	protected void efeitoGrade() {
+		if (objetoMapaSelecionado == null) {
+			return;
+		}
+		objetoMapaSelecionado.setEfeito(Constantes.GRADE);
+		painelEditor.repaint();
+
 	}
 
 	protected void excluirUltimoNo() {
@@ -352,12 +374,54 @@ public class EditorMapa {
 				g2d.drawString("C:" + cont++, x, y);
 				g2d.drawString("T:" + objetoMapa.getTransparencia(), x, y + 10);
 				g2d.draw(objetoMapa.getForma());
-				Color color = new Color(255, 255, 255,
-						objetoMapa.getTransparencia());
+				Color color = new Color(255, 255, 255, objetoMapa
+						.getTransparencia());
 				g2d.setColor(color);
-				g2d.fill(objetoMapa.getForma());
+				if (objetoMapa.getEfeito() == null) {
+					g2d.fill(objetoMapa.getForma());
+				} else {
+					desenhaObjetoEfeito(g2d, objetoMapa);
+				}
+
 			}
 		}
+	}
+
+	private void desenhaObjetoEfeito(Graphics2D g2d, ObjetoMapa objetoMapa) {
+		if (Constantes.GRADE.equals(objetoMapa.getEfeito())) {
+			Rectangle bounds = objetoMapa.getForma().getBounds();
+
+			BufferedImage bufferedImagePasso1 = new BufferedImage(bounds.width,
+					bounds.height, BufferedImage.TYPE_INT_ARGB);
+
+			Graphics2D graphics = (Graphics2D) bufferedImagePasso1
+					.getGraphics();
+			int inicioLinha = 0;
+			int fimLinha = 0 + bounds.width;
+			int inicioCol = 0;
+			Color color = new Color(255, 255, 255, objetoMapa
+					.getTransparencia());
+			graphics.setColor(color);
+			for (int i = 0; i < bounds.getHeight(); i++) {
+				if (i % 2 == 0)
+					graphics.drawLine(inicioLinha, inicioCol + i, fimLinha,
+							inicioCol + i);
+			}
+			Shape forma = objetoMapa.getForma();
+			AffineTransform affineTransform = AffineTransform.getScaleInstance(
+					1, 1);
+			GeneralPath generalPath = new GeneralPath(forma);
+			generalPath.transform(affineTransform);
+			affineTransform.setToTranslation(-bounds.x, -bounds.y);
+			forma = generalPath.createTransformedShape(affineTransform);
+			BufferedImage bufferedImagePasso2 = new BufferedImage(bounds.width,
+					bounds.height, BufferedImage.TYPE_INT_ARGB);
+			graphics = (Graphics2D) bufferedImagePasso2.getGraphics();
+			graphics.setClip(forma);
+			graphics.drawImage(bufferedImagePasso1, 0, 0, null);
+			g2d.drawImage(bufferedImagePasso2, bounds.x, bounds.y, null);
+		}
+
 	}
 
 	private void criarMenu() {
@@ -600,23 +664,23 @@ public class EditorMapa {
 			return;
 		}
 
-		FileInputStream inputStream = new FileInputStream(
-				fileChooser.getSelectedFile());
+		FileInputStream inputStream = new FileInputStream(fileChooser
+				.getSelectedFile());
 		ObjectInputStream ois = new ObjectInputStream(inputStream);
 
 		mapaTopWar = (MapaTopWar) ois.readObject();
 		frame.setTitle(mapaTopWar.getNome());
 
-		backGround = CarregadorRecursos.carregaBackGround(
-				mapaTopWar.getBackGround(), painelEditor);
+		backGround = CarregadorRecursos.carregaBackGround(mapaTopWar
+				.getBackGround(), painelEditor);
 	}
 
 	private void novoMapa() {
-		String nomeMapa = JOptionPane.showInputDialog(frame,
-				Lang.msg("nomeDoMapa"));
+		String nomeMapa = JOptionPane.showInputDialog(frame, Lang
+				.msg("nomeDoMapa"));
 		if (Util.isNullOrEmpty(nomeMapa)) {
-			JOptionPane.showMessageDialog(frame, Lang.msg("nomeInvalido"),
-					Lang.msg("erro"), JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(frame, Lang.msg("nomeInvalido"), Lang
+					.msg("erro"), JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 
