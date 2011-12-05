@@ -57,9 +57,7 @@ img {
 	border-style: none;
 	border-width: 0px;
 	border-color: #5C5E5D;
-	padding: 10px;
-	padding-left: 0px;
-	padding-right: 0px;
+	padding: 5px;
 }
 
 #title {
@@ -106,7 +104,7 @@ img {
 	border-width: 1px;
 	border-color: #B8CFE5;
 	text-align: center;
-	padding: 15px;
+	padding: 0px;
 }
 
 #description {
@@ -175,8 +173,8 @@ img {
 	<td>
 	<div id="main">
 		<div id="title">	
-			<span >Mesa-11
-				<h1 id="description">Futebol de botão</h1>
+			<span >TopWar
+				<h1 id="description">Guerra Estrategica</h1>
 			</span>
 			<a id="link" style="position: absolute; left: 150px; top: 10px;font-size: 16px;"
 				href="http://twitter.com/mesa11" style="text-align: right;"
@@ -192,7 +190,7 @@ img {
 				Como Jogar</a>				
 			<a id="link" style="position: absolute; left: 300px; top: 50px;font-size: 16px;"
 				href="mailto:sowbreira@gmail.com" style="text-align: right;"
-				target="_BLANK">Sugestões,Colaborar ...</a>
+				target="_BLANK">XXXXXXXXXXXXXXXXXXX</a>
 			<br>					
 		</div>
 		<div id="pop" style="background-color: #F0F0F0;">
@@ -221,14 +219,14 @@ img {
 			</UL>				
 		</div>		
 		<div id="shots" class="highslide-gallery">
-			<a href="m11-1.jpg" style="padding-left: 10px; padding-right: 10px;" onclick="return hs.expand(this)"> <img src="m11-1.jpg" width="130" height="120" /></a>
-			<a href="m11-2.jpg" style="padding-left: 10px; padding-right: 10px;" onclick="return hs.expand(this)"> <img src="m11-2.jpg" width="130" height="120" /></a>
-			<a href="m11-3.jpg" style="padding-left: 10px; padding-right: 10px;" onclick="return hs.expand(this)"> <img src="m11-3.jpg" width="130" height="120" /></a>
-			<a href="m11-4.jpg" style="padding-left: 10px; padding-right: 10px;" onclick="return hs.expand(this)"> <img src="m11-4.jpg" width="130" height="120" /></a><br>
-			<a href="m11-5.jpg" style="padding-left: 10px; padding-right: 10px;" onclick="return hs.expand(this)"> <img src="m11-5.jpg" width="130" height="120" /></a>
-			<a href="m11-6.jpg" style="padding-left: 10px; padding-right: 10px;" onclick="return hs.expand(this)"> <img src="m11-6.jpg" width="130" height="120" /></a>
-			<a href="m11-8.jpg" style="padding-left: 10px; padding-right: 10px;" onclick="return hs.expand(this)"> <img src="m11-8.jpg" width="130" height="120" /></a>
-			<a href="m11-10.jpg" style="padding-left: 10px; padding-right: 10px;" onclick="return hs.expand(this)"> <img src="m11-10.jpg" width="130" height="120" /></a><br>
+			<a href="m11-1.jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img src="m11-1.jpg" width="130" height="120" /></a>
+			<a href="m11-2.jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img src="m11-2.jpg" width="130" height="120" /></a>
+			<a href="m11-3.jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img src="m11-3.jpg" width="130" height="120" /></a>
+			<a href="m11-4.jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img src="m11-4.jpg" width="130" height="120" /></a><br>
+			<a href="m11-5.jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img src="m11-5.jpg" width="130" height="120" /></a>
+			<a href="m11-6.jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img src="m11-6.jpg" width="130" height="120" /></a>
+			<a href="m11-8.jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img src="m11-8.jpg" width="130" height="120" /></a>
+			<a href="m11-10.jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img src="m11-10.jpg" width="130" height="120" /></a><br>
 		</div>
 		<div style="text-align: center;">
 			<a id="link"  href="TopWarOnline.jnlp" style="text-align: left;">
@@ -243,14 +241,25 @@ img {
 
 		</div><br>
 		<div id="shotsPromo" class="highslide-gallery">
-			Veja Tambem <br><br>
-			<a id="link" 
-				href="../../f1mane" style="text-align: center;"
-				target="_BLANK">  F1-mane </a><br>
-			<a href="./../f1mane/fm1.jpg" style="padding-left: 10px; padding-right: 10px;" onclick="return hs.expand(this)"> <img src="./../f1mane/fm1.jpg" width="130" height="120" /></a>
-			<a href="./../f1mane/fm2.jpg" style="padding-left: 10px; padding-right: 10px;" onclick="return hs.expand(this)"> <img src="./../f1mane/fm2.jpg" width="130" height="120" /></a>
-			<a href="./../f1mane/fm3.jpg" style="padding-left: 10px; padding-right: 10px;" onclick="return hs.expand(this)"> <img src="./../f1mane/fm3.jpg" width="130" height="120" /></a>
-			<a href="./../f1mane/fm4.jpg" style="padding-left: 10px; padding-right: 10px;" onclick="return hs.expand(this)"> <img src="./../f1mane/fm4.jpg" width="130" height="120" /></a>
+			<table style="text-align: center;padding: 15px">
+			<tr>
+			<td colspan="2">Veja Tambem</td>
+			</tr>
+			<tr><td>
+				<a id="link" 
+					href="../../f1mane" style="text-align: center;"
+					target="_BLANK">  F1-mane </a><br>
+				<a href="./../f1mane/fm1.jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img  src="./../f1mane/fm1.jpg" width="130" height="120" /></a>
+				<a href="./../f1mane/fm2.jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img  src="./../f1mane/fm2.jpg" width="130" height="120" /></a>
+			</td>
+			<td>				
+				<a id="link" 
+					href="../../mesa11" style="text-align: center;"
+					target="_BLANK">  Mesa-11 </a><br>
+				<a href="../../mesa11/m11-1.jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img  src="../../mesa11/m11-1.jpg" width="130" height="120" /></a>
+				<a href="../../mesa11/m11-2.jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img  src="../../mesa11/m11-2.jpg" width="130" height="120" /></a>
+			</td></tr>
+			</table>
 		</div>		
 	</div>
 	</td>
