@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0+"
+	codebase="http://{host}/topwar/" href="topwar.jnlp">
+	<information>
+		<title>TopWar</title>
+		<vendor>Paulo Sobreira</vendor>
+		<homepage href="http://sowbreira.appspot.com/" />
+		<icon href="icon.png"/>  
+		<description>TopWar (Guerra Estrategica)</description>
+		<offline-allowed />
+	</information>
+
+	<security>
+		<all-permissions />
+	</security>	
+	
+	<resources>
+		<j2se version="1.6"   />
+		<jar href="topwar.jar" />
+    </resources>
+
+	<application-desc
+		main-class="br.topwar.MainFrame" >
+		<argument>http://{host}/topwar/</argument>
+	</application-desc> 
+</jnlp>
