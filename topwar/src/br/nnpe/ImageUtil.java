@@ -7,6 +7,7 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
@@ -186,4 +187,25 @@ public class ImageUtil {
 		return bufferedImageRetorno;
 	}
 
+	public static BufferedImage gerarSubImagem(BufferedImage azul,
+			Rectangle rect) {
+		int largura = (int) rect.getWidth();
+		int altura = (int) rect.getHeight();
+
+		BufferedImage bufferedImageRetorno = new BufferedImage(largura, altura,
+				BufferedImage.TYPE_INT_ARGB);
+		Raster srcRaster = azul.getData();
+		WritableRaster destRaster = bufferedImageRetorno.getRaster();
+		int[] argbArray = new int[4];
+
+		for (int i = 0; i < largura; i++) {
+			for (int j = 0; j < altura; j++) {
+				argbArray = new int[4];
+				argbArray = srcRaster.getPixel(i + rect.x, j + rect.y,
+						argbArray);
+				destRaster.setPixel(i, j, argbArray);
+			}
+		}
+		return bufferedImageRetorno;
+	}
 }

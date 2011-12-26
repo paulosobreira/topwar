@@ -224,41 +224,6 @@ public class CarregadorRecursos {
 
 	}
 
-	public static BufferedImage gerarCoresCarros(Color corPintar, String carro) {
-		ImageIcon img = new ImageIcon(
-				CarregadorRecursos.class.getResource(carro));
-
-		BufferedImage srcBufferedImage = new BufferedImage(img.getIconWidth(),
-				img.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
-		srcBufferedImage.getGraphics().drawImage(img.getImage(), 0, 0, null);
-		srcBufferedImage = ImageUtil.geraTransparencia(srcBufferedImage,
-				Color.BLACK);
-		BufferedImage bufferedImageRetorno = new BufferedImage(
-				img.getIconWidth(), img.getIconHeight(),
-				BufferedImage.TYPE_INT_ARGB);
-		Raster srcRaster = srcBufferedImage.getData();
-		WritableRaster destRaster = bufferedImageRetorno.getRaster();
-		int[] argbArray = new int[4];
-		for (int i = 0; i < img.getIconWidth(); i++) {
-			for (int j = 0; j < img.getIconHeight(); j++) {
-				argbArray = new int[4];
-				argbArray = srcRaster.getPixel(i, j, argbArray);
-				Color c = new Color(argbArray[0], argbArray[1], argbArray[2]);
-				argbArray[0] = (int) ((argbArray[0] + corPintar.getRed()) / 2);
-				argbArray[1] = (int) ((argbArray[1] + corPintar.getGreen()) / 2);
-				argbArray[2] = (int) ((argbArray[2] + corPintar.getBlue()) / 2);
-				if (Color.WHITE.equals(c)) {
-					argbArray[3] = 0;
-				}
-
-				// argbArray[3] = 255;
-				destRaster.setPixel(i, j, argbArray);
-			}
-		}
-
-		return bufferedImageRetorno;
-	}
-
 	public static BufferedImage carregaImgSemCache(String img) {
 		ImageIcon icon = new ImageIcon(
 				CarregadorRecursos.class.getResource(img));
@@ -316,6 +281,51 @@ public class CarregadorRecursos {
 					argbArray[3] = 0;
 				} else {
 					argbArray[3] = 100;
+				}
+				destRaster.setPixel(i, j, argbArray);
+			}
+		}
+
+		return bufferedImageRetorno;
+	}
+
+	public static BufferedImage carregaBufferedImageTransparecia(String file,
+			Color cor) {
+		BufferedImage buffer = null;
+		try {
+			ImageIcon icon = new ImageIcon(
+					CarregadorRecursos.class.getResource(file));
+			buffer = ImageUtil.toBufferedImage(icon.getImage());
+			if (buffer == null) {
+				Logger.logar("img=" + buffer);
+				System.exit(1);
+			}
+
+		} catch (Exception e) {
+			Logger.logar("Erro gerando transparencia para :" + file);
+			Logger.logarExept(e);
+		}
+		ImageIcon img = new ImageIcon(buffer);
+		BufferedImage srcBufferedImage = new BufferedImage(img.getIconWidth(),
+				img.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
+		srcBufferedImage.getGraphics().drawImage(img.getImage(), 0, 0, null);
+
+		BufferedImage bufferedImageRetorno = new BufferedImage(
+				img.getIconWidth(), img.getIconHeight(),
+				BufferedImage.TYPE_INT_ARGB);
+		Raster srcRaster = srcBufferedImage.getData();
+		WritableRaster destRaster = bufferedImageRetorno.getRaster();
+		int[] argbArray = new int[4];
+
+		for (int i = 0; i < img.getIconWidth(); i++) {
+			for (int j = 0; j < img.getIconHeight(); j++) {
+				argbArray = new int[4];
+				argbArray = srcRaster.getPixel(i, j, argbArray);
+
+				Color c = new Color(argbArray[0], argbArray[1], argbArray[2],
+						argbArray[3]);
+				if (c.equals(cor)) {
+					argbArray[3] = 0;
 				}
 				destRaster.setPixel(i, j, argbArray);
 			}
