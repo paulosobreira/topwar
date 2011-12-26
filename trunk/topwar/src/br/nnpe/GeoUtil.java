@@ -43,9 +43,9 @@ public class GeoUtil {
 		// return Math.atan2(dy, dx); // 4 quadrantes, -pi até pi
 	}
 
-	public static List drawParabola(int velocity, int angle,
+	public static List<Point> drawParabola(int velocity, int angle,
 			Point initialPostion, int orientation, Graphics graphics) {
-		List list = new ArrayList();
+		List<Point> list = new ArrayList<Point>();
 		double vx, vy, newx = 0, newy, oldx, oldy;
 		vx = velocity * Math.cos(Math.toRadians(angle));
 		vy = velocity * Math.sin(Math.toRadians(angle));
@@ -67,13 +67,13 @@ public class GeoUtil {
 		return list;
 	}
 
-	public static List drawBresenhamLine(Point p1, Point p2) {
+	public static List<Point> drawBresenhamLine(Point p1, Point p2) {
 		return drawBresenhamLine(p1.x, p1.y, p2.x, p2.y);
 		// return myDrawLine(p1.x,p1.y,p2.x,p2.y);
 	}
 
-	public static List drawBresenhamLine(int x0, int y0, int x1, int y1) {
-		LinkedList list = new LinkedList();
+	public static List<Point> drawBresenhamLine(int x0, int y0, int x1, int y1) {
+		LinkedList<Point> list = new LinkedList<Point>();
 		int dy = y1 - y0;
 		int dx = x1 - x0;
 		int stepx, stepy;
