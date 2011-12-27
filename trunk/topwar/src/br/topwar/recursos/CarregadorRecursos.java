@@ -117,13 +117,17 @@ public class CarregadorRecursos {
 		return ImageUtil.geraTransparencia(buffer, Color.BLACK);
 	}
 
+	public static BufferedImage carregaBackGround(String backGroundStr) {
+		return carregaBackGround(backGroundStr, null);
+	}
+
 	public static BufferedImage carregaBackGround(String backGroundStr,
 			JPanel panel) {
 		ImageIcon icon = new ImageIcon(
 				CarregadorRecursos.class.getResource(backGroundStr));
 		BufferedImage backGround = ImageUtil.toBufferedImage(icon.getImage());
-		panel.setSize(backGround.getWidth(), backGround.getHeight());
-
+		if (panel != null)
+			panel.setSize(backGround.getWidth(), backGround.getHeight());
 		if (backGround == null) {
 			Logger.logar("backGround=" + backGround);
 			System.exit(1);

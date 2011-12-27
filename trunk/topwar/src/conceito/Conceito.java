@@ -1,10 +1,13 @@
 package conceito;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.Toolkit;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -15,6 +18,9 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -27,12 +33,17 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import br.nnpe.GeoUtil;
 import br.nnpe.ImageUtil;
 import br.nnpe.Util;
 import br.topwar.recursos.CarregadorRecursos;
+import br.topwar.serial.MapaTopWar;
 
 public class Conceito {
 
@@ -48,12 +59,18 @@ public class Conceito {
 	public static Map<String, BufferedImage> mapImgs = new HashMap<String, BufferedImage>();
 	private static long lastAnim;
 	private static String time = "azul";
+	private static MapaTopWar mapaTopWar;
+	private static JPanel panel;
+	private static JScrollPane scrollPane;
+	private static Point pontoMouse;
+	private static Point pontoAvatar;
 	public final static BufferedImage azul = CarregadorRecursos
 			.carregaBufferedImageTransparecia("azul.png", Color.MAGENTA);
 	public final static BufferedImage vermelho = CarregadorRecursos
 			.carregaBufferedImageTransparecia("vermelho.png", Color.MAGENTA);
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException,
+			ClassNotFoundException {
 		if ("azul".equals(time)) {
 			gerarMapaImagens(azul);
 		} else {
@@ -68,9 +85,18 @@ public class Conceito {
 			}
 		});
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		final BufferedImage img = CarregadorRecursos.carregaImg("mapa9.jpg");
-		final Point p = new Point(150, 80);
-		final Point m = new Point(0, 0);
+
+		ObjectInputStream ois = new ObjectInputStream(
+				CarregadorRecursos.recursoComoStream("mapa9.topwar"));
+
+		mapaTopWar = (MapaTopWar) ois.readObject();
+		frame.setTitle(mapaTopWar.getNome());
+
+		final BufferedImage img = CarregadorRecursos
+				.carregaBackGround(mapaTopWar.getBackGround());
+
+		pontoAvatar = new Point(150, 80);
+		pontoMouse = new Point(0, 0);
 		final AffineTransform afRotate = new AffineTransform();
 		KeyAdapter keyAdapter = new KeyAdapter() {
 
@@ -104,8 +130,121 @@ public class Conceito {
 
 		};
 
-		final JPanel panel = new JPanel() {
+		geraPainel(img, pontoAvatar, pontoMouse, afRotate);
+		scrollPane = new JScrollPane(panel,
+				JScrollPane.VERTICAL_SCROLLBAR_NEVER,
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane.getViewport().addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent e) {
+
+				System.out.println("stateChanged");
+
+			}
+		});
+		frame.getContentPane().add(scrollPane);
+		frame.setSize(800, 600);
+		frame.addKeyListener(keyAdapter);
+		panel.addMouseMotionListener(new MouseAdapter() {
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				pontoMouse.x = e.getX();
+				pontoMouse.y = e.getY();
+				super.mouseMoved(e);
+			}
+
+		});
+		panel.setDoubleBuffered(true);
+		panel.addMouseListener(new MouseAdapter() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (atirando == null || !atirando.isAlive()) {
+					atirando = new Thread(new Runnable() {
+						public void run() {
+							try {
+								Thread.sleep(500);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+					});
+					atirando.start();
+				}
+				super.mouseClicked(e);
+			}
+		});
+		Thread threadRepaint = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while (rodando) {
+					panel.repaint();
+					try {
+						centralizarPontoDireto(pontoAvatar);
+						// pontoMouse =
+						// MouseInfo.getPointerInfo().getLocation();
+						Thread.sleep(50);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+		threadRepaint.start();
+		Thread threadTeclado = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while (rodando) {
+					for (Iterator iterator = pressed.iterator(); iterator
+							.hasNext();) {
+						Integer key = (Integer) iterator.next();
+						int keyCode = key.intValue();
+						if (keyCode == KeyEvent.VK_A) {
+							animar();
+							pontoAvatar.x = pontoAvatar.x - velocidade;
+						}
+						if (keyCode == KeyEvent.VK_S) {
+							animar();
+							pontoAvatar.y = pontoAvatar.y + velocidade;
+						}
+						if (keyCode == KeyEvent.VK_D) {
+							animar();
+							pontoAvatar.x = pontoAvatar.x + velocidade;
+						}
+						if (keyCode == KeyEvent.VK_W) {
+							animar();
+							pontoAvatar.y = pontoAvatar.y - velocidade;
+						}
+					}
+					try {
+						Thread.sleep(50);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+		threadTeclado.start();
+
+		frame.setVisible(true);
+
+	}
+
+	private static void geraPainel(final BufferedImage img, final Point p,
+			final Point m, final AffineTransform afRotate) {
+		panel = new JPanel() {
+
+			public Dimension getPreferredSize() {
+				if (img == null) {
+					return super.getPreferredSize();
+				}
+				return new Dimension(img.getWidth(), img.getHeight());
+			}
+
 			protected void paintComponent(java.awt.Graphics g) {
+				super.paintComponent(g);
 				Graphics2D graphics2d = (Graphics2D) g;
 				graphics2d.drawImage(img, null, 0, 0);
 				graphics2d.setColor(Color.WHITE);
@@ -118,9 +257,13 @@ public class Conceito {
 					angulo = 360 + angulo;
 				}
 				graphics2d.setColor(Color.MAGENTA);
-				g.drawString("Angulo " + angulo, 10, 10);
-				g.drawString("Amin " + anim, 10, 25);
-				g.drawString("Velocidade " + velocidade, 10, 40);
+				Rectangle limitesViewPort = (Rectangle) limitesViewPort();
+				g.drawString("Angulo " + angulo, limitesViewPort.x + 10,
+						limitesViewPort.y + 10);
+				g.drawString("Amin " + anim, limitesViewPort.x + 10,
+						limitesViewPort.y + 25);
+				g.drawString("Velocidade " + velocidade,
+						limitesViewPort.x + 10, limitesViewPort.y + 40);
 				synchronized (mapImgs) {
 					BufferedImage imgJog = null;
 					if (angulo >= 0 && angulo <= 22.5 || angulo > 337.5) {
@@ -149,15 +292,15 @@ public class Conceito {
 				}
 				afRotate.setToRotation(rad, gpCorpo.getBounds().getCenterX(),
 						gpCorpo.getBounds().getCenterY());
-//				graphics2d.draw(gpCorpo.createTransformedShape(afRotate));
+				graphics2d.draw(gpCorpo.createTransformedShape(afRotate));
 				graphics2d.setColor(Color.RED);
 				Shape cabeca = desenhaCabeca(GeoUtil.calculaPonto(angulo, 6, p));
 				GeneralPath gpCabeca = new GeneralPath(cabeca);
 				afRotate.setToRotation(rad, gpCabeca.getBounds().getCenterX(),
 						gpCabeca.getBounds().getCenterY());
-//				graphics2d.draw(gpCabeca.createTransformedShape(afRotate));
+				graphics2d.draw(gpCabeca.createTransformedShape(afRotate));
 				graphics2d.setColor(Color.CYAN);
-				// graphics2d.drawLine(p.x, p.y, m.x, m.y);
+				graphics2d.drawLine(p.x, p.y, m.x, m.y);
 				// List linha = GeoUtil.drawBresenhamLine(p, m);
 				// for (Iterator iterator = linha.iterator();
 				// iterator.hasNext();) {
@@ -183,89 +326,6 @@ public class Conceito {
 				}
 			};
 		};
-		frame.getContentPane().add(panel);
-		frame.setSize(800, 600);
-		frame.addKeyListener(keyAdapter);
-		panel.addMouseMotionListener(new MouseAdapter() {
-			@Override
-			public void mouseMoved(MouseEvent e) {
-				m.x = e.getX();
-				m.y = e.getY();
-				super.mouseMoved(e);
-			}
-
-		});
-		panel.addMouseListener(new MouseAdapter() {
-
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (atirando == null || !atirando.isAlive()) {
-					atirando = new Thread(new Runnable() {
-						public void run() {
-							try {
-								Thread.sleep(500);
-							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						}
-					});
-					atirando.start();
-				}
-				super.mouseClicked(e);
-			}
-		});
-		Thread threadRepaint = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				while (rodando) {
-					panel.repaint();
-					try {
-						Thread.sleep(50);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		});
-		threadRepaint.start();
-		Thread threadTeclado = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				while (rodando) {
-					for (Iterator iterator = pressed.iterator(); iterator
-							.hasNext();) {
-						Integer key = (Integer) iterator.next();
-						int keyCode = key.intValue();
-						if (keyCode == KeyEvent.VK_A) {
-							animar();
-							p.x = p.x - velocidade;
-						}
-						if (keyCode == KeyEvent.VK_S) {
-							animar();
-							p.y = p.y + velocidade;
-						}
-						if (keyCode == KeyEvent.VK_D) {
-							animar();
-							p.x = p.x + velocidade;
-						}
-						if (keyCode == KeyEvent.VK_W) {
-							animar();
-							p.y = p.y - velocidade;
-						}
-					}
-					try {
-						Thread.sleep(50);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		});
-		threadTeclado.start();
-
-		frame.setVisible(true);
-
 	}
 
 	private static void animar() {
@@ -319,5 +379,45 @@ public class Conceito {
 
 	protected static Shape desenhaCorpo(Point p) {
 		return new Rectangle2D.Double(p.x - 8, p.y - 3, 16, 6);
+	}
+
+	public static void centralizarPontoDireto(Point pin) {
+		final Point p = new Point((int) (pin.x)
+				- (scrollPane.getViewport().getWidth() / 2), (int) (pin.y)
+				- (scrollPane.getViewport().getHeight() / 2));
+		if (p.x < 0) {
+			p.x = 1;
+		}
+		double maxX = ((panel.getWidth()) - scrollPane.getViewport().getWidth());
+		if (p.x > maxX) {
+			p.x = Util.inte(maxX) - 1;
+		}
+		if (p.y < 0) {
+			p.y = 1;
+		}
+		double maxY = ((panel.getHeight()) - (scrollPane.getViewport()
+				.getHeight()));
+		if (p.y > maxY) {
+			p.y = Util.inte(maxY) - 1;
+		}
+		Point oldp = scrollPane.getViewport().getViewPosition();
+		if (!oldp.equals(p)) {
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					scrollPane.getViewport().setViewPosition(p);
+				}
+			});
+		}
+	}
+
+	public static Shape limitesViewPort() {
+		if (scrollPane == null) {
+			return null;
+		}
+		Rectangle rectangle = scrollPane.getViewport().getBounds();
+		rectangle.x = scrollPane.getViewport().getViewPosition().x;
+		rectangle.y = scrollPane.getViewport().getViewPosition().y;
+		return rectangle;
 	}
 }
