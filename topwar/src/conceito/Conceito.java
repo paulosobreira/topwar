@@ -1,11 +1,15 @@
 package conceito;
 
+import java.awt.AWTException;
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Robot;
 import java.awt.Shape;
 import java.awt.Toolkit;
 import java.awt.event.KeyAdapter;
@@ -42,8 +46,10 @@ import javax.swing.event.ChangeListener;
 import br.nnpe.GeoUtil;
 import br.nnpe.ImageUtil;
 import br.nnpe.Util;
+import br.topwar.Constantes;
 import br.topwar.recursos.CarregadorRecursos;
 import br.topwar.serial.MapaTopWar;
+import br.topwar.serial.ObjetoMapa;
 
 public class Conceito {
 
@@ -95,7 +101,7 @@ public class Conceito {
 		final BufferedImage img = CarregadorRecursos
 				.carregaBackGround(mapaTopWar.getBackGround());
 
-		pontoAvatar = new Point(150, 80);
+		pontoAvatar = new Point(650, 600);
 		pontoMouse = new Point(0, 0);
 		final AffineTransform afRotate = new AffineTransform();
 		KeyAdapter keyAdapter = new KeyAdapter() {
@@ -135,12 +141,8 @@ public class Conceito {
 				JScrollPane.VERTICAL_SCROLLBAR_NEVER,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.getViewport().addChangeListener(new ChangeListener() {
-
 			@Override
 			public void stateChanged(ChangeEvent e) {
-
-				System.out.println("stateChanged");
-
 			}
 		});
 		frame.getContentPane().add(scrollPane);
@@ -286,8 +288,11 @@ public class Conceito {
 					if (imgJog == null) {
 						System.out.println("Angulo nulo " + angulo);
 					} else {
-						g.drawImage(imgJog, p.x - (imgJog.getWidth() / 2), p.y
-								- (imgJog.getHeight() / 2), null);
+						Point desenha = new Point(
+								p.x - (imgJog.getWidth() / 2), p.y
+										- (imgJog.getHeight() / 2));
+						imgJog = processaTransparencia(imgJog, desenha);
+						g.drawImage(imgJog, desenha.x, desenha.y, null);
 					}
 				}
 				afRotate.setToRotation(rad, gpCorpo.getBounds().getCenterX(),
@@ -326,6 +331,53 @@ public class Conceito {
 				}
 			};
 		};
+	}
+
+	protected static BufferedImage processaTransparencia(BufferedImage imgJog,
+			Point desenha) {
+		Rectangle rectangle = new Rectangle(desenha.x, desenha.y,
+				imgJog.getWidth(), imgJog.getHeight());
+		List<ObjetoMapa> objetoMapaList = mapaTopWar.getObjetoMapaList();
+		for (Iterator iterator = objetoMapaList.iterator(); iterator.hasNext();) {
+			ObjetoMapa objetoMapa = (ObjetoMapa) iterator.next();
+			if (objetoMapa.getForma().intersects(rectangle)) {
+
+				BufferedImage novaImg = new BufferedImage(imgJog.getWidth(),
+						imgJog.getHeight(), BufferedImage.TYPE_INT_ARGB);
+				Graphics2D g2d = novaImg.createGraphics();
+				g2d.drawImage(imgJog, 0, 0, null);
+				AffineTransform affineTransform = AffineTransform
+						.getScaleInstance(1, 1);
+				Rectangle bounds = objetoMapa.getForma().getBounds();
+				GeneralPath generalPath = new GeneralPath(objetoMapa.getForma());
+				affineTransform.setToTranslation(
+						-(bounds.x - (bounds.x - desenha.x)),
+						-(bounds.y - (bounds.y - desenha.y)));
+				AlphaComposite composite = AlphaComposite.getInstance(
+						AlphaComposite.CLEAR, 1);
+				g2d.setComposite(composite);
+				Shape createTransformedShape = generalPath
+						.createTransformedShape(affineTransform);
+				if (Constantes.GRADE.equals(objetoMapa.getEfeito())) {
+					int inicioLinha = 0;
+					int fimLinha = 0 + bounds.width;
+					int inicioCol = 0;
+					for (int i = 0; i < bounds.getHeight(); i++) {
+						if (i % 2 == 0) {
+							Point ini = new Point(inicioLinha, inicioCol + i);
+							Point fim = new Point(fimLinha, inicioCol + i);
+							g2d.drawLine(inicioLinha, inicioCol + i, fimLinha,
+									inicioCol + i);
+						}
+					}
+				} else {
+					g2d.fill(createTransformedShape);
+				}
+				g2d.dispose();
+				return novaImg;
+			}
+		}
+		return imgJog;
 	}
 
 	private static void animar() {
