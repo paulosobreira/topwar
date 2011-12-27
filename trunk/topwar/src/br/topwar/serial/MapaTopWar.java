@@ -10,6 +10,9 @@ public class MapaTopWar implements Serializable {
 	private String backGround;
 	private List<ObjetoMapa> objetoMapaList = new ArrayList<ObjetoMapa>();
 
+	public MapaTopWar() {
+	}
+	
 	public String getBackGround() {
 		return backGround;
 	}

@@ -19,6 +19,9 @@ public class ObjetoMapa implements Serializable {
 	private double zoom;
 	private String efeito;
 
+	public ObjetoMapa() {
+	}
+
 	public String getEfeito() {
 		return efeito;
 	}
