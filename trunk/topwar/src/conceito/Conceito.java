@@ -70,6 +70,7 @@ public class Conceito {
 	private static JScrollPane scrollPane;
 	private static Point pontoMouse;
 	private static Point pontoAvatar;
+	private static Rectangle areaAvatar;
 	public final static BufferedImage azul = CarregadorRecursos
 			.carregaBufferedImageTransparecia("azul.png", Color.MAGENTA);
 	public final static BufferedImage vermelho = CarregadorRecursos
@@ -103,7 +104,6 @@ public class Conceito {
 
 		pontoAvatar = new Point(650, 600);
 		pontoMouse = new Point(0, 0);
-		final AffineTransform afRotate = new AffineTransform();
 		KeyAdapter keyAdapter = new KeyAdapter() {
 
 			@Override
@@ -136,7 +136,7 @@ public class Conceito {
 
 		};
 
-		geraPainel(img, pontoAvatar, pontoMouse, afRotate);
+		geraPainel(img, pontoAvatar, pontoMouse);
 		scrollPane = new JScrollPane(panel,
 				JScrollPane.VERTICAL_SCROLLBAR_NEVER,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -203,21 +203,24 @@ public class Conceito {
 							.hasNext();) {
 						Integer key = (Integer) iterator.next();
 						int keyCode = key.intValue();
+						Point novoPonto = new Point(pontoAvatar.x,
+								pontoAvatar.y);
 						if (keyCode == KeyEvent.VK_A) {
-							animar();
-							pontoAvatar.x = pontoAvatar.x - velocidade;
+							novoPonto.x = novoPonto.x - velocidade;
 						}
 						if (keyCode == KeyEvent.VK_S) {
-							animar();
-							pontoAvatar.y = pontoAvatar.y + velocidade;
+							novoPonto.y = novoPonto.y + velocidade;
 						}
 						if (keyCode == KeyEvent.VK_D) {
-							animar();
-							pontoAvatar.x = pontoAvatar.x + velocidade;
+							novoPonto.x = novoPonto.x + velocidade;
 						}
 						if (keyCode == KeyEvent.VK_W) {
+							novoPonto.y = novoPonto.y - velocidade;
+						}
+						if (!verificaColisao(novoPonto)) {
 							animar();
-							pontoAvatar.y = pontoAvatar.y - velocidade;
+							pontoAvatar.x = novoPonto.x;
+							pontoAvatar.y = novoPonto.y;
 						}
 					}
 					try {
@@ -234,8 +237,26 @@ public class Conceito {
 
 	}
 
+	protected static boolean verificaColisao(Point novoPonto) {
+		Point desenha = new Point(novoPonto.x
+				- ((int) areaAvatar.getWidth() / 2), novoPonto.y
+				- ((int) areaAvatar.getHeight() / 2));
+		Rectangle novaArea = new Rectangle(desenha.x, desenha.y,
+				(int) areaAvatar.getWidth(), (int) areaAvatar.getHeight());
+		List<ObjetoMapa> objetoMapaList = mapaTopWar.getObjetoMapaList();
+		for (Iterator iterator = objetoMapaList.iterator(); iterator.hasNext();) {
+			ObjetoMapa objetoMapa = (ObjetoMapa) iterator.next();
+			if (objetoMapa.getTransparencia() > 100
+					&& objetoMapa.getEfeito() == null
+					&& objetoMapa.getForma().intersects(novaArea)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	private static void geraPainel(final BufferedImage img, final Point p,
-			final Point m, final AffineTransform afRotate) {
+			final Point m) {
 		panel = new JPanel() {
 
 			public Dimension getPreferredSize() {
@@ -249,12 +270,8 @@ public class Conceito {
 				super.paintComponent(g);
 				Graphics2D graphics2d = (Graphics2D) g;
 				graphics2d.drawImage(img, null, 0, 0);
-				graphics2d.setColor(Color.WHITE);
-				// graphics2d.fill(new Rectangle(0, 0, 800, 600));
-				Shape corpo = desenhaCorpo(p);
-				double angulo = GeoUtil.calculaAngulo(p, m, 90);
-				double rad = Math.toRadians((double) angulo);
-				GeneralPath gpCorpo = new GeneralPath(corpo);
+				double angulo = GeoUtil.calculaAngulo(pontoAvatar, pontoMouse,
+						90);
 				if (angulo < 0) {
 					angulo = 360 + angulo;
 				}
@@ -291,21 +308,18 @@ public class Conceito {
 						Point desenha = new Point(
 								p.x - (imgJog.getWidth() / 2), p.y
 										- (imgJog.getHeight() / 2));
+						areaAvatar = new Rectangle(desenha.x, desenha.y,
+								imgJog.getWidth(), imgJog.getHeight());
 						imgJog = processaTransparencia(imgJog, desenha);
 						g.drawImage(imgJog, desenha.x, desenha.y, null);
 					}
 				}
-				afRotate.setToRotation(rad, gpCorpo.getBounds().getCenterX(),
-						gpCorpo.getBounds().getCenterY());
-				graphics2d.draw(gpCorpo.createTransformedShape(afRotate));
-				graphics2d.setColor(Color.RED);
-				Shape cabeca = desenhaCabeca(GeoUtil.calculaPonto(angulo, 6, p));
-				GeneralPath gpCabeca = new GeneralPath(cabeca);
-				afRotate.setToRotation(rad, gpCabeca.getBounds().getCenterX(),
-						gpCabeca.getBounds().getCenterY());
-				graphics2d.draw(gpCabeca.createTransformedShape(afRotate));
+
 				graphics2d.setColor(Color.CYAN);
+				graphics2d.draw(gerarCorpo());
 				graphics2d.drawLine(p.x, p.y, m.x, m.y);
+				graphics2d.setColor(Color.RED);
+				graphics2d.draw(gerarCabeca());
 				// List linha = GeoUtil.drawBresenhamLine(p, m);
 				// for (Iterator iterator = linha.iterator();
 				// iterator.hasNext();) {
@@ -333,14 +347,35 @@ public class Conceito {
 		};
 	}
 
+	protected static Shape gerarCabeca() {
+		AffineTransform afRotate = new AffineTransform();
+		double angulo = GeoUtil.calculaAngulo(pontoAvatar, pontoMouse, 90);
+		double rad = Math.toRadians((double) angulo);
+		Shape cabeca = desenhaCabeca(GeoUtil.calculaPonto(angulo, 6,
+				pontoAvatar));
+		GeneralPath gpCabeca = new GeneralPath(cabeca);
+		afRotate.setToRotation(rad, gpCabeca.getBounds().getCenterX(), gpCabeca
+				.getBounds().getCenterY());
+		return gpCabeca.createTransformedShape(afRotate);
+	}
+
+	protected static Shape gerarCorpo() {
+		AffineTransform afRotate = new AffineTransform();
+		Shape corpo = desenhaCorpo(pontoAvatar);
+		double angulo = GeoUtil.calculaAngulo(pontoAvatar, pontoMouse, 90);
+		double rad = Math.toRadians((double) angulo);
+		GeneralPath gpCorpo = new GeneralPath(corpo);
+		afRotate.setToRotation(rad, gpCorpo.getBounds().getCenterX(), gpCorpo
+				.getBounds().getCenterY());
+		return gpCorpo.createTransformedShape(afRotate);
+	}
+
 	protected static BufferedImage processaTransparencia(BufferedImage imgJog,
 			Point desenha) {
-		Rectangle rectangle = new Rectangle(desenha.x, desenha.y,
-				imgJog.getWidth(), imgJog.getHeight());
 		List<ObjetoMapa> objetoMapaList = mapaTopWar.getObjetoMapaList();
 		for (Iterator iterator = objetoMapaList.iterator(); iterator.hasNext();) {
 			ObjetoMapa objetoMapa = (ObjetoMapa) iterator.next();
-			if (objetoMapa.getForma().intersects(rectangle)) {
+			if (objetoMapa.getForma().intersects(areaAvatar)) {
 
 				BufferedImage novaImg = new BufferedImage(imgJog.getWidth(),
 						imgJog.getHeight(), BufferedImage.TYPE_INT_ARGB);
@@ -370,7 +405,7 @@ public class Conceito {
 									inicioCol + i);
 						}
 					}
-				} else {
+				} else if (objetoMapa.getTransparencia() == 0) {
 					g2d.fill(createTransformedShape);
 				}
 				g2d.dispose();
