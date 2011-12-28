@@ -342,13 +342,13 @@ public class EditorMapa {
 		Rectangle limitesViewPort = (Rectangle) limitesViewPort();
 		g2d.drawImage(backGround, 0, 0, null);
 		g2d.setColor(Color.CYAN);
-		g2d.drawString("Transparencia = 0 -> 20", limitesViewPort.x + 10,
+		g2d.drawString("Transparencia = 0", limitesViewPort.x + 10,
 				limitesViewPort.y + 10);
-		g2d.drawString("Terreno Dificil % = 21 -> 120", limitesViewPort.x + 10,
+		g2d.drawString("Terreno Dificil % = 1 -> 10", limitesViewPort.x + 10,
 				limitesViewPort.y + 25);
-		g2d.drawString("Estrutura Resistente % = 121 -> 220",
+		g2d.drawString("Estrutura Resistente % = 11 -> 100",
 				limitesViewPort.x + 10, limitesViewPort.y + 40);
-		g2d.drawString("Estrutura Solida = maior que 221",
+		g2d.drawString("Estrutura Solida = maior que 100",
 				limitesViewPort.x + 10, limitesViewPort.y + 55);
 		if (pontosNovoObj != null) {
 			Point ptAnt = null;
