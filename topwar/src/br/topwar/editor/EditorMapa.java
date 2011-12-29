@@ -59,6 +59,8 @@ public class EditorMapa {
 	private List<Point> pontosNovoObj;
 	private ObjetoMapa objetoMapaSelecionado;
 	private JMenu menuObjetos;
+	private Point pontoMouse = null;
+	private boolean desenhaAvatar = false;
 
 	public EditorMapa() {
 		frame = new JFrame();
@@ -114,6 +116,8 @@ public class EditorMapa {
 					excluirUltimoNo();
 				} else if (keyCoode == KeyEvent.VK_3) {
 					efeitoGrade();
+				} else if (keyCoode == KeyEvent.VK_SPACE) {
+					desenhaAvatar = !desenhaAvatar;
 				}
 			}
 		});
@@ -129,18 +133,21 @@ public class EditorMapa {
 				super.mouseClicked(e);
 			}
 
-			@Override
-			public void mouseMoved(MouseEvent e) {
-
-			}
-
 		});
 		painelEditor.addMouseMotionListener(new MouseAdapter() {
-
 			@Override
 			public void mouseDragged(MouseEvent e) {
 				arrastarDoMouse(e);
 				super.mouseMoved(e);
+			}
+
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				if (objetoMapaSelecionado == null
+						&& !NOVO_OBJETO.equals(clickState)) {
+					pontoMouse = e.getPoint();
+					painelEditor.repaint();
+				}
 			}
 		});
 	}
@@ -373,7 +380,7 @@ public class EditorMapa {
 				if (objetoMapa.equals(objetoMapaSelecionado)) {
 					g2d.setColor(Color.YELLOW);
 				} else {
-					g2d.setColor(Color.BLACK);
+					g2d.setColor(Color.CYAN);
 				}
 				int x = objetoMapa.getForma().getBounds().x;
 				int y = objetoMapa.getForma().getBounds().y;
@@ -390,6 +397,24 @@ public class EditorMapa {
 				}
 
 			}
+		}
+		if (desenhaAvatar && pontoMouse != null) {
+			BufferedImage imgJog = Conceito.mapImgs.get("azul-0-0");
+			Point desenha = new Point(pontoMouse.x - (imgJog.getWidth() / 2),
+					pontoMouse.y - (imgJog.getHeight() / 2));
+			Rectangle areaAvatar = new Rectangle(desenha.x, desenha.y,
+					imgJog.getWidth(), imgJog.getHeight());
+			imgJog = Conceito.processaTransparencia(imgJog, desenha,
+					areaAvatar, mapaTopWar);
+			imgJog = Conceito.processaGrade(imgJog, desenha, areaAvatar,
+					mapaTopWar);
+			g2d.drawImage(imgJog, desenha.x, desenha.y, null);
+			if (Conceito.verificaColisao(pontoMouse, areaAvatar, mapaTopWar)) {
+				g2d.setColor(Color.CYAN);
+			} else {
+				g2d.setColor(Color.MAGENTA);
+			}
+			g2d.draw(areaAvatar);
 		}
 	}
 
@@ -612,7 +637,7 @@ public class EditorMapa {
 
 		JMenuItem grade = new JMenuItem() {
 			public String getText() {
-				return Lang.msg("grade");
+				return Lang.msg("tpGrade");
 			}
 
 		};
@@ -621,6 +646,34 @@ public class EditorMapa {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				efeitoGrade();
+			}
+		});
+
+		JMenuItem excNo = new JMenuItem() {
+			public String getText() {
+				return Lang.msg("excNo");
+			}
+
+		};
+		menuObjetos.add(excNo);
+		excNo.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				excluirUltimoNo();
+			}
+		});
+
+		JMenuItem desAv = new JMenuItem() {
+			public String getText() {
+				return Lang.msg("desAv");
+			}
+
+		};
+		menuObjetos.add(desAv);
+		desAv.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				desenhaAvatar = !desenhaAvatar;
 			}
 		});
 	}
@@ -645,6 +698,7 @@ public class EditorMapa {
 		clickState = NOVO_OBJETO;
 		pontosNovoObj = new ArrayList<Point>();
 		objetoMapaSelecionado = null;
+		desenhaAvatar = false;
 	}
 
 	protected void salvarMapa() throws IOException {
@@ -725,6 +779,7 @@ public class EditorMapa {
 	}
 
 	public static void main(String[] args) {
+		Conceito.gerarMapaImagens(Conceito.azul);
 		new EditorMapa();
 	}
 

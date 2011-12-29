@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -35,39 +36,13 @@ public class CarregadorRecursos {
 
 	public static BufferedImage carregaBufferedImageTranspareciaBranca(
 			String file) {
-		BufferedImage buffer = null;
-		try {
-			ImageIcon icon = new ImageIcon(
-					CarregadorRecursos.class.getResource(file));
-			buffer = ImageUtil.toBufferedImage(icon.getImage());
-			if (buffer == null) {
-				Logger.logar("img=" + buffer);
-				System.exit(1);
-			}
-
-		} catch (Exception e) {
-			Logger.logar("Erro gerando transparencia para :" + file);
-			Logger.logarExept(e);
-		}
+		BufferedImage buffer = carregaImagem(file);
 
 		return ImageUtil.geraTransparencia(buffer);
 	}
 
 	public static BufferedImage carregaBufferedImage(String file) {
-		BufferedImage buffer = null;
-		try {
-			ImageIcon icon = new ImageIcon(
-					CarregadorRecursos.class.getResource(file));
-			buffer = ImageUtil.toBufferedImage(icon.getImage());
-			if (buffer == null) {
-				Logger.logar("img=" + buffer);
-				System.exit(1);
-			}
-
-		} catch (Exception e) {
-			Logger.logar("Erro gerando transparencia para :" + file);
-			Logger.logarExept(e);
-		}
+		BufferedImage buffer = carregaImagem(file);
 
 		return buffer;
 	}
@@ -79,40 +54,14 @@ public class CarregadorRecursos {
 
 	public static BufferedImage carregaBufferedImageTranspareciaBranca(
 			String file, int ingVal, int translucidez) {
-		BufferedImage buffer = null;
-		try {
-			ImageIcon icon = new ImageIcon(
-					CarregadorRecursos.class.getResource(file));
-			buffer = ImageUtil.toBufferedImage(icon.getImage());
-			if (buffer == null) {
-				Logger.logar("img=" + buffer);
-				System.exit(1);
-			}
-
-		} catch (Exception e) {
-			Logger.logar("Erro gerando transparencia para :" + file);
-			Logger.logarExept(e);
-		}
+		BufferedImage buffer = carregaImagem(file);
 
 		return ImageUtil.geraTransparencia(buffer, ingVal, translucidez);
 	}
 
 	public static BufferedImage carregaBufferedImageTranspareciaPreta(
 			String file) {
-		BufferedImage buffer = null;
-		try {
-			ImageIcon icon = new ImageIcon(
-					CarregadorRecursos.class.getResource(file));
-			buffer = ImageUtil.toBufferedImage(icon.getImage());
-			if (buffer == null) {
-				Logger.logar("img=" + buffer);
-				System.exit(1);
-			}
-
-		} catch (Exception e) {
-			Logger.logar("Erro gerando transparencia para :" + file);
-			Logger.logarExept(e);
-		}
+		BufferedImage buffer = carregaImagem(file);
 
 		return ImageUtil.geraTransparencia(buffer, Color.BLACK);
 	}
@@ -248,20 +197,7 @@ public class CarregadorRecursos {
 
 	public static BufferedImage carregaBufferedImageMeiaTransparenciaBraca(
 			String file) {
-		BufferedImage buffer = null;
-		try {
-			ImageIcon icon = new ImageIcon(
-					CarregadorRecursos.class.getResource(file));
-			buffer = ImageUtil.toBufferedImage(icon.getImage());
-			if (buffer == null) {
-				Logger.logar("img=" + buffer);
-				System.exit(1);
-			}
-
-		} catch (Exception e) {
-			Logger.logar("Erro gerando transparencia para :" + file);
-			Logger.logarExept(e);
-		}
+		BufferedImage buffer = carregaImagem(file);
 		ImageIcon img = new ImageIcon(buffer);
 		BufferedImage srcBufferedImage = new BufferedImage(img.getIconWidth(),
 				img.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
@@ -295,23 +231,11 @@ public class CarregadorRecursos {
 
 	public static BufferedImage carregaBufferedImageTransparecia(String file,
 			Color cor) {
-		BufferedImage buffer = null;
-		try {
-			ImageIcon icon = new ImageIcon(
-					CarregadorRecursos.class.getResource(file));
-			buffer = ImageUtil.toBufferedImage(icon.getImage());
-			if (buffer == null) {
-				Logger.logar("img=" + buffer);
-				System.exit(1);
-			}
-
-		} catch (Exception e) {
-			Logger.logar("Erro gerando transparencia para :" + file);
-			Logger.logarExept(e);
-		}
+		BufferedImage buffer = carregaImagem(file);
 		ImageIcon img = new ImageIcon(buffer);
 		BufferedImage srcBufferedImage = new BufferedImage(img.getIconWidth(),
 				img.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
+
 		srcBufferedImage.getGraphics().drawImage(img.getImage(), 0, 0, null);
 
 		BufferedImage bufferedImageRetorno = new BufferedImage(
@@ -336,6 +260,15 @@ public class CarregadorRecursos {
 		}
 
 		return bufferedImageRetorno;
+	}
+
+	public static BufferedImage carregaImagem(String file) {
+		try {
+			return ImageIO.read(CarregadorRecursos.class.getResource(file));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }
