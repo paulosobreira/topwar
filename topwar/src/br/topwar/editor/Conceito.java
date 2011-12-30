@@ -41,7 +41,7 @@ import javax.swing.event.ChangeListener;
 import br.nnpe.GeoUtil;
 import br.nnpe.ImageUtil;
 import br.nnpe.Util;
-import br.topwar.Constantes;
+import br.topwar.ConstantesTopWar;
 import br.topwar.recursos.CarregadorRecursos;
 import br.topwar.serial.MapaTopWar;
 import br.topwar.serial.ObjetoMapa;
@@ -108,7 +108,9 @@ public class Conceito {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				int keyCode = e.getKeyCode();
-				pressed.add(keyCode);
+				synchronized (pressed) {
+					pressed.add(keyCode);
+				}
 				move(keyCode);
 				super.keyPressed(e);
 			}
@@ -116,7 +118,9 @@ public class Conceito {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				int keyCode = e.getKeyCode();
-				pressed.remove(keyCode);
+				synchronized (pressed) {
+					pressed.remove(keyCode);
+				}
 				super.keyReleased(e);
 			}
 
@@ -249,7 +253,7 @@ public class Conceito {
 			Rectangle areaAvatar, MapaTopWar mapaTopWar) {
 		Point desenha = new Point(novoPonto.x
 				- ((int) areaAvatar.getWidth() / 2), novoPonto.y
-				- ((int) areaAvatar.getHeight() / 2));
+				- ((int) areaAvatar.getHeight() / 3));
 		Rectangle novaArea = new Rectangle(desenha.x, desenha.y,
 				(int) areaAvatar.getWidth(), (int) areaAvatar.getHeight());
 		List<ObjetoMapa> objetoMapaList = mapaTopWar.getObjetoMapaList();
@@ -316,7 +320,7 @@ public class Conceito {
 					} else {
 						Point desenha = new Point(
 								p.x - (imgJog.getWidth() / 2), p.y
-										- (imgJog.getHeight() / 2));
+										- (imgJog.getHeight() / 3));
 						areaAvatar = new Rectangle(desenha.x, desenha.y,
 								imgJog.getWidth(), imgJog.getHeight());
 						imgJog = Conceito.processaTransparencia(imgJog,
@@ -345,21 +349,68 @@ public class Conceito {
 				// graphics2d.fillOval(ptLinha.x, ptLinha.y, 2, 2);
 				// }
 				if (atirando != null && atirando.isAlive()) {
+
+					/**
+					 * shotgun
+					 */
 					for (int i = 0; i < 3; i++) {
 						Point nOri = new Point(p.x, p.y);
-						Point nDst = new Point(m.x + Util.intervalo(-15, 15),
-								m.y + Util.intervalo(-15, 15));
-						graphics2d.setColor(Color.YELLOW);
+						Point nDst = new Point(m.x + Util.intervalo(-30, 30),
+								m.y + Util.intervalo(-30, 30));
+						
 						List<Point> linha = GeoUtil.drawBresenhamLine(nOri,
 								nDst);
-						if (linha.size() > 30) {
-							int intIni = Util.intervalo(10, 20);
+						int cont = 0;
+						for (Iterator iterator = linha.iterator(); iterator
+								.hasNext();) {
+							cont++;
+							if (cont > 100) {
+								break;
+							}
+							Point point = (Point) iterator.next();
+							if (Math.random() > .9) {
+								if(Math.random()>.7){
+									graphics2d.setColor(Color.WHITE);
+								}else{
+									graphics2d.setColor(Color.LIGHT_GRAY);
+								}
+								graphics2d.drawOval(point.x, point.y,
+										Util.intervalo(1, 2),
+										Util.intervalo(1, 2));
+							}
+						}
+						if (linha.size() > 100) {
+							int intIni = Util.intervalo(1, 20);
 							Point pIni = linha.get(intIni);
 							Point pFim = linha.get(intIni
-									+ Util.intervalo(1, 10));
+									+ Util.intervalo(1, 30));
+							if(Math.random()>.7){
+								graphics2d.setColor(Color.WHITE);
+							}else{
+								graphics2d.setColor(Color.LIGHT_GRAY);
+							}
 							graphics2d.drawLine(pIni.x, pIni.y, pFim.x, pFim.y);
 						}
 					}
+
+					/**
+					 * assaut
+					 */
+					// for (int i = 0; i < 5; i++) {
+					// Point nOri = new Point(p.x, p.y);
+					// Point nDst = new Point(m.x + Util.intervalo(-15, 15),
+					// m.y + Util.intervalo(-15, 15));
+					// graphics2d.setColor(Color.YELLOW);
+					// List<Point> linha = GeoUtil.drawBresenhamLine(nOri,
+					// nDst);
+					// if (linha.size() > 40) {
+					// int intIni = Util.intervalo(10, 20);
+					// Point pIni = linha.get(intIni);
+					// Point pFim = linha.get(intIni
+					// + Util.intervalo(1, 20));
+					// graphics2d.drawLine(pIni.x, pIni.y, pFim.x, pFim.y);
+					// }
+					// }
 				}
 				if (desenhaObjetos) {
 					List<ObjetoMapa> objetoMapaList = mapaTopWar
@@ -440,7 +491,7 @@ public class Conceito {
 		List<ObjetoMapa> objetoMapaList = mapaTopWar.getObjetoMapaList();
 		for (Iterator iterator = objetoMapaList.iterator(); iterator.hasNext();) {
 			ObjetoMapa objetoMapa = (ObjetoMapa) iterator.next();
-			if ((Constantes.GRADE.equals(objetoMapa.getEfeito()))
+			if ((ConstantesTopWar.GRADE.equals(objetoMapa.getEfeito()))
 					&& objetoMapa.getForma().intersects(areaAvatar)) {
 				BufferedImage novaImg = new BufferedImage(imgJog.getWidth(),
 						imgJog.getHeight(), BufferedImage.TYPE_INT_ARGB);

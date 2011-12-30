@@ -38,7 +38,7 @@ import javax.swing.WindowConstants;
 
 import br.nnpe.ExampleFileFilter;
 import br.nnpe.Util;
-import br.topwar.Constantes;
+import br.topwar.ConstantesTopWar;
 import br.topwar.recursos.CarregadorRecursos;
 import br.topwar.recursos.idiomas.Lang;
 import br.topwar.serial.MapaTopWar;
@@ -156,10 +156,10 @@ public class EditorMapa {
 		if (objetoMapaSelecionado == null) {
 			return;
 		}
-		if (Constantes.GRADE.equals(objetoMapaSelecionado.getEfeito())) {
+		if (ConstantesTopWar.GRADE.equals(objetoMapaSelecionado.getEfeito())) {
 			objetoMapaSelecionado.setEfeito(null);
 		} else {
-			objetoMapaSelecionado.setEfeito(Constantes.GRADE);
+			objetoMapaSelecionado.setEfeito(ConstantesTopWar.GRADE);
 		}
 		painelEditor.repaint();
 
@@ -419,7 +419,7 @@ public class EditorMapa {
 	}
 
 	private void desenhaObjetoEfeito(Graphics2D g2d, ObjetoMapa objetoMapa) {
-		if (Constantes.GRADE.equals(objetoMapa.getEfeito())) {
+		if (ConstantesTopWar.GRADE.equals(objetoMapa.getEfeito())) {
 			Rectangle bounds = objetoMapa.getForma().getBounds();
 
 			BufferedImage bufferedImagePasso1 = new BufferedImage(bounds.width,
