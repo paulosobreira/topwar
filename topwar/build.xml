@@ -61,8 +61,8 @@
 	</target>
 
 	<target name="atualizaLib">
-		<delete file="WebContent/WEB-INF/lib/topwar.jar" />
-		<delete file="WebContent/topwar.jar" />
+		<delete file="WebContent/WEB-INF/lib/topwar.jar" failonerror="no" />
+		<delete file="WebContent/topwar.jar" failonerror="no" />
 		<copy file="topwar.jar" todir="WebContent" />
 		<copy file="topwar.jar" todir="WebContent/WEB-INF/lib" />
 		<delete file="topwar.jar" />
