@@ -1,6 +1,6 @@
 package br.topwar.cliente;
 
-import br.nnpe.applet.NnpeApplet;
+import br.nnpe.cliente.NnpeApplet;
 import br.nnpe.cliente.NnpeChatWindow;
 import br.nnpe.cliente.NnpeChatCliente;
 
