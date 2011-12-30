@@ -18,7 +18,7 @@
 	  <applet-desc 
 	      documentBase="http://{host}/topwar" 
 	      name="TopWar" 
-	      main-class="br.applet.TopWarApplet" 
+	      main-class="br.topwar.cliente.TopWarApplet" 
 	      width="820" 
 	      height="380"> 
 	  </applet-desc>
