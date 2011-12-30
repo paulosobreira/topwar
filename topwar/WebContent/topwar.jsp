@@ -229,7 +229,7 @@ img {
 			<a href="m11-10.jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img src="m11-10.jpg" width="130" height="120" /></a><br>
 		</div>
 		<div style="text-align: center;">
-			<a id="link"  href="TopWarOnline.jnlp" style="text-align: left;">
+			<a id="link"  href="topwarOnline.jnlp" style="text-align: left;">
 				Jogar Online  
 				<img src="webstart.png" border="0">
 			</a>
