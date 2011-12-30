@@ -14,7 +14,6 @@ import javax.swing.JOptionPane;
 import br.nnpe.Constantes;
 import br.nnpe.Logger;
 import br.nnpe.Util;
-import br.nnpe.applet.NnpeApplet;
 import br.nnpe.tos.NnpeCliente;
 import br.nnpe.tos.NnpeTO;
 import br.nnpe.tos.SessaoCliente;
@@ -147,7 +146,7 @@ public abstract class NnpeChatCliente {
 		}
 		clienteMesa11.setEmailJogador(nnpeFormLogin.getEmail().getText());
 	//	clienteMesa11.setRecuperar(nnpeFormLogin.getRecuperar().isSelected());
-		clienteMesa11.setChaveCapcha(nnpeFormLogin.getCapchaChave());
+//		clienteMesa11.setChaveCapcha(nnpeFormLogin.getCapchaChave());
 		clienteMesa11.setTexto(nnpeFormLogin.getCapchaTexto());
 
 		if (!Util.isNullOrEmpty(clienteMesa11.getNomeJogador())

@@ -17,7 +17,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import br.nnpe.Logger;
-import br.nnpe.tos.DadosChatNnpe;
+import br.nnpe.tos.NnpeDadosChat;
 import br.topwar.cliente.ControleChatCliente;
 import br.topwar.recursos.idiomas.Lang;
 
@@ -156,11 +156,11 @@ public class NnpeChatWindow {
 		return mainPanel;
 	}
 
-	public void atualizar(DadosChatNnpe dadosMesa11) {
+	public void atualizar(NnpeDadosChat dadosMesa11) {
 		atualizarChat(dadosMesa11);
 	}
 
-	protected void atualizarChat(DadosChatNnpe dadosMesa11) {
+	protected void atualizarChat(NnpeDadosChat dadosMesa11) {
 		if ("".equals(dadosMesa11.getLinhaChat())
 				|| dadosMesa11.getLinhaChat() == null
 				|| dadosMesa11.getDataTime() == null) {

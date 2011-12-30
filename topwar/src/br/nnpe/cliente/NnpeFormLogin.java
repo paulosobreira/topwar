@@ -8,6 +8,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.FileNotFoundException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
@@ -23,7 +25,6 @@ import javax.swing.border.TitledBorder;
 import br.nnpe.Constantes;
 import br.nnpe.Logger;
 import br.nnpe.Util;
-import br.nnpe.applet.NnpeApplet;
 import br.nnpe.tos.NnpeTO;
 import br.topwar.recursos.idiomas.Lang;
 
@@ -33,8 +34,7 @@ public class NnpeFormLogin extends JPanel {
 	protected JTextField nomeLogar = new JTextField(20);
 	protected JTextField capchaTexto = new JTextField(20);
 	protected JTextField capchaTextoRecuperar = new JTextField(20);
-	protected String capchaChave = "";
-	protected JLabel capchaImage;
+	protected Map<String, String> chapchaChave = new HashMap<String, String>();
 	protected JTextField nomeRegistrar = new JTextField(20);
 	protected JTextField nomeRecuperar = new JTextField(20);
 	protected NnpeApplet nnpeApplet;
@@ -74,11 +74,7 @@ public class NnpeFormLogin extends JPanel {
 		JPanel abaRecuperar = new JPanel(new BorderLayout());
 		abaRecuperar.add(gerarRecuperar(), BorderLayout.CENTER);
 		jTabbedPane.addTab(Lang.msg("recuperarSenha"), abaRecuperar);
-
 		add(jTabbedPane, BorderLayout.CENTER);
-		if (nnpeApplet != null) {
-			capchaReload();
-		}
 		setSize(300, 300);
 		setVisible(true);
 	}
@@ -105,7 +101,8 @@ public class NnpeFormLogin extends JPanel {
 
 		JPanel newPanel = new JPanel(new BorderLayout());
 		newPanel.add(registrarPanel, BorderLayout.NORTH);
-		newPanel.add(gerarCapchaPanel(capchaTextoRecuperar),
+		newPanel.add(
+				gerarCapchaPanel(capchaTextoRecuperar, Constantes.RECUPERAR),
 				BorderLayout.CENTER);
 		return newPanel;
 	}
@@ -119,7 +116,6 @@ public class NnpeFormLogin extends JPanel {
 		langPanel.add(new JLabel() {
 			@Override
 			public String getText() {
-				// TODO Auto-generated method stub
 				return Lang.msg("lembrar");
 			}
 		});
@@ -171,22 +167,22 @@ public class NnpeFormLogin extends JPanel {
 			}
 		});
 		registrarPanel.add(email);
-
 		JPanel newPanel = new JPanel(new BorderLayout());
 		newPanel.add(registrarPanel, BorderLayout.NORTH);
-		newPanel.add(gerarCapchaPanel(capchaTexto), BorderLayout.CENTER);
+		newPanel.add(gerarCapchaPanel(capchaTexto, Constantes.REGISTRAR),
+				BorderLayout.CENTER);
 		return newPanel;
 	}
 
-	private Component gerarCapchaPanel(JTextField capchaTexto) {
+	private Component gerarCapchaPanel(JTextField capchaTexto,
+			final String cpachaChave) {
 		JPanel capchaPanel = new JPanel(new BorderLayout());
-		capchaImage = new JLabel();
-
+		final JLabel capchaImage = new JLabel();
 		JPanel capchaImagePanel = new JPanel();
 		capchaImagePanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				capchaReload();
+				chapchaChave.put(cpachaChave, capchaReload(capchaImage));
 				super.mouseClicked(e);
 			}
 		});
@@ -207,18 +203,20 @@ public class NnpeFormLogin extends JPanel {
 		});
 		sulPanel.add(capchaTexto);
 		capchaPanel.add(sulPanel, BorderLayout.SOUTH);
+		chapchaChave.put(cpachaChave, capchaReload(capchaImage));
 		return capchaPanel;
 	}
 
-	protected void capchaReload() {
-		NnpeTO mesa11to = new NnpeTO();
-		mesa11to.setComando(Constantes.NOVO_CAPCHA);
-		Object ret = nnpeApplet.enviarObjeto(mesa11to);
+	protected String capchaReload(JLabel capchaImage) {
+		NnpeTO nnpeTO = new NnpeTO();
+		nnpeTO.setComando(Constantes.NOVO_CAPCHA);
+		Object ret = nnpeApplet.enviarObjeto(nnpeTO);
 		if (ret != null && ret instanceof NnpeTO) {
-			mesa11to = (NnpeTO) ret;
-			capchaChave = (String) mesa11to.getData();
-			capchaImage.setIcon(new ImageIcon(mesa11to.getDataBytes()));
+			nnpeTO = (NnpeTO) ret;
+			capchaImage.setIcon(new ImageIcon(nnpeTO.getDataBytes()));
+			return (String) nnpeTO.getData();
 		}
+		return null;
 
 	}
 
@@ -281,10 +279,6 @@ public class NnpeFormLogin extends JPanel {
 
 	public String getCapchaTexto() {
 		return capchaTexto.getText();
-	}
-
-	public String getCapchaChave() {
-		return capchaChave;
 	}
 
 }
