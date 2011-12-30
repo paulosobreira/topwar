@@ -1,6 +1,12 @@
 package br.nnpe;
 
 public class Constantes {
+
+	public static boolean modoZip = true;
+	public static final String NOVO_CAPCHA = "NOVO_CAPCHA";
+	public static final String NOVO_USUARIO = "NOVO_USUARIO";
+	public static final String RECUPERA_SENHA = "RECUPERA_SENHA";
+	public static final String LOGAR = "LOGAR";
 	public static final String CONFIG = "configuracoes";
 	public final static String CRYPTOGRAPHY = "_CRYPTOGRAPHY_";
 	public final static String DOWNLOAD_DATA = "_DOWNLOAD_";

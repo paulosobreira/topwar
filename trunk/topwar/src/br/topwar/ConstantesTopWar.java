@@ -1,6 +1,6 @@
 package br.topwar;
 
-public class Constantes {
+public class ConstantesTopWar {
 
 	public static final String GRADE = "GRADE";
 

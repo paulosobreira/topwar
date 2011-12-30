@@ -33,13 +33,13 @@ import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.dialect.Dialect;
 import org.hibernate.tool.hbm2ddl.DatabaseMetadata;
 
-import br.mesa11.ConstantesMesa11;
+import br.nnpe.Constantes;
 import br.nnpe.Email;
 import br.nnpe.HibernateUtil;
 import br.nnpe.Logger;
 import br.nnpe.ZipUtil;
-import br.recursos.Lang;
 import br.topwar.ProxyComandos;
+import br.topwar.recursos.idiomas.Lang;
 
 /**
  * @author paulo.sobreira
@@ -65,7 +65,7 @@ public class ServletTopWar extends HttpServlet {
 		proxyComandos = new ProxyComandos(webDir, webInfDir);
 		Lang.setSrvgame(true);
 		try {
-			atualizarJnlp("TopWarOnline.jnlp");
+			atualizarJnlp("topwarOnline.jnlp");
 			atualizarJnlp("topwar.jnlp");
 		} catch (Exception e) {
 			Logger.logarExept(e);
@@ -88,8 +88,8 @@ public class ServletTopWar extends HttpServlet {
 		String ip = Inet4Address.getLocalHost().getHostAddress();
 		int port = 80;
 		try {
-			Connector[] connectors = ServerFactory.getServer().findService(
-					"Catalina").findConnectors();
+			Connector[] connectors = ServerFactory.getServer()
+					.findService("Catalina").findConnectors();
 			for (int i = 0; i < connectors.length; i++) {
 				if ("HTTP/1.1".equals(connectors[i].getProtocol())) {
 					port = connectors[i].getPort();
@@ -113,6 +113,7 @@ public class ServletTopWar extends HttpServlet {
 		FileWriter fileWriter = new FileWriter(file);
 		fileWriter.write(buffer.toString());
 		fileWriter.close();
+		Logger.logar("Atualizado " + jnlp);
 
 	}
 
@@ -143,7 +144,7 @@ public class ServletTopWar extends HttpServlet {
 
 				Object escrever = proxyComandos.processarObjeto(object);
 
-				if (ConstantesMesa11.modoZip) {
+				if (Constantes.modoZip) {
 					dumaparDadosZip(ZipUtil.compactarObjeto(Logger.ativo,
 							escrever, res.getOutputStream()));
 				} else {
