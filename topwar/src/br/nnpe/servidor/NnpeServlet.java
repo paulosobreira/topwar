@@ -35,9 +35,9 @@ import org.hibernate.tool.hbm2ddl.DatabaseMetadata;
 
 import br.nnpe.Constantes;
 import br.nnpe.Email;
-import br.nnpe.HibernateUtil;
 import br.nnpe.Logger;
 import br.nnpe.ZipUtil;
+import br.nnpe.persistencia.HibernateUtil;
 import br.topwar.ProxyComandos;
 import br.topwar.recursos.idiomas.Lang;
 
