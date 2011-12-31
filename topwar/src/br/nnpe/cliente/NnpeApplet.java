@@ -39,7 +39,7 @@ public abstract class NnpeApplet extends JApplet {
 	protected int latenciaMinima = 120;
 	protected int latenciaReal;
 
-	public abstract NnpeChatCliente getControleChatCliente();
+	public abstract NnpeChatCliente getNnpeChatCliente();
 
 	protected List pacotes = new LinkedList();
 
@@ -93,7 +93,7 @@ public abstract class NnpeApplet extends JApplet {
 			Thread thread = new Thread(new Runnable() {
 				@Override
 				public void run() {
-					getControleChatCliente().logar();
+					getNnpeChatCliente().logar();
 				}
 			});
 			thread.start();
@@ -214,8 +214,8 @@ public abstract class NnpeApplet extends JApplet {
 				setLatenciaMinima(media);
 			}
 			setLatenciaReal(media);
-			if (getControleChatCliente() != null) {
-				getControleChatCliente().atualizaInfo();
+			if (getNnpeChatCliente() != null) {
+				getNnpeChatCliente().atualizaInfo();
 			}
 		}
 	}

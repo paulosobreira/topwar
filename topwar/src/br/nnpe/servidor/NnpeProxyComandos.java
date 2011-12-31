@@ -4,9 +4,6 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 
 import br.nnpe.Constantes;
 import br.nnpe.Logger;
@@ -20,6 +17,7 @@ import com.octo.captcha.service.image.DefaultManageableImageCaptchaService;
 
 public class NnpeProxyComandos {
 	protected NnpeDadosChat nnpeDadosChat;
+	protected NnpeChatServidor nnpeChatServidor;
 	protected DefaultManageableImageCaptchaService capcha = new DefaultManageableImageCaptchaService();
 
 	public NnpeProxyComandos(String webDir, String webInfDir) {
@@ -28,7 +26,9 @@ public class NnpeProxyComandos {
 
 	public Object processarObjeto(Object object) {
 		NnpeTO nnpeTO = (NnpeTO) object;
-		if (Constantes.NOVO_CAPCHA.equals(nnpeTO.getComando())) {
+		if (Constantes.ATUALIZAR_VISAO.equals(nnpeTO.getComando())) {
+			return atualizarDadosVisao(nnpeTO);
+		} else if (Constantes.NOVO_CAPCHA.equals(nnpeTO.getComando())) {
 			return novoCapcha();
 		}
 
@@ -45,8 +45,6 @@ public class NnpeProxyComandos {
 			nnpeTO.setComando(Constantes.NOVO_CAPCHA);
 			nnpeTO.setData(chave);
 			nnpeTO.setDataBytes(jpegstream.toByteArray());
-//			JOptionPane.showMessageDialog(null,
-//					new ImageIcon(nnpeTO.getDataBytes()));
 			return nnpeTO;
 		} catch (Exception e) {
 			Logger.logarExept(e);
@@ -54,18 +52,16 @@ public class NnpeProxyComandos {
 		return new ErroServ(Lang.msg("erroCapcha"));
 	}
 
-	private Object atualizarDadosVisao(NnpeTO mesa11to) {
-		if (mesa11to.getSessaoCliente() != null) {
-			// controleChatServidor.atualizaSessaoCliente(mesa11to
-			// .getSessaoCliente());
+	private Object atualizarDadosVisao(NnpeTO nnpeTO) {
+		if (nnpeTO.getSessaoCliente() != null) {
+			nnpeChatServidor.atualizaSessaoCliente(nnpeTO.getSessaoCliente());
 		}
-		mesa11to.setData(nnpeDadosChat);
-		return mesa11to;
+		nnpeTO.setData(nnpeDadosChat);
+		return nnpeTO;
 	}
 
 	public void removerClienteInativo(SessaoCliente sessaoClienteRemover) {
 		Logger.logar("removerClienteInativo " + sessaoClienteRemover);
-		// controleJogosServidor.removerClienteInativo(sessaoClienteRemover);
 		nnpeDadosChat.getClientes().remove(sessaoClienteRemover);
 	}
 

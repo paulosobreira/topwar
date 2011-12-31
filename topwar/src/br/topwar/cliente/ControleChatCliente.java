@@ -9,10 +9,4 @@ public class ControleChatCliente extends NnpeChatCliente {
 	public ControleChatCliente(NnpeApplet topWarApplet) {
 		super(topWarApplet);
 	}
-
-	public void setChatWindow(NnpeChatWindow chatWindowNnpe) {
-		// TODO Auto-generated method stub
-
-	}
-
 }

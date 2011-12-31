@@ -1,6 +1,8 @@
 package br.nnpe.cliente;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
@@ -13,12 +15,13 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.border.TitledBorder;
 
 import br.nnpe.Logger;
 import br.nnpe.tos.NnpeDadosChat;
-import br.topwar.cliente.ControleChatCliente;
 import br.topwar.recursos.idiomas.Lang;
 
 /**
@@ -32,37 +35,6 @@ public class NnpeChatWindow {
 	protected JList listaClientes = new JList();
 	protected JTextArea textAreaChat = new JTextArea();
 	protected JTextField textoEnviar = new JTextField();
-
-	protected JButton entrarJogo = new JButton("Entrar Jogo") {
-
-		public String getText() {
-
-			return Lang.msg("entrarJogo");
-		}
-	};
-	protected JButton criarJogo = new JButton("Criar Jogo") {
-
-		public String getText() {
-
-			return Lang.msg("criarJogo");
-		}
-	};
-
-	protected JButton verDetalhes = new JButton("Ver Detalhes") {
-
-		public String getText() {
-
-			return Lang.msg("verDetalhes");
-		}
-	};
-	protected JButton sairJogo = new JButton("sairJogo") {
-
-		public String getText() {
-
-			return Lang.msg("sairJogo");
-		}
-	};
-
 	protected JComboBox comboIdiomas = new JComboBox(new String[] {
 			Lang.msg("pt"), Lang.msg("en") });
 	protected JButton sobre = new JButton("Sobre") {
@@ -73,7 +45,7 @@ public class NnpeChatWindow {
 		}
 	};
 	protected JLabel infoLabel1 = new JLabel();
-	protected Set chatTimes = new HashSet();
+	protected Set chatSet = new HashSet();
 	protected SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
 	public NnpeChatWindow(NnpeChatCliente nnpeChatCliente) {
@@ -108,37 +80,6 @@ public class NnpeChatWindow {
 
 		};
 		textoEnviar.addActionListener(actionListener);
-		criarJogo.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				nnpeChatCliente.criarJogo();
-			}
-
-		});
-
-		entrarJogo.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				nnpeChatCliente.entarJogo();
-			}
-
-		});
-		verDetalhes.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				nnpeChatCliente.verDetalhesJogo();
-				nnpeChatCliente.verDetalhesJogador();
-
-			}
-
-		});
-
-		sairJogo.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				nnpeChatCliente.sairJogo();
-
-			}
-
-		});
-
 		sobre.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String msg = Lang.msg("feitopor") + "  Paulo Sobreira \n "
@@ -160,16 +101,16 @@ public class NnpeChatWindow {
 		atualizarChat(dadosMesa11);
 	}
 
-	protected void atualizarChat(NnpeDadosChat dadosMesa11) {
-		if ("".equals(dadosMesa11.getLinhaChat())
-				|| dadosMesa11.getLinhaChat() == null
-				|| dadosMesa11.getDataTime() == null) {
+	protected void atualizarChat(NnpeDadosChat nnpeDadosChat) {
+		if ("".equals(nnpeDadosChat.getLinhaChat())
+				|| nnpeDadosChat.getLinhaChat() == null
+				|| nnpeDadosChat.getDataTime() == null) {
 			return;
 		}
-		if (!chatTimes.contains(dadosMesa11.getDataTime())) {
-			textAreaChat.append(dadosMesa11.getLinhaChat() + "\n");
+		if (!chatSet.contains(nnpeDadosChat.getDataTime())) {
+			textAreaChat.append(nnpeDadosChat.getLinhaChat() + "\n");
 			textAreaChat.setCaretPosition(textAreaChat.getText().length());
-			chatTimes.add(dadosMesa11.getDataTime());
+			chatSet.add(nnpeDadosChat.getDataTime());
 		}
 	}
 
@@ -184,16 +125,65 @@ public class NnpeChatWindow {
 
 	}
 
-	public void mostrarDetalhesJogador(Object object) {
-		Logger.logar("Implementar mostrarDetalhesJogador");
-	}
-
-	public String obterJogoSelecionado() {
-		Logger.logar("Implementar obterJogoSelecionado");
-		return null;
-	}
-
 	public void gerarLayout() {
-		Logger.logar("Implementar gerarLayout");
+		JPanel cPanel = new JPanel(new BorderLayout());
+		JPanel ePanel = new JPanel(new GridLayout(1, 2));
+		mainPanel.add(cPanel, BorderLayout.CENTER);
+		JPanel chatPanel = new JPanel();
+		chatPanel.setBorder(new TitledBorder("Chat Room "
+				+ nnpeChatCliente.getVersao()));
+		JPanel usersPanel = new JPanel();
+		usersPanel.setBorder(new TitledBorder("Jogadores Online") {
+			public String getTitle() {
+				return Lang.msg("jogadoresOnline");
+			}
+		});
+		cPanel.add(chatPanel, BorderLayout.CENTER);
+		mainPanel.add(ePanel, BorderLayout.EAST);
+		JPanel inputPanel = new JPanel();
+		cPanel.add(inputPanel, BorderLayout.SOUTH);
+		ePanel.add(usersPanel);
+		/**
+		 * adicionar componentes.
+		 */
+		JScrollPane jogsPane = new JScrollPane(listaClientes) {
+			@Override
+			public Dimension getPreferredSize() {
+				Dimension preferredSize = super.getPreferredSize();
+				return new Dimension(120, 340);
+			}
+		};
+		usersPanel.add(jogsPane);
+		JPanel buttonsPanel = new JPanel();
+		buttonsPanel.setLayout(new GridLayout(3, 4));
+		buttonsPanel.add(comboIdiomas);
+		comboIdiomas.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Logger.logar(Lang
+						.key(comboIdiomas.getSelectedItem().toString()));
+				String i = Lang.key(comboIdiomas.getSelectedItem().toString());
+				if (i != null && !"".equals(i)) {
+					Lang.mudarIdioma(i);
+					comboIdiomas.removeAllItems();
+					comboIdiomas.addItem(Lang.msg("pt"));
+					comboIdiomas.addItem(Lang.msg("en"));
+				}
+			}
+		});
+		buttonsPanel.add(sobre);
+		JPanel panelTextoEnviar = new JPanel();
+		panelTextoEnviar.setBorder(new TitledBorder("Texto Enviar") {
+			public String getTitle() {
+				return Lang.msg("textoEnviar");
+			}
+		});
+		panelTextoEnviar.setLayout(new BorderLayout());
+		panelTextoEnviar.add(textoEnviar, BorderLayout.CENTER);
+		inputPanel.setLayout(new BorderLayout());
+		inputPanel.add(panelTextoEnviar, BorderLayout.NORTH);
+		inputPanel.add(buttonsPanel, BorderLayout.CENTER);
+		inputPanel.add(infoLabel1, BorderLayout.SOUTH);
+		chatPanel.setLayout(new BorderLayout());
+		chatPanel.add(new JScrollPane(textAreaChat), BorderLayout.CENTER);
 	}
 }
