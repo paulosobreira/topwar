@@ -43,7 +43,8 @@ public class Constantes {
 	public static final int MAX_CICLO = 120;
 	public static final String RECUPERAR = "RECUPERAR";
 	public static final String REGISTRAR = "REGISTRAR";
-	
+	public static final String ENVIAR_TEXTO = "ENVIAR_TEXTO";
+	public static final String ATUALIZAR_VISAO = "ATUALIZAR_VISAO";
 
 	// public static final int MAX_VOLTAS = 2;
 	// public static final int MIN_VOLTAS = 2;
