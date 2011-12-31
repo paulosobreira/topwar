@@ -46,7 +46,6 @@ public abstract class NnpeChatCliente {
 			}
 		});
 		setChatWindow();
-//		atualizaVisao();
 		nnpeApplet.setLayout(new BorderLayout());
 		nnpeApplet.add(nnpeChatWindow.getMainPanel(), BorderLayout.CENTER);
 		threadAtualizadora.setPriority(Thread.MIN_PRIORITY);
@@ -102,7 +101,7 @@ public abstract class NnpeChatCliente {
 				Lang.msg("formularioLogin"), JOptionPane.OK_CANCEL_OPTION);
 
 		if (JOptionPane.OK_OPTION == result) {
-			registrarUsuario();
+			logarRecuperarLembrar();
 			atualizaVisao();
 			if (nnpeFormLogin.getLembrar().isSelected()) {
 				try {
@@ -141,7 +140,7 @@ public abstract class NnpeChatCliente {
 
 	}
 
-	private boolean registrarUsuario() {
+	private boolean logarRecuperarLembrar() {
 		NnpeTO mesa11to = new NnpeTO();
 		NnpeCliente clienteMesa11 = new NnpeCliente();
 		mesa11to.setData(clienteMesa11);

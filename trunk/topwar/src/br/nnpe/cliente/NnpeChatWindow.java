@@ -7,8 +7,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -22,6 +24,7 @@ import javax.swing.border.TitledBorder;
 
 import br.nnpe.Logger;
 import br.nnpe.tos.NnpeDadosChat;
+import br.nnpe.tos.SessaoCliente;
 import br.topwar.recursos.idiomas.Lang;
 
 /**
@@ -99,6 +102,14 @@ public class NnpeChatWindow {
 
 	public void atualizar(NnpeDadosChat dadosMesa11) {
 		atualizarChat(dadosMesa11);
+		DefaultListModel clientesModel = new DefaultListModel();
+		for (Iterator iter = dadosMesa11.getClientes().iterator(); iter
+				.hasNext();) {
+			SessaoCliente element = (SessaoCliente) iter.next();
+			clientesModel.addElement(element);
+		}
+		listaClientes.setModel(clientesModel);
+
 	}
 
 	protected void atualizarChat(NnpeDadosChat nnpeDadosChat) {
