@@ -9,7 +9,7 @@ public class TopWarApplet extends NnpeApplet {
 			this);
 
 	@Override
-	public NnpeChatCliente getControleChatCliente() {
+	public NnpeChatCliente getNnpeChatCliente() {
 		return controleChatCliente;
 	}
 

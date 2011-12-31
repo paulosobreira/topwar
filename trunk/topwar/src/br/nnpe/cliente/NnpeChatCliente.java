@@ -14,7 +14,10 @@ import javax.swing.JOptionPane;
 import br.nnpe.Constantes;
 import br.nnpe.Logger;
 import br.nnpe.Util;
+import br.nnpe.tos.ErroServ;
+import br.nnpe.tos.MsgSrv;
 import br.nnpe.tos.NnpeCliente;
+import br.nnpe.tos.NnpeDadosChat;
 import br.nnpe.tos.NnpeTO;
 import br.nnpe.tos.SessaoCliente;
 import br.topwar.recursos.idiomas.Lang;
@@ -42,21 +45,32 @@ public abstract class NnpeChatCliente {
 				}
 			}
 		});
-		nnpeChatWindow = getnnpeChatWindow();
-		atualizaVisao();
+		setChatWindow();
+//		atualizaVisao();
 		nnpeApplet.setLayout(new BorderLayout());
 		nnpeApplet.add(nnpeChatWindow.getMainPanel(), BorderLayout.CENTER);
 		threadAtualizadora.setPriority(Thread.MIN_PRIORITY);
 		threadAtualizadora.start();
 	}
 
-	private NnpeChatWindow getnnpeChatWindow() {
-		return new NnpeChatWindow(this);
+	private void setChatWindow() {
+		nnpeChatWindow = new NnpeChatWindow(this);
 	}
 
 	protected void atualizaVisao() {
-		// TODO Auto-generated method stub
-
+		if (nnpeChatWindow == null || nnpeApplet == null) {
+			return;
+		}
+		NnpeTO nnpeTO = new NnpeTO();
+		nnpeTO.setComando(Constantes.ATUALIZAR_VISAO);
+		nnpeTO.setSessaoCliente(sessaoCliente);
+		Object ret = nnpeApplet.enviarObjeto(nnpeTO);
+		if (ret == null) {
+			return;
+		}
+		nnpeTO = (NnpeTO) ret;
+		NnpeDadosChat nnpeDadosChat = (NnpeDadosChat) nnpeTO.getData();
+		nnpeChatWindow.atualizar(nnpeDadosChat);
 	}
 
 	public void logar() {
@@ -145,8 +159,8 @@ public abstract class NnpeChatCliente {
 					e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
 		}
 		clienteMesa11.setEmailJogador(nnpeFormLogin.getEmail().getText());
-	//	clienteMesa11.setRecuperar(nnpeFormLogin.getRecuperar().isSelected());
-//		clienteMesa11.setChaveCapcha(nnpeFormLogin.getCapchaChave());
+		// clienteMesa11.setRecuperar(nnpeFormLogin.getRecuperar().isSelected());
+		// clienteMesa11.setChaveCapcha(nnpeFormLogin.getCapchaChave());
 		clienteMesa11.setTexto(nnpeFormLogin.getCapchaTexto());
 
 		if (!Util.isNullOrEmpty(clienteMesa11.getNomeJogador())
@@ -177,49 +191,53 @@ public abstract class NnpeChatCliente {
 		return new NnpeFormLogin(nnpeApplet);
 	}
 
-	public void atualizaInfo() {
-		// TODO Auto-generated method stub
-
-	}
-
 	public void enviarTexto(String text) {
-		// TODO Auto-generated method stub
+		if (sessaoCliente == null) {
+			logar();
+			return;
+		}
+		NnpeCliente nnpeCliente = new NnpeCliente(sessaoCliente);
+		nnpeCliente.setTexto(text);
+		NnpeTO nnpeTO = new NnpeTO();
+		nnpeTO.setData(nnpeCliente);
+		nnpeTO.setComando(Constantes.ENVIAR_TEXTO);
+		Object ret = nnpeApplet.enviarObjeto(nnpeTO);
+		if (retornoNaoValido(ret)) {
+			return;
+		}
+		if (ret == null) {
+			JOptionPane.showMessageDialog(nnpeChatWindow.getMainPanel(),
+					Lang.msg("problemasRede"), "Erro",
+					JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		nnpeTO = (NnpeTO) ret;
+		nnpeChatWindow.atualizar((NnpeDadosChat) nnpeTO.getData());
 
 	}
 
-	public void criarJogo() {
-		// TODO Auto-generated method stub
+	private boolean retornoNaoValido(Object ret) {
+		if (ret instanceof ErroServ || ret instanceof MsgSrv) {
+			return true;
+		}
+		return false;
+	}
+
+	public int getLatenciaMinima() {
+		return nnpeApplet.getLatenciaMinima();
+	}
+
+	public int getLatenciaReal() {
+		return nnpeApplet.getLatenciaReal();
+	}
+
+	public void atualizaInfo() {
+		if (nnpeChatWindow != null)
+			nnpeChatWindow.atualizaInfo();
 
 	}
 
-	public void entarJogo() {
-		// TODO Auto-generated method stub
-
+	public String getVersao() {
+		return nnpeApplet.getVersao();
 	}
-
-	public void verDetalhesJogo() {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void verDetalhesJogador() {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void sairJogo() {
-		// TODO Auto-generated method stub
-
-	}
-
-	public String getLatenciaMinima() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public String getLatenciaReal() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }
