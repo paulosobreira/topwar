@@ -41,6 +41,10 @@ public class NnpeFormLogin extends JPanel {
 	protected JTextField email = new JTextField(20);
 	protected JTextField emailRecuperar = new JTextField(20);
 
+	public Map<String, String> getChapchaChave() {
+		return chapchaChave;
+	}
+
 	private JLabel senhaLabel = new JLabel("Senha") {
 		public String getText() {
 			return Lang.msg("senha");
@@ -183,6 +187,7 @@ public class NnpeFormLogin extends JPanel {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				chapchaChave.put(cpachaChave, capchaReload(capchaImage));
+				Logger.logar("Reload de Capcha " + cpachaChave);
 				super.mouseClicked(e);
 			}
 		});
@@ -241,18 +246,24 @@ public class NnpeFormLogin extends JPanel {
 		return panel;
 	}
 
-	public JTextField getNome() {
-		if (!Util.isNullOrEmpty(nomeRegistrar.getText()))
-			return nomeRegistrar;
-		return nomeLogar;
-	}
-
 	public void setNome(JTextField nome) {
 		this.nomeLogar = nome;
 	}
 
 	public JPasswordField getSenha() {
 		return senha;
+	}
+
+	public JTextField getNomeLogar() {
+		return nomeLogar;
+	}
+
+	public JTextField getNomeRegistrar() {
+		return nomeRegistrar;
+	}
+
+	public JTextField getNomeRecuperar() {
+		return nomeRecuperar;
 	}
 
 	public static void main(String[] args) throws FileNotFoundException {
@@ -279,6 +290,14 @@ public class NnpeFormLogin extends JPanel {
 
 	public String getCapchaTexto() {
 		return capchaTexto.getText();
+	}
+
+	public String getCapchaTextoRecuperar() {
+		return capchaTextoRecuperar.getText();
+	}
+
+	public JTextField getEmailRecuperar() {
+		return emailRecuperar;
 	}
 
 }

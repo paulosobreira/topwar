@@ -21,7 +21,7 @@ public class NnpeChatServidor {
 		nnpeDadosChat.atualizaAtividade(cliente.getSessaoCliente()
 				.getNomeJogador());
 		nnpeDadosChat.setLinhaChat(cliente.getSessaoCliente().getNomeJogador()
-				+ " : " + cliente.getTexto());
+				+ " : " + cliente.getTextoCapcha());
 		nnpeDadosChat.setDataTime(System.currentTimeMillis());
 		NnpeTO mesa11to = new NnpeTO();
 		mesa11to.setData(nnpeDadosChat);
