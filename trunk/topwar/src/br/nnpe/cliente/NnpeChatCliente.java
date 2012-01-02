@@ -89,7 +89,7 @@ public abstract class NnpeChatCliente {
 			String login = (String) map.get("login");
 			String pass = (String) map.get("pass");
 			if (!Util.isNullOrEmpty(pass) && !Util.isNullOrEmpty(login)) {
-				nnpeFormLogin.getNome().setText(login);
+				nnpeFormLogin.getNomeLogar().setText(login);
 				nnpeFormLogin.getSenha().setText(pass);
 				nnpeFormLogin.getLembrar().setSelected(true);
 			}
@@ -124,7 +124,7 @@ public abstract class NnpeChatCliente {
 					}
 
 					Map map = new HashMap();
-					map.put("login", nnpeFormLogin.getNome().getText());
+					map.put("login", nnpeFormLogin.getNomeLogar().getText());
 					map.put("pass", String.valueOf((nnpeFormLogin.getSenha()
 							.getPassword())));
 					ObjectOutputStream stream = new ObjectOutputStream(
@@ -141,46 +141,63 @@ public abstract class NnpeChatCliente {
 	}
 
 	private boolean logarRecuperarLembrar() {
-		NnpeTO mesa11to = new NnpeTO();
-		NnpeCliente clienteMesa11 = new NnpeCliente();
-		mesa11to.setData(clienteMesa11);
-		clienteMesa11.setNomeJogador(nnpeFormLogin.getNome().getText());
+		NnpeTO nnpeTO = new NnpeTO();
+		NnpeCliente nnpeCliente = new NnpeCliente();
+		nnpeTO.setData(nnpeCliente);
 
-		try {
-			if (!Util.isNullOrEmpty(new String(nnpeFormLogin.getSenha()
-					.getPassword()))) {
-				clienteMesa11.setSenhaJogador(Util.md5(new String(nnpeFormLogin
-						.getSenha().getPassword())));
-			}
-		} catch (Exception e) {
-			Logger.logarExept(e);
-			JOptionPane.showMessageDialog(nnpeChatWindow.getMainPanel(),
-					e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+		if (!Util.isNullOrEmpty(nnpeFormLogin.getNomeRecuperar().getText())
+				|| !Util.isNullOrEmpty(nnpeFormLogin.getEmailRecuperar()
+						.getText())) {
+			nnpeCliente.setNomeJogador(nnpeFormLogin.getNomeRecuperar()
+					.getText());
+			nnpeCliente.setEmailJogador(nnpeFormLogin.getEmailRecuperar()
+					.getText());
+			nnpeCliente.setChaveCapcha(nnpeFormLogin.getChapchaChave().get(
+					Constantes.RECUPERAR));
+			nnpeCliente.setTextoCapcha(nnpeFormLogin.getCapchaTextoRecuperar());
+			nnpeTO.setComando(Constantes.RECUPERA_SENHA);
 		}
-		clienteMesa11.setEmailJogador(nnpeFormLogin.getEmail().getText());
-		// clienteMesa11.setRecuperar(nnpeFormLogin.getRecuperar().isSelected());
-		// clienteMesa11.setChaveCapcha(nnpeFormLogin.getCapchaChave());
-		clienteMesa11.setTexto(nnpeFormLogin.getCapchaTexto());
+		if (!Util.isNullOrEmpty(nnpeFormLogin.getNomeRegistrar().getText())
+				&& !Util.isNullOrEmpty(nnpeFormLogin.getEmail().getText())) {
+			nnpeCliente.setNomeJogador(nnpeFormLogin.getNomeRegistrar()
+					.getText());
+			nnpeCliente.setEmailJogador(nnpeFormLogin.getEmail().getText());
+			nnpeCliente.setChaveCapcha(nnpeFormLogin.getChapchaChave().get(
+					Constantes.REGISTRAR));
+			nnpeCliente.setTextoCapcha(nnpeFormLogin.getCapchaTexto());
+			nnpeTO.setComando(Constantes.NOVO_USUARIO);
+		}
 
-		if (!Util.isNullOrEmpty(clienteMesa11.getNomeJogador())
-				&& !Util.isNullOrEmpty(clienteMesa11.getSenhaJogador())) {
-			mesa11to.setComando(Constantes.LOGAR);
-		} else if (!Util.isNullOrEmpty(clienteMesa11.getNomeJogador())
-				&& !Util.isNullOrEmpty(clienteMesa11.getEmailJogador())
-				&& !clienteMesa11.isRecuperar()) {
-			mesa11to.setComando(Constantes.NOVO_USUARIO);
-		} else if (clienteMesa11.isRecuperar()) {
-			mesa11to.setComando(Constantes.RECUPERA_SENHA);
+		if (!Util.isNullOrEmpty(nnpeFormLogin.getNomeLogar().getText())) {
+			nnpeCliente.setNomeJogador(nnpeFormLogin.getNomeLogar().getText());
+			try {
+				if (!Util.isNullOrEmpty(new String(nnpeFormLogin.getSenha()
+						.getPassword()))) {
+					nnpeCliente.setSenhaJogador(Util.md5(new String(
+							nnpeFormLogin.getSenha().getPassword())));
+				}
+			} catch (Exception e) {
+				Logger.logarExept(e);
+				JOptionPane.showMessageDialog(nnpeChatWindow.getMainPanel(),
+						e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+			}
+			nnpeTO.setComando(Constantes.LOGAR);
+		}
+		if (Util.isNullOrEmpty(nnpeTO.getComando())) {
+			JOptionPane.showMessageDialog(nnpeChatWindow.getMainPanel(),
+					Lang.msg("opercaoLogarInvalida"), "Erro",
+					JOptionPane.ERROR_MESSAGE);
+			return false;
 		}
 		Logger.logar("registrarUsuario mesa11to.getComando() "
-				+ mesa11to.getComando());
-		Object ret = nnpeApplet.enviarObjeto(mesa11to);
+				+ nnpeTO.getComando());
+		Object ret = nnpeApplet.enviarObjeto(nnpeTO);
 		if (ret == null) {
 			return false;
 		}
 		if (ret instanceof NnpeTO) {
-			mesa11to = (NnpeTO) ret;
-			SessaoCliente cliente = (SessaoCliente) mesa11to.getData();
+			nnpeTO = (NnpeTO) ret;
+			SessaoCliente cliente = (SessaoCliente) nnpeTO.getData();
 			this.sessaoCliente = cliente;
 		}
 		return true;
@@ -196,7 +213,7 @@ public abstract class NnpeChatCliente {
 			return;
 		}
 		NnpeCliente nnpeCliente = new NnpeCliente(sessaoCliente);
-		nnpeCliente.setTexto(text);
+		nnpeCliente.setTextoCapcha(text);
 		NnpeTO nnpeTO = new NnpeTO();
 		nnpeTO.setData(nnpeCliente);
 		nnpeTO.setComando(Constantes.ENVIAR_TEXTO);

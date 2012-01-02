@@ -15,7 +15,7 @@ public class NnpeCliente implements Serializable {
 	private String emailJogador;
 	private String chaveCapcha;
 	private SessaoCliente sessaoCliente;
-	private String texto;
+	private String textoCapcha;
 	private String nomeJogo;
 	private boolean recuperar = false;
 
@@ -24,8 +24,8 @@ public class NnpeCliente implements Serializable {
 		this.sessaoCliente = sessaoCliente;
 	}
 
-	public String getTexto() {
-		return texto;
+	public String getTextoCapcha() {
+		return textoCapcha;
 	}
 
 	public String getNomeJogo() {
@@ -36,8 +36,8 @@ public class NnpeCliente implements Serializable {
 		this.nomeJogo = nomeJogo;
 	}
 
-	public void setTexto(String texto) {
-		this.texto = texto;
+	public void setTextoCapcha(String texto) {
+		this.textoCapcha = texto;
 	}
 
 	public SessaoCliente getSessaoCliente() {
