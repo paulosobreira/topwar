@@ -47,6 +47,13 @@ public class NnpeChatWindow {
 			return Lang.msg("sobre");
 		}
 	};
+	protected JButton sair = new JButton("sair") {
+
+		public String getText() {
+
+			return Lang.msg("sair");
+		}
+	};
 	protected JLabel infoLabel1 = new JLabel();
 	protected Set chatSet = new HashSet();
 	protected SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
@@ -89,11 +96,21 @@ public class NnpeChatWindow {
 						+ "sowbreira@gmail.com \n"
 						+ "sowbreira.appspot.com/ \n" + "Janeiro de 2011 \n ";
 
-				JOptionPane.showMessageDialog(getMainPanel(), msg,
-						Lang.msg("autor"), JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(getMainPanel(), msg, Lang
+						.msg("autor"), JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
-
+		sair.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int ret = JOptionPane.showConfirmDialog(getMainPanel(), Lang
+						.msg("confirmaSair"), Lang.msg("confirmaSair"),
+						JOptionPane.YES_NO_OPTION);
+				if (ret == JOptionPane.NO_OPTION) {
+					return;
+				}
+				nnpeChatCliente.sair();
+			}
+		});
 	}
 
 	public JPanel getMainPanel() {
@@ -182,6 +199,7 @@ public class NnpeChatWindow {
 			}
 		});
 		buttonsPanel.add(sobre);
+		buttonsPanel.add(sair);
 		JPanel panelTextoEnviar = new JPanel();
 		panelTextoEnviar.setBorder(new TitledBorder("Texto Enviar") {
 			public String getTitle() {
