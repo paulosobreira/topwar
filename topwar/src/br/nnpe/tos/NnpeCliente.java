@@ -16,12 +16,21 @@ public class NnpeCliente implements Serializable {
 	private String chaveCapcha;
 	private SessaoCliente sessaoCliente;
 	private String textoCapcha;
+	private String textoChat;
 	private String nomeJogo;
 	private boolean recuperar = false;
 
 	public NnpeCliente(SessaoCliente sessaoCliente) {
 		super();
 		this.sessaoCliente = sessaoCliente;
+	}
+
+	public String getTextoChat() {
+		return textoChat;
+	}
+
+	public void setTextoChat(String textoChat) {
+		this.textoChat = textoChat;
 	}
 
 	public String getTextoCapcha() {
