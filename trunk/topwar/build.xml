@@ -76,6 +76,7 @@
 			</fileset>
 			<fileset dir="WebContent">
 				<include name="WEB-INF/lib/topwar.jar" />
+				<include name="topwar.jar" />
 			</fileset>
 		</war>
 	</target>
