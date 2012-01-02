@@ -25,7 +25,7 @@
 	</target>
 
 	<target name="atualizaVersao">
-		<propertyfile file="src/br/applet/client.properties">
+		<propertyfile file="src/br/topwar/cliente/client.properties">
 			<entry operation="+" key="versao" type="int" value="1" />
 		</propertyfile>
 	</target>
