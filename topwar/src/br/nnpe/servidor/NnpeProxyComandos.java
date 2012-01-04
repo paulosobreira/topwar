@@ -56,9 +56,32 @@ public class NnpeProxyComandos {
 			return cadastrarUsuario((NnpeCliente) nnpeTO.getData());
 		} else if (Constantes.RECUPERA_SENHA.equals(nnpeTO.getComando())) {
 			return recuperaSenha((NnpeCliente) nnpeTO.getData());
+		} else if (Constantes.ENCERRAR_SESSAO.equals(nnpeTO.getComando())) {
+			return encerrarSessao((NnpeCliente) nnpeTO.getData());
 		}
 
 		return null;
+	}
+
+	private Object encerrarSessao(NnpeCliente nnpeCliente) {
+		SessaoCliente sessaoClienteRemover = null;
+		Collection clientes = nnpeDadosChat.getClientes();
+		for (Iterator iterator = clientes.iterator(); iterator.hasNext();) {
+			SessaoCliente object = (SessaoCliente) iterator.next();
+			if (object.equals(nnpeCliente.getSessaoCliente())) {
+				sessaoClienteRemover = object;
+				break;
+			}
+		}
+		nnpeDadosChat.getClientes().remove(sessaoClienteRemover);
+		Logger.logar("Sessao Removida para "
+				+ sessaoClienteRemover.getNomeJogador());
+		NnpeTO nnpeTO = new NnpeTO();
+		nnpeDadosChat.setLinhaChat(Lang.msg("desconectou",
+				new String[] { sessaoClienteRemover.getNomeJogador() }));
+		nnpeDadosChat.setDataTime(System.currentTimeMillis());
+		nnpeTO.setData(nnpeDadosChat);
+		return nnpeTO;
 	}
 
 	public Object receberTexto(NnpeCliente cliente) {
@@ -70,9 +93,9 @@ public class NnpeProxyComandos {
 		nnpeDadosChat.setLinhaChat(cliente.getSessaoCliente().getNomeJogador()
 				+ " : " + cliente.getTextoChat());
 		nnpeDadosChat.setDataTime(System.currentTimeMillis());
-		NnpeTO mesa11to = new NnpeTO();
-		mesa11to.setData(nnpeDadosChat);
-		return mesa11to;
+		NnpeTO nnpeTO = new NnpeTO();
+		nnpeTO.setData(nnpeDadosChat);
+		return nnpeTO;
 	}
 
 	private Object recuperaSenha(NnpeCliente nnpeCliente) {

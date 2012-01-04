@@ -257,7 +257,25 @@ public abstract class NnpeChatCliente {
 	}
 
 	public void sair() {
-		// TODO Auto-generated method stub
-
+		if (sessaoCliente == null) {
+			logar();
+			return;
+		}
+		NnpeCliente nnpeCliente = new NnpeCliente(sessaoCliente);
+		NnpeTO nnpeTO = new NnpeTO();
+		nnpeTO.setData(nnpeCliente);
+		nnpeTO.setComando(Constantes.ENCERRAR_SESSAO);
+		Object ret = nnpeApplet.enviarObjeto(nnpeTO);
+		if (retornoNaoValido(ret)) {
+			return;
+		}
+		if (ret == null) {
+			JOptionPane.showMessageDialog(nnpeChatWindow.getMainPanel(), Lang
+					.msg("problemasRede"), "Erro", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		nnpeTO = (NnpeTO) ret;
+		nnpeChatWindow.atualizar((NnpeDadosChat) nnpeTO.getData());
+		sessaoCliente = null;
 	}
 }

@@ -13,6 +13,7 @@ import java.util.Set;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -20,6 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 import javax.swing.border.TitledBorder;
 
 import br.nnpe.Logger;
@@ -158,8 +160,11 @@ public class NnpeChatWindow {
 		JPanel ePanel = new JPanel(new GridLayout(1, 2));
 		mainPanel.add(cPanel, BorderLayout.CENTER);
 		JPanel chatPanel = new JPanel();
-		chatPanel.setBorder(new TitledBorder("Chat Room "
-				+ nnpeChatCliente.getVersao()));
+		String versao = "Rodando Main";
+		if (nnpeChatCliente != null) {
+			versao = nnpeChatCliente.getVersao();
+		}
+		chatPanel.setBorder(new TitledBorder("Nnpe Chat Room " + versao));
 		JPanel usersPanel = new JPanel();
 		usersPanel.setBorder(new TitledBorder("Jogadores Online") {
 			public String getTitle() {
@@ -213,6 +218,26 @@ public class NnpeChatWindow {
 		inputPanel.add(buttonsPanel, BorderLayout.CENTER);
 		inputPanel.add(infoLabel1, BorderLayout.SOUTH);
 		chatPanel.setLayout(new BorderLayout());
-		chatPanel.add(new JScrollPane(textAreaChat), BorderLayout.CENTER);
+
+		JScrollPane textAreaScrollPane = new JScrollPane(textAreaChat) {
+			@Override
+			public Dimension getPreferredSize() {
+				Dimension preferredSize = super.getPreferredSize();
+				return new Dimension(600, 200);
+			}
+		};
+
+		chatPanel.add(textAreaScrollPane, BorderLayout.CENTER);
 	}
+
+	public static void main(String[] args) {
+		NnpeChatWindow nnpeChatWindow = new NnpeChatWindow(null);
+		JFrame frame = new JFrame();
+		frame.getContentPane().add(nnpeChatWindow.getMainPanel());
+		// frame.setSize(820, 380);
+		frame.pack();
+		frame.setVisible(true);
+		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+	}
+
 }
