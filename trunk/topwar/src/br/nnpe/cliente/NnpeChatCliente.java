@@ -45,15 +45,15 @@ public abstract class NnpeChatCliente {
 				}
 			}
 		});
-		setChatWindow();
+		definirImplementacaoChatWindow();
 		nnpeApplet.setLayout(new BorderLayout());
 		nnpeApplet.add(nnpeChatWindow.getMainPanel(), BorderLayout.CENTER);
 		threadAtualizadora.setPriority(Thread.MIN_PRIORITY);
 		threadAtualizadora.start();
 	}
 
-	private void setChatWindow() {
-		nnpeChatWindow = new NnpeChatWindow(this);
+	public void definirImplementacaoChatWindow() {
+		this.nnpeChatWindow = new NnpeChatWindow(this);
 	}
 
 	protected void atualizaVisao() {
@@ -229,6 +229,14 @@ public abstract class NnpeChatCliente {
 		nnpeTO = (NnpeTO) ret;
 		nnpeChatWindow.atualizar((NnpeDadosChat) nnpeTO.getData());
 
+	}
+
+	public Object enviarObjeto(NnpeTO nnpeTO) {
+		if (nnpeApplet == null) {
+			Logger.logar("enviarObjeto nnpeApplet null");
+			return null;
+		}
+		return nnpeApplet.enviarObjeto(nnpeTO);
 	}
 
 	private boolean retornoNaoValido(Object ret) {
