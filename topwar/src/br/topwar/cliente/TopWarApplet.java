@@ -5,7 +5,7 @@ import br.nnpe.cliente.NnpeChatCliente;
 
 public class TopWarApplet extends NnpeApplet {
 
-	private ControleChatCliente controleChatCliente = new ControleChatCliente(
+	private ControleCliente controleChatCliente = new ControleCliente(
 			this);
 
 	@Override

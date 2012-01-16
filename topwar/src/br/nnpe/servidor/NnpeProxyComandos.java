@@ -23,7 +23,7 @@ import br.nnpe.persistencia.NnpeUsuario;
 import br.nnpe.tos.ErroServ;
 import br.nnpe.tos.MsgSrv;
 import br.nnpe.tos.NnpeCliente;
-import br.nnpe.tos.NnpeDadosChat;
+import br.nnpe.tos.NnpeDados;
 import br.nnpe.tos.NnpeTO;
 import br.nnpe.tos.SessaoCliente;
 import br.topwar.recursos.idiomas.Lang;
@@ -31,14 +31,14 @@ import br.topwar.recursos.idiomas.Lang;
 import com.octo.captcha.service.image.DefaultManageableImageCaptchaService;
 
 public class NnpeProxyComandos {
-	protected NnpeDadosChat nnpeDadosChat;
+	protected NnpeDados nnpeDados;
 	protected NnpeChatServidor nnpeChatServidor;
 	protected NnpeMonitorAtividadeChat nnpeMonitorAtividadeChat;
 	protected DefaultManageableImageCaptchaService capcha = new DefaultManageableImageCaptchaService();
 
 	public NnpeProxyComandos(String webDir, String webInfDir) {
-		nnpeDadosChat = new NnpeDadosChat();
-		nnpeChatServidor = new NnpeChatServidor(nnpeDadosChat);
+		nnpeDados = new NnpeDados();
+		nnpeChatServidor = new NnpeChatServidor(nnpeDados);
 		nnpeMonitorAtividadeChat = new NnpeMonitorAtividadeChat(this);
 	}
 
@@ -65,7 +65,7 @@ public class NnpeProxyComandos {
 
 	private Object encerrarSessao(NnpeCliente nnpeCliente) {
 		SessaoCliente sessaoClienteRemover = null;
-		Collection clientes = nnpeDadosChat.getClientes();
+		Collection clientes = nnpeDados.getClientes();
 		for (Iterator iterator = clientes.iterator(); iterator.hasNext();) {
 			SessaoCliente object = (SessaoCliente) iterator.next();
 			if (object.equals(nnpeCliente.getSessaoCliente())) {
@@ -73,14 +73,14 @@ public class NnpeProxyComandos {
 				break;
 			}
 		}
-		nnpeDadosChat.getClientes().remove(sessaoClienteRemover);
+		nnpeDados.getClientes().remove(sessaoClienteRemover);
 		Logger.logar("Sessao Removida para "
 				+ sessaoClienteRemover.getNomeJogador());
 		NnpeTO nnpeTO = new NnpeTO();
-		nnpeDadosChat.setLinhaChat(Lang.msg("desconectou",
+		nnpeDados.setLinhaChat(Lang.msg("desconectou",
 				new String[] { sessaoClienteRemover.getNomeJogador() }));
-		nnpeDadosChat.setDataTime(System.currentTimeMillis());
-		nnpeTO.setData(nnpeDadosChat);
+		nnpeDados.setDataTime(System.currentTimeMillis());
+		nnpeTO.setData(nnpeDados);
 		return nnpeTO;
 	}
 
@@ -88,13 +88,13 @@ public class NnpeProxyComandos {
 		if (cliente.getSessaoCliente() == null) {
 			return (new MsgSrv(Lang.msg("usuarioSemSessao")));
 		}
-		nnpeDadosChat.atualizaAtividade(cliente.getSessaoCliente()
+		nnpeDados.atualizaAtividade(cliente.getSessaoCliente()
 				.getNomeJogador());
-		nnpeDadosChat.setLinhaChat(cliente.getSessaoCliente().getNomeJogador()
+		nnpeDados.setLinhaChat(cliente.getSessaoCliente().getNomeJogador()
 				+ " : " + cliente.getTextoChat());
-		nnpeDadosChat.setDataTime(System.currentTimeMillis());
+		nnpeDados.setDataTime(System.currentTimeMillis());
 		NnpeTO nnpeTO = new NnpeTO();
-		nnpeTO.setData(nnpeDadosChat);
+		nnpeTO.setData(nnpeDados);
 		return nnpeTO;
 	}
 
@@ -231,8 +231,8 @@ public class NnpeProxyComandos {
 				"Your game user:password is " + nome + ":" + senha, false);
 	}
 
-	public NnpeDadosChat getNnpeDadosChat() {
-		return nnpeDadosChat;
+	public NnpeDados getNnpeDadosChat() {
+		return nnpeDados;
 	}
 
 	public Object logar(NnpeCliente nnpeCliente) {
@@ -259,7 +259,7 @@ public class NnpeProxyComandos {
 
 	private Object criarSessao(NnpeUsuario usuario) {
 		SessaoCliente sessaoCliente = null;
-		Collection clientes = nnpeDadosChat.getClientes();
+		Collection clientes = nnpeDados.getClientes();
 		for (Iterator iterator = clientes.iterator(); iterator.hasNext();) {
 			SessaoCliente object = (SessaoCliente) iterator.next();
 			if (object.getNomeJogador().equals(usuario.getLogin())) {
@@ -270,7 +270,7 @@ public class NnpeProxyComandos {
 		if (sessaoCliente == null) {
 			sessaoCliente = new SessaoCliente();
 			sessaoCliente.setNomeJogador(usuario.getLogin());
-			nnpeDadosChat.getClientes().add(sessaoCliente);
+			nnpeDados.getClientes().add(sessaoCliente);
 		}
 		sessaoCliente.setUlimaAtividade(System.currentTimeMillis());
 		NnpeTO nnpeTO = new NnpeTO();
@@ -300,20 +300,20 @@ public class NnpeProxyComandos {
 		if (nnpeTO.getSessaoCliente() != null) {
 			nnpeChatServidor.atualizaSessaoCliente(nnpeTO.getSessaoCliente());
 		}
-		nnpeTO.setData(nnpeDadosChat);
+		nnpeTO.setData(nnpeDados);
 		return nnpeTO;
 	}
 
 	public void removerClienteInativo(SessaoCliente sessaoClienteRemover) {
 		Logger.logar("removerClienteInativo " + sessaoClienteRemover);
-		nnpeDadosChat.getClientes().remove(sessaoClienteRemover);
+		nnpeDados.getClientes().remove(sessaoClienteRemover);
 	}
 
 	public boolean verificaSemSessao(String nomeCriador) {
 		if (Util.isNullOrEmpty(nomeCriador)) {
 			return true;
 		}
-		Collection<SessaoCliente> clientes = nnpeDadosChat.getClientes();
+		Collection<SessaoCliente> clientes = nnpeDados.getClientes();
 		for (Iterator iter = clientes.iterator(); iter.hasNext();) {
 			SessaoCliente sessaoCliente = (SessaoCliente) iter.next();
 			if (nomeCriador.equals(sessaoCliente.getNomeJogador())) {

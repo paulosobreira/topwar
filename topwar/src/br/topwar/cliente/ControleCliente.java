@@ -1,0 +1,41 @@
+package br.topwar.cliente;
+
+import br.nnpe.cliente.NnpeApplet;
+import br.nnpe.cliente.NnpeChatCliente;
+import br.nnpe.tos.NnpeTO;
+import br.topwar.ConstantesTopWar;
+import br.topwar.tos.DadosJogoTopWar;
+
+public class ControleCliente extends NnpeChatCliente {
+
+	private DadosJogoTopWar dadosJogoTopWar;
+
+	public ControleCliente(NnpeApplet topWarApplet) {
+		super(topWarApplet);
+	}
+
+	@Override
+	public void definirImplementacaoChatWindow() {
+		this.nnpeChatWindow = new ChatWindow(this);
+	}
+
+	public void criarJogo() {
+		if (sessaoCliente == null) {
+			logar();
+			return;
+		}
+		NnpeTO nnpeTO = new NnpeTO();
+		nnpeTO.setComando(ConstantesTopWar.CRIAR_JOGO);
+		DadosJogoTopWar dadosJogoTopWar = new DadosJogoTopWar();
+		nnpeTO.setData(dadosJogoTopWar);
+		Object ret = enviarObjeto(nnpeTO);
+		if (nnpeTO instanceof NnpeTO) {
+			nnpeTO = (NnpeTO) ret;
+			dadosJogoTopWar = (DadosJogoTopWar) nnpeTO.getData();
+			// monitorJogo = new MonitorJogo(controleChatCliente, this,
+			// dadosJogoSrvMesa11, mesa11Applet, dadosJogoSrvMesa11
+			// .getTimeCasa());
+			// monitorJogo.start();
+		}
+	}
+}

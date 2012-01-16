@@ -2,15 +2,15 @@ package br.nnpe.servidor;
 
 import br.nnpe.tos.MsgSrv;
 import br.nnpe.tos.NnpeCliente;
-import br.nnpe.tos.NnpeDadosChat;
+import br.nnpe.tos.NnpeDados;
 import br.nnpe.tos.NnpeTO;
 import br.nnpe.tos.SessaoCliente;
 import br.topwar.recursos.idiomas.Lang;
 
 public class NnpeChatServidor {
-	private NnpeDadosChat nnpeDadosChat;
+	private NnpeDados nnpeDadosChat;
 
-	public NnpeChatServidor(NnpeDadosChat nnpeDadosChat) {
+	public NnpeChatServidor(NnpeDados nnpeDadosChat) {
 		this.nnpeDadosChat = nnpeDadosChat;
 	}
 
