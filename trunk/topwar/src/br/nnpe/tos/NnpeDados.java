@@ -11,7 +11,7 @@ import br.nnpe.tos.SessaoCliente;
  * @author paulo.sobreira
  * 
  */
-public class NnpeDadosChat implements Serializable {
+public class NnpeDados implements Serializable {
 	private static final long serialVersionUID = 2200481566401284586L;
 	private Long dataTime;
 	private Collection<SessaoCliente> clientes = new HashSet<SessaoCliente>();

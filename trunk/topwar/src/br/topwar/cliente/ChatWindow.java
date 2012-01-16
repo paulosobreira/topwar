@@ -5,21 +5,23 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Time;
 import java.util.HashMap;
 import java.util.Iterator;
 
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.WindowConstants;
 import javax.swing.border.TitledBorder;
 
 import br.nnpe.Logger;
 import br.nnpe.Util;
 import br.nnpe.cliente.NnpeChatCliente;
 import br.nnpe.cliente.NnpeChatWindow;
-import br.nnpe.tos.NnpeDadosChat;
+import br.nnpe.tos.NnpeDados;
 import br.nnpe.tos.NnpeTO;
 import br.topwar.ConstantesTopWar;
 import br.topwar.recursos.idiomas.Lang;
@@ -28,8 +30,14 @@ public class ChatWindow extends NnpeChatWindow {
 	protected JList listaJogos = new JList();
 	private HashMap mapaJogosCriados = new HashMap();
 
+	protected JButton criarJogo;
+	protected JButton entrarJogo;
+
+	protected ControleCliente controleChatCliente;
+
 	public ChatWindow(NnpeChatCliente nnpeChatCliente) {
 		super(nnpeChatCliente);
+		this.controleChatCliente = (ControleCliente) nnpeChatCliente;
 	}
 
 	public void gerarLayout() {
@@ -71,6 +79,7 @@ public class ChatWindow extends NnpeChatWindow {
 				return new Dimension(120, 210);
 			}
 		};
+		listaJogos = new JList();
 		JScrollPane jogsPane = new JScrollPane(listaJogos) {
 			@Override
 			public Dimension getPreferredSize() {
@@ -82,7 +91,23 @@ public class ChatWindow extends NnpeChatWindow {
 		usersPanel.add(usersPane);
 		jogosPanel.add(jogsPane);
 		JPanel buttonsPanel = new JPanel();
-		buttonsPanel.setLayout(new GridLayout(3, 4));
+		buttonsPanel.setLayout(new GridLayout(2, 3));
+		criarJogo = new JButton("criarJogo") {
+
+			public String getText() {
+
+				return Lang.msg("criarJogo");
+			}
+		};
+		entrarJogo = new JButton("entrarJogo") {
+
+			public String getText() {
+
+				return Lang.msg("entrarJogo");
+			}
+		};
+		buttonsPanel.add(criarJogo);
+		buttonsPanel.add(entrarJogo);
 		buttonsPanel.add(comboIdiomas);
 		comboIdiomas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -125,7 +150,19 @@ public class ChatWindow extends NnpeChatWindow {
 	}
 
 	@Override
-	public void atualizar(NnpeDadosChat nnpeDadosChat) {
+	protected void gerarAcoes() {
+		super.gerarAcoes();
+		criarJogo.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				controleChatCliente.criarJogo();
+			}
+
+		});
+	}
+
+	@Override
+	public void atualizar(NnpeDados nnpeDadosChat) {
 		super.atualizar(nnpeDadosChat);
 		DefaultListModel modelJogosCriados = ((DefaultListModel) listaJogos
 				.getModel());
@@ -148,6 +185,16 @@ public class ChatWindow extends NnpeChatWindow {
 			modelJogosCriados.addElement(key);
 		}
 		listaJogos.setModel(modelJogosCriados);
+	}
+
+	public static void main(String[] args) {
+		ChatWindow nnpeChatWindow = new ChatWindow(null);
+		JFrame frame = new JFrame();
+		frame.getContentPane().add(nnpeChatWindow.getMainPanel());
+		// frame.setSize(820, 380);
+		frame.pack();
+		frame.setVisible(true);
+		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 	}
 
 }

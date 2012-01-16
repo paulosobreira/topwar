@@ -17,7 +17,7 @@ import br.nnpe.Util;
 import br.nnpe.tos.ErroServ;
 import br.nnpe.tos.MsgSrv;
 import br.nnpe.tos.NnpeCliente;
-import br.nnpe.tos.NnpeDadosChat;
+import br.nnpe.tos.NnpeDados;
 import br.nnpe.tos.NnpeTO;
 import br.nnpe.tos.SessaoCliente;
 import br.topwar.recursos.idiomas.Lang;
@@ -68,7 +68,7 @@ public abstract class NnpeChatCliente {
 			return;
 		}
 		nnpeTO = (NnpeTO) ret;
-		NnpeDadosChat nnpeDadosChat = (NnpeDadosChat) nnpeTO.getData();
+		NnpeDados nnpeDadosChat = (NnpeDados) nnpeTO.getData();
 		nnpeChatWindow.atualizar(nnpeDadosChat);
 	}
 
@@ -227,7 +227,7 @@ public abstract class NnpeChatCliente {
 			return;
 		}
 		nnpeTO = (NnpeTO) ret;
-		nnpeChatWindow.atualizar((NnpeDadosChat) nnpeTO.getData());
+		nnpeChatWindow.atualizar((NnpeDados) nnpeTO.getData());
 
 	}
 
@@ -283,7 +283,7 @@ public abstract class NnpeChatCliente {
 			return;
 		}
 		nnpeTO = (NnpeTO) ret;
-		nnpeChatWindow.atualizar((NnpeDadosChat) nnpeTO.getData());
+		nnpeChatWindow.atualizar((NnpeDados) nnpeTO.getData());
 		sessaoCliente = null;
 	}
 }

@@ -25,7 +25,7 @@ import javax.swing.WindowConstants;
 import javax.swing.border.TitledBorder;
 
 import br.nnpe.Logger;
-import br.nnpe.tos.NnpeDadosChat;
+import br.nnpe.tos.NnpeDados;
 import br.nnpe.tos.SessaoCliente;
 import br.topwar.recursos.idiomas.Lang;
 
@@ -119,7 +119,7 @@ public class NnpeChatWindow {
 		return mainPanel;
 	}
 
-	public void atualizar(NnpeDadosChat dadosMesa11) {
+	public void atualizar(NnpeDados dadosMesa11) {
 		atualizarChat(dadosMesa11);
 		DefaultListModel clientesModel = new DefaultListModel();
 		for (Iterator iter = dadosMesa11.getClientes().iterator(); iter
@@ -131,7 +131,7 @@ public class NnpeChatWindow {
 
 	}
 
-	protected void atualizarChat(NnpeDadosChat nnpeDadosChat) {
+	protected void atualizarChat(NnpeDados nnpeDadosChat) {
 		if ("".equals(nnpeDadosChat.getLinhaChat())
 				|| nnpeDadosChat.getLinhaChat() == null
 				|| nnpeDadosChat.getDataTime() == null) {
