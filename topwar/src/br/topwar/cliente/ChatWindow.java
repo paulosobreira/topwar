@@ -27,8 +27,8 @@ import br.topwar.ConstantesTopWar;
 import br.topwar.recursos.idiomas.Lang;
 
 public class ChatWindow extends NnpeChatWindow {
-	protected JList listaJogos = new JList();
-	private HashMap mapaJogosCriados = new HashMap();
+	protected JList listaJogos;
+	private HashMap mapaJogosAndamento = new HashMap();
 
 	protected JButton criarJogo;
 	protected JButton entrarJogo;
@@ -79,7 +79,7 @@ public class ChatWindow extends NnpeChatWindow {
 				return new Dimension(120, 210);
 			}
 		};
-		listaJogos = new JList();
+		listaJogos = new JList(new DefaultListModel());
 		JScrollPane jogsPane = new JScrollPane(listaJogos) {
 			@Override
 			public Dimension getPreferredSize() {
@@ -153,35 +153,33 @@ public class ChatWindow extends NnpeChatWindow {
 	protected void gerarAcoes() {
 		super.gerarAcoes();
 		criarJogo.addActionListener(new ActionListener() {
-
 			public void actionPerformed(ActionEvent e) {
 				controleChatCliente.criarJogo();
 			}
-
 		});
 	}
 
 	@Override
-	public void atualizar(NnpeDados nnpeDadosChat) {
-		super.atualizar(nnpeDadosChat);
+	public void atualizar(NnpeDados nnpeDados) {
+		super.atualizar(nnpeDados);
 		DefaultListModel modelJogosCriados = ((DefaultListModel) listaJogos
 				.getModel());
 		modelJogosCriados.clear();
-		mapaJogosCriados.clear();
-		for (Iterator iter = nnpeDadosChat.getJogosCriados().iterator(); iter
+		mapaJogosAndamento.clear();
+		for (Iterator iter = nnpeDados.getJogosAndamento().iterator(); iter
 				.hasNext();) {
 			String nmJogo = (String) iter.next();
+			Logger.logar("nmJogo" + nmJogo);
 			String key = Lang.decodeTexto(nmJogo);
-			NnpeTO nnpeTO = new NnpeTO();
-			nnpeTO.setComando(ConstantesTopWar.OBTER_DADOS_JOGO);
-			nnpeTO.setData(nmJogo);
-			String placar = "";
-			Object ret = nnpeChatCliente.enviarObjeto(nnpeTO);
-			if (ret instanceof NnpeTO) {
-				nnpeTO = (NnpeTO) ret;
-			}
-			mapaJogosCriados.put(key, Util.isNullOrEmpty(nmJogo) ? nmJogo
-					: placar);
+			// NnpeTO nnpeTO = new NnpeTO();
+			// nnpeTO.setComando(ConstantesTopWar.OBTER_DADOS_JOGO);
+			// nnpeTO.setData(nmJogo);
+			// String placar = "";
+			// Object ret = nnpeChatCliente.enviarObjeto(nnpeTO);
+			// if (ret instanceof NnpeTO) {
+			// nnpeTO = (NnpeTO) ret;
+			// }
+			mapaJogosAndamento.put(key, nmJogo);
 			modelJogosCriados.addElement(key);
 		}
 		listaJogos.setModel(modelJogosCriados);
