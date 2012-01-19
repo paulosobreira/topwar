@@ -33,7 +33,7 @@ public class ControleJogosServidor {
 	public Object criarJogo(NnpeTO nnpeTO) {
 		DadosJogoTopWar dadosJogoTopWar = (DadosJogoTopWar) nnpeTO.getData();
 		dadosJogoTopWar.setNomeJogo(Lang.msg("jogo") + contadorJogos++);
-		nnpeDados.getJogosCriados().add(dadosJogoTopWar.getNomeJogo());
+		nnpeDados.getJogosAndamento().add(dadosJogoTopWar.getNomeJogo());
 		JogoServidor jogoServidor = new JogoServidor(dadosJogoTopWar,
 				proxyComandos);
 		mapaJogos.put(dadosJogoTopWar.getNomeJogo(), jogoServidor);

@@ -8,28 +8,28 @@ import br.nnpe.tos.SessaoCliente;
 import br.topwar.recursos.idiomas.Lang;
 
 public class NnpeChatServidor {
-	private NnpeDados nnpeDadosChat;
+	private NnpeDados nnpeDados;
 
-	public NnpeChatServidor(NnpeDados nnpeDadosChat) {
-		this.nnpeDadosChat = nnpeDadosChat;
+	public NnpeChatServidor(NnpeDados nnpeDados) {
+		this.nnpeDados = nnpeDados;
 	}
 
 	public Object receberTexto(NnpeCliente cliente) {
 		if (cliente.getSessaoCliente() == null) {
 			return (new MsgSrv(Lang.msg("usuarioSemSessao")));
 		}
-		nnpeDadosChat.atualizaAtividade(cliente.getSessaoCliente()
-				.getNomeJogador());
-		nnpeDadosChat.setLinhaChat(cliente.getSessaoCliente().getNomeJogador()
+		nnpeDados
+				.atualizaAtividade(cliente.getSessaoCliente().getNomeJogador());
+		nnpeDados.setLinhaChat(cliente.getSessaoCliente().getNomeJogador()
 				+ " : " + cliente.getTextoCapcha());
-		nnpeDadosChat.setDataTime(System.currentTimeMillis());
+		nnpeDados.setDataTime(System.currentTimeMillis());
 		NnpeTO mesa11to = new NnpeTO();
-		mesa11to.setData(nnpeDadosChat);
+		mesa11to.setData(nnpeDados);
 		return mesa11to;
 	}
 
 	public void atualizaSessaoCliente(SessaoCliente sessaoCliente) {
-		nnpeDadosChat.atualizaAtividade(sessaoCliente.getNomeJogador());
+		nnpeDados.atualizaAtividade(sessaoCliente.getNomeJogador());
 	}
 
 }
