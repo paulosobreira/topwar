@@ -9,6 +9,7 @@ import br.topwar.tos.DadosJogoTopWar;
 public class ControleCliente extends NnpeChatCliente {
 
 	private DadosJogoTopWar dadosJogoTopWar;
+	private JogoCliente jogoCliente;
 
 	public ControleCliente(NnpeApplet topWarApplet) {
 		super(topWarApplet);
@@ -32,10 +33,8 @@ public class ControleCliente extends NnpeChatCliente {
 		if (nnpeTO instanceof NnpeTO) {
 			nnpeTO = (NnpeTO) ret;
 			dadosJogoTopWar = (DadosJogoTopWar) nnpeTO.getData();
-			// monitorJogo = new MonitorJogo(controleChatCliente, this,
-			// dadosJogoSrvMesa11, mesa11Applet, dadosJogoSrvMesa11
-			// .getTimeCasa());
-			// monitorJogo.start();
+			jogoCliente = new JogoCliente(dadosJogoTopWar, this);
+			jogoCliente.inciaJogo();
 		}
 	}
 }
