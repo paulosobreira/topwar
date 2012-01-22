@@ -53,8 +53,8 @@ public class AvatarCliente {
 			}
 		}
 
-		JOptionPane.showMessageDialog(null, new JLabel(new ImageIcon(bf)),
-				"bf", JOptionPane.INFORMATION_MESSAGE);
+//		JOptionPane.showMessageDialog(null, new JLabel(new ImageIcon(bf)),
+//				"bf", JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	public Point getPontoMouse() {

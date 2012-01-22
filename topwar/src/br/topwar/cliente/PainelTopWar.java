@@ -3,7 +3,6 @@ package br.topwar.cliente;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -18,12 +17,13 @@ import java.util.Map;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import br.nnpe.GeoUtil;
 import br.nnpe.ImageUtil;
 import br.nnpe.Util;
 import br.topwar.ConstantesTopWar;
-import br.topwar.editor.Conceito;
 import br.topwar.recursos.CarregadorRecursos;
 import br.topwar.serial.MapaTopWar;
 import br.topwar.serial.ObjetoMapa;
@@ -39,6 +39,10 @@ public class PainelTopWar {
 		this.jogoCliente = jogoCliente;
 		mapaTopWar = jogoCliente.getMapaTopWar();
 		geraPainel();
+	}
+
+	public JScrollPane getScrollPane() {
+		return scrollPane;
 	}
 
 	private void geraPainel() {
@@ -79,6 +83,14 @@ public class PainelTopWar {
 				}
 			};
 		};
+		scrollPane = new JScrollPane(panel,
+				JScrollPane.VERTICAL_SCROLLBAR_NEVER,
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane.getViewport().addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+			}
+		});
 
 	}
 
