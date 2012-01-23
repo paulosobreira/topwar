@@ -10,6 +10,7 @@ import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -34,11 +35,51 @@ public class PainelTopWar {
 	private JScrollPane scrollPane;
 	private MapaTopWar mapaTopWar;
 	private boolean desenhaObjetos;
+	public Map<String, BufferedImage> mapImgs = new HashMap<String, BufferedImage>();
+	public final static BufferedImage azul = CarregadorRecursos
+			.carregaBufferedImageTransparecia("azul.png", Color.MAGENTA);
+	public final static BufferedImage vermelho = CarregadorRecursos
+			.carregaBufferedImageTransparecia("vermelho.png", Color.MAGENTA);
 
 	public PainelTopWar(JogoCliente jogoCliente) {
 		this.jogoCliente = jogoCliente;
 		mapaTopWar = jogoCliente.getMapaTopWar();
+		gerarMapaImagens(azul, "azul");
+		gerarMapaImagens(vermelho, "vermelho");
 		geraPainel();
+	}
+
+	public void gerarMapaImagens(BufferedImage src, String time) {
+		int altura = src.getHeight() / 8;
+		int largura = src.getWidth() / 4;
+		BufferedImage bf = new BufferedImage(src.getWidth(), src.getHeight(),
+				BufferedImage.TYPE_INT_ARGB);
+		Graphics2D graphics = (Graphics2D) bf.getGraphics();
+		graphics.drawImage(src, 0, 0, null);
+		graphics.setColor(Color.MAGENTA);
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 8; j++) {
+				Rectangle rect = new Rectangle(i * largura, j * altura,
+						largura, altura);
+				graphics.draw(rect);
+				graphics.drawString("i=" + i + " j=" + j, rect.x, rect.y
+						+ altura - 10);
+				BufferedImage bufferedImage = ImageUtil.gerarSubImagem(src,
+						rect);
+				String key = time + "-" + i + "-" + j;
+				mapImgs.put(key, bufferedImage);
+				// JOptionPane.showMessageDialog(null, new JLabel(new ImageIcon(
+				// mapImgs.get(key))), key,
+				// JOptionPane.INFORMATION_MESSAGE);
+			}
+		}
+
+		// JOptionPane.showMessageDialog(null, new JLabel(new ImageIcon(bf)),
+		// "bf", JOptionPane.INFORMATION_MESSAGE);
+	}
+
+	public JPanel getPanel() {
+		return panel;
 	}
 
 	public JScrollPane getScrollPane() {
@@ -62,15 +103,16 @@ public class PainelTopWar {
 				super.paintComponent(g);
 				Graphics2D graphics2d = (Graphics2D) g;
 				graphics2d.drawImage(img, null, 0, 0);
-				List<AvatarCliente> avatarClientes = jogoCliente
-						.getAvatarClientes();
-				for (Iterator iterator = avatarClientes.iterator(); iterator
-						.hasNext();) {
-					AvatarCliente avatarCliente = (AvatarCliente) iterator
-							.next();
-					desenhaAvatares(graphics2d, avatarCliente);
+				synchronized (jogoCliente.getAvatarClientes()) {
+					List<AvatarCliente> avatarClientes = jogoCliente
+							.getAvatarClientes();
+					for (Iterator iterator = avatarClientes.iterator(); iterator
+							.hasNext();) {
+						AvatarCliente avatarCliente = (AvatarCliente) iterator
+								.next();
+						desenhaAvatares(graphics2d, avatarCliente);
+					}
 				}
-
 				if (desenhaObjetos) {
 					List<ObjetoMapa> objetoMapaList = mapaTopWar
 							.getObjetoMapaList();
@@ -97,9 +139,8 @@ public class PainelTopWar {
 	protected void desenhaAvatares(Graphics2D graphics2d,
 			AvatarCliente avatarCliente) {
 		Point pontoAvatar = avatarCliente.getPontoAvatar();
-		int anim = avatarCliente.getAnim();
+		int anim = avatarCliente.getQuadroAnimacao();
 		int velocidade = avatarCliente.getVelocidade();
-		Map<String, BufferedImage> mapImgs = avatarCliente.getMapImgs();
 		String time = avatarCliente.getTime();
 		double angulo = avatarCliente.getAngulo();
 		if (angulo < 0) {
@@ -150,6 +191,7 @@ public class PainelTopWar {
 				}
 			}
 		}
+		avatarCliente.setQuadroAnimacao(anim++);
 		// if (desenhaObjetos) {
 		// graphics2d.setColor(Color.CYAN);
 		// graphics2d.draw(gerarCorpo());

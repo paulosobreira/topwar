@@ -1,14 +1,22 @@
 package br.topwar.tos;
 
 import java.awt.Point;
+import java.io.Serializable;
 
-public class AvatarTopWar {
+public class AvatarTopWar implements Serializable {
 	private Point pontoAvatar;
-	private int anim;
-	private boolean local;
 	private double angulo;
 	private int velocidade = 3;
 	private String time;
+	private String nomeJogador;
+
+	public String getNomeJogador() {
+		return nomeJogador;
+	}
+
+	public void setNomeJogador(String nomeJogador) {
+		this.nomeJogador = nomeJogador;
+	}
 
 	public Point getPontoAvatar() {
 		return pontoAvatar;
@@ -16,22 +24,6 @@ public class AvatarTopWar {
 
 	public void setPontoAvatar(Point pontoAvatar) {
 		this.pontoAvatar = pontoAvatar;
-	}
-
-	public int getAnim() {
-		return anim;
-	}
-
-	public void setAnim(int anim) {
-		this.anim = anim;
-	}
-
-	public boolean isLocal() {
-		return local;
-	}
-
-	public void setLocal(boolean local) {
-		this.local = local;
 	}
 
 	public double getAngulo() {
