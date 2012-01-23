@@ -21,9 +21,22 @@ public class ProxyComandos extends NnpeProxyComandos {
 		NnpeTO nnpeTO = (NnpeTO) object;
 		if (ConstantesTopWar.CRIAR_JOGO.equals(nnpeTO.getComando())) {
 			return criarJogo(nnpeTO);
+		} else if (ConstantesTopWar.ATUALIZAR_LISTA_AVS.equals(nnpeTO
+				.getComando())) {
+			return atualizarListaAvatares(nnpeTO);
+		} else if (ConstantesTopWar.MOVER.equals(nnpeTO.getComando())) {
+			return mover(nnpeTO);
 		} else {
 			return super.processarObjeto(object);
 		}
+	}
+
+	private Object atualizarListaAvatares(NnpeTO nnpeTO) {
+		return controleJogosServidor.atualizarListaAvatares(nnpeTO);
+	}
+
+	private Object mover(NnpeTO nnpeTO) {
+		return controleJogosServidor.mover(nnpeTO);
 	}
 
 	private Object criarJogo(NnpeTO nnpeTO) {
