@@ -97,12 +97,11 @@ public class PainelTopWar {
 	protected void desenhaAvatares(Graphics2D graphics2d,
 			AvatarCliente avatarCliente) {
 		Point pontoAvatar = avatarCliente.getPontoAvatar();
-		Point pontoMouse = avatarCliente.getPontoMouse();
 		int anim = avatarCliente.getAnim();
 		int velocidade = avatarCliente.getVelocidade();
 		Map<String, BufferedImage> mapImgs = avatarCliente.getMapImgs();
 		String time = avatarCliente.getTime();
-		double angulo = GeoUtil.calculaAngulo(pontoAvatar, pontoMouse, 90);
+		double angulo = avatarCliente.getAngulo();
 		if (angulo < 0) {
 			angulo = 360 + angulo;
 		}

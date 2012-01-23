@@ -37,4 +37,24 @@ public class ControleCliente extends NnpeChatCliente {
 			jogoCliente.inciaJogo();
 		}
 	}
+
+	public void moverEsquerda() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void moverBaixo() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void moverDireita() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void moverCima() {
+		// TODO Auto-generated method stub
+		
+	}
 }
