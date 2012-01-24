@@ -47,6 +47,15 @@ public class ControleJogosServidor {
 		return nnpeTO;
 	}
 
+	public Object entrarJogo(NnpeTO nnpeTO) {
+		String nmJogo = (String) nnpeTO.getData();
+		JogoServidor jogoServidor = obterJogo(nmJogo);
+		jogoServidor.adicionarJogador(nnpeTO.getSessaoCliente()
+				.getNomeJogador());
+		nnpeTO.setData(jogoServidor.getDadosJogoTopWar());
+		return nnpeTO;
+	}
+
 	public Object mover(NnpeTO nnpeTO) {
 		DadosAcaoClienteTopWar acaoClienteTopWar = (DadosAcaoClienteTopWar) nnpeTO
 				.getData();
@@ -120,4 +129,5 @@ public class ControleJogosServidor {
 		}
 		return null;
 	}
+
 }

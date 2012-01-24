@@ -31,9 +31,9 @@ public class JogoServidor {
 		this.proxyComandos = proxyComandos;
 		ObjectInputStream ois;
 		try {
-			ois = new ObjectInputStream(
-					CarregadorRecursos.recursoComoStream(dadosJogoTopWar
-							.getNomeMapa() + ".topwar"));
+			ois = new ObjectInputStream(CarregadorRecursos
+					.recursoComoStream(dadosJogoTopWar.getNomeMapa()
+							+ ".topwar"));
 			mapaTopWar = (MapaTopWar) ois.readObject();
 		} catch (Exception e) {
 			Logger.logarExept(e);
@@ -47,6 +47,14 @@ public class JogoServidor {
 
 	public List<AvatarTopWar> getAvatarTopWars() {
 		return avatarTopWars;
+	}
+
+	public DadosJogoTopWar getDadosJogoTopWar() {
+		return dadosJogoTopWar;
+	}
+
+	public void setDadosJogoTopWar(DadosJogoTopWar dadosJogoTopWar) {
+		this.dadosJogoTopWar = dadosJogoTopWar;
 	}
 
 	public String getNome() {
@@ -89,5 +97,13 @@ public class JogoServidor {
 			}
 		}
 		return false;
+	}
+
+	public void adicionarJogador(String nomeJogador) {
+		AvatarTopWar avatarTopWar = new AvatarTopWar();
+		avatarTopWar.setPontoAvatar(new Point(20, 20));
+		avatarTopWar.setTime("azul");
+		avatarTopWar.setNomeJogador(nomeJogador);
+		avatarTopWars.add(avatarTopWar);
 	}
 }

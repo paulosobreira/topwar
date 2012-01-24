@@ -9,7 +9,6 @@ import br.topwar.tos.DadosJogoTopWar;
 
 public class ControleCliente extends NnpeChatCliente {
 
-	private DadosJogoTopWar dadosJogoTopWar;
 	private JogoCliente jogoCliente;
 
 	public ControleCliente(NnpeApplet topWarApplet) {
@@ -36,6 +35,26 @@ public class ControleCliente extends NnpeChatCliente {
 		if (nnpeTO instanceof NnpeTO) {
 			nnpeTO = (NnpeTO) ret;
 			dadosJogoTopWar = (DadosJogoTopWar) nnpeTO.getData();
+			jogoCliente = new JogoCliente(dadosJogoTopWar, this);
+			jogoCliente.inciaJogo();
+		}
+	}
+
+	public void entrarJogo() {
+		if (sessaoCliente == null) {
+			logar();
+			return;
+		}
+		NnpeTO nnpeTO = new NnpeTO();
+		nnpeTO.setComando(ConstantesTopWar.ENTRAR_JOGO);
+		nnpeTO.setSessaoCliente(sessaoCliente);
+		ChatWindow chatWindow = (ChatWindow) this.nnpeChatWindow;
+		nnpeTO.setData(chatWindow.obterJogoSelecionado());
+		Object ret = enviarObjeto(nnpeTO);
+		if (nnpeTO instanceof NnpeTO) {
+			nnpeTO = (NnpeTO) ret;
+			DadosJogoTopWar dadosJogoTopWar = (DadosJogoTopWar) nnpeTO
+					.getData();
 			jogoCliente = new JogoCliente(dadosJogoTopWar, this);
 			jogoCliente.inciaJogo();
 		}
@@ -75,4 +94,5 @@ public class ControleCliente extends NnpeChatCliente {
 	public void moverCima() {
 		mover(ConstantesTopWar.CIMA);
 	}
+
 }

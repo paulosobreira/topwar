@@ -28,8 +28,7 @@ import br.topwar.recursos.idiomas.Lang;
 
 public class ChatWindow extends NnpeChatWindow {
 	protected JList listaJogos;
-	private HashMap mapaJogosAndamento = new HashMap();
-
+	private HashMap<String, String> mapaJogosAndamento = new HashMap<String, String>();
 	protected JButton criarJogo;
 	protected JButton entrarJogo;
 
@@ -157,6 +156,11 @@ public class ChatWindow extends NnpeChatWindow {
 				controleChatCliente.criarJogo();
 			}
 		});
+		entrarJogo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				controleChatCliente.entrarJogo();
+			}
+		});
 	}
 
 	@Override
@@ -193,6 +197,11 @@ public class ChatWindow extends NnpeChatWindow {
 		frame.pack();
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+	}
+
+	public String obterJogoSelecionado() {
+		return mapaJogosAndamento.get(mapaJogosAndamento.keySet().iterator()
+				.next());
 	}
 
 }

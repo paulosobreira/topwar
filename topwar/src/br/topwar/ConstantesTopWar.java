@@ -11,5 +11,6 @@ public class ConstantesTopWar {
 	public static final String DIREITA = "DIREITA";
 	public static final String CIMA = "CIMA";
 	public static final String ATUALIZAR_LISTA_AVS = "ATUALIZAR_LISTA_AVS";
+	public static final String ENTRAR_JOGO = "ENTRAR_JOGO";
 
 }
