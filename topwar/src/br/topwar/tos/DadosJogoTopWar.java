@@ -6,7 +6,7 @@ public class DadosJogoTopWar implements Serializable {
 
 	private String nomeJogo;
 
-	private String nomeCriadorJogo;
+	private String nomeJogador;
 
 	private String nomeMapa;
 
@@ -14,12 +14,12 @@ public class DadosJogoTopWar implements Serializable {
 		return nomeJogo;
 	}
 
-	public String getNomeCriadorJogo() {
-		return nomeCriadorJogo;
+	public String getNomeJogador() {
+		return nomeJogador;
 	}
 
-	public void setNomeCriadorJogo(String nomeCriadorJogo) {
-		this.nomeCriadorJogo = nomeCriadorJogo;
+	public void setNomeJogador(String nomeJogador) {
+		this.nomeJogador = nomeJogador;
 	}
 
 	public void setNomeJogo(String nomeJogo) {

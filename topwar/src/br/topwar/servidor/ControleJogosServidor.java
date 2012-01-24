@@ -48,10 +48,9 @@ public class ControleJogosServidor {
 	}
 
 	public Object entrarJogo(NnpeTO nnpeTO) {
-		String nmJogo = (String) nnpeTO.getData();
-		JogoServidor jogoServidor = obterJogo(nmJogo);
-		jogoServidor.adicionarJogador(nnpeTO.getSessaoCliente()
-				.getNomeJogador());
+		DadosJogoTopWar dadosJogoTopWar = (DadosJogoTopWar) nnpeTO.getData();
+		JogoServidor jogoServidor = obterJogo(dadosJogoTopWar.getNomeJogo());
+		jogoServidor.adicionarJogador(dadosJogoTopWar.getNomeJogador());
 		nnpeTO.setData(jogoServidor.getDadosJogoTopWar());
 		return nnpeTO;
 	}
@@ -69,9 +68,7 @@ public class ControleJogosServidor {
 		if (avatarTopWar == null) {
 			return null;
 		}
-		jogoServidor.moverAvatar(avatarTopWar, acaoClienteTopWar);
-		return null;
-
+		return jogoServidor.moverAvatar(avatarTopWar, acaoClienteTopWar);
 	}
 
 	public Object atualizarListaAvatares(NnpeTO nnpeTO) {

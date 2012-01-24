@@ -41,7 +41,7 @@ public class JogoServidor {
 		AvatarTopWar avatarTopWar = new AvatarTopWar();
 		avatarTopWar.setPontoAvatar(new Point(20, 20));
 		avatarTopWar.setTime("vermelho");
-		avatarTopWar.setNomeJogador(dadosJogoTopWar.getNomeCriadorJogo());
+		avatarTopWar.setNomeJogador(dadosJogoTopWar.getNomeJogador());
 		avatarTopWars.add(avatarTopWar);
 	}
 
@@ -61,7 +61,7 @@ public class JogoServidor {
 		return dadosJogoTopWar.getNomeJogo();
 	}
 
-	public void moverAvatar(AvatarTopWar avatarTopWar,
+	public String moverAvatar(AvatarTopWar avatarTopWar,
 			DadosAcaoClienteTopWar acaoClienteTopWar) {
 		Point novoPonto = avatarTopWar.getPontoAvatar();
 		if (ConstantesTopWar.ESQUERDA.equals(acaoClienteTopWar.getMoverPara())) {
@@ -76,12 +76,18 @@ public class JogoServidor {
 		if (ConstantesTopWar.CIMA.equals(acaoClienteTopWar.getMoverPara())) {
 			novoPonto.y = novoPonto.y - avatarTopWar.getVelocidade();
 		}
+		if (verificaColisao(novoPonto, mapaTopWar)) {
+			return null;
+		}
 		avatarTopWar.setPontoAvatar(novoPonto);
 		avatarTopWar.setAngulo(acaoClienteTopWar.getAngulo());
+		return ConstantesTopWar.OK;
 	}
 
 	protected static boolean verificaColisao(Point novoPonto,
-			Rectangle areaAvatar, MapaTopWar mapaTopWar) {
+			MapaTopWar mapaTopWar) {
+		Rectangle areaAvatar = new Rectangle(novoPonto.x, novoPonto.y,
+				ConstantesTopWar.LARGURA_AVATAR, ConstantesTopWar.ALTURA_AVATAR);
 		Point desenha = new Point(novoPonto.x
 				- ((int) areaAvatar.getWidth() / 2), novoPonto.y
 				- ((int) areaAvatar.getHeight() / 3));
