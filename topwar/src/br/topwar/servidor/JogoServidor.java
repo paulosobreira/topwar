@@ -63,7 +63,8 @@ public class JogoServidor {
 
 	public String moverAvatar(AvatarTopWar avatarTopWar,
 			DadosAcaoClienteTopWar acaoClienteTopWar) {
-		Point novoPonto = avatarTopWar.getPontoAvatar();
+		Point novoPonto = new Point(avatarTopWar.getPontoAvatar().x,
+				avatarTopWar.getPontoAvatar().y);
 		if (ConstantesTopWar.ESQUERDA.equals(acaoClienteTopWar.getMoverPara())) {
 			novoPonto.x = novoPonto.x - avatarTopWar.getVelocidade();
 		}
