@@ -47,11 +47,11 @@ public class ControleCliente extends NnpeChatCliente {
 		}
 		NnpeTO nnpeTO = new NnpeTO();
 		nnpeTO.setComando(ConstantesTopWar.ENTRAR_JOGO);
-
 		ChatWindow chatWindow = (ChatWindow) this.nnpeChatWindow;
 		DadosJogoTopWar dadosJogoTopWar = new DadosJogoTopWar();
 		dadosJogoTopWar.setNomeJogo(chatWindow.obterJogoSelecionado());
-
+		dadosJogoTopWar.setNomeJogador(sessaoCliente.getNomeJogador());
+		nnpeTO.setData(dadosJogoTopWar);
 		Object ret = enviarObjeto(nnpeTO);
 		if (nnpeTO instanceof NnpeTO) {
 			nnpeTO = (NnpeTO) ret;
