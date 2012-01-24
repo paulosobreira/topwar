@@ -28,7 +28,7 @@ public class ControleCliente extends NnpeChatCliente {
 		NnpeTO nnpeTO = new NnpeTO();
 		nnpeTO.setComando(ConstantesTopWar.CRIAR_JOGO);
 		DadosJogoTopWar dadosJogoTopWar = new DadosJogoTopWar();
-		dadosJogoTopWar.setNomeCriadorJogo(getNomeJogador());
+		dadosJogoTopWar.setNomeJogador(getNomeJogador());
 		dadosJogoTopWar.setNomeMapa("mapa9");
 		nnpeTO.setData(dadosJogoTopWar);
 		Object ret = enviarObjeto(nnpeTO);
@@ -47,14 +47,15 @@ public class ControleCliente extends NnpeChatCliente {
 		}
 		NnpeTO nnpeTO = new NnpeTO();
 		nnpeTO.setComando(ConstantesTopWar.ENTRAR_JOGO);
-		nnpeTO.setSessaoCliente(sessaoCliente);
+
 		ChatWindow chatWindow = (ChatWindow) this.nnpeChatWindow;
-		nnpeTO.setData(chatWindow.obterJogoSelecionado());
+		DadosJogoTopWar dadosJogoTopWar = new DadosJogoTopWar();
+		dadosJogoTopWar.setNomeJogo(chatWindow.obterJogoSelecionado());
+
 		Object ret = enviarObjeto(nnpeTO);
 		if (nnpeTO instanceof NnpeTO) {
 			nnpeTO = (NnpeTO) ret;
-			DadosJogoTopWar dadosJogoTopWar = (DadosJogoTopWar) nnpeTO
-					.getData();
+			dadosJogoTopWar = (DadosJogoTopWar) nnpeTO.getData();
 			jogoCliente = new JogoCliente(dadosJogoTopWar, this);
 			jogoCliente.inciaJogo();
 		}
