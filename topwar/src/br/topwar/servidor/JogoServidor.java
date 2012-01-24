@@ -31,15 +31,16 @@ public class JogoServidor {
 		this.proxyComandos = proxyComandos;
 		ObjectInputStream ois;
 		try {
-			ois = new ObjectInputStream(CarregadorRecursos
-					.recursoComoStream(dadosJogoTopWar.getNomeMapa()
-							+ ".topwar"));
+			ois = new ObjectInputStream(
+					CarregadorRecursos.recursoComoStream(dadosJogoTopWar
+							.getNomeMapa() + ".topwar"));
 			mapaTopWar = (MapaTopWar) ois.readObject();
 		} catch (Exception e) {
 			Logger.logarExept(e);
 		}
 		AvatarTopWar avatarTopWar = new AvatarTopWar();
 		avatarTopWar.setPontoAvatar(new Point(20, 20));
+		avatarTopWar.setTime("vermelho");
 		avatarTopWar.setNomeJogador(dadosJogoTopWar.getNomeCriadorJogo());
 		avatarTopWars.add(avatarTopWar);
 	}

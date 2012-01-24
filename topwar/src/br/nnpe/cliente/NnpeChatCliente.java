@@ -189,7 +189,7 @@ public abstract class NnpeChatCliente {
 					JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
-		Logger.logar("registrarUsuario mesa11to.getComando() "
+		Logger.logar("registrarUsuario nnpeTO.getComando() "
 				+ nnpeTO.getComando());
 		Object ret = nnpeApplet.enviarObjeto(nnpeTO);
 		if (ret == null) {

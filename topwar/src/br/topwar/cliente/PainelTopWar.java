@@ -23,6 +23,7 @@ import javax.swing.event.ChangeListener;
 
 import br.nnpe.GeoUtil;
 import br.nnpe.ImageUtil;
+import br.nnpe.Logger;
 import br.nnpe.Util;
 import br.topwar.ConstantesTopWar;
 import br.topwar.recursos.CarregadorRecursos;
@@ -34,7 +35,7 @@ public class PainelTopWar {
 	private JPanel panel;
 	private JScrollPane scrollPane;
 	private MapaTopWar mapaTopWar;
-	private boolean desenhaObjetos;
+	private boolean desenhaObjetos = true;
 	public Map<String, BufferedImage> mapImgs = new HashMap<String, BufferedImage>();
 	public final static BufferedImage azul = CarregadorRecursos
 			.carregaBufferedImageTransparecia("azul.png", Color.MAGENTA);
@@ -191,14 +192,16 @@ public class PainelTopWar {
 				}
 			}
 		}
-		avatarCliente.setQuadroAnimacao(anim++);
-		// if (desenhaObjetos) {
-		// graphics2d.setColor(Color.CYAN);
-		// graphics2d.draw(gerarCorpo());
-		// graphics2d.drawLine(p.x, p.y, m.x, m.y);
-		// graphics2d.setColor(Color.RED);
-		// graphics2d.draw(gerarCabeca());
-		// }
+		if (!avatarCliente.getPontoAvatar().equals(
+				avatarCliente.getPontoAvatarOld())){
+			avatarCliente.animar();
+		}
+		if (desenhaObjetos) {
+			graphics2d.setColor(Color.CYAN);
+			graphics2d.draw(avatarCliente.gerarCorpo());
+			graphics2d.setColor(Color.RED);
+			graphics2d.draw(avatarCliente.gerarCabeca());
+		}
 
 	}
 
@@ -208,6 +211,9 @@ public class PainelTopWar {
 			AvatarCliente avatarCliente = (AvatarCliente) iterator.next();
 			if (avatarCliente.isLocal())
 				centralizarPontoDireto(avatarCliente.getPontoAvatar());
+		}
+		if (panel != null) {
+			panel.repaint();
 		}
 	}
 

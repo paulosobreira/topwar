@@ -51,9 +51,9 @@ public class JogoCliente {
 		this.controleCliente = controleCliente;
 		ObjectInputStream ois;
 		try {
-			ois = new ObjectInputStream(CarregadorRecursos
-					.recursoComoStream(dadosJogoTopWar.getNomeMapa()
-							+ ".topwar"));
+			ois = new ObjectInputStream(
+					CarregadorRecursos.recursoComoStream(dadosJogoTopWar
+							.getNomeMapa() + ".topwar"));
 			mapaTopWar = (MapaTopWar) ois.readObject();
 		} catch (Exception e1) {
 			Logger.logarExept(e1);
@@ -93,35 +93,8 @@ public class JogoCliente {
 			public void run() {
 				while (rodando) {
 					try {
-						NnpeTO nnpeTO = new NnpeTO();
-						nnpeTO.setComando(ConstantesTopWar.ATUALIZAR_LISTA_AVS);
-						nnpeTO.setData(dadosJogoTopWar.getNomeJogo());
-						Object ret = controleCliente.enviarObjeto(nnpeTO);
-						if (ret instanceof NnpeTO) {
-							nnpeTO = (NnpeTO) ret;
-							List<AvatarTopWar> avatarTopWars = (List<AvatarTopWar>) nnpeTO
-									.getData();
-							synchronized (avatarClientes) {
-								avatarClientes.clear();
-								for (Iterator iterator = avatarTopWars
-										.iterator(); iterator.hasNext();) {
-									AvatarTopWar avatarTopWar = (AvatarTopWar) iterator
-											.next();
-									AvatarCliente avatarCliente = new AvatarCliente(
-											avatarTopWar.getTime(),
-											avatarTopWar);
-									if (controleCliente.getNomeJogador()
-											.equals(
-													avatarTopWar
-															.getNomeJogador())) {
-										avatarCliente.setLocal(true);
-										angulo = avatarCliente.getAngulo();
-										pontoAvatar = avatarCliente
-												.getPontoAvatar();
-									}
-									avatarClientes.add(avatarCliente);
-								}
-							}
+						synchronized (avatarClientes) {
+							atualizaListaAvatares();
 						}
 						Thread.sleep(100);
 					} catch (InterruptedException e) {
@@ -138,6 +111,9 @@ public class JogoCliente {
 		painelTopWar.getPanel().addMouseMotionListener(new MouseAdapter() {
 			@Override
 			public void mouseMoved(MouseEvent e) {
+				if (pontoAvatar == null) {
+					return;
+				}
 				if (pontoMouse == null) {
 					pontoMouse = new Point(e.getX(), e.getY());
 				}
@@ -234,7 +210,6 @@ public class JogoCliente {
 			threadTeclado.interrupt();
 		}
 		threadTeclado = new Thread(new Runnable() {
-
 			@Override
 			public void run() {
 				while (rodando) {
@@ -270,6 +245,45 @@ public class JogoCliente {
 
 	public double getAngulo() {
 		return angulo;
+	}
+
+	private void atualizaListaAvatares() {
+		NnpeTO nnpeTO = new NnpeTO();
+		nnpeTO.setComando(ConstantesTopWar.ATUALIZAR_LISTA_AVS);
+		nnpeTO.setData(dadosJogoTopWar.getNomeJogo());
+		Object ret = controleCliente.enviarObjeto(nnpeTO);
+		if (!(ret instanceof NnpeTO)) {
+			return;
+		}
+		nnpeTO = (NnpeTO) ret;
+		List<AvatarTopWar> avatarTopWars = (List<AvatarTopWar>) nnpeTO
+				.getData();
+		for (Iterator iterator = avatarTopWars.iterator(); iterator.hasNext();) {
+			AvatarTopWar avatarTopWar = (AvatarTopWar) iterator.next();
+			for (Iterator iterator2 = avatarClientes.iterator(); iterator2
+					.hasNext();) {
+				AvatarCliente avatarCliente = (AvatarCliente) iterator2.next();
+				if (avatarTopWar.getNomeJogador().equals(
+						avatarCliente.getNomeJogador())) {
+					avatarCliente.setPontoAvatarOld(avatarCliente
+							.getPontoAvatar());
+					avatarCliente.setAvatarTopWar(avatarTopWar);
+					if (controleCliente.getNomeJogador().equals(
+							avatarTopWar.getNomeJogador())) {
+						avatarCliente.setLocal(true);
+						angulo = avatarCliente.getAngulo();
+						pontoAvatar = avatarCliente.getPontoAvatar();
+					}
+					break;
+				}
+
+			}
+			AvatarCliente avatarCliente = new AvatarCliente(
+					avatarTopWar.getTime(), avatarTopWar);
+			if (!avatarClientes.contains(avatarCliente)) {
+				avatarClientes.add(avatarCliente);
+			}
+		}
 	}
 
 }
