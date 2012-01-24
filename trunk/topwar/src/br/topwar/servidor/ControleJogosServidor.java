@@ -20,6 +20,8 @@ public class ControleJogosServidor {
 
 	private ProxyComandos proxyComandos;
 
+	private Map<String, JogoServidor> mapaJogos = new HashMap<String, JogoServidor>();
+
 	protected NnpeDados nnpeDados;
 
 	private int contadorJogos = 0;
@@ -39,6 +41,7 @@ public class ControleJogosServidor {
 		nnpeDados.getJogosAndamento().add(dadosJogoTopWar.getNomeJogo());
 		JogoServidor jogoServidor = new JogoServidor(dadosJogoTopWar,
 				proxyComandos);
+		mapaJogos.put(dadosJogoTopWar.getNomeJogo(), jogoServidor);
 		nnpeTO = new NnpeTO();
 		nnpeTO.setData(dadosJogoTopWar);
 		return nnpeTO;
@@ -73,27 +76,26 @@ public class ControleJogosServidor {
 	}
 
 	private JogoServidor obterJogo(String nomeJogo) {
-		Collection jogosAndamento = nnpeDados.getJogosAndamento();
-		for (Iterator iterator = jogosAndamento.iterator(); iterator.hasNext();) {
-			JogoServidor jogoServidor = (JogoServidor) iterator.next();
-			if (nomeJogo.equals(jogoServidor.getNome())) {
-				return jogoServidor;
-			}
-		}
-		return null;
+		return mapaJogos.get(nomeJogo);
 	}
 
 	private AvatarTopWar obterAvatarTopWarCliente(String nomeCliente) {
 		Collection jogosAndamento = nnpeDados.getJogosAndamento();
 		for (Iterator iterator = jogosAndamento.iterator(); iterator.hasNext();) {
-			JogoServidor jogoServidor = (JogoServidor) iterator.next();
-			List<AvatarTopWar> avatarTopWars = jogoServidor.getAvatarTopWars();
-			for (Iterator iterator2 = avatarTopWars.iterator(); iterator2
-					.hasNext();) {
-				AvatarTopWar avatarTopWar = (AvatarTopWar) iterator2.next();
-				if (nomeCliente.equals(avatarTopWar.getNomeJogador())) {
-					return avatarTopWar;
+			String nmJogog = (String) iterator.next();
+			JogoServidor jogoServidor = mapaJogos.get(nmJogog);
+			if (jogoServidor != null) {
+
+				List<AvatarTopWar> avatarTopWars = jogoServidor
+						.getAvatarTopWars();
+				for (Iterator iterator2 = avatarTopWars.iterator(); iterator2
+						.hasNext();) {
+					AvatarTopWar avatarTopWar = (AvatarTopWar) iterator2.next();
+					if (nomeCliente.equals(avatarTopWar.getNomeJogador())) {
+						return avatarTopWar;
+					}
 				}
+
 			}
 		}
 		return null;
@@ -102,17 +104,20 @@ public class ControleJogosServidor {
 	private JogoServidor obterJogoCliente(String nomeCliente) {
 		Collection jogosAndamento = nnpeDados.getJogosAndamento();
 		for (Iterator iterator = jogosAndamento.iterator(); iterator.hasNext();) {
-			JogoServidor jogoServidor = (JogoServidor) iterator.next();
-			List<AvatarTopWar> avatarTopWars = jogoServidor.getAvatarTopWars();
-			for (Iterator iterator2 = avatarTopWars.iterator(); iterator2
-					.hasNext();) {
-				AvatarTopWar avatarTopWar = (AvatarTopWar) iterator2.next();
-				if (nomeCliente.equals(avatarTopWar.getNomeJogador())) {
-					return jogoServidor;
+			String nmJogog = (String) iterator.next();
+			JogoServidor jogoServidor = mapaJogos.get(nmJogog);
+			if (jogoServidor != null) {
+				List<AvatarTopWar> avatarTopWars = jogoServidor
+						.getAvatarTopWars();
+				for (Iterator iterator2 = avatarTopWars.iterator(); iterator2
+						.hasNext();) {
+					AvatarTopWar avatarTopWar = (AvatarTopWar) iterator2.next();
+					if (nomeCliente.equals(avatarTopWar.getNomeJogador())) {
+						return jogoServidor;
+					}
 				}
 			}
 		}
 		return null;
 	}
-
 }

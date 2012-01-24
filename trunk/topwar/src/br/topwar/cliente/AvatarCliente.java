@@ -1,30 +1,81 @@
 package br.topwar.cliente;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
-import java.util.HashMap;
-import java.util.Map;
+import java.awt.Shape;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.Rectangle2D;
 
-import br.nnpe.ImageUtil;
+import br.nnpe.GeoUtil;
 import br.topwar.tos.AvatarTopWar;
 
 public class AvatarCliente {
 	private boolean local;
 	private int quadroAnimacao;
+	private long lastAnim;
+	private Point pontoAvatarOld;
 	private AvatarTopWar avatarTopWar;
+
+	public Point getPontoAvatarOld() {
+		return pontoAvatarOld;
+	}
+
+	public void setPontoAvatarOld(Point pontoAvatarOld) {
+		this.pontoAvatarOld = pontoAvatarOld;
+	}
 
 	public int getQuadroAnimacao() {
 		return quadroAnimacao;
 	}
 
-	public void setQuadroAnimacao(int quadroAnimacao) {
+	public void setAvatarTopWar(AvatarTopWar avatarTopWar) {
+		this.avatarTopWar = avatarTopWar;
+	}
+
+	public Shape gerarCabeca() {
+		AffineTransform afRotate = new AffineTransform();
+		double angulo = getAngulo();
+		double rad = Math.toRadians((double) angulo);
+		Shape cabeca = desenhaCabeca(GeoUtil.calculaPonto(angulo, 6,
+				getPontoAvatar()));
+		GeneralPath gpCabeca = new GeneralPath(cabeca);
+		afRotate.setToRotation(rad, gpCabeca.getBounds().getCenterX(), gpCabeca
+				.getBounds().getCenterY());
+		return gpCabeca.createTransformedShape(afRotate);
+	}
+
+	public Shape desenhaCorpo(Point p) {
+		return new Rectangle2D.Double(p.x - 8, p.y - 3, 16, 6);
+	}
+
+	public Shape gerarCorpo() {
+		AffineTransform afRotate = new AffineTransform();
+		Shape corpo = desenhaCorpo(getPontoAvatar());
+		double angulo = getAngulo();
+		double rad = Math.toRadians((double) angulo);
+		GeneralPath gpCorpo = new GeneralPath(corpo);
+		afRotate.setToRotation(rad, gpCorpo.getBounds().getCenterX(), gpCorpo
+				.getBounds().getCenterY());
+		return gpCorpo.createTransformedShape(afRotate);
+	}
+
+	public Shape desenhaCabeca(Point p) {
+		return new Rectangle2D.Double(p.x - 3, p.y - 2, 6, 4);
+	}
+
+	public void animar() {
+		int intMin = (100 + (10 * getVelocidade()));
+		if (intMin < 60) {
+			intMin = 60;
+		}
+		if ((System.currentTimeMillis() - lastAnim) < intMin) {
+			return;
+		}
+		quadroAnimacao++;
 		if (quadroAnimacao > 3) {
 			quadroAnimacao = 0;
 		}
-		this.quadroAnimacao = quadroAnimacao;
+		lastAnim = System.currentTimeMillis();
 	}
 
 	public AvatarCliente(String time, AvatarTopWar avatarTopWar) {
@@ -33,7 +84,11 @@ public class AvatarCliente {
 	}
 
 	public boolean equals(Object obj) {
-		return avatarTopWar.equals(obj);
+		if (obj instanceof AvatarCliente) {
+			AvatarCliente outro = (AvatarCliente) obj;
+			return (getNomeJogador().equals(outro.getNomeJogador()));
+		} else
+			return avatarTopWar.equals(obj);
 	}
 
 	public double getAngulo() {

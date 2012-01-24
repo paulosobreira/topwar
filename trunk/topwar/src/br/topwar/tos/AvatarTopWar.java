@@ -6,7 +6,7 @@ import java.io.Serializable;
 public class AvatarTopWar implements Serializable {
 	private Point pontoAvatar;
 	private double angulo;
-	private int velocidade = 3;
+	private int velocidade = 4;
 	private String time;
 	private String nomeJogador;
 
@@ -48,6 +48,32 @@ public class AvatarTopWar implements Serializable {
 
 	public void setTime(String time) {
 		this.time = time;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((nomeJogador == null) ? 0 : nomeJogador.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AvatarTopWar other = (AvatarTopWar) obj;
+		if (nomeJogador == null) {
+			if (other.nomeJogador != null)
+				return false;
+		} else if (!nomeJogador.equals(other.nomeJogador))
+			return false;
+		return true;
 	}
 
 }
