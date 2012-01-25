@@ -51,9 +51,9 @@ public class JogoCliente {
 		this.controleCliente = controleCliente;
 		ObjectInputStream ois;
 		try {
-			ois = new ObjectInputStream(
-					CarregadorRecursos.recursoComoStream(dadosJogoTopWar
-							.getNomeMapa() + ".topwar"));
+			ois = new ObjectInputStream(CarregadorRecursos
+					.recursoComoStream(dadosJogoTopWar.getNomeMapa()
+							+ ".topwar"));
 			mapaTopWar = (MapaTopWar) ois.readObject();
 		} catch (Exception e1) {
 			Logger.logarExept(e1);
@@ -96,7 +96,7 @@ public class JogoCliente {
 						synchronized (avatarClientes) {
 							atualizaListaAvatares();
 						}
-						Thread.sleep(100);
+						Thread.sleep(150);
 					} catch (InterruptedException e) {
 						Logger.logarExept(e);
 					}
@@ -233,7 +233,7 @@ public class JogoCliente {
 						}
 					}
 					try {
-						Thread.sleep(100);
+						Thread.sleep(150);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
@@ -278,8 +278,8 @@ public class JogoCliente {
 				}
 
 			}
-			AvatarCliente avatarCliente = new AvatarCliente(
-					avatarTopWar.getTime(), avatarTopWar);
+			AvatarCliente avatarCliente = new AvatarCliente(avatarTopWar
+					.getTime(), avatarTopWar);
 			if (!avatarClientes.contains(avatarCliente)) {
 				avatarClientes.add(avatarCliente);
 			}
