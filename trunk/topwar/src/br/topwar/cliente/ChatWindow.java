@@ -90,7 +90,7 @@ public class ChatWindow extends NnpeChatWindow {
 		usersPanel.add(usersPane);
 		jogosPanel.add(jogsPane);
 		JPanel buttonsPanel = new JPanel();
-		buttonsPanel.setLayout(new GridLayout(2, 3));
+		buttonsPanel.setLayout(new GridLayout(1, 4));
 		criarJogo = new JButton("criarJogo") {
 
 			public String getText() {
@@ -107,6 +107,8 @@ public class ChatWindow extends NnpeChatWindow {
 		};
 		buttonsPanel.add(criarJogo);
 		buttonsPanel.add(entrarJogo);
+		buttonsPanel.add(sair);
+		buttonsPanel.add(sobre);
 		buttonsPanel.add(comboIdiomas);
 		comboIdiomas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -121,8 +123,7 @@ public class ChatWindow extends NnpeChatWindow {
 				}
 			}
 		});
-		buttonsPanel.add(sobre);
-		buttonsPanel.add(sair);
+
 		JPanel panelTextoEnviar = new JPanel();
 		panelTextoEnviar.setBorder(new TitledBorder("Texto Enviar") {
 			public String getTitle() {
