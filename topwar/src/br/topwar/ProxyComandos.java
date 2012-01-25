@@ -48,4 +48,10 @@ public class ProxyComandos extends NnpeProxyComandos {
 		return controleJogosServidor.criarJogo(nnpeTO);
 	}
 
+	@Override
+	public void ganchoMonitorAtividade() {
+		controleJogosServidor.removerJogosVaziosFinalizados();
+
+	}
+
 }

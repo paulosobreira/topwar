@@ -39,6 +39,7 @@ public class NnpeMonitorAtividadeChat extends Thread {
 				if (sessaoClienteRemover != null) {
 					proxyComandos.removerClienteInativo(sessaoClienteRemover);
 				}
+				proxyComandos.ganchoMonitorAtividade();
 			} catch (Exception e) {
 				Logger.logarExept(e);
 			}

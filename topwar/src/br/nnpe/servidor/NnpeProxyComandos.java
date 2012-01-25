@@ -30,7 +30,7 @@ import br.topwar.recursos.idiomas.Lang;
 
 import com.octo.captcha.service.image.DefaultManageableImageCaptchaService;
 
-public class NnpeProxyComandos {
+public abstract class NnpeProxyComandos {
 	protected NnpeDados nnpeDados;
 	protected NnpeChatServidor nnpeChatServidor;
 	protected NnpeMonitorAtividadeChat nnpeMonitorAtividadeChat;
@@ -88,8 +88,8 @@ public class NnpeProxyComandos {
 		if (cliente.getSessaoCliente() == null) {
 			return (new MsgSrv(Lang.msg("usuarioSemSessao")));
 		}
-		nnpeDados.atualizaAtividade(cliente.getSessaoCliente()
-				.getNomeJogador());
+		nnpeDados
+				.atualizaAtividade(cliente.getSessaoCliente().getNomeJogador());
 		nnpeDados.setLinhaChat(cliente.getSessaoCliente().getNomeJogador()
 				+ " : " + cliente.getTextoChat());
 		nnpeDados.setDataTime(System.currentTimeMillis());
@@ -323,5 +323,7 @@ public class NnpeProxyComandos {
 		return true;
 
 	}
+
+	public abstract void ganchoMonitorAtividade();
 
 }

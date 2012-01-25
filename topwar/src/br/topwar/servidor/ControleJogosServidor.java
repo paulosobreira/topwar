@@ -127,4 +127,9 @@ public class ControleJogosServidor {
 		return null;
 	}
 
+	public void removerJogosVaziosFinalizados() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
