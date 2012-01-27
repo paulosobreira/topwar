@@ -62,6 +62,7 @@ public class JogoServidor {
 					.hasNext();) {
 				AvatarTopWar avatarTopWar = (AvatarTopWar) iterator.next();
 				if (avatarTopWar.equals(avatarTopWarJog)) {
+					ret.add(avatarTopWar);
 					continue;
 				}
 				List<Point> line = GeoUtil.drawBresenhamLine(avatarTopWar

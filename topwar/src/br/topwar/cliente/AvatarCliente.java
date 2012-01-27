@@ -16,6 +16,10 @@ public class AvatarCliente {
 	private Point pontoAvatarOld;
 	private AvatarTopWar avatarTopWar;
 
+	public AvatarTopWar getAvatarTopWar() {
+		return avatarTopWar;
+	}
+
 	public Point getPontoAvatarOld() {
 		return pontoAvatarOld;
 	}

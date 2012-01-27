@@ -286,4 +286,9 @@ public abstract class NnpeChatCliente {
 		nnpeChatWindow.atualizar((NnpeDados) nnpeTO.getData());
 		sessaoCliente = null;
 	}
+
+	public SessaoCliente getSessaoCliente() {
+		return sessaoCliente;
+	}
+
 }
