@@ -83,7 +83,8 @@ public class JogoServidor {
 			for (Iterator iterator2 = objetoMapaList.iterator(); iterator2
 					.hasNext();) {
 				ObjetoMapa objetoMapa = (ObjetoMapa) iterator2.next();
-				if (objetoMapa.getForma().contains(point)) {
+				if (objetoMapa.getTransparencia() > 10
+						&& objetoMapa.getForma().contains(point)) {
 					return false;
 				}
 			}
@@ -186,7 +187,6 @@ public class JogoServidor {
 	}
 
 	public boolean verificaFinalizado() {
-		// TODO Auto-generated method stub
-		return false;
+		return avatarTopWars.isEmpty();
 	}
 }

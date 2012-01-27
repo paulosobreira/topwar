@@ -35,13 +35,13 @@ public class JogoCliente {
 	protected boolean rodando = true;
 	private Thread threadRepaint;
 	private Thread threadDadosSrv;
+	private Thread threadTeclado;
 	private PainelTopWar painelTopWar;
 	protected Set pressed = new HashSet();
 	private List<AvatarCliente> avatarClientes = new ArrayList<AvatarCliente>();
 	private JFrame frameTopWar;
 	private ControleCliente controleCliente;
 	private DadosJogoTopWar dadosJogoTopWar;
-	private Thread threadTeclado;
 
 	public JogoCliente(DadosJogoTopWar dadosJogoTopWar,
 			ControleCliente controleCliente) {
@@ -176,6 +176,31 @@ public class JogoCliente {
 		frameTopWar.getContentPane().add(painelTopWar.getScrollPane());
 		frameTopWar.setSize(800, 600);
 		frameTopWar.setVisible(true);
+		frameTopWar.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosed(WindowEvent e) {
+				matarTodasThreads();
+				super.windowClosed(e);
+			}
+		});
+	}
+
+	protected void matarTodasThreads() {
+		rodando = false;
+		try {
+			if (threadRepaint != null) {
+				threadRepaint.interrupt();
+			}
+			if (threadDadosSrv != null) {
+				threadDadosSrv.interrupt();
+			}
+			if (threadTeclado != null) {
+				threadTeclado.interrupt();
+			}
+		} catch (Exception e) {
+			Logger.logarExept(e);
+		}
+
 	}
 
 	private void iniciaListenerTeclado() {
