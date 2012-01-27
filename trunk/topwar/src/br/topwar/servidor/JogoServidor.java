@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import br.nnpe.GeoUtil;
 import br.nnpe.Logger;
+import br.nnpe.tos.SessaoCliente;
 import br.topwar.ConstantesTopWar;
 import br.topwar.ProxyComandos;
 import br.topwar.cliente.AvatarCliente;
@@ -47,6 +49,46 @@ public class JogoServidor {
 
 	public List<AvatarTopWar> getAvatarTopWars() {
 		return avatarTopWars;
+	}
+
+	public List<AvatarTopWar> getAvatarTopWars(SessaoCliente sessaoCliente) {
+		AvatarTopWar avatarTopWarJog = obterAvatarTopWar(sessaoCliente
+				.getNomeJogador());
+		if (avatarTopWarJog == null)
+			return null;
+		List<AvatarTopWar> ret = new ArrayList<AvatarTopWar>();
+		synchronized (avatarTopWars) {
+			for (Iterator iterator = avatarTopWars.iterator(); iterator
+					.hasNext();) {
+				AvatarTopWar avatarTopWar = (AvatarTopWar) iterator.next();
+				if (avatarTopWar.equals(avatarTopWarJog)) {
+					continue;
+				}
+				List<Point> line = GeoUtil.drawBresenhamLine(avatarTopWar
+						.getPontoAvatar(), avatarTopWarJog.getPontoAvatar());
+				if (campoVisao(line)) {
+					ret.add(avatarTopWar);
+				}
+
+			}
+		}
+		return ret;
+	}
+
+	private boolean campoVisao(List<Point> line) {
+		List<ObjetoMapa> objetoMapaList = mapaTopWar.getObjetoMapaList();
+		for (Iterator iterator = line.iterator(); iterator.hasNext();) {
+			Point point = (Point) iterator.next();
+			for (Iterator iterator2 = objetoMapaList.iterator(); iterator2
+					.hasNext();) {
+				ObjetoMapa objetoMapa = (ObjetoMapa) iterator2.next();
+				if (objetoMapa.getForma().contains(point)) {
+					return false;
+				}
+			}
+
+		}
+		return true;
 	}
 
 	public DadosJogoTopWar getDadosJogoTopWar() {
@@ -112,5 +154,38 @@ public class JogoServidor {
 		avatarTopWar.setTime("azul");
 		avatarTopWar.setNomeJogador(nomeJogador);
 		avatarTopWars.add(avatarTopWar);
+	}
+
+	public AvatarTopWar removerJogador(String nomeJogador) {
+		synchronized (avatarTopWars) {
+			for (Iterator iterator = avatarTopWars.iterator(); iterator
+					.hasNext();) {
+				AvatarTopWar avatarTopWar = (AvatarTopWar) iterator.next();
+				if (avatarTopWar.getNomeJogador().equals(nomeJogador)) {
+					iterator.remove();
+					return avatarTopWar;
+				}
+			}
+		}
+		return null;
+	}
+
+	public AvatarTopWar obterAvatarTopWar(String nomeCliente) {
+		List<AvatarTopWar> avatarTopWars = getAvatarTopWars();
+		synchronized (avatarTopWars) {
+			for (Iterator iterator2 = avatarTopWars.iterator(); iterator2
+					.hasNext();) {
+				AvatarTopWar avatarTopWar = (AvatarTopWar) iterator2.next();
+				if (nomeCliente.equals(avatarTopWar.getNomeJogador())) {
+					return avatarTopWar;
+				}
+			}
+		}
+		return null;
+	}
+
+	public boolean verificaFinalizado() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }
