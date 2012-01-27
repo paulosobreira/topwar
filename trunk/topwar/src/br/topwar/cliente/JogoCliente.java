@@ -1,6 +1,5 @@
 package br.topwar.cliente;
 
-import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.event.KeyAdapter;
@@ -9,7 +8,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -250,6 +248,7 @@ public class JogoCliente {
 	private void atualizaListaAvatares() {
 		NnpeTO nnpeTO = new NnpeTO();
 		nnpeTO.setComando(ConstantesTopWar.ATUALIZAR_LISTA_AVS);
+		nnpeTO.setSessaoCliente(controleCliente.getSessaoCliente());
 		nnpeTO.setData(dadosJogoTopWar.getNomeJogo());
 		Object ret = controleCliente.enviarObjeto(nnpeTO);
 		if (!(ret instanceof NnpeTO)) {
@@ -276,12 +275,17 @@ public class JogoCliente {
 					}
 					break;
 				}
-
 			}
 			AvatarCliente avatarCliente = new AvatarCliente(avatarTopWar
 					.getTime(), avatarTopWar);
 			if (!avatarClientes.contains(avatarCliente)) {
 				avatarClientes.add(avatarCliente);
+			}
+		}
+		for (Iterator iterator = avatarClientes.iterator(); iterator.hasNext();) {
+			AvatarCliente avatarCliente = (AvatarCliente) iterator.next();
+			if (!avatarTopWars.contains(avatarCliente.getAvatarTopWar())) {
+				iterator.remove();
 			}
 		}
 	}
