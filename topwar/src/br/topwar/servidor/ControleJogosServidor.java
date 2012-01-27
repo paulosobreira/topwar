@@ -5,9 +5,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import br.nnpe.tos.NnpeDados;
 import br.nnpe.tos.NnpeTO;
+import br.nnpe.tos.SessaoCliente;
 import br.topwar.ProxyComandos;
 import br.topwar.recursos.idiomas.Lang;
 import br.topwar.tos.AvatarTopWar;
@@ -75,7 +77,8 @@ public class ControleJogosServidor {
 		String nomeJogo = (String) nnpeTO.getData();
 		JogoServidor jogoServidor = obterJogo(nomeJogo);
 		if (jogoServidor != null) {
-			nnpeTO.setData(jogoServidor.getAvatarTopWars());
+			nnpeTO.setData(jogoServidor.getAvatarTopWars(nnpeTO
+					.getSessaoCliente()));
 			return nnpeTO;
 		}
 		return null;
@@ -91,17 +94,7 @@ public class ControleJogosServidor {
 			String nmJogog = (String) iterator.next();
 			JogoServidor jogoServidor = mapaJogos.get(nmJogog);
 			if (jogoServidor != null) {
-
-				List<AvatarTopWar> avatarTopWars = jogoServidor
-						.getAvatarTopWars();
-				for (Iterator iterator2 = avatarTopWars.iterator(); iterator2
-						.hasNext();) {
-					AvatarTopWar avatarTopWar = (AvatarTopWar) iterator2.next();
-					if (nomeCliente.equals(avatarTopWar.getNomeJogador())) {
-						return avatarTopWar;
-					}
-				}
-
+				return jogoServidor.obterAvatarTopWar(nomeCliente);
 			}
 		}
 		return null;
@@ -128,8 +121,36 @@ public class ControleJogosServidor {
 	}
 
 	public void removerJogosVaziosFinalizados() {
-		// TODO Auto-generated method stub
-		
+		Set<String> keySet = mapaJogos.keySet();
+		synchronized (mapaJogos) {
+			for (Iterator iterator = keySet.iterator(); iterator.hasNext();) {
+				String key = (String) iterator.next();
+				JogoServidor jogoServidor = mapaJogos.get(key);
+				if (jogoServidor.verificaFinalizado()) {
+					mapaJogos.remove(key);
+					Collection jogosAndamento = nnpeDados.getJogosAndamento();
+					synchronized (jogosAndamento) {
+						for (Iterator iterator2 = jogosAndamento.iterator(); iterator2
+								.hasNext();) {
+							String jogo = (String) iterator2.next();
+							if (key.equals(jogo)) {
+								iterator2.remove();
+							}
+						}
+					}
+				}
+
+			}
+		}
+	}
+
+	public void removerClienteInativo(SessaoCliente sessaoClienteRemover) {
+		JogoServidor jogoServidor = obterJogoCliente(sessaoClienteRemover
+				.getNomeJogador());
+		if (jogoServidor != null) {
+			jogoServidor.removerJogador(sessaoClienteRemover.getNomeJogador());
+		}
+
 	}
 
 }

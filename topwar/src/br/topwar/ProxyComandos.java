@@ -2,6 +2,7 @@ package br.topwar;
 
 import br.nnpe.servidor.NnpeProxyComandos;
 import br.nnpe.tos.NnpeTO;
+import br.nnpe.tos.SessaoCliente;
 import br.topwar.servidor.ControleJogosServidor;
 import br.topwar.servidor.ControlePersistencia;
 
@@ -48,6 +49,12 @@ public class ProxyComandos extends NnpeProxyComandos {
 		return controleJogosServidor.criarJogo(nnpeTO);
 	}
 
+	@Override
+	public void removerClienteInativo(SessaoCliente sessaoClienteRemover) {
+		super.removerClienteInativo(sessaoClienteRemover);
+		controleJogosServidor.removerClienteInativo(sessaoClienteRemover);
+	}
+	
 	@Override
 	public void ganchoMonitorAtividade() {
 		controleJogosServidor.removerJogosVaziosFinalizados();
