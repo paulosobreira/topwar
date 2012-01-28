@@ -6,7 +6,7 @@ import java.io.Serializable;
 public class AvatarTopWar implements Serializable {
 	private Point pontoAvatar;
 	private double angulo;
-	private int velocidade = 4;
+	private int velocidade = 3;
 	private String time;
 	private String nomeJogador;
 

@@ -30,12 +30,14 @@ import br.topwar.tos.DadosJogoTopWar;
 public class JogoCliente {
 	private MapaTopWar mapaTopWar;
 	private Point pontoMouse;
+	private Point pontoMouseMover;
 	private Point pontoAvatar;
 	private double angulo;
 	protected boolean rodando = true;
 	private Thread threadRepaint;
 	private Thread threadDadosSrv;
 	private Thread threadTeclado;
+	private Thread threadMoverMouse;
 	private PainelTopWar painelTopWar;
 	protected Set pressed = new HashSet();
 	private List<AvatarCliente> avatarClientes = new ArrayList<AvatarCliente>();
@@ -49,9 +51,9 @@ public class JogoCliente {
 		this.controleCliente = controleCliente;
 		ObjectInputStream ois;
 		try {
-			ois = new ObjectInputStream(CarregadorRecursos
-					.recursoComoStream(dadosJogoTopWar.getNomeMapa()
-							+ ".topwar"));
+			ois = new ObjectInputStream(
+					CarregadorRecursos.recursoComoStream(dadosJogoTopWar
+							.getNomeMapa() + ".topwar"));
 			mapaTopWar = (MapaTopWar) ois.readObject();
 		} catch (Exception e1) {
 			Logger.logarExept(e1);
@@ -118,10 +120,80 @@ public class JogoCliente {
 				pontoMouse.x = e.getX();
 				pontoMouse.y = e.getY();
 				angulo = GeoUtil.calculaAngulo(pontoAvatar, pontoMouse, 90);
+
 				super.mouseMoved(e);
 			}
 
 		});
+
+		painelTopWar.getPanel().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (pontoMouseMover == null) {
+					pontoMouseMover = new Point(e.getX(), e.getY());
+				}
+				pontoMouseMover.x = e.getX();
+				pontoMouseMover.y = e.getY();
+				moverPeloMouse();
+				super.mouseClicked(e);
+			}
+		});
+	}
+
+	protected void moverPeloMouse() {
+		pararMovimentoMouse();
+		Runnable runnable = new Runnable() {
+			@Override
+			public void run() {
+				if (pontoAvatar != null && pontoMouseMover != null) {
+					boolean path = true;
+					while (path
+							&& GeoUtil.distaciaEntrePontos(pontoAvatar,
+									pontoMouseMover) > 5) {
+						try {
+							Thread.sleep(150);
+						} catch (InterruptedException e) {
+							path = false;
+							Logger.logarExept(e);
+						}
+						String ret = null;
+						if (pontoMouseMover.x > pontoAvatar.x) {
+							ret = (String) controleCliente.moverDireita();
+						} else {
+							ret = (String) controleCliente.moverEsquerda();
+						}
+						if (!ConstantesTopWar.OK.equals(ret)) {
+							path = false;
+						}
+						ret = null;
+						try {
+							Thread.sleep(150);
+						} catch (InterruptedException e) {
+							path = false;
+							Logger.logarExept(e);
+						}
+						if (pontoMouseMover.y > pontoAvatar.y) {
+							ret = (String) controleCliente.moverBaixo();
+						} else {
+							ret = (String) controleCliente.moverCima();
+						}
+						if (!ConstantesTopWar.OK.equals(ret)) {
+							path = false;
+						}
+					}
+				}
+			}
+		};
+		threadMoverMouse = new Thread(runnable);
+		threadMoverMouse.start();
+	}
+
+	private boolean pararMovimentoMouse() {
+		if (threadMoverMouse != null && threadMoverMouse.isAlive()) {
+			threadMoverMouse.interrupt();
+			return true;
+		}
+		return false;
 	}
 
 	private void iniciaThreadAtualizaTela() {
@@ -197,6 +269,7 @@ public class JogoCliente {
 			if (threadTeclado != null) {
 				threadTeclado.interrupt();
 			}
+			pararMovimentoMouse();
 		} catch (Exception e) {
 			Logger.logarExept(e);
 		}
@@ -212,6 +285,7 @@ public class JogoCliente {
 				synchronized (pressed) {
 					pressed.add(keyCode);
 				}
+				pararMovimentoMouse();
 				super.keyPressed(e);
 			}
 
@@ -221,6 +295,7 @@ public class JogoCliente {
 				synchronized (pressed) {
 					pressed.remove(keyCode);
 				}
+				pararMovimentoMouse();
 				super.keyReleased(e);
 			}
 
@@ -241,16 +316,20 @@ public class JogoCliente {
 								.hasNext();) {
 							Integer key = (Integer) iterator.next();
 							int keyCode = key.intValue();
-							if (keyCode == KeyEvent.VK_A) {
+							if (keyCode == KeyEvent.VK_A
+									|| keyCode == KeyEvent.VK_LEFT) {
 								controleCliente.moverEsquerda();
 							}
-							if (keyCode == KeyEvent.VK_S) {
+							if (keyCode == KeyEvent.VK_S
+									|| keyCode == KeyEvent.VK_DOWN) {
 								controleCliente.moverBaixo();
 							}
-							if (keyCode == KeyEvent.VK_D) {
+							if (keyCode == KeyEvent.VK_D
+									|| keyCode == KeyEvent.VK_RIGHT) {
 								controleCliente.moverDireita();
 							}
-							if (keyCode == KeyEvent.VK_W) {
+							if (keyCode == KeyEvent.VK_W
+									|| keyCode == KeyEvent.VK_UP) {
 								controleCliente.moverCima();
 							}
 						}
@@ -301,8 +380,8 @@ public class JogoCliente {
 					break;
 				}
 			}
-			AvatarCliente avatarCliente = new AvatarCliente(avatarTopWar
-					.getTime(), avatarTopWar);
+			AvatarCliente avatarCliente = new AvatarCliente(
+					avatarTopWar.getTime(), avatarTopWar);
 			if (!avatarClientes.contains(avatarCliente)) {
 				avatarClientes.add(avatarCliente);
 			}
