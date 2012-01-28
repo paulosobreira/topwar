@@ -1,5 +1,6 @@
 package br.topwar;
 
+import br.nnpe.Logger;
 import br.nnpe.servidor.NnpeProxyComandos;
 import br.nnpe.tos.NnpeTO;
 import br.nnpe.tos.SessaoCliente;
@@ -54,7 +55,7 @@ public class ProxyComandos extends NnpeProxyComandos {
 		super.removerClienteInativo(sessaoClienteRemover);
 		controleJogosServidor.removerClienteInativo(sessaoClienteRemover);
 	}
-	
+
 	@Override
 	public void ganchoMonitorAtividade() {
 		controleJogosServidor.removerJogosVaziosFinalizados();

@@ -33,15 +33,15 @@ public class JogoServidor {
 		this.proxyComandos = proxyComandos;
 		ObjectInputStream ois;
 		try {
-			ois = new ObjectInputStream(CarregadorRecursos
-					.recursoComoStream(dadosJogoTopWar.getNomeMapa()
-							+ ".topwar"));
+			ois = new ObjectInputStream(
+					CarregadorRecursos.recursoComoStream(dadosJogoTopWar
+							.getNomeMapa() + ".topwar"));
 			mapaTopWar = (MapaTopWar) ois.readObject();
 		} catch (Exception e) {
 			Logger.logarExept(e);
 		}
 		AvatarTopWar avatarTopWar = new AvatarTopWar();
-		avatarTopWar.setPontoAvatar(new Point(20, 20));
+		avatarTopWar.setPontoAvatar(new Point(520, 520));
 		avatarTopWar.setTime("vermelho");
 		avatarTopWar.setNomeJogador(dadosJogoTopWar.getNomeJogador());
 		avatarTopWars.add(avatarTopWar);
@@ -62,11 +62,13 @@ public class JogoServidor {
 					.hasNext();) {
 				AvatarTopWar avatarTopWar = (AvatarTopWar) iterator.next();
 				if (avatarTopWar.equals(avatarTopWarJog)) {
+					avatarTopWar.setLastRequest(System.currentTimeMillis());
 					ret.add(avatarTopWar);
 					continue;
 				}
-				List<Point> line = GeoUtil.drawBresenhamLine(avatarTopWar
-						.getPontoAvatar(), avatarTopWarJog.getPontoAvatar());
+				List<Point> line = GeoUtil.drawBresenhamLine(
+						avatarTopWar.getPontoAvatar(),
+						avatarTopWarJog.getPontoAvatar());
 				if (campoVisao(line)) {
 					ret.add(avatarTopWar);
 				}
@@ -188,5 +190,19 @@ public class JogoServidor {
 
 	public boolean verificaFinalizado() {
 		return avatarTopWars.isEmpty();
+	}
+
+	public void removerClientesInativos() {
+		synchronized (avatarTopWars) {
+			for (Iterator iterator = avatarTopWars.iterator(); iterator
+					.hasNext();) {
+				AvatarTopWar avatarTopWar = (AvatarTopWar) iterator.next();
+				long diff = (System.currentTimeMillis() - avatarTopWar
+						.getLastRequest());
+				if (diff > 5000) {
+					iterator.remove();
+				}
+			}
+		}
 	}
 }

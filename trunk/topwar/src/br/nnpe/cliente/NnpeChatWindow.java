@@ -70,6 +70,7 @@ public class NnpeChatWindow {
 		if (nnpeChatCliente != null) {
 			atualizaInfo();
 		}
+		
 	}
 
 	protected void gerarAcoes() {

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import br.nnpe.Logger;
 import br.nnpe.tos.NnpeDados;
 import br.nnpe.tos.NnpeTO;
 import br.nnpe.tos.SessaoCliente;
@@ -126,6 +127,7 @@ public class ControleJogosServidor {
 			for (Iterator iterator = keySet.iterator(); iterator.hasNext();) {
 				String key = (String) iterator.next();
 				JogoServidor jogoServidor = mapaJogos.get(key);
+				jogoServidor.removerClientesInativos();
 				if (jogoServidor.verificaFinalizado()) {
 					mapaJogos.remove(key);
 					Collection jogosAndamento = nnpeDados.getJogosAndamento();

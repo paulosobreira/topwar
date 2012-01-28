@@ -3,12 +3,25 @@ package br.topwar.tos;
 import java.awt.Point;
 import java.io.Serializable;
 
+import javax.persistence.Transient;
+
 public class AvatarTopWar implements Serializable {
 	private Point pontoAvatar;
 	private double angulo;
 	private int velocidade = 3;
 	private String time;
 	private String nomeJogador;
+	private transient long lastRequest = System.currentTimeMillis();
+
+	@Transient
+	public long getLastRequest() {
+		return lastRequest;
+	}
+
+	@Transient
+	public void setLastRequest(long lastRequest) {
+		this.lastRequest = lastRequest;
+	}
 
 	public String getNomeJogador() {
 		return nomeJogador;
