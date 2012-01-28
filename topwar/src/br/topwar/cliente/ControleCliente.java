@@ -69,7 +69,7 @@ public class ControleCliente extends NnpeChatCliente {
 		return sessaoCliente.getNomeJogador();
 	}
 
-	private void mover(String mover) {
+	private Object mover(String mover) {
 		DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
 		acaoClienteTopWar.setNomeCliente(sessaoCliente.getNomeJogador());
 		acaoClienteTopWar.setAngulo(jogoCliente.getAngulo());
@@ -77,23 +77,24 @@ public class ControleCliente extends NnpeChatCliente {
 		NnpeTO nnpeTO = new NnpeTO();
 		nnpeTO.setComando(ConstantesTopWar.MOVER);
 		nnpeTO.setData(acaoClienteTopWar);
-		enviarObjeto(nnpeTO);
+		Object ret = enviarObjeto(nnpeTO);
+		return ret;
 	}
 
-	public void moverEsquerda() {
-		mover(ConstantesTopWar.ESQUERDA);
+	public Object moverEsquerda() {
+		return mover(ConstantesTopWar.ESQUERDA);
 	}
 
-	public void moverBaixo() {
-		mover(ConstantesTopWar.BAIXO);
+	public Object moverBaixo() {
+		return mover(ConstantesTopWar.BAIXO);
 	}
 
-	public void moverDireita() {
-		mover(ConstantesTopWar.DIREITA);
+	public Object moverDireita() {
+		return mover(ConstantesTopWar.DIREITA);
 	}
 
-	public void moverCima() {
-		mover(ConstantesTopWar.CIMA);
+	public Object moverCima() {
+		return mover(ConstantesTopWar.CIMA);
 	}
 
 }
