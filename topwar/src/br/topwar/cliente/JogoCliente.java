@@ -91,13 +91,15 @@ public class JogoCliente {
 		threadDadosSrv = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				while (rodando) {
+				boolean interrupt = false;
+				while (rodando && !interrupt) {
 					try {
 						synchronized (avatarClientes) {
 							atualizaListaAvatares();
 						}
 						Thread.sleep(150);
 					} catch (InterruptedException e) {
+						interrupt = true;
 						Logger.logarExept(e);
 					}
 				}
@@ -114,12 +116,7 @@ public class JogoCliente {
 				if (pontoAvatar == null) {
 					return;
 				}
-				if (pontoMouse == null) {
-					pontoMouse = new Point(e.getX(), e.getY());
-				}
-				pontoMouse.x = e.getX();
-				pontoMouse.y = e.getY();
-				angulo = GeoUtil.calculaAngulo(pontoAvatar, pontoMouse, 90);
+				setarPontoMouse(e);
 
 				super.mouseMoved(e);
 			}
@@ -129,15 +126,22 @@ public class JogoCliente {
 		painelTopWar.getPanel().addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (pontoMouseMover == null) {
-					pontoMouseMover = new Point(e.getX(), e.getY());
-				}
-				pontoMouseMover.x = e.getX();
-				pontoMouseMover.y = e.getY();
+				setarPontoMouse(e);
+				setarPontoMouseMover(e);
 				moverPeloMouse();
 				super.mouseClicked(e);
 			}
 		});
+	}
+
+	private void setarPontoMouse(MouseEvent e) {
+		if (pontoMouse == null) {
+			pontoMouse = new Point(e.getX(), e.getY());
+		}
+		pontoMouse.x = e.getX();
+		pontoMouse.y = e.getY();
+		if (pontoAvatar != null)
+			angulo = GeoUtil.calculaAngulo(pontoAvatar, pontoMouse, 90);
 	}
 
 	protected void moverPeloMouse() {
@@ -146,39 +150,58 @@ public class JogoCliente {
 			@Override
 			public void run() {
 				if (pontoAvatar != null && pontoMouseMover != null) {
-					boolean path = true;
-					while (path
+					boolean interrupt = false;
+					boolean pathX = true;
+					boolean pathY = true;
+
+					boolean moveuX = false;
+					boolean moveuY = false;
+					while (!interrupt
+							&& (pathX || pathY)
 							&& GeoUtil.distaciaEntrePontos(pontoAvatar,
 									pontoMouseMover) > 5) {
-						try {
-							Thread.sleep(150);
-						} catch (InterruptedException e) {
-							path = false;
-							Logger.logarExept(e);
-						}
+
 						String ret = null;
 						if (pontoMouseMover.x > pontoAvatar.x) {
 							ret = (String) controleCliente.moverDireita();
-						} else {
+							moveuX = true;
+						} else if (pontoMouseMover.x < pontoAvatar.x) {
 							ret = (String) controleCliente.moverEsquerda();
+							moveuX = true;
 						}
 						if (!ConstantesTopWar.OK.equals(ret)) {
-							path = false;
+							pathX = false;
+						} else {
+							pathX = true;
+						}
+						if (moveuX) {
+							try {
+								Thread.sleep(200);
+							} catch (InterruptedException e) {
+								interrupt = true;
+								Logger.logarExept(e);
+							}
 						}
 						ret = null;
-						try {
-							Thread.sleep(150);
-						} catch (InterruptedException e) {
-							path = false;
-							Logger.logarExept(e);
-						}
 						if (pontoMouseMover.y > pontoAvatar.y) {
 							ret = (String) controleCliente.moverBaixo();
-						} else {
+							moveuY = true;
+						} else if (pontoMouseMover.y < pontoAvatar.y) {
 							ret = (String) controleCliente.moverCima();
+							moveuY = true;
 						}
 						if (!ConstantesTopWar.OK.equals(ret)) {
-							path = false;
+							pathY = false;
+						} else {
+							pathY = true;
+						}
+						if (moveuY) {
+							try {
+								Thread.sleep(200);
+							} catch (InterruptedException e) {
+								interrupt = true;
+								Logger.logarExept(e);
+							}
 						}
 					}
 				}
@@ -203,11 +226,13 @@ public class JogoCliente {
 		threadRepaint = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				while (rodando) {
+				boolean interrupt = false;
+				while (rodando && !interrupt) {
 					try {
 						painelTopWar.atualiza();
 						Thread.sleep(50);
 					} catch (InterruptedException e) {
+						interrupt = true;
 						Logger.logarExept(e);
 					}
 				}
@@ -310,7 +335,8 @@ public class JogoCliente {
 		threadTeclado = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				while (rodando) {
+				boolean interrupt = false;
+				while (rodando && !interrupt) {
 					synchronized (pressed) {
 						for (Iterator iterator = pressed.iterator(); iterator
 								.hasNext();) {
@@ -335,8 +361,9 @@ public class JogoCliente {
 						}
 					}
 					try {
-						Thread.sleep(150);
+						Thread.sleep(200);
 					} catch (InterruptedException e) {
+						interrupt = true;
 						e.printStackTrace();
 					}
 				}
@@ -392,6 +419,14 @@ public class JogoCliente {
 				iterator.remove();
 			}
 		}
+	}
+
+	private void setarPontoMouseMover(MouseEvent e) {
+		if (pontoMouseMover == null) {
+			pontoMouseMover = new Point(e.getX(), e.getY());
+		}
+		pontoMouseMover.x = e.getX();
+		pontoMouseMover.y = e.getY();
 	}
 
 }

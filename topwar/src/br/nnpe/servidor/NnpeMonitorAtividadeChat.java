@@ -41,17 +41,9 @@ public class NnpeMonitorAtividadeChat extends Thread {
 				}
 				proxyComandos.ganchoMonitorAtividade();
 			} catch (Exception e) {
+				viva = false;
 				Logger.logarExept(e);
 			}
-		}
-
-	}
-
-	private void dormir(long l) {
-		try {
-			Thread.sleep(l);
-		} catch (InterruptedException e) {
-			Logger.logarExept(e);
 		}
 
 	}

@@ -18,12 +18,9 @@ import javax.swing.WindowConstants;
 import javax.swing.border.TitledBorder;
 
 import br.nnpe.Logger;
-import br.nnpe.Util;
 import br.nnpe.cliente.NnpeChatCliente;
 import br.nnpe.cliente.NnpeChatWindow;
 import br.nnpe.tos.NnpeDados;
-import br.nnpe.tos.NnpeTO;
-import br.topwar.ConstantesTopWar;
 import br.topwar.recursos.idiomas.Lang;
 
 public class ChatWindow extends NnpeChatWindow {
