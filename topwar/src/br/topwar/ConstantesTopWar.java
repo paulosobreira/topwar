@@ -14,6 +14,9 @@ public class ConstantesTopWar {
 	public static final String ENTRAR_JOGO = "ENTRAR_JOGO";
 	public static final int LARGURA_AVATAR = 35;
 	public static final int ALTURA_AVATAR = 47;
+	public static final int LARGURA_AREA_AVATAR = LARGURA_AVATAR / 2;
+	public static final int ALTURA_AREA_AVATAR = ALTURA_AVATAR / 3;
 	public static final String OK = "K";
+	public static final String ATIRAR = "ATIRAR";
 
 }

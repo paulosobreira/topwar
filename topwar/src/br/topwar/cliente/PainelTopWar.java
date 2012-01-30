@@ -188,7 +188,7 @@ public class PainelTopWar {
 				graphics2d.drawImage(imgJog, desenha.x, desenha.y, null);
 				if (desenhaObjetos) {
 					graphics2d.setColor(Color.MAGENTA);
-					graphics2d.draw(areaAvatar);
+					graphics2d.draw(avatarCliente.obeterAreaAvatar());
 				}
 			}
 		}
