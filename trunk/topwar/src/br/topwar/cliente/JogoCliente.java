@@ -51,9 +51,9 @@ public class JogoCliente {
 		this.controleCliente = controleCliente;
 		ObjectInputStream ois;
 		try {
-			ois = new ObjectInputStream(
-					CarregadorRecursos.recursoComoStream(dadosJogoTopWar
-							.getNomeMapa() + ".topwar"));
+			ois = new ObjectInputStream(CarregadorRecursos
+					.recursoComoStream(dadosJogoTopWar.getNomeMapa()
+							+ ".topwar"));
 			mapaTopWar = (MapaTopWar) ois.readObject();
 		} catch (Exception e1) {
 			Logger.logarExept(e1);
@@ -117,7 +117,6 @@ public class JogoCliente {
 					return;
 				}
 				setarPontoMouse(e);
-
 				super.mouseMoved(e);
 			}
 
@@ -129,9 +128,17 @@ public class JogoCliente {
 				setarPontoMouse(e);
 				setarPontoMouseMover(e);
 				moverPeloMouse();
+				atirar();
 				super.mouseClicked(e);
 			}
 		});
+	}
+
+	protected void atirar() {
+		if (avatarClientes == null) {
+			return;
+		}
+		controleCliente.atirar();
 	}
 
 	private void setarPontoMouse(MouseEvent e) {
@@ -162,7 +169,9 @@ public class JogoCliente {
 									pontoMouseMover) > 5) {
 
 						String ret = null;
-						if (pontoMouseMover.x > pontoAvatar.x) {
+						if (pontoMouseMover.x == pontoAvatar.x) {
+							moveuX = false;
+						} else if (pontoMouseMover.x > pontoAvatar.x) {
 							ret = (String) controleCliente.moverDireita();
 							moveuX = true;
 						} else if (pontoMouseMover.x < pontoAvatar.x) {
@@ -183,7 +192,9 @@ public class JogoCliente {
 							}
 						}
 						ret = null;
-						if (pontoMouseMover.y > pontoAvatar.y) {
+						if (pontoMouseMover.y == pontoAvatar.y) {
+							moveuY = false;
+						} else if (pontoMouseMover.y > pontoAvatar.y) {
 							ret = (String) controleCliente.moverBaixo();
 							moveuY = true;
 						} else if (pontoMouseMover.y < pontoAvatar.y) {
@@ -407,8 +418,8 @@ public class JogoCliente {
 					break;
 				}
 			}
-			AvatarCliente avatarCliente = new AvatarCliente(
-					avatarTopWar.getTime(), avatarTopWar);
+			AvatarCliente avatarCliente = new AvatarCliente(avatarTopWar
+					.getTime(), avatarTopWar);
 			if (!avatarClientes.contains(avatarCliente)) {
 				avatarClientes.add(avatarCliente);
 			}

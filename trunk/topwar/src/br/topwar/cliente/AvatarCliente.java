@@ -1,12 +1,14 @@
 package br.topwar.cliente;
 
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Rectangle2D;
 
 import br.nnpe.GeoUtil;
+import br.topwar.ConstantesTopWar;
 import br.topwar.tos.AvatarTopWar;
 
 public class AvatarCliente {
@@ -50,6 +52,16 @@ public class AvatarCliente {
 
 	public Shape desenhaCorpo(Point p) {
 		return new Rectangle2D.Double(p.x - 8, p.y - 3, 16, 6);
+	}
+
+	public Shape obeterAreaAvatar() {
+		Point pontoAvatar = getPontoAvatar();
+		Point desenha = new Point(pontoAvatar.x
+				- (ConstantesTopWar.LARGURA_AREA_AVATAR), pontoAvatar.y
+				- (ConstantesTopWar.ALTURA_AREA_AVATAR));
+		Rectangle areaAvatar = new Rectangle(desenha.x, desenha.y,
+				ConstantesTopWar.LARGURA_AVATAR, ConstantesTopWar.ALTURA_AVATAR);
+		return areaAvatar;
 	}
 
 	public Shape gerarCorpo() {
