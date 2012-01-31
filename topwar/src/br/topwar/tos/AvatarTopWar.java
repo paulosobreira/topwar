@@ -8,6 +8,8 @@ import javax.persistence.Transient;
 public class AvatarTopWar implements Serializable {
 	private Point pontoAvatar;
 	private double angulo;
+	private long tempoUtlDisparo;
+	private int vida = 100;
 	private int velocidade = 3;
 	private String time;
 	private String nomeJogador;
@@ -21,6 +23,22 @@ public class AvatarTopWar implements Serializable {
 	@Transient
 	public void setLastRequest(long lastRequest) {
 		this.lastRequest = lastRequest;
+	}
+
+	public long getTempoUtlDisparo() {
+		return tempoUtlDisparo;
+	}
+
+	public void setTempoUtlDisparo(long tempoUtlDisparo) {
+		this.tempoUtlDisparo = tempoUtlDisparo;
+	}
+
+	public int getVida() {
+		return vida;
+	}
+
+	public void setVida(int vida) {
+		this.vida = vida;
 	}
 
 	public String getNomeJogador() {

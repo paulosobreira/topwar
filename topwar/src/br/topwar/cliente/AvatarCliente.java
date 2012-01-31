@@ -94,9 +94,8 @@ public class AvatarCliente {
 		lastAnim = System.currentTimeMillis();
 	}
 
-	public AvatarCliente(String time, AvatarTopWar avatarTopWar) {
+	public AvatarCliente(AvatarTopWar avatarTopWar) {
 		this.avatarTopWar = avatarTopWar;
-		setTime(time);
 	}
 
 	public boolean equals(Object obj) {

@@ -155,4 +155,20 @@ public class ControleJogosServidor {
 
 	}
 
+	public Object atirar(NnpeTO nnpeTO) {
+		DadosAcaoClienteTopWar acaoClienteTopWar = (DadosAcaoClienteTopWar) nnpeTO
+				.getData();
+		JogoServidor jogoServidor = obterJogoCliente(acaoClienteTopWar
+				.getNomeCliente());
+		if (jogoServidor == null) {
+			return null;
+		}
+		AvatarTopWar avatarTopWar = obterAvatarTopWarCliente(acaoClienteTopWar
+				.getNomeCliente());
+		if (avatarTopWar == null) {
+			return null;
+		}
+		return jogoServidor.atirar(avatarTopWar, acaoClienteTopWar.getAngulo());
+	}
+
 }
