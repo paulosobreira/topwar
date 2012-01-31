@@ -418,8 +418,7 @@ public class JogoCliente {
 					break;
 				}
 			}
-			AvatarCliente avatarCliente = new AvatarCliente(avatarTopWar
-					.getTime(), avatarTopWar);
+			AvatarCliente avatarCliente = new AvatarCliente(avatarTopWar);
 			if (!avatarClientes.contains(avatarCliente)) {
 				avatarClientes.add(avatarCliente);
 			}

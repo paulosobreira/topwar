@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import sun.util.logging.resources.logging;
+
 import br.nnpe.GeoUtil;
 import br.nnpe.Logger;
 import br.nnpe.tos.SessaoCliente;
@@ -26,6 +28,8 @@ public class JogoServidor {
 	private static MapaTopWar mapaTopWar;
 	private ProxyComandos proxyComandos;
 	private List<AvatarTopWar> avatarTopWars = new ArrayList<AvatarTopWar>();
+	private Thread monitorJogo;
+	private boolean finalizado = false;
 
 	public JogoServidor(DadosJogoTopWar dadosJogoTopWar,
 			ProxyComandos proxyComandos) {
@@ -33,9 +37,9 @@ public class JogoServidor {
 		this.proxyComandos = proxyComandos;
 		ObjectInputStream ois;
 		try {
-			ois = new ObjectInputStream(
-					CarregadorRecursos.recursoComoStream(dadosJogoTopWar
-							.getNomeMapa() + ".topwar"));
+			ois = new ObjectInputStream(CarregadorRecursos
+					.recursoComoStream(dadosJogoTopWar.getNomeMapa()
+							+ ".topwar"));
 			mapaTopWar = (MapaTopWar) ois.readObject();
 		} catch (Exception e) {
 			Logger.logarExept(e);
@@ -45,6 +49,37 @@ public class JogoServidor {
 		avatarTopWar.setTime("vermelho");
 		avatarTopWar.setNomeJogador(dadosJogoTopWar.getNomeJogador());
 		avatarTopWars.add(avatarTopWar);
+		monitorJogo = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				while (!finalizado) {
+					processaClicoJogoServidor();
+					try {
+						Thread.sleep(200);
+					} catch (InterruptedException e) {
+						Logger.logarExept(e);
+						finalizado = true;
+					}
+
+				}
+
+			}
+		});
+		monitorJogo.start();
+	}
+
+	public boolean isFinalizado() {
+		return finalizado;
+	}
+
+	public void setFinalizado(boolean finalizado) {
+		this.finalizado = finalizado;
+	}
+
+	protected void processaClicoJogoServidor() {
+		// TODO Auto-generated method stub
+
 	}
 
 	public List<AvatarTopWar> getAvatarTopWars() {
@@ -66,9 +101,8 @@ public class JogoServidor {
 					ret.add(avatarTopWar);
 					continue;
 				}
-				List<Point> line = GeoUtil.drawBresenhamLine(
-						avatarTopWar.getPontoAvatar(),
-						avatarTopWarJog.getPontoAvatar());
+				List<Point> line = GeoUtil.drawBresenhamLine(avatarTopWar
+						.getPontoAvatar(), avatarTopWarJog.getPontoAvatar());
 				if (campoVisao(line)) {
 					ret.add(avatarTopWar);
 				}
@@ -85,7 +119,7 @@ public class JogoServidor {
 			for (Iterator iterator2 = objetoMapaList.iterator(); iterator2
 					.hasNext();) {
 				ObjetoMapa objetoMapa = (ObjetoMapa) iterator2.next();
-				if (objetoMapa.getTransparencia() > 10
+				if (objetoMapa.getTransparencia() > 50
 						&& objetoMapa.getForma().contains(point)) {
 					return false;
 				}
@@ -189,7 +223,8 @@ public class JogoServidor {
 	}
 
 	public boolean verificaFinalizado() {
-		return avatarTopWars.isEmpty();
+		finalizado = avatarTopWars.isEmpty();
+		return finalizado;
 	}
 
 	public void removerClientesInativos() {
@@ -204,5 +239,45 @@ public class JogoServidor {
 				}
 			}
 		}
+	}
+
+	public Object atirar(AvatarTopWar avatarTopWarCli, double angulo) {
+		avatarTopWarCli.setTempoUtlDisparo(System.currentTimeMillis());
+		Point pontoTiro = GeoUtil.calculaPonto(angulo, 100, avatarTopWarCli
+				.getPontoAvatar());
+		List<ObjetoMapa> objetoMapaList = mapaTopWar.getObjetoMapaList();
+		List<Point> linhaTipo = GeoUtil.drawBresenhamLine(avatarTopWarCli
+				.getPontoAvatar(), pontoTiro);
+		for (Iterator iteratorPtsBala = linhaTipo.iterator(); iteratorPtsBala
+				.hasNext();) {
+			Point point = (Point) iteratorPtsBala.next();
+
+			for (Iterator iterator = objetoMapaList.iterator(); iterator
+					.hasNext();) {
+				ObjetoMapa objetoMapa = (ObjetoMapa) iterator.next();
+				if (objetoMapa.getTransparencia() > 10
+						&& objetoMapa.getForma().contains(point)) {
+					return null;
+				}
+			}
+
+			for (Iterator iteratorAvatar = avatarTopWars.iterator(); iteratorAvatar
+					.hasNext();) {
+				AvatarTopWar avatarTopWar = (AvatarTopWar) iteratorAvatar
+						.next();
+				if (avatarTopWar.equals(avatarTopWarCli)
+						|| (!avatarTopWar.getTime().equals(
+								avatarTopWar.getTime()))) {
+					continue;
+				}
+				AvatarCliente avatarCliente = new AvatarCliente(avatarTopWar);
+				if (avatarCliente.gerarCorpo().contains(point)) {
+					avatarTopWar.setVida(avatarTopWar.getVida() - 1);
+					return null;
+				}
+
+			}
+		}
+		return null;
 	}
 }
