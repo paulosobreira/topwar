@@ -112,6 +112,10 @@ public class PainelTopWar {
 						AvatarCliente avatarCliente = (AvatarCliente) iterator
 								.next();
 						desenhaAvatares(graphics2d, avatarCliente);
+						long millisSrv = jogoCliente.getMillisSrv();
+						long tempoUtlDisparo = avatarCliente.getTempoUtlDisparo();
+						//if()
+
 					}
 				}
 				if (desenhaObjetos) {
@@ -147,14 +151,6 @@ public class PainelTopWar {
 		if (angulo < 0) {
 			angulo = 360 + angulo;
 		}
-		graphics2d.setColor(Color.MAGENTA);
-		Rectangle limitesViewPort = (Rectangle) limitesViewPort();
-		graphics2d.drawString("Angulo " + angulo, limitesViewPort.x + 10,
-				limitesViewPort.y + 10);
-		graphics2d.drawString("Amin " + anim, limitesViewPort.x + 10,
-				limitesViewPort.y + 25);
-		graphics2d.drawString("Velocidade " + velocidade,
-				limitesViewPort.x + 10, limitesViewPort.y + 40);
 		synchronized (mapImgs) {
 			BufferedImage imgJog = null;
 			if (angulo >= 0 && angulo <= 22.5 || angulo > 337.5) {
@@ -193,10 +189,18 @@ public class PainelTopWar {
 			}
 		}
 		if (!avatarCliente.getPontoAvatar().equals(
-				avatarCliente.getPontoAvatarOld())){
+				avatarCliente.getPontoAvatarOld())) {
 			avatarCliente.animar();
 		}
 		if (desenhaObjetos) {
+			graphics2d.setColor(Color.MAGENTA);
+			Rectangle limitesViewPort = (Rectangle) limitesViewPort();
+			graphics2d.drawString("Angulo " + angulo, limitesViewPort.x + 10,
+					limitesViewPort.y + 10);
+			graphics2d.drawString("Amin " + anim, limitesViewPort.x + 10,
+					limitesViewPort.y + 25);
+			graphics2d.drawString("Velocidade " + velocidade,
+					limitesViewPort.x + 10, limitesViewPort.y + 40);
 			graphics2d.setColor(Color.CYAN);
 			graphics2d.draw(avatarCliente.gerarCorpo());
 			graphics2d.setColor(Color.RED);

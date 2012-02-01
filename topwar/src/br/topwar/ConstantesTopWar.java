@@ -18,5 +18,8 @@ public class ConstantesTopWar {
 	public static final int ALTURA_AREA_AVATAR = ALTURA_AVATAR / 3;
 	public static final String OK = "K";
 	public static final String ATIRAR = "ATIRAR";
+	public static final String TIME_AZUL = "azul";
+	public static final String TIME_VERMELHO = "vermelho";
+	public static final int VIDA_COMPLETA = 100;
 
 }

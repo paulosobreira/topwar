@@ -162,4 +162,16 @@ public class AvatarCliente {
 		this.local = local;
 	}
 
+	public long getTempoUtlDisparo() {
+		return avatarTopWar.getTempoUtlDisparo();
+	}
+
+	public long getUltimaMorte() {
+		return avatarTopWar.getUltimaMorte();
+	}
+
+	public int getVida() {
+		return avatarTopWar.getVida();
+	}
+
 }
