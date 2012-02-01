@@ -46,17 +46,16 @@ public class JogoServidor {
 		}
 		AvatarTopWar avatarTopWar = new AvatarTopWar();
 		avatarTopWar.setPontoAvatar(new Point(520, 520));
-		avatarTopWar.setTime("vermelho");
+		avatarTopWar.setTime(ConstantesTopWar.TIME_VERMELHO);
 		avatarTopWar.setNomeJogador(dadosJogoTopWar.getNomeJogador());
 		avatarTopWars.add(avatarTopWar);
 		monitorJogo = new Thread(new Runnable() {
-
 			@Override
 			public void run() {
 				while (!finalizado) {
 					processaClicoJogoServidor();
 					try {
-						Thread.sleep(200);
+						Thread.sleep(500);
 					} catch (InterruptedException e) {
 						Logger.logarExept(e);
 						finalizado = true;
@@ -78,7 +77,27 @@ public class JogoServidor {
 	}
 
 	protected void processaClicoJogoServidor() {
-		// TODO Auto-generated method stub
+		synchronized (avatarTopWars) {
+			for (Iterator iterator = avatarTopWars.iterator(); iterator
+					.hasNext();) {
+				AvatarTopWar avatarTopWar = (AvatarTopWar) iterator.next();
+				long tempDesdeUltMorte = System.currentTimeMillis()
+						- avatarTopWar.getUltimaMorte();
+				if (avatarTopWar.getVida() < 0 && tempDesdeUltMorte > 3000) {
+					avatarTopWar.setVida(ConstantesTopWar.VIDA_COMPLETA);
+					if (ConstantesTopWar.TIME_AZUL.equals(avatarTopWar
+							.getTime())) {
+						avatarTopWar.setPontoAvatar(mapaTopWar
+								.getPontoTimeAzul());
+					}
+					if (ConstantesTopWar.TIME_VERMELHO.equals(avatarTopWar
+							.getTime())) {
+						avatarTopWar.setPontoAvatar(mapaTopWar
+								.getPontoTimeVermelho());
+					}
+				}
+			}
+		}
 
 	}
 
@@ -97,7 +116,8 @@ public class JogoServidor {
 					.hasNext();) {
 				AvatarTopWar avatarTopWar = (AvatarTopWar) iterator.next();
 				if (avatarTopWar.equals(avatarTopWarJog)) {
-					avatarTopWar.setLastRequest(System.currentTimeMillis());
+					avatarTopWar
+							.setUltimaRequisicao(System.currentTimeMillis());
 					ret.add(avatarTopWar);
 					continue;
 				}
@@ -189,7 +209,7 @@ public class JogoServidor {
 	public void adicionarJogador(String nomeJogador) {
 		AvatarTopWar avatarTopWar = new AvatarTopWar();
 		avatarTopWar.setPontoAvatar(new Point(20, 20));
-		avatarTopWar.setTime("azul");
+		avatarTopWar.setTime(ConstantesTopWar.TIME_AZUL);
 		avatarTopWar.setNomeJogador(nomeJogador);
 		avatarTopWars.add(avatarTopWar);
 	}
@@ -233,7 +253,7 @@ public class JogoServidor {
 					.hasNext();) {
 				AvatarTopWar avatarTopWar = (AvatarTopWar) iterator.next();
 				long diff = (System.currentTimeMillis() - avatarTopWar
-						.getLastRequest());
+						.getUltimaRequisicao());
 				if (diff > 5000) {
 					iterator.remove();
 				}
@@ -273,6 +293,9 @@ public class JogoServidor {
 				AvatarCliente avatarCliente = new AvatarCliente(avatarTopWar);
 				if (avatarCliente.gerarCorpo().contains(point)) {
 					avatarTopWar.setVida(avatarTopWar.getVida() - 1);
+					if (avatarTopWar.getVida() < 0) {
+
+					}
 					return null;
 				}
 

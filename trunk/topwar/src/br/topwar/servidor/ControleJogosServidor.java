@@ -80,6 +80,7 @@ public class ControleJogosServidor {
 		if (jogoServidor != null) {
 			nnpeTO.setData(jogoServidor.getAvatarTopWars(nnpeTO
 					.getSessaoCliente()));
+			nnpeTO.setMillisSrv(System.currentTimeMillis());
 			return nnpeTO;
 		}
 		return null;

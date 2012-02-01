@@ -13,16 +13,27 @@ public class AvatarTopWar implements Serializable {
 	private int velocidade = 3;
 	private String time;
 	private String nomeJogador;
-	private transient long lastRequest = System.currentTimeMillis();
+	private transient long ultimaRequisicao = System.currentTimeMillis();
+	private transient long ultimaMorte;
 
 	@Transient
-	public long getLastRequest() {
-		return lastRequest;
+	public long getUltimaMorte() {
+		return ultimaMorte;
 	}
 
 	@Transient
-	public void setLastRequest(long lastRequest) {
-		this.lastRequest = lastRequest;
+	public void setUltimaMorte(long ultimaMorte) {
+		this.ultimaMorte = ultimaMorte;
+	}
+
+	@Transient
+	public long getUltimaRequisicao() {
+		return ultimaRequisicao;
+	}
+
+	@Transient
+	public void setUltimaRequisicao(long lastRequest) {
+		this.ultimaRequisicao = lastRequest;
 	}
 
 	public long getTempoUtlDisparo() {

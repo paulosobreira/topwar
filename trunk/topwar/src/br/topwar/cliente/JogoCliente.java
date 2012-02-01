@@ -44,6 +44,7 @@ public class JogoCliente {
 	private JFrame frameTopWar;
 	private ControleCliente controleCliente;
 	private DadosJogoTopWar dadosJogoTopWar;
+	private long millisSrv;
 
 	public JogoCliente(DadosJogoTopWar dadosJogoTopWar,
 			ControleCliente controleCliente) {
@@ -81,6 +82,10 @@ public class JogoCliente {
 		iniciaThreadAtualizaDadosServidor();
 		iniciaListenerTeclado();
 		iniciaThreadTeclado();
+	}
+
+	public long getMillisSrv() {
+		return millisSrv;
 	}
 
 	private void iniciaThreadAtualizaDadosServidor() {
@@ -397,6 +402,7 @@ public class JogoCliente {
 			return;
 		}
 		nnpeTO = (NnpeTO) ret;
+		millisSrv = nnpeTO.getMillisSrv();
 		List<AvatarTopWar> avatarTopWars = (List<AvatarTopWar>) nnpeTO
 				.getData();
 		for (Iterator iterator = avatarTopWars.iterator(); iterator.hasNext();) {

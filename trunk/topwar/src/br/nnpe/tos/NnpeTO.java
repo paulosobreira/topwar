@@ -11,7 +11,7 @@ public class NnpeTO implements Serializable {
 
 	private Object Data;
 
-	private int tamListaGols;
+	private long millisSrv;
 
 	private byte[] dataBytes;
 
@@ -19,12 +19,12 @@ public class NnpeTO implements Serializable {
 		return dataBytes;
 	}
 
-	public int getTamListaGols() {
-		return tamListaGols;
+	public long getMillisSrv() {
+		return millisSrv;
 	}
 
-	public void setTamListaGols(int tamListaGols) {
-		this.tamListaGols = tamListaGols;
+	public void setMillisSrv(long millisSrv) {
+		this.millisSrv = millisSrv;
 	}
 
 	public void setDataBytes(byte[] dataBytes) {
@@ -57,10 +57,9 @@ public class NnpeTO implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Mesa11TO [comando=" + comando + ", Data=" + Data
-				+ ", sessaoCliente=" + sessaoCliente + ", tamListaGols="
-				+ tamListaGols + ", dataBytes=" + Arrays.toString(dataBytes)
-				+ "]";
+		return "NnpeTO [comando=" + comando + ", Data=" + Data
+				+ ", sessaoCliente=" + sessaoCliente + ", millisSrv="
+				+ millisSrv + ", dataBytes=" + Arrays.toString(dataBytes) + "]";
 	}
 
 }
