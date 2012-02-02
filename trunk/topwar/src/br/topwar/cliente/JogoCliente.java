@@ -10,9 +10,11 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.swing.JFrame;
@@ -133,7 +135,6 @@ public class JogoCliente {
 				setarPontoMouse(e);
 				setarPontoMouseMover(e);
 				moverPeloMouse();
-				atirar();
 				super.mouseClicked(e);
 			}
 		});
@@ -165,30 +166,24 @@ public class JogoCliente {
 					boolean interrupt = false;
 					boolean pathX = true;
 					boolean pathY = true;
-
-					boolean moveuX = false;
-					boolean moveuY = false;
 					while (!interrupt
 							&& (pathX || pathY)
 							&& GeoUtil.distaciaEntrePontos(pontoAvatar,
 									pontoMouseMover) > 5) {
-
 						String ret = null;
 						if (pontoMouseMover.x == pontoAvatar.x) {
-							moveuX = false;
+							pathX = false;
 						} else if (pontoMouseMover.x > pontoAvatar.x) {
 							ret = (String) controleCliente.moverDireita();
-							moveuX = true;
 						} else if (pontoMouseMover.x < pontoAvatar.x) {
 							ret = (String) controleCliente.moverEsquerda();
-							moveuX = true;
 						}
 						if (!ConstantesTopWar.OK.equals(ret)) {
 							pathX = false;
 						} else {
 							pathX = true;
 						}
-						if (moveuX) {
+						if (pathX) {
 							try {
 								Thread.sleep(200);
 							} catch (InterruptedException e) {
@@ -198,20 +193,18 @@ public class JogoCliente {
 						}
 						ret = null;
 						if (pontoMouseMover.y == pontoAvatar.y) {
-							moveuY = false;
+							pathY = false;
 						} else if (pontoMouseMover.y > pontoAvatar.y) {
 							ret = (String) controleCliente.moverBaixo();
-							moveuY = true;
 						} else if (pontoMouseMover.y < pontoAvatar.y) {
 							ret = (String) controleCliente.moverCima();
-							moveuY = true;
 						}
 						if (!ConstantesTopWar.OK.equals(ret)) {
 							pathY = false;
 						} else {
 							pathY = true;
 						}
-						if (moveuY) {
+						if (pathY) {
 							try {
 								Thread.sleep(200);
 							} catch (InterruptedException e) {
@@ -374,6 +367,9 @@ public class JogoCliente {
 									|| keyCode == KeyEvent.VK_UP) {
 								controleCliente.moverCima();
 							}
+							if (keyCode == KeyEvent.VK_SPACE) {
+								atirar();
+							}
 						}
 					}
 					try {
@@ -403,8 +399,11 @@ public class JogoCliente {
 		}
 		nnpeTO = (NnpeTO) ret;
 		millisSrv = nnpeTO.getMillisSrv();
-		List<AvatarTopWar> avatarTopWars = (List<AvatarTopWar>) nnpeTO
-				.getData();
+		Map retorno = (Map) nnpeTO.getData();
+		// retorno.put(ConstantesTopWar.BALAS, balas);
+		// retorno.put(ConstantesTopWar.CARTUCHO, cartuchos);
+		List<AvatarTopWar> avatarTopWars = (List<AvatarTopWar>) retorno
+				.get(ConstantesTopWar.LISTA_AVATARES);
 		for (Iterator iterator = avatarTopWars.iterator(); iterator.hasNext();) {
 			AvatarTopWar avatarTopWar = (AvatarTopWar) iterator.next();
 			for (Iterator iterator2 = avatarClientes.iterator(); iterator2

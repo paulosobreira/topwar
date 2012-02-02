@@ -5,8 +5,12 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.collections.map.HashedMap;
 
 import sun.util.logging.resources.logging;
 
@@ -105,12 +109,14 @@ public class JogoServidor {
 		return avatarTopWars;
 	}
 
-	public List<AvatarTopWar> getAvatarTopWars(SessaoCliente sessaoCliente) {
+	public Object getAvatarTopWars(SessaoCliente sessaoCliente) {
 		AvatarTopWar avatarTopWarJog = obterAvatarTopWar(sessaoCliente
 				.getNomeJogador());
 		if (avatarTopWarJog == null)
 			return null;
 		List<AvatarTopWar> ret = new ArrayList<AvatarTopWar>();
+		int balas = 0;
+		int cartuchos = 0;
 		synchronized (avatarTopWars) {
 			for (Iterator iterator = avatarTopWars.iterator(); iterator
 					.hasNext();) {
@@ -118,6 +124,8 @@ public class JogoServidor {
 				if (avatarTopWar.equals(avatarTopWarJog)) {
 					avatarTopWar
 							.setUltimaRequisicao(System.currentTimeMillis());
+					balas = avatarTopWar.getBalas();
+					cartuchos = avatarTopWar.getCartuchos();
 					ret.add(avatarTopWar);
 					continue;
 				}
@@ -143,7 +151,12 @@ public class JogoServidor {
 
 			}
 		}
-		return ret;
+
+		Map retorno = new HashMap();
+		retorno.put(ConstantesTopWar.LISTA_AVATARES, retorno);
+		retorno.put(ConstantesTopWar.BALAS, balas);
+		retorno.put(ConstantesTopWar.CARTUCHO, cartuchos);
+		return retorno;
 	}
 
 	private boolean campoVisao(List<Point> line) {

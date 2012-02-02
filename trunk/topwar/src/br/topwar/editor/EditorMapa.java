@@ -364,9 +364,9 @@ public class EditorMapa {
 		g2d.drawString("Estrutura Resistente (Ver Atraves) % = 11 -> 50",
 				limitesViewPort.x + 10, limitesViewPort.y + 40);
 		g2d.drawString("Estrutura Resistente (Não Ver Atraves) % = 51 -> 100",
-				limitesViewPort.x + 10, limitesViewPort.y + 40);
-		g2d.drawString("Estrutura Solida = maior que 100",
 				limitesViewPort.x + 10, limitesViewPort.y + 55);
+		g2d.drawString("Estrutura Solida = maior que 100",
+				limitesViewPort.x + 10, limitesViewPort.y + 70);
 		if (pontosNovoObj != null) {
 			Point ptAnt = null;
 			for (Iterator iterator = pontosNovoObj.iterator(); iterator
@@ -407,7 +407,19 @@ public class EditorMapa {
 				}
 
 			}
+			if (mapaTopWar.getPontoTimeAzul() != null) {
+				g2d.setColor(ConstantesTopWar.lightBlu);
+				g2d.fillOval(mapaTopWar.getPontoTimeAzul().x - 6, mapaTopWar
+						.getPontoTimeAzul().y - 6, 12, 12);
+			}
+			if (mapaTopWar.getPontoTimeVermelho() != null) {
+				g2d.setColor(ConstantesTopWar.lightRed);
+				g2d.fillOval(mapaTopWar.getPontoTimeVermelho().x - 6,
+						mapaTopWar.getPontoTimeVermelho().y - 6, 12, 12);
+			}
+
 		}
+
 		if (desenhaAvatar && pontoMouse != null) {
 			BufferedImage imgJog = Conceito.mapImgs.get("azul-0-0");
 			Point desenha = new Point(pontoMouse.x - (imgJog.getWidth() / 2),
@@ -701,7 +713,7 @@ public class EditorMapa {
 			}
 
 		};
-		menuObjetos.add(ptTimeVermelho);
+		menuPontos.add(ptTimeVermelho);
 		ptTimeVermelho.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -715,7 +727,7 @@ public class EditorMapa {
 			}
 
 		};
-		menuObjetos.add(ptTimeAzul);
+		menuPontos.add(ptTimeAzul);
 		ptTimeAzul.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
