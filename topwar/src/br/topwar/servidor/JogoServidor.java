@@ -49,7 +49,7 @@ public class JogoServidor {
 			Logger.logarExept(e);
 		}
 		AvatarTopWar avatarTopWar = new AvatarTopWar();
-		avatarTopWar.setPontoAvatar(new Point(520, 520));
+		avatarTopWar.setPontoAvatar(mapaTopWar.getPontoTimeVermelho());
 		avatarTopWar.setTime(ConstantesTopWar.TIME_VERMELHO);
 		avatarTopWar.setNomeJogador(dadosJogoTopWar.getNomeJogador());
 		avatarTopWars.add(avatarTopWar);
@@ -234,7 +234,7 @@ public class JogoServidor {
 
 	public void adicionarJogador(String nomeJogador) {
 		AvatarTopWar avatarTopWar = new AvatarTopWar();
-		avatarTopWar.setPontoAvatar(new Point(20, 20));
+		avatarTopWar.setPontoAvatar(mapaTopWar.getPontoTimeAzul());
 		avatarTopWar.setTime(ConstantesTopWar.TIME_AZUL);
 		avatarTopWar.setNomeJogador(nomeJogador);
 		avatarTopWars.add(avatarTopWar);
