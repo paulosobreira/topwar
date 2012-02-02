@@ -113,8 +113,11 @@ public class PainelTopWar {
 								.next();
 						desenhaAvatares(graphics2d, avatarCliente);
 						long millisSrv = jogoCliente.getMillisSrv();
-						long tempoUtlDisparo = avatarCliente.getTempoUtlDisparo();
-						//if()
+						long tempoUtlDisparo = avatarCliente
+								.getTempoUtlDisparo();
+						if ((millisSrv - tempoUtlDisparo) < 150) {
+							desenhaDisparoAvatar(graphics2d, avatarCliente);
+						}
 
 					}
 				}
@@ -138,6 +141,27 @@ public class PainelTopWar {
 			public void stateChanged(ChangeEvent e) {
 			}
 		});
+
+	}
+
+	protected void desenhaDisparoAvatar(Graphics2D graphics2d,
+			AvatarCliente avatarCliente) {
+		Point pontoAvatar = avatarCliente.getPontoAvatar();
+		Point pontoTiro = GeoUtil.calculaPonto(avatarCliente.getAngulo(),
+				ConstantesTopWar.ASSALT_MAX_RANGE, pontoAvatar);
+		for (int i = 0; i < 5; i++) {
+			Point nOri = new Point(pontoAvatar.x, pontoAvatar.y);
+			Point nDst = new Point(pontoTiro.x + Util.intervalo(-15, 15),
+					pontoTiro.y + Util.intervalo(-15, 15));
+			graphics2d.setColor(Color.YELLOW);
+			List<Point> linha = GeoUtil.drawBresenhamLine(nOri, nDst);
+			if (linha.size() > 40) {
+				int intIni = Util.intervalo(10, 20);
+				Point pIni = linha.get(intIni);
+				Point pFim = linha.get(intIni + Util.intervalo(1, 20));
+				graphics2d.drawLine(pIni.x, pIni.y, pFim.x, pFim.y);
+			}
+		}
 
 	}
 
