@@ -162,7 +162,52 @@ public class PainelTopWar {
 				graphics2d.drawLine(pIni.x, pIni.y, pFim.x, pFim.y);
 			}
 		}
-
+		List<Point> linhaDisparo = GeoUtil.drawBresenhamLine(pontoAvatar,
+				pontoTiro);
+		List<ObjetoMapa> objetoMapaList = mapaTopWar.getObjetoMapaList();
+		List<AvatarCliente> avatarClientes = jogoCliente.getAvatarClientes();
+		for (int i = 0; i < linhaDisparo.size(); i++) {
+			Point tiro = linhaDisparo.get(i);
+			boolean bateu = false;
+			for (Iterator iterator = objetoMapaList.iterator(); iterator
+					.hasNext();) {
+				ObjetoMapa objetoMapa = (ObjetoMapa) iterator.next();
+				if (objetoMapa.getTransparencia() > 11
+						&& objetoMapa.getForma().contains(tiro)) {
+					bateu = true;
+				}
+			}
+			for (Iterator iterator = avatarClientes.iterator(); iterator
+					.hasNext();) {
+				AvatarCliente avatarClienteAnalizar = (AvatarCliente) iterator
+						.next();
+				if (!avatarCliente.equals(avatarClienteAnalizar)
+						&& avatarClienteAnalizar.gerarCorpo().contains(
+								pontoTiro)) {
+					bateu = true;
+				}
+			}
+			if (bateu) {
+				int noAnt = i - 41;
+				while (noAnt < 0) {
+					noAnt++;
+				}
+				Point nOri = linhaDisparo.get(noAnt);
+				for (int j = 0; j < 5; j++) {
+					Point nDst = new Point(tiro.x + Util.intervalo(-15, 15),
+							tiro.y + Util.intervalo(-15, 15));
+					graphics2d.setColor(Color.YELLOW);
+					List<Point> linha = GeoUtil.drawBresenhamLine(nOri, nDst);
+					if (linha.size() > 40) {
+						int intIni = Util.intervalo(10, 20);
+						Point pIni = linha.get(intIni + Util.intervalo(1, 20));
+						Point pFim = linha.get(intIni);
+						graphics2d.drawLine(pIni.x, pIni.y, pFim.x, pFim.y);
+					}
+				}
+				break;
+			}
+		}
 	}
 
 	protected void desenhaAvatares(Graphics2D graphics2d,

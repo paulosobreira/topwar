@@ -2,17 +2,12 @@ package br.topwar.servidor;
 
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.event.KeyEvent;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.collections.map.HashedMap;
-
-import sun.util.logging.resources.logging;
 
 import br.nnpe.GeoUtil;
 import br.nnpe.Logger;
@@ -153,7 +148,7 @@ public class JogoServidor {
 		}
 
 		Map retorno = new HashMap();
-		retorno.put(ConstantesTopWar.LISTA_AVATARES, retorno);
+		retorno.put(ConstantesTopWar.LISTA_AVATARES, ret);
 		retorno.put(ConstantesTopWar.BALAS, balas);
 		retorno.put(ConstantesTopWar.CARTUCHO, cartuchos);
 		return retorno;
@@ -319,13 +314,9 @@ public class JogoServidor {
 				}
 				AvatarCliente avatarCliente = new AvatarCliente(avatarTopWar);
 				if (avatarCliente.gerarCorpo().contains(point)) {
-					avatarTopWar.setVida(avatarTopWar.getVida() - 1);
-					if (avatarTopWar.getVida() < 0) {
-
-					}
+					avatarTopWar.setVida(avatarTopWar.getVida() - 5);
 					return null;
 				}
-
 			}
 		}
 		return null;

@@ -55,13 +55,19 @@ public class AvatarCliente {
 	}
 
 	public Shape obeterAreaAvatar() {
-		Point pontoAvatar = getPontoAvatar();
-		Point desenha = new Point(pontoAvatar.x
-				- (ConstantesTopWar.LARGURA_AREA_AVATAR), pontoAvatar.y
-				- (ConstantesTopWar.ALTURA_AREA_AVATAR));
+
+		Point desenha = getPontoDesenha();
 		Rectangle areaAvatar = new Rectangle(desenha.x, desenha.y,
 				ConstantesTopWar.LARGURA_AVATAR, ConstantesTopWar.ALTURA_AVATAR);
 		return areaAvatar;
+	}
+
+	public Point getPontoDesenha() {
+		Point pontoAvatar = getPontoAvatar();
+		return new Point(
+				pontoAvatar.x - (ConstantesTopWar.LARGURA_AREA_AVATAR),
+				pontoAvatar.y - (ConstantesTopWar.ALTURA_AREA_AVATAR));
+
 	}
 
 	public Shape gerarCorpo() {

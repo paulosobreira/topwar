@@ -23,7 +23,7 @@ public class ConstantesTopWar {
 	public static final String TIME_AZUL = "azul";
 	public static final String TIME_VERMELHO = "vermelho";
 	public static final int VIDA_COMPLETA = 100;
-	public static final int ASSALT_MAX_RANGE = 100;
+	public static final int ASSALT_MAX_RANGE = 1000;
 	public final static Color lightRed = new Color(250, 0, 0, 100);
 	public final static Color lightBlu = new Color(0, 0, 250, 100);
 	public static final String LISTA_AVATARES = "LISTA_AVATARES";
