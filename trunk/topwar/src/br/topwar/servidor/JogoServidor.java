@@ -121,10 +121,24 @@ public class JogoServidor {
 					ret.add(avatarTopWar);
 					continue;
 				}
-				List<Point> line = GeoUtil.drawBresenhamLine(avatarTopWar
-						.getPontoAvatar(), avatarTopWarJog.getPontoAvatar());
+				List<Point> line = GeoUtil.drawBresenhamLine(avatarTopWarJog
+						.getPontoAvatar(), avatarTopWar.getPontoAvatar());
 				if (campoVisao(line)) {
 					ret.add(avatarTopWar);
+				}
+				/**
+				 * Campo Visao Tiro
+				 */
+				if ((System.currentTimeMillis() - avatarTopWar
+						.getTempoUtlDisparo()) < 150) {
+					Point pontoTiro = GeoUtil.calculaPonto(avatarTopWar
+							.getAngulo(), ConstantesTopWar.ASSALT_MAX_RANGE,
+							avatarTopWar.getPontoAvatar());
+					line = GeoUtil.drawBresenhamLine(avatarTopWarJog
+							.getPontoAvatar(), pontoTiro);
+					if (campoVisao(line)) {
+						ret.add(avatarTopWar);
+					}
 				}
 
 			}
@@ -144,7 +158,6 @@ public class JogoServidor {
 					return false;
 				}
 			}
-
 		}
 		return true;
 	}
@@ -263,12 +276,13 @@ public class JogoServidor {
 
 	public Object atirar(AvatarTopWar avatarTopWarCli, double angulo) {
 		avatarTopWarCli.setTempoUtlDisparo(System.currentTimeMillis());
-		Point pontoTiro = GeoUtil.calculaPonto(angulo, 100, avatarTopWarCli
-				.getPontoAvatar());
+		Point pontoTiro = GeoUtil.calculaPonto(angulo,
+				ConstantesTopWar.ASSALT_MAX_RANGE, avatarTopWarCli
+						.getPontoAvatar());
 		List<ObjetoMapa> objetoMapaList = mapaTopWar.getObjetoMapaList();
-		List<Point> linhaTipo = GeoUtil.drawBresenhamLine(avatarTopWarCli
+		List<Point> linhaTiro = GeoUtil.drawBresenhamLine(avatarTopWarCli
 				.getPontoAvatar(), pontoTiro);
-		for (Iterator iteratorPtsBala = linhaTipo.iterator(); iteratorPtsBala
+		for (Iterator iteratorPtsBala = linhaTiro.iterator(); iteratorPtsBala
 				.hasNext();) {
 			Point point = (Point) iteratorPtsBala.next();
 
