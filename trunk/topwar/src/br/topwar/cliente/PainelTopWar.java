@@ -195,7 +195,7 @@ public class PainelTopWar {
 				imgJog = mapImgs.get(time + "-" + anim + "-7");
 			}
 			if (imgJog == null) {
-				System.out.println("Angulo nulo " + angulo);
+				Logger.logar("Angulo nulo " + angulo);
 			} else {
 				Point desenha = new Point(pontoAvatar.x
 						- (imgJog.getWidth() / 2), pontoAvatar.y
@@ -210,6 +210,8 @@ public class PainelTopWar {
 					graphics2d.setColor(Color.MAGENTA);
 					graphics2d.draw(avatarCliente.obeterAreaAvatar());
 				}
+				graphics2d.drawString("" + avatarCliente.getVida(), desenha.x,
+						pontoAvatar.y - 20);
 			}
 		}
 		if (!avatarCliente.getPontoAvatar().equals(
