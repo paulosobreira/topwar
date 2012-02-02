@@ -31,9 +31,10 @@ import br.topwar.tos.DadosJogoTopWar;
 
 public class JogoCliente {
 	private MapaTopWar mapaTopWar;
-	private Point pontoMouse;
-	private Point pontoMouseMover;
+	private Point pontoMouseMovendo;
+	private Point pontoMouseClicado;
 	private Point pontoAvatar;
+	private Point pontoAvatarDesenha;
 	private double angulo;
 	protected boolean rodando = true;
 	private Thread threadRepaint;
@@ -148,13 +149,13 @@ public class JogoCliente {
 	}
 
 	private void setarPontoMouse(MouseEvent e) {
-		if (pontoMouse == null) {
-			pontoMouse = new Point(e.getX(), e.getY());
+		if (pontoMouseMovendo == null) {
+			pontoMouseMovendo = new Point(e.getX(), e.getY());
 		}
-		pontoMouse.x = e.getX();
-		pontoMouse.y = e.getY();
+		pontoMouseMovendo.x = e.getX();
+		pontoMouseMovendo.y = e.getY();
 		if (pontoAvatar != null)
-			angulo = GeoUtil.calculaAngulo(pontoAvatar, pontoMouse, 90);
+			angulo = GeoUtil.calculaAngulo(pontoAvatar, pontoMouseMovendo, 90);
 	}
 
 	protected void moverPeloMouse() {
@@ -162,20 +163,20 @@ public class JogoCliente {
 		Runnable runnable = new Runnable() {
 			@Override
 			public void run() {
-				if (pontoAvatar != null && pontoMouseMover != null) {
+				if (pontoAvatarDesenha != null && pontoMouseClicado != null) {
 					boolean interrupt = false;
 					boolean pathX = true;
 					boolean pathY = true;
 					while (!interrupt
 							&& (pathX || pathY)
-							&& GeoUtil.distaciaEntrePontos(pontoAvatar,
-									pontoMouseMover) > 5) {
+							&& GeoUtil.distaciaEntrePontos(pontoAvatarDesenha,
+									pontoMouseClicado) > 5) {
 						String ret = null;
-						if (pontoMouseMover.x == pontoAvatar.x) {
+						if (pontoMouseClicado.x == pontoAvatarDesenha.x) {
 							pathX = false;
-						} else if (pontoMouseMover.x > pontoAvatar.x) {
+						} else if (pontoMouseClicado.x > pontoAvatarDesenha.x) {
 							ret = (String) controleCliente.moverDireita();
-						} else if (pontoMouseMover.x < pontoAvatar.x) {
+						} else if (pontoMouseClicado.x < pontoAvatarDesenha.x) {
 							ret = (String) controleCliente.moverEsquerda();
 						}
 						if (!ConstantesTopWar.OK.equals(ret)) {
@@ -192,11 +193,11 @@ public class JogoCliente {
 							}
 						}
 						ret = null;
-						if (pontoMouseMover.y == pontoAvatar.y) {
+						if (pontoMouseClicado.y == pontoAvatarDesenha.y) {
 							pathY = false;
-						} else if (pontoMouseMover.y > pontoAvatar.y) {
+						} else if (pontoMouseClicado.y > pontoAvatarDesenha.y) {
 							ret = (String) controleCliente.moverBaixo();
-						} else if (pontoMouseMover.y < pontoAvatar.y) {
+						} else if (pontoMouseClicado.y < pontoAvatarDesenha.y) {
 							ret = (String) controleCliente.moverCima();
 						}
 						if (!ConstantesTopWar.OK.equals(ret)) {
@@ -419,6 +420,7 @@ public class JogoCliente {
 						avatarCliente.setLocal(true);
 						angulo = avatarCliente.getAngulo();
 						pontoAvatar = avatarCliente.getPontoAvatar();
+						pontoAvatarDesenha = avatarCliente.getPontoDesenha();
 					}
 					break;
 				}
@@ -437,11 +439,11 @@ public class JogoCliente {
 	}
 
 	private void setarPontoMouseMover(MouseEvent e) {
-		if (pontoMouseMover == null) {
-			pontoMouseMover = new Point(e.getX(), e.getY());
+		if (pontoMouseClicado == null) {
+			pontoMouseClicado = new Point(e.getX(), e.getY());
 		}
-		pontoMouseMover.x = e.getX();
-		pontoMouseMover.y = e.getY();
+		pontoMouseClicado.x = e.getX();
+		pontoMouseClicado.y = e.getY();
 	}
 
 }
