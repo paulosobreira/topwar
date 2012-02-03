@@ -39,15 +39,14 @@ public class JogoCliente {
 	protected boolean rodando = true;
 	private Thread threadRepaint;
 	private Thread threadDadosSrv;
-	private Thread threadTeclado;
 	private Thread threadMoverMouse;
 	private PainelTopWar painelTopWar;
-	protected Set pressed = new HashSet();
 	private List<AvatarCliente> avatarClientes = new ArrayList<AvatarCliente>();
 	private JFrame frameTopWar;
 	private ControleCliente controleCliente;
 	private DadosJogoTopWar dadosJogoTopWar;
 	private long millisSrv;
+	protected long ultAcao;
 
 	public JogoCliente(DadosJogoTopWar dadosJogoTopWar,
 			ControleCliente controleCliente) {
@@ -55,9 +54,9 @@ public class JogoCliente {
 		this.controleCliente = controleCliente;
 		ObjectInputStream ois;
 		try {
-			ois = new ObjectInputStream(CarregadorRecursos
-					.recursoComoStream(dadosJogoTopWar.getNomeMapa()
-							+ ".topwar"));
+			ois = new ObjectInputStream(
+					CarregadorRecursos.recursoComoStream(dadosJogoTopWar
+							.getNomeMapa() + ".topwar"));
 			mapaTopWar = (MapaTopWar) ois.readObject();
 		} catch (Exception e1) {
 			Logger.logarExept(e1);
@@ -84,7 +83,6 @@ public class JogoCliente {
 		iniciaThreadAtualizaTela();
 		iniciaThreadAtualizaDadosServidor();
 		iniciaListenerTeclado();
-		iniciaThreadTeclado();
 	}
 
 	public long getMillisSrv() {
@@ -156,9 +154,16 @@ public class JogoCliente {
 		pontoMouseMovendo.y = e.getY();
 		if (pontoAvatar != null)
 			angulo = GeoUtil.calculaAngulo(pontoAvatar, pontoMouseMovendo, 90);
+		if ((System.currentTimeMillis() - ultAcao) > 200) {
+			controleCliente.atualizaAngulo();
+		}
 	}
 
 	protected void moverPeloMouse() {
+		if ((System.currentTimeMillis() - ultAcao) < 200) {
+			return;
+		}
+		ultAcao = System.currentTimeMillis();
 		pararMovimentoMouse();
 		Runnable runnable = new Runnable() {
 			@Override
@@ -301,10 +306,6 @@ public class JogoCliente {
 			if (threadDadosSrv != null) {
 				threadDadosSrv.interrupt();
 			}
-			if (threadTeclado != null) {
-				threadTeclado.interrupt();
-			}
-			pararMovimentoMouse();
 		} catch (Exception e) {
 			Logger.logarExept(e);
 		}
@@ -313,76 +314,34 @@ public class JogoCliente {
 
 	private void iniciaListenerTeclado() {
 		KeyAdapter keyAdapter = new KeyAdapter() {
-
 			@Override
 			public void keyPressed(KeyEvent e) {
-				int keyCode = e.getKeyCode();
-				synchronized (pressed) {
-					pressed.add(keyCode);
-				}
 				pararMovimentoMouse();
+				if ((System.currentTimeMillis() - ultAcao) < 200) {
+					return;
+				}
+				ultAcao = System.currentTimeMillis();
+				int keyCode = e.getKeyCode();
+				if (keyCode == KeyEvent.VK_A || keyCode == KeyEvent.VK_LEFT) {
+					controleCliente.moverEsquerda();
+				}
+				if (keyCode == KeyEvent.VK_S || keyCode == KeyEvent.VK_DOWN) {
+					controleCliente.moverBaixo();
+				}
+				if (keyCode == KeyEvent.VK_D || keyCode == KeyEvent.VK_RIGHT) {
+					controleCliente.moverDireita();
+				}
+				if (keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_UP) {
+					controleCliente.moverCima();
+				}
+				if (keyCode == KeyEvent.VK_SPACE) {
+					atirar();
+				}
 				super.keyPressed(e);
-			}
-
-			@Override
-			public void keyReleased(KeyEvent e) {
-				int keyCode = e.getKeyCode();
-				synchronized (pressed) {
-					pressed.remove(keyCode);
-				}
-				pararMovimentoMouse();
-				super.keyReleased(e);
 			}
 
 		};
 		frameTopWar.addKeyListener(keyAdapter);
-	}
-
-	private void iniciaThreadTeclado() {
-		if (threadTeclado != null) {
-			threadTeclado.interrupt();
-		}
-		threadTeclado = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				boolean interrupt = false;
-				while (rodando && !interrupt) {
-					synchronized (pressed) {
-						for (Iterator iterator = pressed.iterator(); iterator
-								.hasNext();) {
-							Integer key = (Integer) iterator.next();
-							int keyCode = key.intValue();
-							if (keyCode == KeyEvent.VK_A
-									|| keyCode == KeyEvent.VK_LEFT) {
-								controleCliente.moverEsquerda();
-							}
-							if (keyCode == KeyEvent.VK_S
-									|| keyCode == KeyEvent.VK_DOWN) {
-								controleCliente.moverBaixo();
-							}
-							if (keyCode == KeyEvent.VK_D
-									|| keyCode == KeyEvent.VK_RIGHT) {
-								controleCliente.moverDireita();
-							}
-							if (keyCode == KeyEvent.VK_W
-									|| keyCode == KeyEvent.VK_UP) {
-								controleCliente.moverCima();
-							}
-							if (keyCode == KeyEvent.VK_SPACE) {
-								atirar();
-							}
-						}
-					}
-					try {
-						Thread.sleep(200);
-					} catch (InterruptedException e) {
-						interrupt = true;
-						e.printStackTrace();
-					}
-				}
-			}
-		});
-		threadTeclado.start();
 	}
 
 	public double getAngulo() {

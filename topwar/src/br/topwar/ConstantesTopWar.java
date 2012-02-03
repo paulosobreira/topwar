@@ -29,5 +29,6 @@ public class ConstantesTopWar {
 	public static final String LISTA_AVATARES = "LISTA_AVATARES";
 	public static final String BALAS = "BALAS";
 	public static final String CARTUCHO = "CARTUCHO";
+	public static final String ATUALIZA_ANGULO = "ATUALIZA_ANGULO";
 
 }

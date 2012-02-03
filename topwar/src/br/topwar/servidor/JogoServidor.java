@@ -36,9 +36,9 @@ public class JogoServidor {
 		this.proxyComandos = proxyComandos;
 		ObjectInputStream ois;
 		try {
-			ois = new ObjectInputStream(CarregadorRecursos
-					.recursoComoStream(dadosJogoTopWar.getNomeMapa()
-							+ ".topwar"));
+			ois = new ObjectInputStream(
+					CarregadorRecursos.recursoComoStream(dadosJogoTopWar
+							.getNomeMapa() + ".topwar"));
 			mapaTopWar = (MapaTopWar) ois.readObject();
 		} catch (Exception e) {
 			Logger.logarExept(e);
@@ -124,8 +124,9 @@ public class JogoServidor {
 					ret.add(avatarTopWar);
 					continue;
 				}
-				List<Point> line = GeoUtil.drawBresenhamLine(avatarTopWarJog
-						.getPontoAvatar(), avatarTopWar.getPontoAvatar());
+				List<Point> line = GeoUtil.drawBresenhamLine(
+						avatarTopWarJog.getPontoAvatar(),
+						avatarTopWar.getPontoAvatar());
 				if (campoVisao(line)) {
 					ret.add(avatarTopWar);
 				}
@@ -134,11 +135,12 @@ public class JogoServidor {
 				 */
 				if ((System.currentTimeMillis() - avatarTopWar
 						.getTempoUtlDisparo()) < 150) {
-					Point pontoTiro = GeoUtil.calculaPonto(avatarTopWar
-							.getAngulo(), ConstantesTopWar.ASSALT_MAX_RANGE,
+					Point pontoTiro = GeoUtil.calculaPonto(
+							avatarTopWar.getAngulo(),
+							ConstantesTopWar.ASSALT_MAX_RANGE,
 							avatarTopWar.getPontoAvatar());
-					line = GeoUtil.drawBresenhamLine(avatarTopWarJog
-							.getPontoAvatar(), pontoTiro);
+					line = GeoUtil.drawBresenhamLine(
+							avatarTopWarJog.getPontoAvatar(), pontoTiro);
 					if (campoVisao(line)) {
 						ret.add(avatarTopWar);
 					}
@@ -285,11 +287,11 @@ public class JogoServidor {
 	public Object atirar(AvatarTopWar avatarTopWarCli, double angulo) {
 		avatarTopWarCli.setTempoUtlDisparo(System.currentTimeMillis());
 		Point pontoTiro = GeoUtil.calculaPonto(angulo,
-				ConstantesTopWar.ASSALT_MAX_RANGE, avatarTopWarCli
-						.getPontoAvatar());
+				ConstantesTopWar.ASSALT_MAX_RANGE,
+				avatarTopWarCli.getPontoAvatar());
 		List<ObjetoMapa> objetoMapaList = mapaTopWar.getObjetoMapaList();
-		List<Point> linhaTiro = GeoUtil.drawBresenhamLine(avatarTopWarCli
-				.getPontoAvatar(), pontoTiro);
+		List<Point> linhaTiro = GeoUtil.drawBresenhamLine(
+				avatarTopWarCli.getPontoAvatar(), pontoTiro);
 		for (Iterator iteratorPtsBala = linhaTiro.iterator(); iteratorPtsBala
 				.hasNext();) {
 			Point point = (Point) iteratorPtsBala.next();
@@ -315,10 +317,15 @@ public class JogoServidor {
 				AvatarCliente avatarCliente = new AvatarCliente(avatarTopWar);
 				if (avatarCliente.gerarCorpo().contains(point)) {
 					avatarTopWar.setVida(avatarTopWar.getVida() - 5);
-					return null;
+					return ConstantesTopWar.OK;
 				}
 			}
 		}
 		return null;
+	}
+
+	public Object atualizaAngulo(AvatarTopWar avatarTopWar, double angulo) {
+		avatarTopWar.setAngulo(angulo);
+		return ConstantesTopWar.OK;
 	}
 }

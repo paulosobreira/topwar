@@ -172,4 +172,20 @@ public class ControleJogosServidor {
 		return jogoServidor.atirar(avatarTopWar, acaoClienteTopWar.getAngulo());
 	}
 
+	public Object atualizaAngulo(NnpeTO nnpeTO) {
+		DadosAcaoClienteTopWar acaoClienteTopWar = (DadosAcaoClienteTopWar) nnpeTO
+				.getData();
+		JogoServidor jogoServidor = obterJogoCliente(acaoClienteTopWar
+				.getNomeCliente());
+		if (jogoServidor == null) {
+			return null;
+		}
+		AvatarTopWar avatarTopWar = obterAvatarTopWarCliente(acaoClienteTopWar
+				.getNomeCliente());
+		if (avatarTopWar == null) {
+			return null;
+		}
+		return jogoServidor.atualizaAngulo(avatarTopWar, acaoClienteTopWar.getAngulo());
+	}
+
 }
