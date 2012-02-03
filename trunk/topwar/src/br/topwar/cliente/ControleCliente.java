@@ -108,4 +108,16 @@ public class ControleCliente extends NnpeChatCliente {
 		return ret;
 	}
 
+	public Object atualizaAngulo() {
+		DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
+		acaoClienteTopWar.setNomeCliente(sessaoCliente.getNomeJogador());
+		acaoClienteTopWar.setAngulo(jogoCliente.getAngulo());
+		NnpeTO nnpeTO = new NnpeTO();
+		nnpeTO.setComando(ConstantesTopWar.ATUALIZA_ANGULO);
+		nnpeTO.setData(acaoClienteTopWar);
+		Object ret = enviarObjeto(nnpeTO);
+		return ret;
+
+	}
+
 }

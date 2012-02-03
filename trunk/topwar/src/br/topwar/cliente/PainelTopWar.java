@@ -169,22 +169,23 @@ public class PainelTopWar {
 		for (int i = 0; i < linhaDisparo.size(); i++) {
 			Point tiro = linhaDisparo.get(i);
 			boolean bateu = false;
-			for (Iterator iterator = objetoMapaList.iterator(); iterator
-					.hasNext();) {
-				ObjetoMapa objetoMapa = (ObjetoMapa) iterator.next();
-				if (objetoMapa.getTransparencia() > 11
-						&& objetoMapa.getForma().contains(tiro)) {
-					bateu = true;
-				}
-			}
 			for (Iterator iterator = avatarClientes.iterator(); iterator
 					.hasNext();) {
 				AvatarCliente avatarClienteAnalizar = (AvatarCliente) iterator
 						.next();
 				if (!avatarCliente.equals(avatarClienteAnalizar)
-						&& avatarClienteAnalizar.gerarCorpo().contains(
-								pontoTiro)) {
+						&& avatarClienteAnalizar.gerarCorpo().contains(tiro)) {
 					bateu = true;
+				}
+			}
+			if (!bateu) {
+				for (Iterator iterator = objetoMapaList.iterator(); iterator
+						.hasNext();) {
+					ObjetoMapa objetoMapa = (ObjetoMapa) iterator.next();
+					if (objetoMapa.getTransparencia() > 11
+							&& objetoMapa.getForma().contains(tiro)) {
+						bateu = true;
+					}
 				}
 			}
 			if (bateu) {
@@ -194,8 +195,8 @@ public class PainelTopWar {
 				}
 				Point nOri = linhaDisparo.get(noAnt);
 				for (int j = 0; j < 5; j++) {
-					Point nDst = new Point(tiro.x + Util.intervalo(-15, 15),
-							tiro.y + Util.intervalo(-15, 15));
+					Point nDst = new Point(tiro.x + Util.intervalo(-10, 10),
+							tiro.y + Util.intervalo(-10, 10));
 					graphics2d.setColor(Color.YELLOW);
 					List<Point> linha = GeoUtil.drawBresenhamLine(nOri, nDst);
 					if (linha.size() > 40) {
