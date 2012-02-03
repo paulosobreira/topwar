@@ -36,16 +36,21 @@ public class JogoServidor {
 		this.proxyComandos = proxyComandos;
 		ObjectInputStream ois;
 		try {
-			ois = new ObjectInputStream(
-					CarregadorRecursos.recursoComoStream(dadosJogoTopWar
-							.getNomeMapa() + ".topwar"));
+			ois = new ObjectInputStream(CarregadorRecursos
+					.recursoComoStream(dadosJogoTopWar.getNomeMapa()
+							+ ".topwar"));
 			mapaTopWar = (MapaTopWar) ois.readObject();
 		} catch (Exception e) {
 			Logger.logarExept(e);
 		}
 		AvatarTopWar avatarTopWar = new AvatarTopWar();
-		avatarTopWar.setPontoAvatar(mapaTopWar.getPontoTimeVermelho());
-		avatarTopWar.setTime(ConstantesTopWar.TIME_VERMELHO);
+		if (Math.random() > .5) {
+			avatarTopWar.setTime(ConstantesTopWar.TIME_VERMELHO);
+			avatarTopWar.setPontoAvatar(mapaTopWar.getPontoTimeVermelho());
+		} else {
+			avatarTopWar.setTime(ConstantesTopWar.TIME_AZUL);
+			avatarTopWar.setPontoAvatar(mapaTopWar.getPontoTimeAzul());
+		}
 		avatarTopWar.setNomeJogador(dadosJogoTopWar.getNomeJogador());
 		avatarTopWars.add(avatarTopWar);
 		monitorJogo = new Thread(new Runnable() {
@@ -124,9 +129,8 @@ public class JogoServidor {
 					ret.add(avatarTopWar);
 					continue;
 				}
-				List<Point> line = GeoUtil.drawBresenhamLine(
-						avatarTopWarJog.getPontoAvatar(),
-						avatarTopWar.getPontoAvatar());
+				List<Point> line = GeoUtil.drawBresenhamLine(avatarTopWarJog
+						.getPontoAvatar(), avatarTopWar.getPontoAvatar());
 				if (campoVisao(line)) {
 					ret.add(avatarTopWar);
 				}
@@ -135,12 +139,11 @@ public class JogoServidor {
 				 */
 				if ((System.currentTimeMillis() - avatarTopWar
 						.getTempoUtlDisparo()) < 150) {
-					Point pontoTiro = GeoUtil.calculaPonto(
-							avatarTopWar.getAngulo(),
-							ConstantesTopWar.ASSALT_MAX_RANGE,
+					Point pontoTiro = GeoUtil.calculaPonto(avatarTopWar
+							.getAngulo(), ConstantesTopWar.ASSALT_MAX_RANGE,
 							avatarTopWar.getPontoAvatar());
-					line = GeoUtil.drawBresenhamLine(
-							avatarTopWarJog.getPontoAvatar(), pontoTiro);
+					line = GeoUtil.drawBresenhamLine(avatarTopWarJog
+							.getPontoAvatar(), pontoTiro);
 					if (campoVisao(line)) {
 						ret.add(avatarTopWar);
 					}
@@ -231,10 +234,36 @@ public class JogoServidor {
 
 	public void adicionarJogador(String nomeJogador) {
 		AvatarTopWar avatarTopWar = new AvatarTopWar();
-		avatarTopWar.setPontoAvatar(mapaTopWar.getPontoTimeAzul());
-		avatarTopWar.setTime(ConstantesTopWar.TIME_AZUL);
+		int contAzul = contarJogadores(ConstantesTopWar.TIME_AZUL);
+		int contVermelho = contarJogadores(ConstantesTopWar.TIME_VERMELHO);
+		if (contAzul > contVermelho) {
+			avatarTopWar.setPontoAvatar(mapaTopWar.getPontoTimeVermelho());
+			avatarTopWar.setTime(ConstantesTopWar.TIME_VERMELHO);
+		} else if (contAzul < contVermelho) {
+			avatarTopWar.setPontoAvatar(mapaTopWar.getPontoTimeAzul());
+			avatarTopWar.setTime(ConstantesTopWar.TIME_AZUL);
+		} else {
+			if (Math.random() > 0.5) {
+				avatarTopWar.setPontoAvatar(mapaTopWar.getPontoTimeVermelho());
+				avatarTopWar.setTime(ConstantesTopWar.TIME_VERMELHO);
+			} else {
+				avatarTopWar.setPontoAvatar(mapaTopWar.getPontoTimeAzul());
+				avatarTopWar.setTime(ConstantesTopWar.TIME_AZUL);
+			}
+		}
+
 		avatarTopWar.setNomeJogador(nomeJogador);
 		avatarTopWars.add(avatarTopWar);
+	}
+
+	private int contarJogadores(String time) {
+		int cont = 0;
+		for (int i = 0; i < avatarTopWars.size(); i++) {
+			if (time.equals(avatarTopWars.get(i).getTime())) {
+				cont++;
+			}
+		}
+		return cont;
 	}
 
 	public AvatarTopWar removerJogador(String nomeJogador) {
@@ -287,11 +316,11 @@ public class JogoServidor {
 	public Object atirar(AvatarTopWar avatarTopWarCli, double angulo) {
 		avatarTopWarCli.setTempoUtlDisparo(System.currentTimeMillis());
 		Point pontoTiro = GeoUtil.calculaPonto(angulo,
-				ConstantesTopWar.ASSALT_MAX_RANGE,
-				avatarTopWarCli.getPontoAvatar());
+				ConstantesTopWar.ASSALT_MAX_RANGE, avatarTopWarCli
+						.getPontoAvatar());
 		List<ObjetoMapa> objetoMapaList = mapaTopWar.getObjetoMapaList();
-		List<Point> linhaTiro = GeoUtil.drawBresenhamLine(
-				avatarTopWarCli.getPontoAvatar(), pontoTiro);
+		List<Point> linhaTiro = GeoUtil.drawBresenhamLine(avatarTopWarCli
+				.getPontoAvatar(), pontoTiro);
 		for (Iterator iteratorPtsBala = linhaTiro.iterator(); iteratorPtsBala
 				.hasNext();) {
 			Point point = (Point) iteratorPtsBala.next();
