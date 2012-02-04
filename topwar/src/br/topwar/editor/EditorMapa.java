@@ -78,8 +78,8 @@ public class EditorMapa {
 				if (backGround == null) {
 					return super.getPreferredSize();
 				}
-				return new Dimension(backGround.getWidth(), backGround
-						.getHeight());
+				return new Dimension(backGround.getWidth(),
+						backGround.getHeight());
 			}
 		};
 		scrollPane = new JScrollPane(painelEditor,
@@ -397,8 +397,8 @@ public class EditorMapa {
 				g2d.drawString("C:" + cont++, x, y);
 				g2d.drawString("T:" + objetoMapa.getTransparencia(), x, y + 10);
 				g2d.draw(objetoMapa.getForma());
-				Color color = new Color(255, 255, 255, objetoMapa
-						.getTransparencia());
+				Color color = new Color(255, 255, 255,
+						objetoMapa.getTransparencia());
 				g2d.setColor(color);
 				if (objetoMapa.getEfeito() == null) {
 					g2d.fill(objetoMapa.getForma());
@@ -409,8 +409,8 @@ public class EditorMapa {
 			}
 			if (mapaTopWar.getPontoTimeAzul() != null) {
 				g2d.setColor(ConstantesTopWar.lightBlu);
-				g2d.fillOval(mapaTopWar.getPontoTimeAzul().x - 6, mapaTopWar
-						.getPontoTimeAzul().y - 6, 12, 12);
+				g2d.fillOval(mapaTopWar.getPontoTimeAzul().x - 6,
+						mapaTopWar.getPontoTimeAzul().y - 6, 12, 12);
 			}
 			if (mapaTopWar.getPontoTimeVermelho() != null) {
 				g2d.setColor(ConstantesTopWar.lightRed);
@@ -424,8 +424,8 @@ public class EditorMapa {
 			BufferedImage imgJog = Conceito.mapImgs.get("azul-0-0");
 			Point desenha = new Point(pontoMouse.x - (imgJog.getWidth() / 2),
 					pontoMouse.y - (imgJog.getHeight() / 2));
-			Rectangle areaAvatar = new Rectangle(desenha.x, desenha.y, imgJog
-					.getWidth(), imgJog.getHeight());
+			Rectangle areaAvatar = new Rectangle(desenha.x, desenha.y,
+					imgJog.getWidth(), imgJog.getHeight());
 			imgJog = Conceito.processaTransparencia(imgJog, desenha,
 					areaAvatar, mapaTopWar);
 			imgJog = Conceito.processaGrade(imgJog, desenha, areaAvatar,
@@ -452,8 +452,8 @@ public class EditorMapa {
 			int inicioLinha = 0;
 			int fimLinha = 0 + bounds.width;
 			int inicioCol = 0;
-			Color color = new Color(255, 255, 255, objetoMapa
-					.getTransparencia());
+			Color color = new Color(255, 255, 255,
+					objetoMapa.getTransparencia());
 			graphics.setColor(color);
 			for (int i = 0; i < bounds.getHeight(); i++) {
 				if (i % 2 == 0)
@@ -761,6 +761,11 @@ public class EditorMapa {
 	}
 
 	protected void salvarMapa() throws IOException {
+		if (backGround == null) {
+			return;
+		}
+		mapaTopWar.setLargura(backGround.getWidth());
+		mapaTopWar.setAltura(backGround.getHeight());
 		JFileChooser fileChooser = new JFileChooser(CarregadorRecursos.class
 				.getResource("CarregadorRecursos.class").getFile());
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -797,23 +802,23 @@ public class EditorMapa {
 			return;
 		}
 
-		FileInputStream inputStream = new FileInputStream(fileChooser
-				.getSelectedFile());
+		FileInputStream inputStream = new FileInputStream(
+				fileChooser.getSelectedFile());
 		ObjectInputStream ois = new ObjectInputStream(inputStream);
 
 		mapaTopWar = (MapaTopWar) ois.readObject();
 		frame.setTitle(mapaTopWar.getNome());
 
-		backGround = CarregadorRecursos.carregaBackGround(mapaTopWar
-				.getBackGround(), painelEditor);
+		backGround = CarregadorRecursos.carregaBackGround(
+				mapaTopWar.getBackGround(), painelEditor);
 	}
 
 	private void novoMapa() {
-		String nomeMapa = JOptionPane.showInputDialog(frame, Lang
-				.msg("nomeDoMapa"));
+		String nomeMapa = JOptionPane.showInputDialog(frame,
+				Lang.msg("nomeDoMapa"));
 		if (Util.isNullOrEmpty(nomeMapa)) {
-			JOptionPane.showMessageDialog(frame, Lang.msg("nomeInvalido"), Lang
-					.msg("erro"), JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(frame, Lang.msg("nomeInvalido"),
+					Lang.msg("erro"), JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 
