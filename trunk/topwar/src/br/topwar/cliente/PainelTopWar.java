@@ -35,7 +35,7 @@ public class PainelTopWar {
 	private JPanel panel;
 	private JScrollPane scrollPane;
 	private MapaTopWar mapaTopWar;
-	private boolean desenhaObjetos = true;
+	private boolean desenhaObjetos = false;
 	public Map<String, BufferedImage> mapImgs = new HashMap<String, BufferedImage>();
 	public final static BufferedImage azul = CarregadorRecursos
 			.carregaBufferedImageTransparecia("azul.png", Color.MAGENTA);
@@ -124,7 +124,7 @@ public class PainelTopWar {
 				if (desenhaObjetos) {
 					List<ObjetoMapa> objetoMapaList = mapaTopWar
 							.getObjetoMapaList();
-					graphics2d.setColor(Color.YELLOW);
+					graphics2d.setColor(Color.GREEN);
 					for (Iterator iterator = objetoMapaList.iterator(); iterator
 							.hasNext();) {
 						ObjetoMapa objetoMapa = (ObjetoMapa) iterator.next();
@@ -166,6 +166,7 @@ public class PainelTopWar {
 				pontoTiro);
 		List<ObjetoMapa> objetoMapaList = mapaTopWar.getObjetoMapaList();
 		List<AvatarCliente> avatarClientes = jogoCliente.getAvatarClientes();
+		AvatarCliente avatarClienteBateu = null;
 		for (int i = 0; i < linhaDisparo.size(); i++) {
 			Point tiro = linhaDisparo.get(i);
 			boolean bateu = false;
@@ -176,6 +177,8 @@ public class PainelTopWar {
 				if (!avatarCliente.equals(avatarClienteAnalizar)
 						&& avatarClienteAnalizar.gerarCorpo().contains(tiro)) {
 					bateu = true;
+					avatarClienteBateu = avatarClienteAnalizar;
+					break;
 				}
 			}
 			if (!bateu) {
@@ -185,9 +188,13 @@ public class PainelTopWar {
 					if (objetoMapa.getTransparencia() > 11
 							&& objetoMapa.getForma().contains(tiro)) {
 						bateu = true;
+						break;
 					}
 				}
 			}
+			/**
+			 * Bala Acerta Jogador
+			 */
 			if (bateu) {
 				int noAnt = i - 41;
 				while (noAnt < 0) {
@@ -206,6 +213,32 @@ public class PainelTopWar {
 						graphics2d.drawLine(pIni.x, pIni.y, pFim.x, pFim.y);
 					}
 				}
+
+			}
+			/**
+			 * Sangue Jogador
+			 */
+			if (avatarClienteBateu != null) {
+				int noPost = i + 50;
+				while (noPost > linhaDisparo.size()) {
+					noPost--;
+				}
+				Point nDst = linhaDisparo.get(noPost);
+				for (int j = 0; j < 5; j++) {
+					Point nOri = new Point(tiro.x + Util.intervalo(-10, 10),
+							tiro.y + Util.intervalo(-10, 10));
+					graphics2d.setColor(Color.RED);
+					List<Point> linha = GeoUtil.drawBresenhamLine(nOri, nDst);
+					if (linha.size() > 40) {
+						int intIni = Util.intervalo(10, 20);
+						Point pIni = linha.get(intIni + Util.intervalo(1, 20));
+						Point pFim = linha.get(intIni);
+						graphics2d.drawLine(pIni.x, pIni.y, pFim.x, pFim.y);
+					}
+				}
+
+			}
+			if (bateu) {
 				break;
 			}
 		}
@@ -253,7 +286,7 @@ public class PainelTopWar {
 				imgJog = processaGrade(imgJog, desenha, areaAvatar, mapaTopWar);
 				graphics2d.drawImage(imgJog, desenha.x, desenha.y, null);
 				if (desenhaObjetos) {
-					graphics2d.setColor(Color.MAGENTA);
+					graphics2d.setColor(Color.GREEN);
 					graphics2d.draw(avatarCliente.obeterAreaAvatar());
 				}
 				graphics2d.drawString("" + avatarCliente.getVida(), desenha.x,
@@ -265,7 +298,7 @@ public class PainelTopWar {
 			avatarCliente.animar();
 		}
 		if (desenhaObjetos) {
-			graphics2d.setColor(Color.MAGENTA);
+			graphics2d.setColor(Color.GREEN);
 			Rectangle limitesViewPort = (Rectangle) limitesViewPort();
 			graphics2d.drawString("Angulo " + angulo, limitesViewPort.x + 10,
 					limitesViewPort.y + 10);
@@ -277,6 +310,14 @@ public class PainelTopWar {
 			graphics2d.draw(avatarCliente.gerarCorpo());
 			graphics2d.setColor(Color.RED);
 			graphics2d.draw(avatarCliente.gerarCabeca());
+			graphics2d.setColor(Color.BLUE);
+			Point pontoAvatarLocal = jogoCliente.getPontoAvatar();
+			Point pontoMouseClicado = jogoCliente.getPontoMouseClicado();
+			if (pontoMouseClicado != null && pontoAvatarLocal != null) {
+				graphics2d.drawLine(pontoAvatarLocal.x, pontoAvatarLocal.y,
+						pontoMouseClicado.x, pontoMouseClicado.y);
+			}
+
 		}
 
 	}
