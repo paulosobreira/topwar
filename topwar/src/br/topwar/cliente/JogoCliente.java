@@ -26,6 +26,7 @@ import br.nnpe.tos.NnpeTO;
 import br.topwar.ConstantesTopWar;
 import br.topwar.recursos.CarregadorRecursos;
 import br.topwar.serial.MapaTopWar;
+import br.topwar.servidor.JogoServidor;
 import br.topwar.tos.AvatarTopWar;
 import br.topwar.tos.DadosJogoTopWar;
 
@@ -55,9 +56,9 @@ public class JogoCliente {
 		this.controleCliente = controleCliente;
 		ObjectInputStream ois;
 		try {
-			ois = new ObjectInputStream(
-					CarregadorRecursos.recursoComoStream(dadosJogoTopWar
-							.getNomeMapa() + ".topwar"));
+			ois = new ObjectInputStream(CarregadorRecursos
+					.recursoComoStream(dadosJogoTopWar.getNomeMapa()
+							+ ".topwar"));
 			mapaTopWar = (MapaTopWar) ois.readObject();
 		} catch (Exception e1) {
 			Logger.logarExept(e1);
@@ -183,9 +184,19 @@ public class JogoCliente {
 						if (pontoMouseClicado.x == pontoAvatar.x) {
 							pathX = false;
 						} else if (pontoMouseClicado.x > pontoAvatar.x + nvelo) {
-							ret = (String) controleCliente.moverDireita();
+							Point novoPt = new Point(pontoAvatar.x + nvelo,
+									pontoAvatar.y);
+							if (!JogoServidor.verificaColisao(novoPt,
+									mapaTopWar)) {
+								ret = (String) controleCliente.moverDireita();
+							}
 						} else if (pontoMouseClicado.x < pontoAvatar.x - nvelo) {
-							ret = (String) controleCliente.moverEsquerda();
+							Point novoPt = new Point(pontoAvatar.x - nvelo,
+									pontoAvatar.y);
+							if (!JogoServidor.verificaColisao(novoPt,
+									mapaTopWar)) {
+								ret = (String) controleCliente.moverEsquerda();
+							}
 						} else {
 							pathX = false;
 						}
@@ -206,9 +217,19 @@ public class JogoCliente {
 						if (pontoMouseClicado.y == pontoAvatar.y) {
 							pathY = false;
 						} else if (pontoMouseClicado.y > pontoAvatar.y + nvelo) {
-							ret = (String) controleCliente.moverBaixo();
+							Point novoPt = new Point(pontoAvatar.x,
+									pontoAvatar.y + nvelo);
+							if (!JogoServidor.verificaColisao(novoPt,
+									mapaTopWar)) {
+								ret = (String) controleCliente.moverBaixo();
+							}
 						} else if (pontoMouseClicado.y < pontoAvatar.y - nvelo) {
-							ret = (String) controleCliente.moverCima();
+							Point novoPt = new Point(pontoAvatar.x,
+									pontoAvatar.y - nvelo);
+							if (!JogoServidor.verificaColisao(novoPt,
+									mapaTopWar)) {
+								ret = (String) controleCliente.moverCima();
+							}
 						} else {
 							pathY = false;
 						}

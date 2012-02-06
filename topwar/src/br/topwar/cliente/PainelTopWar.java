@@ -35,7 +35,7 @@ public class PainelTopWar {
 	private JPanel panel;
 	private JScrollPane scrollPane;
 	private MapaTopWar mapaTopWar;
-	private boolean desenhaObjetos = false;
+	private boolean desenhaObjetos = true;
 	public Map<String, BufferedImage> mapImgs = new HashMap<String, BufferedImage>();
 	public final static BufferedImage azul = CarregadorRecursos
 			.carregaBufferedImageTransparecia("azul.png", Color.MAGENTA);
@@ -103,7 +103,12 @@ public class PainelTopWar {
 			protected void paintComponent(java.awt.Graphics g) {
 				super.paintComponent(g);
 				Graphics2D graphics2d = (Graphics2D) g;
-				graphics2d.drawImage(img, null, 0, 0);
+				if (desenhaObjetos) {
+					graphics2d.setColor(Color.BLACK);
+					graphics2d.fillRect(0, 0, img.getWidth(), img.getHeight());
+				} else {
+					graphics2d.drawImage(img, null, 0, 0);
+				}
 				synchronized (jogoCliente.getAvatarClientes()) {
 					List<AvatarCliente> avatarClientes = jogoCliente
 							.getAvatarClientes();
@@ -124,10 +129,11 @@ public class PainelTopWar {
 				if (desenhaObjetos) {
 					List<ObjetoMapa> objetoMapaList = mapaTopWar
 							.getObjetoMapaList();
-					graphics2d.setColor(Color.GREEN);
 					for (Iterator iterator = objetoMapaList.iterator(); iterator
 							.hasNext();) {
 						ObjetoMapa objetoMapa = (ObjetoMapa) iterator.next();
+						graphics2d.setColor(new Color(0, 255, 0, objetoMapa
+								.getTransparencia()));
 						graphics2d.draw(objetoMapa.getForma());
 					}
 				}
@@ -193,7 +199,7 @@ public class PainelTopWar {
 				}
 			}
 			/**
-			 * Bala Acerta Jogador
+			 * Bala Acerta
 			 */
 			if (bateu) {
 				int noAnt = i - 41;
@@ -204,7 +210,11 @@ public class PainelTopWar {
 				for (int j = 0; j < 5; j++) {
 					Point nDst = new Point(tiro.x + Util.intervalo(-10, 10),
 							tiro.y + Util.intervalo(-10, 10));
-					graphics2d.setColor(Color.YELLOW);
+					if (Math.random() > 0.5) {
+						graphics2d.setColor(Color.YELLOW);
+					} else {
+						graphics2d.setColor(Color.WHITE);
+					}
 					List<Point> linha = GeoUtil.drawBresenhamLine(nOri, nDst);
 					if (linha.size() > 40) {
 						int intIni = Util.intervalo(10, 20);

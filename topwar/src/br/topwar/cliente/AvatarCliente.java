@@ -42,16 +42,15 @@ public class AvatarCliente {
 		AffineTransform afRotate = new AffineTransform();
 		double angulo = getAngulo();
 		double rad = Math.toRadians((double) angulo);
-		Shape cabeca = desenhaCabeca(GeoUtil.calculaPonto(angulo, 6,
-				getPontoAvatar()));
+		Shape cabeca = desenhaCabeca(getPontoAvatar());
 		GeneralPath gpCabeca = new GeneralPath(cabeca);
 		afRotate.setToRotation(rad, gpCabeca.getBounds().getCenterX(), gpCabeca
 				.getBounds().getCenterY());
 		return gpCabeca.createTransformedShape(afRotate);
 	}
 
-	public Shape desenhaCorpo(Point p) {
-		return new Rectangle2D.Double(p.x - 8, p.y - 3, 16, 6);
+	public static Shape desenhaCorpo(Point p) {
+		return new Rectangle2D.Double(p.x - 8, p.y, 18, 18);
 	}
 
 	public Shape obeterAreaAvatar() {
@@ -81,8 +80,8 @@ public class AvatarCliente {
 		return gpCorpo.createTransformedShape(afRotate);
 	}
 
-	public Shape desenhaCabeca(Point p) {
-		return new Rectangle2D.Double(p.x - 3, p.y - 2, 6, 4);
+	public static Shape desenhaCabeca(Point p) {
+		return new Rectangle2D.Double(p.x - 3, p.y - 8, 6, 6);
 	}
 
 	public void animar() {
