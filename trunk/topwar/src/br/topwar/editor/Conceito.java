@@ -92,8 +92,8 @@ public class Conceito {
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		Cursor crossHair = new Cursor(Cursor.CROSSHAIR_CURSOR);
 		frame.setCursor(crossHair);
-		ObjectInputStream ois = new ObjectInputStream(
-				CarregadorRecursos.recursoComoStream("mapa9.topwar"));
+		ObjectInputStream ois = new ObjectInputStream(CarregadorRecursos
+				.recursoComoStream("mapa9.topwar"));
 
 		mapaTopWar = (MapaTopWar) ois.readObject();
 		frame.setTitle(mapaTopWar.getNome());
@@ -251,17 +251,13 @@ public class Conceito {
 
 	protected static boolean verificaColisao(Point novoPonto,
 			Rectangle areaAvatar, MapaTopWar mapaTopWar) {
-		Point desenha = new Point(novoPonto.x
-				- ((int) areaAvatar.getWidth() / 2), novoPonto.y
-				- ((int) areaAvatar.getHeight() / 3));
-		Rectangle novaArea = new Rectangle(desenha.x, desenha.y,
-				(int) areaAvatar.getWidth(), (int) areaAvatar.getHeight());
+		Shape novaArea = desenhaCorpo(novoPonto);
 		List<ObjetoMapa> objetoMapaList = mapaTopWar.getObjetoMapaList();
 		for (Iterator iterator = objetoMapaList.iterator(); iterator.hasNext();) {
 			ObjetoMapa objetoMapa = (ObjetoMapa) iterator.next();
 			if (objetoMapa.getTransparencia() > 100
 					&& objetoMapa.getEfeito() == null
-					&& objetoMapa.getForma().intersects(novaArea)) {
+					&& objetoMapa.getForma().intersects(novaArea.getBounds())) {
 				return true;
 			}
 		}
@@ -321,8 +317,8 @@ public class Conceito {
 						Point desenha = new Point(
 								p.x - (imgJog.getWidth() / 2), p.y
 										- (imgJog.getHeight() / 3));
-						areaAvatar = new Rectangle(desenha.x, desenha.y,
-								imgJog.getWidth(), imgJog.getHeight());
+						areaAvatar = new Rectangle(desenha.x, desenha.y, imgJog
+								.getWidth(), imgJog.getHeight());
 						imgJog = Conceito.processaTransparencia(imgJog,
 								desenha, areaAvatar, mapaTopWar);
 						imgJog = Conceito.processaGrade(imgJog, desenha,
@@ -357,7 +353,7 @@ public class Conceito {
 						Point nOri = new Point(p.x, p.y);
 						Point nDst = new Point(m.x + Util.intervalo(-30, 30),
 								m.y + Util.intervalo(-30, 30));
-						
+
 						List<Point> linha = GeoUtil.drawBresenhamLine(nOri,
 								nDst);
 						int cont = 0;
@@ -369,14 +365,13 @@ public class Conceito {
 							}
 							Point point = (Point) iterator.next();
 							if (Math.random() > .9) {
-								if(Math.random()>.7){
+								if (Math.random() > .7) {
 									graphics2d.setColor(Color.WHITE);
-								}else{
+								} else {
 									graphics2d.setColor(Color.LIGHT_GRAY);
 								}
-								graphics2d.drawOval(point.x, point.y,
-										Util.intervalo(1, 2),
-										Util.intervalo(1, 2));
+								graphics2d.drawOval(point.x, point.y, Util
+										.intervalo(1, 2), Util.intervalo(1, 2));
 							}
 						}
 						if (linha.size() > 100) {
@@ -384,9 +379,9 @@ public class Conceito {
 							Point pIni = linha.get(intIni);
 							Point pFim = linha.get(intIni
 									+ Util.intervalo(1, 30));
-							if(Math.random()>.7){
+							if (Math.random() > .7) {
 								graphics2d.setColor(Color.WHITE);
-							}else{
+							} else {
 								graphics2d.setColor(Color.LIGHT_GRAY);
 							}
 							graphics2d.drawLine(pIni.x, pIni.y, pFim.x, pFim.y);
@@ -436,8 +431,9 @@ public class Conceito {
 		AffineTransform afRotate = new AffineTransform();
 		double angulo = GeoUtil.calculaAngulo(pontoAvatar, pontoMouse, 90);
 		double rad = Math.toRadians((double) angulo);
-		Shape cabeca = desenhaCabeca(GeoUtil.calculaPonto(angulo, 6,
-				pontoAvatar));
+		// Shape cabeca = desenhaCabeca(GeoUtil.calculaPonto(angulo, 6,
+		// pontoAvatar));
+		Shape cabeca = desenhaCabeca(pontoAvatar);
 		GeneralPath gpCabeca = new GeneralPath(cabeca);
 		afRotate.setToRotation(rad, gpCabeca.getBounds().getCenterX(), gpCabeca
 				.getBounds().getCenterY());
@@ -581,11 +577,11 @@ public class Conceito {
 	}
 
 	protected static Shape desenhaCabeca(Point p) {
-		return new Rectangle2D.Double(p.x - 3, p.y - 2, 6, 4);
+		return new Rectangle2D.Double(p.x - 3, p.y - 8, 6, 6);
 	}
 
 	protected static Shape desenhaCorpo(Point p) {
-		return new Rectangle2D.Double(p.x - 8, p.y - 3, 16, 6);
+		return new Rectangle2D.Double(p.x - 8, p.y, 18, 18);
 	}
 
 	public static void centralizarPontoDireto(Point pin) {
