@@ -15,6 +15,7 @@ public class AvatarCliente {
 	private boolean local;
 	private int quadroAnimacao;
 	private long lastAnim;
+	private Point pontoAvatarSuave;
 	private Point pontoAvatarOld;
 	private AvatarTopWar avatarTopWar;
 
@@ -36,6 +37,14 @@ public class AvatarCliente {
 
 	public void setAvatarTopWar(AvatarTopWar avatarTopWar) {
 		this.avatarTopWar = avatarTopWar;
+	}
+
+	public Point getPontoAvatarSuave() {
+		return pontoAvatarSuave;
+	}
+
+	public void setPontoAvatarSuave(Point pontoAvatarDesenha) {
+		this.pontoAvatarSuave = pontoAvatarDesenha;
 	}
 
 	public Shape gerarCabeca() {
@@ -177,6 +186,25 @@ public class AvatarCliente {
 
 	public int getVida() {
 		return avatarTopWar.getVida();
+	}
+
+	public Shape obeterAreaAvatarSuave() {
+		Point desenha = getPontoDesenhaSuave();
+		if (desenha == null) {
+			return null;
+		}
+		Rectangle areaAvatar = new Rectangle(desenha.x, desenha.y,
+				ConstantesTopWar.LARGURA_AVATAR, ConstantesTopWar.ALTURA_AVATAR);
+		return areaAvatar;
+	}
+
+	private Point getPontoDesenhaSuave() {
+		if (pontoAvatarSuave == null) {
+			return null;
+		}
+		return new Point(pontoAvatarSuave.x
+				- (ConstantesTopWar.LARGURA_AREA_AVATAR), pontoAvatarSuave.y
+				- (ConstantesTopWar.ALTURA_AREA_AVATAR));
 	}
 
 }
