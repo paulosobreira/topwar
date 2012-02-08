@@ -28,8 +28,8 @@ public class ImageUtil {
 				img.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
 		srcBufferedImage.getGraphics().drawImage(img.getImage(), 0, 0, null);
 
-		BufferedImage bufferedImageRetorno = new BufferedImage(
-				img.getIconWidth(), img.getIconHeight(),
+		BufferedImage bufferedImageRetorno = new BufferedImage(img
+				.getIconWidth(), img.getIconHeight(),
 				BufferedImage.TYPE_INT_ARGB);
 		Raster srcRaster = srcBufferedImage.getData();
 		WritableRaster destRaster = bufferedImageRetorno.getRaster();
@@ -86,8 +86,8 @@ public class ImageUtil {
 
 			GraphicsConfiguration gc = gs.getDefaultConfiguration();
 
-			bimage = gc.createCompatibleImage(image.getWidth(null),
-					image.getHeight(null), transparency);
+			bimage = gc.createCompatibleImage(image.getWidth(null), image
+					.getHeight(null), transparency);
 		} catch (HeadlessException e) {
 			// The system does not have a screen
 		}
@@ -100,8 +100,8 @@ public class ImageUtil {
 				type = BufferedImage.TYPE_INT_ARGB;
 			}
 
-			bimage = new BufferedImage(image.getWidth(null),
-					image.getHeight(null), type);
+			bimage = new BufferedImage(image.getWidth(null), image
+					.getHeight(null), type);
 		}
 
 		// Copy image to buffered image
@@ -159,8 +159,8 @@ public class ImageUtil {
 				img.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
 		srcBufferedImage.getGraphics().drawImage(img.getImage(), 0, 0, null);
 
-		BufferedImage bufferedImageRetorno = new BufferedImage(
-				img.getIconWidth(), img.getIconHeight(),
+		BufferedImage bufferedImageRetorno = new BufferedImage(img
+				.getIconWidth(), img.getIconHeight(),
 				BufferedImage.TYPE_INT_ARGB);
 		Raster srcRaster = srcBufferedImage.getData();
 		WritableRaster destRaster = bufferedImageRetorno.getRaster();
@@ -206,6 +206,33 @@ public class ImageUtil {
 				destRaster.setPixel(i, j, argbArray);
 			}
 		}
+		return bufferedImageRetorno;
+	}
+
+	public static BufferedImage gerarFade(BufferedImage src, int translucidez) {
+		ImageIcon img = new ImageIcon(src);
+		BufferedImage srcBufferedImage = new BufferedImage(img.getIconWidth(),
+				img.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
+		srcBufferedImage.getGraphics().drawImage(img.getImage(), 0, 0, null);
+		BufferedImage bufferedImageRetorno = new BufferedImage(img
+				.getIconWidth(), img.getIconHeight(),
+				BufferedImage.TYPE_INT_ARGB);
+		Raster srcRaster = srcBufferedImage.getData();
+		WritableRaster destRaster = bufferedImageRetorno.getRaster();
+		int[] argbArray = new int[4];
+
+		for (int i = 0; i < img.getIconWidth(); i++) {
+			for (int j = 0; j < img.getIconHeight(); j++) {
+				argbArray = new int[4];
+				argbArray = srcRaster.getPixel(i, j, argbArray);
+				Color c = new Color(argbArray[0], argbArray[1], argbArray[2],
+						argbArray[3]);
+				if (argbArray[3] != 0)
+					argbArray[3] = translucidez;
+				destRaster.setPixel(i, j, argbArray);
+			}
+		}
+
 		return bufferedImageRetorno;
 	}
 }

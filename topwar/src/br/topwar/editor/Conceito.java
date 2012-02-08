@@ -564,15 +564,15 @@ public class Conceito {
 				BufferedImage bufferedImage = ImageUtil.gerarSubImagem(src,
 						rect);
 				String key = time + "-" + i + "-" + j;
-				mapImgs.put(key, bufferedImage);
+				mapImgs.put(key, ImageUtil.gerarFade(bufferedImage, 250));
 				// JOptionPane.showMessageDialog(null, new JLabel(new ImageIcon(
 				// mapImgs.get(key))), key,
 				// JOptionPane.INFORMATION_MESSAGE);
 			}
 		}
 
-		JOptionPane.showMessageDialog(null, new JLabel(new ImageIcon(bf)),
-				"bf", JOptionPane.INFORMATION_MESSAGE);
+		JOptionPane.showMessageDialog(null, new JLabel(new ImageIcon(ImageUtil
+				.gerarFade(bf, 150))), "bf", JOptionPane.INFORMATION_MESSAGE);
 
 	}
 
