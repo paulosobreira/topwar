@@ -49,6 +49,8 @@ public class JogoCliente {
 	private long millisSrv;
 	protected long ultAcao;
 	private int velocidade;
+	protected long atulaizaAvatarSleep = 30;
+	private Thread threadAtualizaPosAvatar;
 
 	public JogoCliente(DadosJogoTopWar dadosJogoTopWar,
 			ControleCliente controleCliente) {
@@ -56,9 +58,9 @@ public class JogoCliente {
 		this.controleCliente = controleCliente;
 		ObjectInputStream ois;
 		try {
-			ois = new ObjectInputStream(CarregadorRecursos
-					.recursoComoStream(dadosJogoTopWar.getNomeMapa()
-							+ ".topwar"));
+			ois = new ObjectInputStream(
+					CarregadorRecursos.recursoComoStream(dadosJogoTopWar
+							.getNomeMapa() + ".topwar"));
 			mapaTopWar = (MapaTopWar) ois.readObject();
 		} catch (Exception e1) {
 			Logger.logarExept(e1);
@@ -85,6 +87,66 @@ public class JogoCliente {
 		iniciaThreadAtualizaTela();
 		iniciaThreadAtualizaDadosServidor();
 		iniciaListenerTeclado();
+		iniciaThreadAtualizaPosAvatar();
+	}
+
+	private void iniciaThreadAtualizaPosAvatar() {
+		if (threadAtualizaPosAvatar != null) {
+			threadAtualizaPosAvatar.interrupt();
+		}
+		threadAtualizaPosAvatar = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				boolean interrupt = false;
+				while (rodando && !interrupt) {
+					try {
+						int media = 0;
+						for (Iterator iterator = avatarClientes.iterator(); iterator
+								.hasNext();) {
+							AvatarCliente avatarCliente = (AvatarCliente) iterator
+									.next();
+							if (avatarCliente.getPontoAvatarSuave() == null) {
+								avatarCliente.setPontoAvatarSuave(avatarCliente
+										.getPontoAvatar());
+								continue;
+							}
+							List<Point> linha = GeoUtil.drawBresenhamLine(
+									avatarCliente.getPontoAvatar(),
+									avatarCliente.getPontoAvatarSuave());
+							int noventaPorcento = (int) ((linha.size() * 0.9));
+							if (linha.size() > avatarCliente.getVelocidade()) {
+								avatarCliente.setPontoAvatarSuave(linha
+										.get(noventaPorcento));
+							} else if (linha.size() > 1) {
+								Point point = linha.get(linha.size() - 2);
+								avatarCliente.setPontoAvatarSuave(point);
+							} else {
+								avatarCliente.setPontoAvatarSuave(avatarCliente
+										.getPontoAvatar());
+							}
+							media += linha.size();
+						}
+						Logger.logar("Media" + media);
+						if (media > velocidade) {
+							atulaizaAvatarSleep -= (media - velocidade);
+							if (atulaizaAvatarSleep < 1) {
+								atulaizaAvatarSleep = 1;
+							}
+						} else {
+							atulaizaAvatarSleep = 30;
+						}
+						Logger.logar("atulaizaAvatarSleep"
+								+ atulaizaAvatarSleep);
+						Thread.sleep(atulaizaAvatarSleep);
+					} catch (InterruptedException e) {
+						interrupt = true;
+						Logger.logarExept(e);
+					}
+				}
+			}
+		});
+		threadAtualizaPosAvatar.start();
+
 	}
 
 	public long getMillisSrv() {
@@ -340,12 +402,16 @@ public class JogoCliente {
 	protected void matarTodasThreads() {
 		rodando = false;
 		try {
+			if (threadAtualizaPosAvatar != null) {
+				threadAtualizaPosAvatar.interrupt();
+			}
 			if (threadRepaint != null) {
 				threadRepaint.interrupt();
 			}
 			if (threadDadosSrv != null) {
 				threadDadosSrv.interrupt();
 			}
+
 		} catch (Exception e) {
 			Logger.logarExept(e);
 		}

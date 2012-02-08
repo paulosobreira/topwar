@@ -103,12 +103,12 @@ public class PainelTopWar {
 			protected void paintComponent(java.awt.Graphics g) {
 				super.paintComponent(g);
 				Graphics2D graphics2d = (Graphics2D) g;
-				if (desenhaObjetos) {
-					graphics2d.setColor(Color.BLACK);
-					graphics2d.fillRect(0, 0, img.getWidth(), img.getHeight());
-				} else {
-					graphics2d.drawImage(img, null, 0, 0);
-				}
+				// if (desenhaObjetos) {
+				// graphics2d.setColor(Color.BLACK);
+				// graphics2d.fillRect(0, 0, img.getWidth(), img.getHeight());
+				// } else {
+				// }
+				graphics2d.drawImage(img, null, 0, 0);
 				synchronized (jogoCliente.getAvatarClientes()) {
 					List<AvatarCliente> avatarClientes = jogoCliente
 							.getAvatarClientes();
@@ -256,7 +256,10 @@ public class PainelTopWar {
 
 	protected void desenhaAvatares(Graphics2D graphics2d,
 			AvatarCliente avatarCliente) {
-		Point pontoAvatar = avatarCliente.getPontoAvatar();
+		Point pontoAvatar = avatarCliente.getPontoAvatarSuave();
+		if (pontoAvatar == null) {
+			pontoAvatar = avatarCliente.getPontoAvatar();
+		}
 		int anim = avatarCliente.getQuadroAnimacao();
 		int velocidade = avatarCliente.getVelocidade();
 		String time = avatarCliente.getTime();
@@ -296,8 +299,13 @@ public class PainelTopWar {
 				imgJog = processaGrade(imgJog, desenha, areaAvatar, mapaTopWar);
 				graphics2d.drawImage(imgJog, desenha.x, desenha.y, null);
 				if (desenhaObjetos) {
-					graphics2d.setColor(Color.GREEN);
-					graphics2d.draw(avatarCliente.obeterAreaAvatar());
+					// graphics2d.setColor(Color.GREEN);
+					// graphics2d.draw(avatarCliente.obeterAreaAvatar());
+					// graphics2d.setColor(Color.WHITE);
+					// Shape obeterAreaAvatarSuave = avatarCliente
+					// .obeterAreaAvatarSuave();
+					// if (obeterAreaAvatarSuave != null)
+					// graphics2d.draw(obeterAreaAvatarSuave);
 				}
 				graphics2d.drawString("" + avatarCliente.getVida(), desenha.x,
 						pontoAvatar.y - 20);
@@ -336,8 +344,14 @@ public class PainelTopWar {
 		List<AvatarCliente> avatarClientes = jogoCliente.getAvatarClientes();
 		for (Iterator iterator = avatarClientes.iterator(); iterator.hasNext();) {
 			AvatarCliente avatarCliente = (AvatarCliente) iterator.next();
-			if (avatarCliente.isLocal())
-				centralizarPontoDireto(avatarCliente.getPontoAvatar());
+			if (avatarCliente.isLocal()) {
+				Point pontoAv = avatarCliente.getPontoAvatarSuave();
+				if (pontoAv == null) {
+					pontoAv = avatarCliente.getPontoAvatar();
+				}
+				centralizarPontoDireto(pontoAv);
+
+			}
 		}
 		if (panel != null) {
 			panel.repaint();
