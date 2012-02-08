@@ -12,7 +12,8 @@ public class AvatarTopWar implements Serializable {
 	private double angulo;
 	private long tempoUtlDisparo;
 	private int vida = 100;
-	private int velocidade = 10;
+	private int velocidade = 8;
+	private transient Point pontoUtlDisparo;
 	private transient int balas = 50;
 	private transient int cartuchos = 3;
 	private transient long ultimaRequisicao = System.currentTimeMillis();
@@ -21,6 +22,15 @@ public class AvatarTopWar implements Serializable {
 	@Transient
 	public long getUltimaMorte() {
 		return ultimaMorte;
+	}
+
+	public Point getPontoUtlDisparo() {
+		return pontoUtlDisparo;
+	}
+
+	public void setPontoUtlDisparo(Point pontoUtlDisparo) {
+		setTempoUtlDisparo(System.currentTimeMillis());
+		this.pontoUtlDisparo = pontoUtlDisparo;
 	}
 
 	@Transient

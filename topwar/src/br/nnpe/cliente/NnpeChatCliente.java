@@ -36,8 +36,11 @@ public abstract class NnpeChatCliente {
 			public void run() {
 				while (NnpeChatCliente.this.nnpeApplet.isComunicacaoServer()) {
 					try {
-						Thread.sleep(10000);
+						while (!NnpeChatCliente.this.nnpeApplet.isInit()) {
+							Thread.sleep(20);
+						}
 						atualizaVisao();
+						Thread.sleep(10000);
 					} catch (Exception e) {
 						Logger.logarExept(e);
 					}
@@ -86,8 +89,8 @@ public abstract class NnpeChatCliente {
 			if (fileContents == null) {
 				Logger.logar(" fileContents == null  ");
 			}
-			ObjectInputStream ois = new ObjectInputStream(
-					fileContents.getInputStream());
+			ObjectInputStream ois = new ObjectInputStream(fileContents
+					.getInputStream());
 			Map map = (Map) ois.readObject();
 			String login = (String) map.get("login");
 			String pass = (String) map.get("pass");
@@ -99,9 +102,9 @@ public abstract class NnpeChatCliente {
 		} catch (Exception e) {
 			Logger.logarExept(e);
 		}
-		int result = JOptionPane.showConfirmDialog(
-				nnpeChatWindow.getMainPanel(), nnpeFormLogin,
-				Lang.msg("formularioLogin"), JOptionPane.OK_CANCEL_OPTION);
+		int result = JOptionPane.showConfirmDialog(nnpeChatWindow
+				.getMainPanel(), nnpeFormLogin, Lang.msg("formularioLogin"),
+				JOptionPane.OK_CANCEL_OPTION);
 
 		if (JOptionPane.OK_OPTION == result) {
 			logarRecuperarLembrar();
@@ -181,14 +184,14 @@ public abstract class NnpeChatCliente {
 				}
 			} catch (Exception e) {
 				Logger.logarExept(e);
-				JOptionPane.showMessageDialog(nnpeChatWindow.getMainPanel(),
-						e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(nnpeChatWindow.getMainPanel(), e
+						.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
 			}
 			nnpeTO.setComando(Constantes.LOGAR);
 		}
 		if (Util.isNullOrEmpty(nnpeTO.getComando())) {
-			JOptionPane.showMessageDialog(nnpeChatWindow.getMainPanel(),
-					Lang.msg("opercaoLogarInvalida"), "Erro",
+			JOptionPane.showMessageDialog(nnpeChatWindow.getMainPanel(), Lang
+					.msg("opercaoLogarInvalida"), "Erro",
 					JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
@@ -225,9 +228,8 @@ public abstract class NnpeChatCliente {
 			return;
 		}
 		if (ret == null) {
-			JOptionPane.showMessageDialog(nnpeChatWindow.getMainPanel(),
-					Lang.msg("problemasRede"), "Erro",
-					JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(nnpeChatWindow.getMainPanel(), Lang
+					.msg("problemasRede"), "Erro", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 		nnpeTO = (NnpeTO) ret;
@@ -282,9 +284,8 @@ public abstract class NnpeChatCliente {
 			return;
 		}
 		if (ret == null) {
-			JOptionPane.showMessageDialog(nnpeChatWindow.getMainPanel(),
-					Lang.msg("problemasRede"), "Erro",
-					JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(nnpeChatWindow.getMainPanel(), Lang
+					.msg("problemasRede"), "Erro", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 		nnpeTO = (NnpeTO) ret;

@@ -139,10 +139,8 @@ public class JogoServidor {
 				 * Campo Visao Tiro
 				 */
 				if ((System.currentTimeMillis() - avatarTopWar
-						.getTempoUtlDisparo()) < 150) {
-					Point pontoTiro = GeoUtil.calculaPonto(avatarTopWar
-							.getAngulo(), ConstantesTopWar.ASSALT_MAX_RANGE,
-							avatarTopWar.getPontoAvatar());
+						.getTempoUtlDisparo()) < 300) {
+					Point pontoTiro = avatarTopWar.getPontoUtlDisparo();
 					line = GeoUtil.drawBresenhamLine(avatarTopWarJog
 							.getPontoAvatar(), pontoTiro);
 					if (campoVisao(line)) {
@@ -313,14 +311,14 @@ public class JogoServidor {
 		}
 	}
 
-	public Object atirar(AvatarTopWar avatarTopWarCli, double angulo) {
-		avatarTopWarCli.setTempoUtlDisparo(System.currentTimeMillis());
+	public Object atirar(AvatarTopWar avatarAtirador, double angulo) {
 		Point pontoTiro = GeoUtil.calculaPonto(angulo,
-				ConstantesTopWar.ASSALT_MAX_RANGE, avatarTopWarCli
+				ConstantesTopWar.ASSALT_MAX_RANGE, avatarAtirador
 						.getPontoAvatar());
 		List<ObjetoMapa> objetoMapaList = mapaTopWar.getObjetoMapaList();
-		List<Point> linhaTiro = GeoUtil.drawBresenhamLine(avatarTopWarCli
+		List<Point> linhaTiro = GeoUtil.drawBresenhamLine(avatarAtirador
 				.getPontoAvatar(), pontoTiro);
+		Point pointAnt = null;
 		for (Iterator iteratorPtsBala = linhaTiro.iterator(); iteratorPtsBala
 				.hasNext();) {
 			Point point = (Point) iteratorPtsBala.next();
@@ -330,25 +328,30 @@ public class JogoServidor {
 				ObjetoMapa objetoMapa = (ObjetoMapa) iterator.next();
 				if (objetoMapa.getTransparencia() > 10
 						&& objetoMapa.getForma().contains(point)) {
+					if (pointAnt != null)
+						avatarAtirador.setPontoUtlDisparo(pointAnt);
 					return null;
 				}
 			}
-
-			for (Iterator iteratorAvatar = avatarTopWars.iterator(); iteratorAvatar
-					.hasNext();) {
-				AvatarTopWar avatarTopWar = (AvatarTopWar) iteratorAvatar
-						.next();
-				if (avatarTopWar.equals(avatarTopWarCli)
-						|| (!avatarTopWar.getTime().equals(
-								avatarTopWar.getTime()))) {
-					continue;
-				}
-				AvatarCliente avatarCliente = new AvatarCliente(avatarTopWar);
-				if (avatarCliente.gerarCorpo().contains(point)) {
-					avatarTopWar.setVida(avatarTopWar.getVida() - 5);
-					return ConstantesTopWar.OK;
+			synchronized (avatarTopWars) {
+				for (Iterator iteratorAvatar = avatarTopWars.iterator(); iteratorAvatar
+						.hasNext();) {
+					AvatarTopWar avatarAlvo = (AvatarTopWar) iteratorAvatar
+							.next();
+					if (avatarAlvo.equals(avatarAtirador)
+							|| (avatarAtirador.getTime().equals(avatarAlvo
+									.getTime()))) {
+						continue;
+					}
+					AvatarCliente avatarCliente = new AvatarCliente(avatarAlvo);
+					if (avatarCliente.gerarCorpo().contains(point)) {
+						avatarAlvo.setVida(avatarAlvo.getVida() - 5);
+						avatarAtirador.setPontoUtlDisparo(point);
+						return ConstantesTopWar.OK;
+					}
 				}
 			}
+			pointAnt = point;
 		}
 		return null;
 	}
