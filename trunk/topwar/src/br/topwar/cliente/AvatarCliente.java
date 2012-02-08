@@ -94,7 +94,7 @@ public class AvatarCliente {
 	}
 
 	public void animar() {
-		int intMin = (200 + (10 * getVelocidade()));
+		int intMin = (120 - (5 * getVelocidade()));
 		if (intMin < 60) {
 			intMin = 60;
 		}

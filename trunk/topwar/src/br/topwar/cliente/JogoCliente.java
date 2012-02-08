@@ -58,9 +58,9 @@ public class JogoCliente {
 		this.controleCliente = controleCliente;
 		ObjectInputStream ois;
 		try {
-			ois = new ObjectInputStream(
-					CarregadorRecursos.recursoComoStream(dadosJogoTopWar
-							.getNomeMapa() + ".topwar"));
+			ois = new ObjectInputStream(CarregadorRecursos
+					.recursoComoStream(dadosJogoTopWar.getNomeMapa()
+							+ ".topwar"));
 			mapaTopWar = (MapaTopWar) ois.readObject();
 		} catch (Exception e1) {
 			Logger.logarExept(e1);
@@ -126,17 +126,14 @@ public class JogoCliente {
 							}
 							media += linha.size();
 						}
-						Logger.logar("Media" + media);
 						if (media > velocidade) {
 							atulaizaAvatarSleep -= (media - velocidade);
-							if (atulaizaAvatarSleep < 1) {
-								atulaizaAvatarSleep = 1;
+							if (atulaizaAvatarSleep < 5) {
+								atulaizaAvatarSleep = 5;
 							}
 						} else {
 							atulaizaAvatarSleep = 30;
 						}
-						Logger.logar("atulaizaAvatarSleep"
-								+ atulaizaAvatarSleep);
 						Thread.sleep(atulaizaAvatarSleep);
 					} catch (InterruptedException e) {
 						interrupt = true;
@@ -234,25 +231,28 @@ public class JogoCliente {
 			@Override
 			public void run() {
 				if (pontoAvatarDesenha != null && pontoMouseClicado != null) {
-					boolean interrupt = false;
-					boolean pathX = true;
-					boolean pathY = true;
-					while (!interrupt
-							&& (pathX || pathY)
-							&& GeoUtil.distaciaEntrePontos(pontoAvatar,
-									pontoMouseClicado) > velocidade) {
+					if (GeoUtil.distaciaEntrePontos(pontoAvatar,
+							pontoMouseClicado) < velocidade) {
+						return;
+					}
+					List<Point> line = GeoUtil.drawBresenhamLine(pontoAvatar,
+							pontoMouseClicado);
+					int nvelo = velocidade;
+					boolean pathX = false;
+					boolean pathY = false;
+					for (int i = 0; i < line.size(); i += nvelo) {
+						Point p = line.get(i);
 						String ret = null;
-						int nvelo = velocidade;
-						if (pontoMouseClicado.x == pontoAvatar.x) {
+						if (p.x == pontoAvatar.x) {
 							pathX = false;
-						} else if (pontoMouseClicado.x > pontoAvatar.x + nvelo) {
+						} else if (p.x > pontoAvatar.x + nvelo) {
 							Point novoPt = new Point(pontoAvatar.x + nvelo,
 									pontoAvatar.y);
 							if (!JogoServidor.verificaColisao(novoPt,
 									mapaTopWar)) {
 								ret = (String) controleCliente.moverDireita();
 							}
-						} else if (pontoMouseClicado.x < pontoAvatar.x - nvelo) {
+						} else if (p.x < pontoAvatar.x - nvelo) {
 							Point novoPt = new Point(pontoAvatar.x - nvelo,
 									pontoAvatar.y);
 							if (!JogoServidor.verificaColisao(novoPt,
@@ -271,21 +271,21 @@ public class JogoCliente {
 							try {
 								Thread.sleep(200);
 							} catch (InterruptedException e) {
-								interrupt = true;
 								Logger.logarExept(e);
+								return;
 							}
 						}
 						ret = null;
-						if (pontoMouseClicado.y == pontoAvatar.y) {
+						if (p.y == pontoAvatar.y) {
 							pathY = false;
-						} else if (pontoMouseClicado.y > pontoAvatar.y + nvelo) {
+						} else if (p.y > pontoAvatar.y + nvelo) {
 							Point novoPt = new Point(pontoAvatar.x,
 									pontoAvatar.y + nvelo);
 							if (!JogoServidor.verificaColisao(novoPt,
 									mapaTopWar)) {
 								ret = (String) controleCliente.moverBaixo();
 							}
-						} else if (pontoMouseClicado.y < pontoAvatar.y - nvelo) {
+						} else if (p.y < pontoAvatar.y - nvelo) {
 							Point novoPt = new Point(pontoAvatar.x,
 									pontoAvatar.y - nvelo);
 							if (!JogoServidor.verificaColisao(novoPt,
@@ -304,10 +304,11 @@ public class JogoCliente {
 							try {
 								Thread.sleep(200);
 							} catch (InterruptedException e) {
-								interrupt = true;
 								Logger.logarExept(e);
+								return;
 							}
 						}
+
 					}
 				}
 			}

@@ -35,7 +35,7 @@ public class PainelTopWar {
 	private JPanel panel;
 	private JScrollPane scrollPane;
 	private MapaTopWar mapaTopWar;
-	private boolean desenhaObjetos = true;
+	private boolean desenhaObjetos = false;
 	public Map<String, BufferedImage> mapImgs = new HashMap<String, BufferedImage>();
 	public final static BufferedImage azul = CarregadorRecursos
 			.carregaBufferedImageTransparecia("azul.png", Color.MAGENTA);
@@ -103,12 +103,12 @@ public class PainelTopWar {
 			protected void paintComponent(java.awt.Graphics g) {
 				super.paintComponent(g);
 				Graphics2D graphics2d = (Graphics2D) g;
-				if (desenhaObjetos) {
-					graphics2d.setColor(Color.BLACK);
-					graphics2d.fillRect(0, 0, img.getWidth(), img.getHeight());
-				} else {
-					graphics2d.drawImage(img, null, 0, 0);
-				}
+				// if (desenhaObjetos) {
+				// graphics2d.setColor(Color.BLACK);
+				// graphics2d.fillRect(0, 0, img.getWidth(), img.getHeight());
+				// } else {
+				// }
+				graphics2d.drawImage(img, null, 0, 0);
 				synchronized (jogoCliente.getAvatarClientes()) {
 					List<AvatarCliente> avatarClientes = jogoCliente
 							.getAvatarClientes();
@@ -125,6 +125,9 @@ public class PainelTopWar {
 						}
 
 					}
+					Logger
+							.logar("avatarClientes.size "
+									+ avatarClientes.size());
 				}
 				if (desenhaObjetos) {
 					List<ObjetoMapa> objetoMapaList = mapaTopWar
