@@ -103,12 +103,12 @@ public class PainelTopWar {
 			protected void paintComponent(java.awt.Graphics g) {
 				super.paintComponent(g);
 				Graphics2D graphics2d = (Graphics2D) g;
-				// if (desenhaObjetos) {
-				// graphics2d.setColor(Color.BLACK);
-				// graphics2d.fillRect(0, 0, img.getWidth(), img.getHeight());
-				// } else {
-				// }
-				graphics2d.drawImage(img, null, 0, 0);
+				if (desenhaObjetos) {
+					graphics2d.setColor(Color.BLACK);
+					graphics2d.fillRect(0, 0, img.getWidth(), img.getHeight());
+				} else {
+					graphics2d.drawImage(img, null, 0, 0);
+				}
 				synchronized (jogoCliente.getAvatarClientes()) {
 					List<AvatarCliente> avatarClientes = jogoCliente
 							.getAvatarClientes();
@@ -206,10 +206,12 @@ public class PainelTopWar {
 				while (noAnt < 0) {
 					noAnt++;
 				}
-				Point nOri = linhaDisparo.get(noAnt);
+				Point ptAcertoAnt = linhaDisparo.get(noAnt);
+				Point nOri = tiro;
 				for (int j = 0; j < 5; j++) {
-					Point nDst = new Point(tiro.x + Util.intervalo(-10, 10),
-							tiro.y + Util.intervalo(-10, 10));
+					Point nDst = new Point(ptAcertoAnt.x
+							+ Util.intervalo(-10, 10), ptAcertoAnt.y
+							+ Util.intervalo(-10, 10));
 					if (Math.random() > 0.5) {
 						graphics2d.setColor(Color.YELLOW);
 					} else {
@@ -217,9 +219,9 @@ public class PainelTopWar {
 					}
 					List<Point> linha = GeoUtil.drawBresenhamLine(nOri, nDst);
 					if (linha.size() > 40) {
-						int intIni = Util.intervalo(10, 20);
-						Point pIni = linha.get(intIni + Util.intervalo(1, 20));
-						Point pFim = linha.get(intIni);
+						int intIni = Util.intervalo(5, 10);
+						Point pIni = linha.get(intIni);
+						Point pFim = linha.get(intIni + Util.intervalo(1, 20));
 						graphics2d.drawLine(pIni.x, pIni.y, pFim.x, pFim.y);
 					}
 				}
@@ -294,19 +296,29 @@ public class PainelTopWar {
 						- (imgJog.getHeight() / 3));
 				Rectangle areaAvatar = new Rectangle(desenha.x, desenha.y,
 						imgJog.getWidth(), imgJog.getHeight());
-				imgJog = processaTransparencia(imgJog, desenha, areaAvatar,
-						mapaTopWar);
+				imgJog = processaSobreposicoesAvatar(imgJog, desenha,
+						areaAvatar, mapaTopWar);
 				imgJog = processaGrade(imgJog, desenha, areaAvatar, mapaTopWar);
-				graphics2d.drawImage(imgJog, desenha.x, desenha.y, null);
-				if (desenhaObjetos) {
-					// graphics2d.setColor(Color.GREEN);
-					// graphics2d.draw(avatarCliente.obeterAreaAvatar());
-					// graphics2d.setColor(Color.WHITE);
-					// Shape obeterAreaAvatarSuave = avatarCliente
-					// .obeterAreaAvatarSuave();
-					// if (obeterAreaAvatarSuave != null)
-					// graphics2d.draw(obeterAreaAvatarSuave);
+				/**
+				 * Avatar Fade
+				 */
+				if (jogoCliente.getPontoAvatar() != null
+						&& !avatarCliente.isLocal()) {
+					List<Point> line = GeoUtil.drawBresenhamLine(jogoCliente
+							.getPontoAvatar(), pontoAvatar);
+					if (line.size() > 200) {
+						int transp = (510 - (line.size() - 200)) / 2;
+						if (transp > 255) {
+							transp = 255;
+						}
+						if (transp < 0) {
+							transp = 0;
+						}
+						imgJog = ImageUtil.gerarFade(imgJog, transp);
+					}
+
 				}
+				graphics2d.drawImage(imgJog, desenha.x, desenha.y, null);
 				graphics2d.drawString("" + avatarCliente.getVida(), desenha.x,
 						pontoAvatar.y - 20);
 			}
@@ -398,7 +410,7 @@ public class PainelTopWar {
 		}
 	}
 
-	protected BufferedImage processaTransparencia(BufferedImage imgJog,
+	protected BufferedImage processaSobreposicoesAvatar(BufferedImage imgJog,
 			Point desenha, Rectangle areaAvatar, MapaTopWar mapaTopWar) {
 		List<ObjetoMapa> objetoMapaList = mapaTopWar.getObjetoMapaList();
 		for (Iterator iterator = objetoMapaList.iterator(); iterator.hasNext();) {
