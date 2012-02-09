@@ -51,6 +51,8 @@ public class JogoCliente {
 	private int velocidade;
 	protected long atulaizaAvatarSleep = 30;
 	private Thread threadAtualizaPosAvatar;
+	private int balas;
+	private int cartuchos;
 
 	public JogoCliente(DadosJogoTopWar dadosJogoTopWar,
 			ControleCliente controleCliente) {
@@ -165,7 +167,7 @@ public class JogoCliente {
 						synchronized (avatarClientes) {
 							atualizaListaAvatares();
 						}
-						Thread.sleep(150);
+						Thread.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO);
 					} catch (InterruptedException e) {
 						interrupt = true;
 						Logger.logarExept(e);
@@ -205,6 +207,9 @@ public class JogoCliente {
 		if (avatarClientes == null) {
 			return;
 		}
+		if (balas <= 0) {
+			controleCliente.recarregar();
+		}
 		controleCliente.atirar();
 	}
 
@@ -216,13 +221,13 @@ public class JogoCliente {
 		pontoMouseMovendo.y = e.getY();
 		if (pontoAvatar != null)
 			angulo = GeoUtil.calculaAngulo(pontoAvatar, pontoMouseMovendo, 90);
-		if ((System.currentTimeMillis() - ultAcao) > 200) {
+		if ((System.currentTimeMillis() - ultAcao) > ConstantesTopWar.ATRASO_REDE_PADRAO) {
 			controleCliente.atualizaAngulo();
 		}
 	}
 
 	protected void moverPeloMouse() {
-		if ((System.currentTimeMillis() - ultAcao) < 200) {
+		if ((System.currentTimeMillis() - ultAcao) < ConstantesTopWar.ATRASO_REDE_PADRAO) {
 			return;
 		}
 		ultAcao = System.currentTimeMillis();
@@ -269,7 +274,8 @@ public class JogoCliente {
 						}
 						if (pathX) {
 							try {
-								Thread.sleep(200);
+								Thread
+										.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO);
 							} catch (InterruptedException e) {
 								Logger.logarExept(e);
 								return;
@@ -302,7 +308,8 @@ public class JogoCliente {
 						}
 						if (pathY) {
 							try {
-								Thread.sleep(200);
+								Thread
+										.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO);
 							} catch (InterruptedException e) {
 								Logger.logarExept(e);
 								return;
@@ -348,7 +355,7 @@ public class JogoCliente {
 				while (rodando && !interrupt) {
 					try {
 						painelTopWar.atualiza();
-						Thread.sleep(50);
+						Thread.sleep(40);
 					} catch (InterruptedException e) {
 						interrupt = true;
 						Logger.logarExept(e);
@@ -424,7 +431,7 @@ public class JogoCliente {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				pararMovimentoMouse();
-				if ((System.currentTimeMillis() - ultAcao) < 200) {
+				if ((System.currentTimeMillis() - ultAcao) < ConstantesTopWar.ATRASO_REDE_PADRAO) {
 					return;
 				}
 				ultAcao = System.currentTimeMillis();
@@ -467,8 +474,8 @@ public class JogoCliente {
 		nnpeTO = (NnpeTO) ret;
 		millisSrv = nnpeTO.getMillisSrv();
 		Map retorno = (Map) nnpeTO.getData();
-		// retorno.put(ConstantesTopWar.BALAS, balas);
-		// retorno.put(ConstantesTopWar.CARTUCHO, cartuchos);
+		balas = (Integer) retorno.get(ConstantesTopWar.BALAS);
+		cartuchos = (Integer) retorno.get(ConstantesTopWar.CARTUCHO);
 		List<AvatarTopWar> avatarTopWars = (List<AvatarTopWar>) retorno
 				.get(ConstantesTopWar.LISTA_AVATARES);
 		for (Iterator iterator = avatarTopWars.iterator(); iterator.hasNext();) {

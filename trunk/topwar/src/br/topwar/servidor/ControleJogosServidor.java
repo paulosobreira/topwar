@@ -185,7 +185,24 @@ public class ControleJogosServidor {
 		if (avatarTopWar == null) {
 			return null;
 		}
-		return jogoServidor.atualizaAngulo(avatarTopWar, acaoClienteTopWar.getAngulo());
+		return jogoServidor.atualizaAngulo(avatarTopWar, acaoClienteTopWar
+				.getAngulo());
+	}
+
+	public Object recarregar(NnpeTO nnpeTO) {
+		DadosAcaoClienteTopWar acaoClienteTopWar = (DadosAcaoClienteTopWar) nnpeTO
+				.getData();
+		JogoServidor jogoServidor = obterJogoCliente(acaoClienteTopWar
+				.getNomeCliente());
+		if (jogoServidor == null) {
+			return null;
+		}
+		AvatarTopWar avatarTopWar = obterAvatarTopWarCliente(acaoClienteTopWar
+				.getNomeCliente());
+		if (avatarTopWar == null) {
+			return null;
+		}
+		return jogoServidor.recarregar(avatarTopWar);
 	}
 
 }
