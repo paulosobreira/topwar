@@ -125,9 +125,7 @@ public class PainelTopWar {
 						}
 
 					}
-					Logger
-							.logar("avatarClientes.size "
-									+ avatarClientes.size());
+					Logger.logar("avatarClientes.size " + avatarClientes.size());
 				}
 				if (desenhaObjetos) {
 					List<ObjetoMapa> objetoMapaList = mapaTopWar
@@ -307,8 +305,8 @@ public class PainelTopWar {
 				 */
 				if (jogoCliente.getPontoAvatar() != null
 						&& !avatarCliente.isLocal()) {
-					List<Point> line = GeoUtil.drawBresenhamLine(jogoCliente
-							.getPontoAvatar(), pontoAvatar);
+					List<Point> line = GeoUtil.drawBresenhamLine(
+							jogoCliente.getPontoAvatar(), pontoAvatar);
 					if (line.size() > 200) {
 						int transp = (510 - (line.size() - 200)) / 2;
 						if (transp > 255) {
@@ -322,7 +320,15 @@ public class PainelTopWar {
 
 				}
 				graphics2d.drawImage(imgJog, desenha.x, desenha.y, null);
-				graphics2d.drawString("" + avatarCliente.getVida(), desenha.x,
+				graphics2d.setColor(new Color(128, 128, 128, 100));
+				graphics2d.fillRoundRect(desenha.x - 20, desenha.y - 20, 100,
+						20, 5, 5);
+				graphics2d.setColor(new Color(0, 255, 0, 100));
+				graphics2d.fillRoundRect(desenha.x - 20, desenha.y - 20,
+						avatarCliente.getVida(), 20, 5, 5);
+				graphics2d.setColor(Color.WHITE);
+				graphics2d.drawString("" + avatarCliente.getNomeJogador() + " "
+						+ avatarCliente.getVida(), desenha.x,
 						pontoAvatar.y - 20);
 			}
 		}

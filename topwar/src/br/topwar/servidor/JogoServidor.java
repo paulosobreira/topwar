@@ -37,9 +37,9 @@ public class JogoServidor {
 		this.proxyComandos = proxyComandos;
 		ObjectInputStream ois;
 		try {
-			ois = new ObjectInputStream(CarregadorRecursos
-					.recursoComoStream(dadosJogoTopWar.getNomeMapa()
-							+ ".topwar"));
+			ois = new ObjectInputStream(
+					CarregadorRecursos.recursoComoStream(dadosJogoTopWar
+							.getNomeMapa() + ".topwar"));
 			mapaTopWar = (MapaTopWar) ois.readObject();
 		} catch (Exception e) {
 			Logger.logarExept(e);
@@ -130,8 +130,9 @@ public class JogoServidor {
 					ret.add(avatarTopWar);
 					continue;
 				}
-				List<Point> line = GeoUtil.drawBresenhamLine(avatarTopWarJog
-						.getPontoAvatar(), avatarTopWar.getPontoAvatar());
+				List<Point> line = GeoUtil.drawBresenhamLine(
+						avatarTopWarJog.getPontoAvatar(),
+						avatarTopWar.getPontoAvatar());
 				if (campoVisao(line)) {
 					ret.add(avatarTopWar);
 				}
@@ -141,8 +142,8 @@ public class JogoServidor {
 				if ((System.currentTimeMillis() - avatarTopWar
 						.getTempoUtlDisparo()) < 300) {
 					Point pontoTiro = avatarTopWar.getPontoUtlDisparo();
-					line = GeoUtil.drawBresenhamLine(avatarTopWarJog
-							.getPontoAvatar(), pontoTiro);
+					line = GeoUtil.drawBresenhamLine(
+							avatarTopWarJog.getPontoAvatar(), pontoTiro);
 					if (campoVisao(line)) {
 						ret.add(avatarTopWar);
 					}
@@ -313,11 +314,11 @@ public class JogoServidor {
 
 	public Object atirar(AvatarTopWar avatarAtirador, double angulo) {
 		Point pontoTiro = GeoUtil.calculaPonto(angulo,
-				ConstantesTopWar.ASSALT_MAX_RANGE, avatarAtirador
-						.getPontoAvatar());
+				ConstantesTopWar.ASSALT_MAX_RANGE,
+				avatarAtirador.getPontoAvatar());
 		List<ObjetoMapa> objetoMapaList = mapaTopWar.getObjetoMapaList();
-		List<Point> linhaTiro = GeoUtil.drawBresenhamLine(avatarAtirador
-				.getPontoAvatar(), pontoTiro);
+		List<Point> linhaTiro = GeoUtil.drawBresenhamLine(
+				avatarAtirador.getPontoAvatar(), pontoTiro);
 		Point pointAnt = null;
 		for (Iterator iteratorPtsBala = linhaTiro.iterator(); iteratorPtsBala
 				.hasNext();) {
@@ -338,15 +339,18 @@ public class JogoServidor {
 						.hasNext();) {
 					AvatarTopWar avatarAlvo = (AvatarTopWar) iteratorAvatar
 							.next();
-					if (avatarAlvo.equals(avatarAtirador)
-							|| (avatarAtirador.getTime().equals(avatarAlvo
-									.getTime()))) {
+					if (avatarAlvo.equals(avatarAtirador)) {
 						continue;
 					}
 					AvatarCliente avatarCliente = new AvatarCliente(avatarAlvo);
 					if (avatarCliente.gerarCorpo().contains(point)) {
-						avatarAlvo.setVida(avatarAlvo.getVida() - 5);
 						avatarAtirador.setPontoUtlDisparo(point);
+						if (avatarAtirador.getTime().equals(
+								avatarAlvo.getTime())) {
+							return null;
+						} else {
+							avatarAlvo.setVida(avatarAlvo.getVida() - 5);
+						}
 						return ConstantesTopWar.OK;
 					}
 				}
