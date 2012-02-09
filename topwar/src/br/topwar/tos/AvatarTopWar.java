@@ -18,6 +18,16 @@ public class AvatarTopWar implements Serializable {
 	private transient int cartuchos = 3;
 	private transient long ultimaRequisicao = System.currentTimeMillis();
 	private transient long ultimaMorte;
+	private transient long recarregar;
+
+	@Transient
+	public long getRecarregar() {
+		return recarregar;
+	}
+
+	public void setRecarregar(long recarregar) {
+		this.recarregar = recarregar;
+	}
 
 	@Transient
 	public long getUltimaMorte() {
