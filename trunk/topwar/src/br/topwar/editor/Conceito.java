@@ -15,6 +15,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -67,6 +68,7 @@ public class Conceito {
 	private static Point pontoAvatar;
 	private static Rectangle areaAvatar;
 	private static boolean desenhaObjetos;
+	private static Point origem;
 	public final static BufferedImage azul = CarregadorRecursos
 			.carregaBufferedImageTransparecia("azul.png", Color.MAGENTA);
 	public final static BufferedImage vermelho = CarregadorRecursos
@@ -92,15 +94,15 @@ public class Conceito {
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		Cursor crossHair = new Cursor(Cursor.CROSSHAIR_CURSOR);
 		frame.setCursor(crossHair);
-		ObjectInputStream ois = new ObjectInputStream(CarregadorRecursos
-				.recursoComoStream("mapa9.topwar"));
+		ObjectInputStream ois = new ObjectInputStream(
+				CarregadorRecursos.recursoComoStream("mapa9.topwar"));
 
 		mapaTopWar = (MapaTopWar) ois.readObject();
 		frame.setTitle(mapaTopWar.getNome());
 
 		final BufferedImage img = CarregadorRecursos
 				.carregaBackGround(mapaTopWar.getBackGround());
-
+		origem = new Point(650, 600);
 		pontoAvatar = new Point(650, 600);
 		pontoMouse = new Point(0, 0);
 		KeyAdapter keyAdapter = new KeyAdapter() {
@@ -317,8 +319,8 @@ public class Conceito {
 						Point desenha = new Point(
 								p.x - (imgJog.getWidth() / 2), p.y
 										- (imgJog.getHeight() / 3));
-						areaAvatar = new Rectangle(desenha.x, desenha.y, imgJog
-								.getWidth(), imgJog.getHeight());
+						areaAvatar = new Rectangle(desenha.x, desenha.y,
+								imgJog.getWidth(), imgJog.getHeight());
 						imgJog = Conceito.processaTransparencia(imgJog,
 								desenha, areaAvatar, mapaTopWar);
 						imgJog = Conceito.processaGrade(imgJog, desenha,
@@ -328,6 +330,31 @@ public class Conceito {
 						if (desenhaObjetos) {
 							graphics2d.setColor(Color.MAGENTA);
 							graphics2d.draw(areaAvatar);
+							Point back = GeoUtil.calculaPonto(angulo + 180, 30,
+									pontoAvatar);
+							Ellipse2D ellipse2d = new Ellipse2D.Double(
+									back.x - 20, back.y - 20, 40, 40);
+							graphics2d.draw(ellipse2d);
+							graphics2d.setColor(Color.WHITE);
+							graphics2d.drawOval(pontoAvatar.x, pontoAvatar.y,
+									10, 10);
+							List<Point> line = GeoUtil.drawBresenhamLine(
+									pontoAvatar, origem);
+							boolean desenhaOr = true;
+							for (Iterator iterator = line.iterator(); iterator
+									.hasNext();) {
+								Point point = (Point) iterator.next();
+								graphics2d.drawOval(point.x, point.y, 2, 2);
+								if (ellipse2d
+										.intersects(new Rectangle2D.Double(
+												point.x, point.y, 1, 1))) {
+									desenhaOr = false;
+									break;
+								}
+							}
+							if (desenhaOr)
+								graphics2d.drawOval(origem.x, origem.y, 10, 10);
+
 						}
 					}
 				}
@@ -370,8 +397,9 @@ public class Conceito {
 								} else {
 									graphics2d.setColor(Color.LIGHT_GRAY);
 								}
-								graphics2d.drawOval(point.x, point.y, Util
-										.intervalo(1, 2), Util.intervalo(1, 2));
+								graphics2d.drawOval(point.x, point.y,
+										Util.intervalo(1, 2),
+										Util.intervalo(1, 2));
 							}
 						}
 						if (linha.size() > 100) {
@@ -388,24 +416,6 @@ public class Conceito {
 						}
 					}
 
-					/**
-					 * assaut
-					 */
-					// for (int i = 0; i < 5; i++) {
-					// Point nOri = new Point(p.x, p.y);
-					// Point nDst = new Point(m.x + Util.intervalo(-15, 15),
-					// m.y + Util.intervalo(-15, 15));
-					// graphics2d.setColor(Color.YELLOW);
-					// List<Point> linha = GeoUtil.drawBresenhamLine(nOri,
-					// nDst);
-					// if (linha.size() > 40) {
-					// int intIni = Util.intervalo(10, 20);
-					// Point pIni = linha.get(intIni);
-					// Point pFim = linha.get(intIni
-					// + Util.intervalo(1, 20));
-					// graphics2d.drawLine(pIni.x, pIni.y, pFim.x, pFim.y);
-					// }
-					// }
 				}
 				if (desenhaObjetos) {
 					List<ObjetoMapa> objetoMapaList = mapaTopWar
@@ -571,8 +581,9 @@ public class Conceito {
 			}
 		}
 
-		JOptionPane.showMessageDialog(null, new JLabel(new ImageIcon(ImageUtil
-				.gerarFade(bf, 150))), "bf", JOptionPane.INFORMATION_MESSAGE);
+		JOptionPane.showMessageDialog(null,
+				new JLabel(new ImageIcon(ImageUtil.gerarFade(bf, 150))), "bf",
+				JOptionPane.INFORMATION_MESSAGE);
 
 	}
 

@@ -53,6 +53,7 @@ public class JogoCliente {
 	private Thread threadAtualizaPosAvatar;
 	private int balas;
 	private int cartuchos;
+	private double anguloServidor;
 
 	public JogoCliente(DadosJogoTopWar dadosJogoTopWar,
 			ControleCliente controleCliente) {
@@ -60,9 +61,9 @@ public class JogoCliente {
 		this.controleCliente = controleCliente;
 		ObjectInputStream ois;
 		try {
-			ois = new ObjectInputStream(CarregadorRecursos
-					.recursoComoStream(dadosJogoTopWar.getNomeMapa()
-							+ ".topwar"));
+			ois = new ObjectInputStream(
+					CarregadorRecursos.recursoComoStream(dadosJogoTopWar
+							.getNomeMapa() + ".topwar"));
 			mapaTopWar = (MapaTopWar) ois.readObject();
 		} catch (Exception e1) {
 			Logger.logarExept(e1);
@@ -103,30 +104,35 @@ public class JogoCliente {
 				while (rodando && !interrupt) {
 					try {
 						int media = 0;
-						for (Iterator iterator = avatarClientes.iterator(); iterator
-								.hasNext();) {
-							AvatarCliente avatarCliente = (AvatarCliente) iterator
-									.next();
-							if (avatarCliente.getPontoAvatarSuave() == null) {
-								avatarCliente.setPontoAvatarSuave(avatarCliente
-										.getPontoAvatar());
-								continue;
+						synchronized (avatarClientes) {
+							for (Iterator iterator = avatarClientes.iterator(); iterator
+									.hasNext();) {
+								AvatarCliente avatarCliente = (AvatarCliente) iterator
+										.next();
+								if (avatarCliente.getPontoAvatarSuave() == null) {
+									avatarCliente
+											.setPontoAvatarSuave(avatarCliente
+													.getPontoAvatar());
+									continue;
+								}
+								List<Point> linha = GeoUtil.drawBresenhamLine(
+										avatarCliente.getPontoAvatar(),
+										avatarCliente.getPontoAvatarSuave());
+								int noventaPorcento = (int) ((linha.size() * 0.9));
+								if (linha.size() > avatarCliente
+										.getVelocidade()) {
+									avatarCliente.setPontoAvatarSuave(linha
+											.get(noventaPorcento));
+								} else if (linha.size() > 1) {
+									Point point = linha.get(linha.size() - 2);
+									avatarCliente.setPontoAvatarSuave(point);
+								} else {
+									avatarCliente
+											.setPontoAvatarSuave(avatarCliente
+													.getPontoAvatar());
+								}
+								media += linha.size();
 							}
-							List<Point> linha = GeoUtil.drawBresenhamLine(
-									avatarCliente.getPontoAvatar(),
-									avatarCliente.getPontoAvatarSuave());
-							int noventaPorcento = (int) ((linha.size() * 0.9));
-							if (linha.size() > avatarCliente.getVelocidade()) {
-								avatarCliente.setPontoAvatarSuave(linha
-										.get(noventaPorcento));
-							} else if (linha.size() > 1) {
-								Point point = linha.get(linha.size() - 2);
-								avatarCliente.setPontoAvatarSuave(point);
-							} else {
-								avatarCliente.setPontoAvatarSuave(avatarCliente
-										.getPontoAvatar());
-							}
-							media += linha.size();
 						}
 						if (media > velocidade) {
 							atulaizaAvatarSleep -= (media - velocidade);
@@ -146,6 +152,10 @@ public class JogoCliente {
 		});
 		threadAtualizaPosAvatar.start();
 
+	}
+
+	public double getAnguloServidor() {
+		return anguloServidor;
 	}
 
 	public long getMillisSrv() {
@@ -274,8 +284,7 @@ public class JogoCliente {
 						}
 						if (pathX) {
 							try {
-								Thread
-										.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO);
+								Thread.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO);
 							} catch (InterruptedException e) {
 								Logger.logarExept(e);
 								return;
@@ -308,8 +317,7 @@ public class JogoCliente {
 						}
 						if (pathY) {
 							try {
-								Thread
-										.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO);
+								Thread.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO);
 							} catch (InterruptedException e) {
 								Logger.logarExept(e);
 								return;
@@ -491,7 +499,7 @@ public class JogoCliente {
 					if (controleCliente.getNomeJogador().equals(
 							avatarTopWar.getNomeJogador())) {
 						avatarCliente.setLocal(true);
-						angulo = avatarCliente.getAngulo();
+						anguloServidor = avatarCliente.getAngulo();
 						velocidade = avatarCliente.getVelocidade();
 						pontoAvatar = avatarCliente.getPontoAvatar();
 						pontoAvatarDesenha = avatarCliente.getPontoDesenha();

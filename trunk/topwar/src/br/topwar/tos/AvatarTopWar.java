@@ -12,7 +12,7 @@ public class AvatarTopWar implements Serializable {
 	private double angulo;
 	private long tempoUtlDisparo;
 	private int vida = 100;
-	private int velocidade = 8;
+	private int velocidade = 12;
 	private transient Point pontoUtlDisparo;
 	private transient int balas = 50;
 	private transient int cartuchos = 3;

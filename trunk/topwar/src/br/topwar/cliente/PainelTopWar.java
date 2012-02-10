@@ -35,7 +35,7 @@ public class PainelTopWar {
 	private JPanel panel;
 	private JScrollPane scrollPane;
 	private MapaTopWar mapaTopWar;
-	private boolean desenhaObjetos = false;
+	private boolean desenhaObjetos = true;
 	public Map<String, BufferedImage> mapImgs = new HashMap<String, BufferedImage>();
 	public final static BufferedImage azul = CarregadorRecursos
 			.carregaBufferedImageTransparecia("azul.png", Color.MAGENTA);
@@ -357,6 +357,24 @@ public class PainelTopWar {
 						pontoMouseClicado.x, pontoMouseClicado.y);
 			}
 
+			double anguloJog = angulo;
+
+			double angMinJogador = anguloJog - 120;
+			if (angMinJogador < 0) {
+				angMinJogador += 360;
+			}
+
+			double angMaxJogador = anguloJog + 120;
+			if (angMinJogador > 360) {
+				angMinJogador -= 360;
+			}
+
+			Point ptMin = GeoUtil.calculaPonto(angMinJogador, 500, pontoAvatar);
+			graphics2d.setColor(Color.BLACK);
+			graphics2d.drawLine(pontoAvatar.x, pontoAvatar.y, ptMin.x, ptMin.y);
+			Point ptMax = GeoUtil.calculaPonto(angMaxJogador, 500, pontoAvatar);
+			graphics2d.setColor(Color.WHITE);
+			graphics2d.drawLine(pontoAvatar.x, pontoAvatar.y, ptMax.x, ptMax.y);
 		}
 
 	}
