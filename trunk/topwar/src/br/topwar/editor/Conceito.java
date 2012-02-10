@@ -49,35 +49,41 @@ import br.topwar.serial.ObjetoMapa;
 
 public class Conceito {
 
-	protected static boolean rodando = true;
-	protected static int velocidade = 3;
-	final static int CIMA = KeyEvent.VK_W;
-	final static int BAIXO = KeyEvent.VK_S;
-	final static int ESQUERDA = KeyEvent.VK_A;
-	final static int DIREIRA = KeyEvent.VK_D;
-	static private int anim;
-	static private Thread atirando;
-	protected static Set pressed = new HashSet();
-	public static Map<String, BufferedImage> mapImgs = new HashMap<String, BufferedImage>();
-	private static long lastAnim;
-	private static String time = "azul";
-	private static MapaTopWar mapaTopWar;
-	private static JPanel panel;
-	private static JScrollPane scrollPane;
-	private static Point pontoMouse;
-	private static Point pontoAvatar;
-	private static Rectangle areaAvatar;
-	private static boolean desenhaObjetos;
-	private static Point origem;
-	public final static BufferedImage azul = CarregadorRecursos
+	protected boolean rodando = true;
+	protected int velocidade = 3;
+	final int CIMA = KeyEvent.VK_W;
+	final int BAIXO = KeyEvent.VK_S;
+	final int ESQUERDA = KeyEvent.VK_A;
+	final int DIREIRA = KeyEvent.VK_D;
+	private int anim;
+	private Thread atirando;
+	protected Set pressed = new HashSet();
+	public Map<String, BufferedImage> mapImgs = new HashMap<String, BufferedImage>();
+	private long lastAnim;
+	private String time;
+	private MapaTopWar mapaTopWar;
+	private JPanel panel;
+	private JScrollPane scrollPane;
+	private Point pontoMouse;
+	private Point pontoAvatar;
+	private Rectangle areaAvatar;
+	private boolean desenhaObjetos;
+	private Point origem;
+	public final BufferedImage azul = CarregadorRecursos
 			.carregaBufferedImageTransparecia("azul.png", Color.MAGENTA);
-	public final static BufferedImage vermelho = CarregadorRecursos
+	public final BufferedImage vermelho = CarregadorRecursos
 			.carregaBufferedImageTransparecia("vermelho.png", Color.MAGENTA);
-	public final static BufferedImage crosshair = CarregadorRecursos
+	public final BufferedImage crosshair = CarregadorRecursos
 			.carregaBufferedImageTransparecia("crosshair.png", null);
 
-	public static void main(String[] args) throws IOException,
+	public static void main(String[] args) throws Exception {
+		Conceito conceito = new Conceito();
+		conceito.incializa("mapa9.topwar", ConstantesTopWar.TIME_AZUL);
+	}
+
+	public void incializa(String mapa, String time) throws IOException,
 			ClassNotFoundException {
+		this.time = time;
 		if ("azul".equals(time)) {
 			gerarMapaImagens(azul);
 		} else {
@@ -94,8 +100,8 @@ public class Conceito {
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		Cursor crossHair = new Cursor(Cursor.CROSSHAIR_CURSOR);
 		frame.setCursor(crossHair);
-		ObjectInputStream ois = new ObjectInputStream(
-				CarregadorRecursos.recursoComoStream("mapa9.topwar"));
+		ObjectInputStream ois = new ObjectInputStream(CarregadorRecursos
+				.recursoComoStream(mapa));
 
 		mapaTopWar = (MapaTopWar) ois.readObject();
 		frame.setTitle(mapaTopWar.getNome());
@@ -112,6 +118,9 @@ public class Conceito {
 				int keyCode = e.getKeyCode();
 				synchronized (pressed) {
 					pressed.add(keyCode);
+				}
+				if (keyCode == KeyEvent.VK_ESCAPE) {
+					desenhaObjetos = !desenhaObjetos;
 				}
 				move(keyCode);
 				super.keyPressed(e);
@@ -223,9 +232,6 @@ public class Conceito {
 							if (keyCode == KeyEvent.VK_W) {
 								novoPonto.y = novoPonto.y - velocidade;
 							}
-							if (keyCode == KeyEvent.VK_ESCAPE) {
-								desenhaObjetos = !desenhaObjetos;
-							}
 							if (!verificaColisao(novoPonto)) {
 								animar();
 								pontoAvatar.x = novoPonto.x;
@@ -247,7 +253,7 @@ public class Conceito {
 
 	}
 
-	protected static boolean verificaColisao(Point novoPonto) {
+	protected boolean verificaColisao(Point novoPonto) {
 		return verificaColisao(novoPonto, areaAvatar, mapaTopWar);
 	}
 
@@ -266,7 +272,7 @@ public class Conceito {
 		return false;
 	}
 
-	private static void geraPainel(final BufferedImage img, final Point p,
+	private void geraPainel(final BufferedImage img, final Point p,
 			final Point m) {
 		panel = new JPanel() {
 
@@ -319,12 +325,12 @@ public class Conceito {
 						Point desenha = new Point(
 								p.x - (imgJog.getWidth() / 2), p.y
 										- (imgJog.getHeight() / 3));
-						areaAvatar = new Rectangle(desenha.x, desenha.y,
-								imgJog.getWidth(), imgJog.getHeight());
-						imgJog = Conceito.processaTransparencia(imgJog,
-								desenha, areaAvatar, mapaTopWar);
-						imgJog = Conceito.processaGrade(imgJog, desenha,
+						areaAvatar = new Rectangle(desenha.x, desenha.y, imgJog
+								.getWidth(), imgJog.getHeight());
+						imgJog = processaTransparencia(imgJog, desenha,
 								areaAvatar, mapaTopWar);
+						imgJog = processaGrade(imgJog, desenha, areaAvatar,
+								mapaTopWar);
 						graphics2d
 								.drawImage(imgJog, desenha.x, desenha.y, null);
 						if (desenhaObjetos) {
@@ -397,9 +403,8 @@ public class Conceito {
 								} else {
 									graphics2d.setColor(Color.LIGHT_GRAY);
 								}
-								graphics2d.drawOval(point.x, point.y,
-										Util.intervalo(1, 2),
-										Util.intervalo(1, 2));
+								graphics2d.drawOval(point.x, point.y, Util
+										.intervalo(1, 2), Util.intervalo(1, 2));
 							}
 						}
 						if (linha.size() > 100) {
@@ -437,7 +442,7 @@ public class Conceito {
 		};
 	}
 
-	protected static Shape gerarCabeca() {
+	protected Shape gerarCabeca() {
 		AffineTransform afRotate = new AffineTransform();
 		double angulo = GeoUtil.calculaAngulo(pontoAvatar, pontoMouse, 90);
 		double rad = Math.toRadians((double) angulo);
@@ -450,7 +455,7 @@ public class Conceito {
 		return gpCabeca.createTransformedShape(afRotate);
 	}
 
-	protected static Shape gerarCorpo() {
+	protected Shape gerarCorpo() {
 		AffineTransform afRotate = new AffineTransform();
 		Shape corpo = desenhaCorpo(pontoAvatar);
 		double angulo = GeoUtil.calculaAngulo(pontoAvatar, pontoMouse, 90);
@@ -541,7 +546,7 @@ public class Conceito {
 		return imgJog;
 	}
 
-	private static void animar() {
+	private void animar() {
 		int intMin = (100 + (10 * velocidade));
 		if (intMin < 60) {
 			intMin = 60;
@@ -556,7 +561,7 @@ public class Conceito {
 		lastAnim = System.currentTimeMillis();
 	}
 
-	public static void gerarMapaImagens(BufferedImage src) {
+	public void gerarMapaImagens(BufferedImage src) {
 		int altura = src.getHeight() / 8;
 		int largura = src.getWidth() / 4;
 		BufferedImage bf = new BufferedImage(src.getWidth(), src.getHeight(),
@@ -581,13 +586,12 @@ public class Conceito {
 			}
 		}
 
-		JOptionPane.showMessageDialog(null,
-				new JLabel(new ImageIcon(ImageUtil.gerarFade(bf, 150))), "bf",
-				JOptionPane.INFORMATION_MESSAGE);
+		JOptionPane.showMessageDialog(null, new JLabel(new ImageIcon(ImageUtil
+				.gerarFade(bf, 150))), "bf", JOptionPane.INFORMATION_MESSAGE);
 
 	}
 
-	protected static Shape desenhaCabeca(Point p) {
+	protected Shape desenhaCabeca(Point p) {
 		return new Rectangle2D.Double(p.x - 3, p.y - 8, 6, 6);
 	}
 
@@ -595,7 +599,7 @@ public class Conceito {
 		return new Rectangle2D.Double(p.x - 8, p.y, 18, 18);
 	}
 
-	public static void centralizarPontoDireto(Point pin) {
+	public void centralizarPontoDireto(Point pin) {
 		final Point p = new Point((int) (pin.x)
 				- (scrollPane.getViewport().getWidth() / 2), (int) (pin.y)
 				- (scrollPane.getViewport().getHeight() / 2));
@@ -625,7 +629,7 @@ public class Conceito {
 		}
 	}
 
-	public static Shape limitesViewPort() {
+	public Shape limitesViewPort() {
 		if (scrollPane == null) {
 			return null;
 		}

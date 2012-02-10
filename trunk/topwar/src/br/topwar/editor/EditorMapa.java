@@ -78,8 +78,8 @@ public class EditorMapa {
 				if (backGround == null) {
 					return super.getPreferredSize();
 				}
-				return new Dimension(backGround.getWidth(),
-						backGround.getHeight());
+				return new Dimension(backGround.getWidth(), backGround
+						.getHeight());
 			}
 		};
 		scrollPane = new JScrollPane(painelEditor,
@@ -397,8 +397,8 @@ public class EditorMapa {
 				g2d.drawString("C:" + cont++, x, y);
 				g2d.drawString("T:" + objetoMapa.getTransparencia(), x, y + 10);
 				g2d.draw(objetoMapa.getForma());
-				Color color = new Color(255, 255, 255,
-						objetoMapa.getTransparencia());
+				Color color = new Color(255, 255, 255, objetoMapa
+						.getTransparencia());
 				g2d.setColor(color);
 				if (objetoMapa.getEfeito() == null) {
 					g2d.fill(objetoMapa.getForma());
@@ -409,34 +409,35 @@ public class EditorMapa {
 			}
 			if (mapaTopWar.getPontoTimeAzul() != null) {
 				g2d.setColor(ConstantesTopWar.lightBlu);
-				g2d.fillOval(mapaTopWar.getPontoTimeAzul().x - 6,
-						mapaTopWar.getPontoTimeAzul().y - 6, 12, 12);
+				g2d.fillOval(mapaTopWar.getPontoTimeAzul().x - 20, mapaTopWar
+						.getPontoTimeAzul().y - 20, 40, 40);
 			}
 			if (mapaTopWar.getPontoTimeVermelho() != null) {
 				g2d.setColor(ConstantesTopWar.lightRed);
-				g2d.fillOval(mapaTopWar.getPontoTimeVermelho().x - 6,
-						mapaTopWar.getPontoTimeVermelho().y - 6, 12, 12);
+				g2d.fillOval(mapaTopWar.getPontoTimeVermelho().x - 20,
+						mapaTopWar.getPontoTimeVermelho().y - 20, 40, 40);
 			}
 
 		}
 
 		if (desenhaAvatar && pontoMouse != null) {
-			BufferedImage imgJog = Conceito.mapImgs.get("azul-0-0");
-			Point desenha = new Point(pontoMouse.x - (imgJog.getWidth() / 2),
-					pontoMouse.y - (imgJog.getHeight() / 2));
-			Rectangle areaAvatar = new Rectangle(desenha.x, desenha.y,
-					imgJog.getWidth(), imgJog.getHeight());
-			imgJog = Conceito.processaTransparencia(imgJog, desenha,
-					areaAvatar, mapaTopWar);
-			imgJog = Conceito.processaGrade(imgJog, desenha, areaAvatar,
-					mapaTopWar);
-			g2d.drawImage(imgJog, desenha.x, desenha.y, null);
-			if (Conceito.verificaColisao(pontoMouse, areaAvatar, mapaTopWar)) {
-				g2d.setColor(Color.CYAN);
-			} else {
-				g2d.setColor(Color.MAGENTA);
-			}
-			g2d.draw(areaAvatar);
+			// BufferedImage imgJog = Conceito.mapImgs.get("azul-0-0");
+			// Point desenha = new Point(pontoMouse.x - (imgJog.getWidth() / 2),
+			// pontoMouse.y - (imgJog.getHeight() / 2));
+			// Rectangle areaAvatar = new Rectangle(desenha.x, desenha.y,
+			// imgJog.getWidth(), imgJog.getHeight());
+			// imgJog = Conceito.processaTransparencia(imgJog, desenha,
+			// areaAvatar, mapaTopWar);
+			// imgJog = Conceito.processaGrade(imgJog, desenha, areaAvatar,
+			// mapaTopWar);
+			// g2d.drawImage(imgJog, desenha.x, desenha.y, null);
+			// if (Conceito.verificaColisao(pontoMouse, areaAvatar, mapaTopWar))
+			// {
+			// g2d.setColor(Color.CYAN);
+			// } else {
+			// g2d.setColor(Color.MAGENTA);
+			// }
+			// g2d.draw(areaAvatar);
 		}
 	}
 
@@ -452,8 +453,8 @@ public class EditorMapa {
 			int inicioLinha = 0;
 			int fimLinha = 0 + bounds.width;
 			int inicioCol = 0;
-			Color color = new Color(255, 255, 255,
-					objetoMapa.getTransparencia());
+			Color color = new Color(255, 255, 255, objetoMapa
+					.getTransparencia());
 			graphics.setColor(color);
 			for (int i = 0; i < bounds.getHeight(); i++) {
 				if (i % 2 == 0)
@@ -536,6 +537,24 @@ public class EditorMapa {
 				try {
 					salvarMapa();
 				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+
+		JMenuItem testarMapa = new JMenuItem() {
+			public String getText() {
+				return Lang.msg("testarMapa");
+			}
+
+		};
+		menuMapa.add(testarMapa);
+		testarMapa.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					testarMapa();
+				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
 			}
@@ -737,6 +756,13 @@ public class EditorMapa {
 
 	}
 
+	protected void testarMapa() throws IOException, ClassNotFoundException {
+		Conceito conceito = new Conceito();
+		conceito.incializa(mapaTopWar.getNome() + ".topwar",
+				ConstantesTopWar.TIME_AZUL);
+
+	}
+
 	protected void maisAnguloObj() {
 		if (objetoMapaSelecionado == null) {
 			return;
@@ -802,23 +828,23 @@ public class EditorMapa {
 			return;
 		}
 
-		FileInputStream inputStream = new FileInputStream(
-				fileChooser.getSelectedFile());
+		FileInputStream inputStream = new FileInputStream(fileChooser
+				.getSelectedFile());
 		ObjectInputStream ois = new ObjectInputStream(inputStream);
 
 		mapaTopWar = (MapaTopWar) ois.readObject();
 		frame.setTitle(mapaTopWar.getNome());
 
-		backGround = CarregadorRecursos.carregaBackGround(
-				mapaTopWar.getBackGround(), painelEditor);
+		backGround = CarregadorRecursos.carregaBackGround(mapaTopWar
+				.getBackGround(), painelEditor);
 	}
 
 	private void novoMapa() {
-		String nomeMapa = JOptionPane.showInputDialog(frame,
-				Lang.msg("nomeDoMapa"));
+		String nomeMapa = JOptionPane.showInputDialog(frame, Lang
+				.msg("nomeDoMapa"));
 		if (Util.isNullOrEmpty(nomeMapa)) {
-			JOptionPane.showMessageDialog(frame, Lang.msg("nomeInvalido"),
-					Lang.msg("erro"), JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(frame, Lang.msg("nomeInvalido"), Lang
+					.msg("erro"), JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 
@@ -843,7 +869,6 @@ public class EditorMapa {
 	}
 
 	public static void main(String[] args) {
-		Conceito.gerarMapaImagens(Conceito.azul);
 		new EditorMapa();
 	}
 
