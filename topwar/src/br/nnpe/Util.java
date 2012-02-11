@@ -1,5 +1,6 @@
 package br.nnpe;
 
+import java.awt.Graphics2D;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -47,17 +48,17 @@ public class Util {
 		conectivos.addElement("DAS");
 	}
 
-//	public static List removePersistBag(List list, Session session) {
-//		List ret = new LinkedList();
-//		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
-//			Object object = (Object) iterator.next();
-//			if (session != null) {
-//				session.evict(object);
-//			}
-//			ret.add(object);
-//		}
-//		return ret;
-//	}
+	// public static List removePersistBag(List list, Session session) {
+	// List ret = new LinkedList();
+	// for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+	// Object object = (Object) iterator.next();
+	// if (session != null) {
+	// session.evict(object);
+	// }
+	// ret.add(object);
+	// }
+	// return ret;
+	// }
 
 	/**
 	 * Verifica se um campo string é nulo ou vazio lançando um Exception caso
@@ -91,8 +92,8 @@ public class Util {
 			// serialize and pass the object
 			oos.writeObject(oldObj); // C
 			oos.flush(); // D
-			ByteArrayInputStream bin = new ByteArrayInputStream(bos
-					.toByteArray()); // E
+			ByteArrayInputStream bin = new ByteArrayInputStream(
+					bos.toByteArray()); // E
 			ois = new ObjectInputStream(bin); // F
 			// return the new object
 			return ois.readObject(); // G
@@ -441,8 +442,8 @@ public class Util {
 			}
 
 			// Digito verificador do CPF que está sendo validado.
-			String nDigVerific = strCpf.substring(strCpf.length() - 2, strCpf
-					.length());
+			String nDigVerific = strCpf.substring(strCpf.length() - 2,
+					strCpf.length());
 
 			// Concatenando o primeiro resto com o segundo.
 			nDigResult = String.valueOf(digito1) + String.valueOf(digito2);
@@ -929,6 +930,14 @@ public class Util {
 
 	public static String extrairSomenteNumerosInteiro(double d) {
 		return extrairSomenteNumerosInteiro(String.valueOf(d));
+	}
+
+	public static int calculaLarguraText(String txt, Graphics2D g2d) {
+		int largura = 0;
+		for (int i = 0; i < txt.length(); i++) {
+			largura += g2d.getFontMetrics().charWidth(txt.charAt(i));
+		}
+		return largura;
 	}
 
 	public static String substVogais(String name) {

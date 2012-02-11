@@ -33,7 +33,8 @@ public class ConstantesTopWar {
 	public static final String RECARREGAR = "RECARREGAR";
 	public static final long ATRASO_REDE_PADRAO = 150;
 	public static final long TEMPO_RECARGA = 2000;
-	public static final String RECARREGANDO = "RECARREGANDO";
 	public static final String ANGULO = "ANGULO";
+	public static final int BALAS_ASSALT = 30;
+	public static final int CARTUCHOS_ASSALT = 5;
 
 }

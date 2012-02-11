@@ -53,7 +53,7 @@ public class ControleJogosServidor {
 	public Object entrarJogo(NnpeTO nnpeTO) {
 		DadosJogoTopWar dadosJogoTopWar = (DadosJogoTopWar) nnpeTO.getData();
 		JogoServidor jogoServidor = obterJogo(dadosJogoTopWar.getNomeJogo());
-		jogoServidor.adicionarJogador(dadosJogoTopWar.getNomeJogador());
+		jogoServidor.entrarNoJogo(dadosJogoTopWar.getNomeJogador());
 		nnpeTO.setData(jogoServidor.getDadosJogoTopWar());
 		return nnpeTO;
 	}
