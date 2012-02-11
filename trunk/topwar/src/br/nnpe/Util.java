@@ -18,6 +18,7 @@ import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Iterator;
@@ -37,6 +38,8 @@ public class Util {
 	public static DecimalFormat decimalFormat = new DecimalFormat("0.00");
 	public static final String MASCARA_CPF = "###.###.###-##";
 	public static final String MASCARA_CNPJ = "##.###.###/####-##";
+	private static DecimalFormat dez = new DecimalFormat("00");
+	private SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
 	static {
 		conectivos = new Vector();
@@ -967,5 +970,15 @@ public class Util {
 
 		}
 		return retorno.toString();
+	}
+
+	public static String formatarTempo(long fullnum) {
+
+		long minu = (fullnum / 60000);
+		long seg = ((fullnum - (minu * 60000)) / 1000);
+		if (minu > 0)
+			return (minu) + ":" + dez.format(Math.abs(seg));
+		else
+			return seg + "";
 	}
 }

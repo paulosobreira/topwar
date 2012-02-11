@@ -29,6 +29,7 @@ import br.nnpe.Logger;
 import br.nnpe.Util;
 import br.topwar.ConstantesTopWar;
 import br.topwar.recursos.CarregadorRecursos;
+import br.topwar.recursos.idiomas.Lang;
 import br.topwar.serial.MapaTopWar;
 import br.topwar.serial.ObjetoMapa;
 
@@ -47,7 +48,6 @@ public class PainelTopWar {
 			.carregaBufferedImageTransparecia("azul.png", Color.MAGENTA);
 	public final static BufferedImage vermelho = CarregadorRecursos
 			.carregaBufferedImageTransparecia("vermelho.png", Color.MAGENTA);
-	public final static Color lightWhite = new Color(255, 255, 255, 200);
 
 	public PainelTopWar(JogoCliente jogoCliente) {
 		this.jogoCliente = jogoCliente;
@@ -167,11 +167,16 @@ public class PainelTopWar {
 				}
 
 			}
-			Logger.logar("avatarClientes.size " + avatarClientes.size());
 		}
 	}
 
 	protected void desenhaInfoJogo(Graphics2D g2d) {
+		desenhaInfoCima(g2d);
+		desnhaInfoBaixo(g2d);
+
+	}
+
+	private void desnhaInfoBaixo(Graphics2D g2d) {
 		Shape limitesViewPort = limitesViewPort();
 		int x = limitesViewPort.getBounds().x
 				+ (limitesViewPort.getBounds().width - 500);
@@ -179,21 +184,24 @@ public class PainelTopWar {
 				+ +(limitesViewPort.getBounds().height - 10);
 		Font fontOri = g2d.getFont();
 		g2d.setFont(new Font(fontOri.getName(), fontOri.getStyle(), 32));
-		g2d.setColor(lightWhite);
+		g2d.setColor(ConstantesTopWar.lightWhite);
 		g2d.fillRoundRect(x - 10, y - 30,
-				Util.calculaLarguraText("ASSAULT", g2d) + 20, 35, 10, 10);
+				Util.calculaLarguraText(Lang.msg("ASSAULT"), g2d) + 20, 35, 10,
+				10);
 		g2d.setColor(Color.BLACK);
-		g2d.drawString("ASSAULT", x, y);
+		g2d.drawString(Lang.msg("ASSAULT"), x, y);
 
 		x += 180;
 
 		if (jogoCliente.verificaRecarregando()) {
 			g2d.setColor(new Color(255, 255, 255, ocilaAlphaRecarregando));
-			g2d.fillRoundRect(x - 10, y - 30,
-					Util.calculaLarguraText("RECARREGANDO", g2d) + 20, 35, 10,
-					10);
+			g2d.fillRoundRect(
+					x - 10,
+					y - 30,
+					Util.calculaLarguraText(Lang.msg("RECARREGANDO"), g2d) + 20,
+					35, 10, 10);
 			g2d.setColor(Color.BLACK);
-			g2d.drawString("RECARREGANDO", x, y);
+			g2d.drawString(Lang.msg("RECARREGANDO"), x, y);
 
 			if (ocilaAlphaRecarregandoSobe) {
 				ocilaAlphaRecarregando += 10;
@@ -207,20 +215,71 @@ public class PainelTopWar {
 				ocilaAlphaRecarregandoSobe = false;
 			}
 		} else {
-			g2d.setColor(lightWhite);
+			g2d.setColor(ConstantesTopWar.lightWhite);
 			g2d.fillRoundRect(x - 10, y - 30,
 					Util.calculaLarguraText("88", g2d) + 20, 35, 10, 10);
 			g2d.setColor(Color.BLACK);
 			g2d.drawString("" + jogoCliente.getBalas(), x, y);
 			x += 80;
-			g2d.setColor(lightWhite);
+			g2d.setColor(ConstantesTopWar.lightWhite);
 			g2d.fillRoundRect(x - 10, y - 30,
 					Util.calculaLarguraText("8", g2d) + 20, 35, 10, 10);
 			g2d.setColor(Color.BLACK);
 			g2d.drawString("" + jogoCliente.getCartuchos(), x, y);
-			g2d.setFont(fontOri);
-
 		}
+		g2d.setFont(fontOri);
+	}
+
+	private void desenhaInfoCima(Graphics2D g2d) {
+		Shape limitesViewPort = limitesViewPort();
+		int x = limitesViewPort.getBounds().x
+				+ limitesViewPort.getBounds().width / 4;
+		int y = limitesViewPort.getBounds().y + 40;
+		Font fontOri = g2d.getFont();
+		g2d.setFont(new Font(fontOri.getName(), fontOri.getStyle(), 32));
+		g2d.setColor(ConstantesTopWar.lightBlu);
+		g2d.fillRoundRect(x - 10, y - 30,
+				Util.calculaLarguraText(Lang.msg("AZUL"), g2d) + 20, 35, 10, 10);
+		g2d.setColor(Color.BLACK);
+		g2d.drawString(Lang.msg("AZUL"), x, y);
+
+		x += Util.calculaLarguraText(Lang.msg("AZUL"), g2d) + 30;
+
+		g2d.setColor(ConstantesTopWar.lightBlu);
+		g2d.fillRoundRect(x - 10, y - 30,
+				Util.calculaLarguraText("00", g2d) + 20, 35, 10, 10);
+		g2d.setColor(Color.BLACK);
+		g2d.drawString("" + jogoCliente.getPtsAzul(), x, y);
+
+		x += Util.calculaLarguraText("00", g2d) + 30;
+
+		g2d.setColor(ConstantesTopWar.lightWhite);
+
+		String formatarTempo = Util.formatarTempo(jogoCliente
+				.getTempoRestanteJogo());
+
+		g2d.fillRoundRect(x - 10, y - 30,
+				Util.calculaLarguraText(formatarTempo, g2d) + 20, 35, 10, 10);
+		g2d.setColor(Color.BLACK);
+		g2d.drawString(formatarTempo, x, y);
+
+		x += Util.calculaLarguraText(formatarTempo, g2d) + 30;
+
+		g2d.setColor(ConstantesTopWar.lightRed);
+		g2d.fillRoundRect(x - 10, y - 30,
+				Util.calculaLarguraText("00", g2d) + 20, 35, 10, 10);
+		g2d.setColor(Color.BLACK);
+		g2d.drawString("" + jogoCliente.getPtsVermelho(), x, y);
+
+		x += Util.calculaLarguraText("00", g2d) + 30;
+
+		g2d.setColor(ConstantesTopWar.lightRed);
+		g2d.fillRoundRect(x - 10, y - 30,
+				Util.calculaLarguraText(Lang.msg("VERMELHO"), g2d) + 20, 35,
+				10, 10);
+		g2d.setColor(Color.BLACK);
+		g2d.drawString(Lang.msg("VERMELHO"), x, y);
+		g2d.setFont(fontOri);
 	}
 
 	protected void desenhaDisparoAvatar(Graphics2D graphics2d,

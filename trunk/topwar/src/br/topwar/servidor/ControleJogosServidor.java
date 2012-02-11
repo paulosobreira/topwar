@@ -78,7 +78,7 @@ public class ControleJogosServidor {
 		String nomeJogo = (String) nnpeTO.getData();
 		JogoServidor jogoServidor = obterJogo(nomeJogo);
 		if (jogoServidor != null) {
-			nnpeTO.setData(jogoServidor.getAvatarTopWars(nnpeTO
+			nnpeTO.setData(jogoServidor.atualizaListaAvatares(nnpeTO
 					.getSessaoCliente()));
 			nnpeTO.setMillisSrv(System.currentTimeMillis());
 			return nnpeTO;

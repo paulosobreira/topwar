@@ -12,6 +12,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javassist.bytecode.analysis.Analyzer;
+
 import br.nnpe.GeoUtil;
 import br.nnpe.Logger;
 import br.nnpe.Util;
@@ -32,7 +34,12 @@ public class JogoServidor {
 	private ProxyComandos proxyComandos;
 	private List<AvatarTopWar> avatarTopWars = new ArrayList<AvatarTopWar>();
 	private Thread monitorJogo;
+	private int ptsVermelho;
+	private int ptsAzul;
 	private boolean finalizado = false;
+	private int tempoJogoMilis;
+	private long inicioJogoMilis;
+	private long fimJogoMilis;
 
 	public JogoServidor(DadosJogoTopWar dadosJogoTopWar,
 			ProxyComandos proxyComandos) {
@@ -60,11 +67,19 @@ public class JogoServidor {
 		}
 		avatarTopWar.setNomeJogador(dadosJogoTopWar.getNomeJogador());
 		avatarTopWars.add(avatarTopWar);
+		int tempoJogoMinutos = 10;
+		tempoJogoMilis = tempoJogoMinutos * 60 * 1000;
+		inicioJogoMilis = System.currentTimeMillis();
+		fimJogoMilis = inicioJogoMilis + tempoJogoMilis;
+
 		monitorJogo = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				while (!finalizado) {
 					processaClicoJogoServidor();
+					if (verificaFinalizado()) {
+						finalizado = true;
+					}
 					try {
 						Thread.sleep(500);
 					} catch (InterruptedException e) {
@@ -77,6 +92,14 @@ public class JogoServidor {
 			}
 		});
 		monitorJogo.start();
+	}
+
+	public long tempoRestanteJogo() {
+		long tempo = fimJogoMilis - System.currentTimeMillis();
+		if (tempo < 0) {
+			return 0;
+		}
+		return tempo;
 	}
 
 	public boolean isFinalizado() {
@@ -94,7 +117,7 @@ public class JogoServidor {
 				AvatarTopWar avatarTopWar = (AvatarTopWar) iterator.next();
 				long tempDesdeUltMorte = System.currentTimeMillis()
 						- avatarTopWar.getUltimaMorte();
-				if (avatarTopWar.getVida() < 0 && tempDesdeUltMorte > 3000) {
+				if (avatarTopWar.getVida() <= 0 && tempDesdeUltMorte > 3000) {
 					avatarTopWar.setVida(ConstantesTopWar.VIDA_COMPLETA);
 					avatarTopWar.setBalas(ConstantesTopWar.BALAS_ASSALT);
 					avatarTopWar
@@ -119,7 +142,7 @@ public class JogoServidor {
 		return avatarTopWars;
 	}
 
-	public Object getAvatarTopWars(SessaoCliente sessaoCliente) {
+	public Object atualizaListaAvatares(SessaoCliente sessaoCliente) {
 		AvatarTopWar avatarTopWarJog = obterAvatarTopWar(sessaoCliente
 				.getNomeJogador());
 		if (avatarTopWarJog == null)
@@ -171,7 +194,18 @@ public class JogoServidor {
 		retorno.put(ConstantesTopWar.CARTUCHO, avatarTopWarJog.getCartuchos());
 		retorno.put(ConstantesTopWar.RECARREGAR,
 				verificaRecarregando(avatarTopWarJog));
+		retorno.put(ConstantesTopWar.PTS_VERMELHO, getPtsVermelho());
+		retorno.put(ConstantesTopWar.PTS_AZUL, getPtsAzul());
+		retorno.put(ConstantesTopWar.TEMPO_JOGO_RESTANTE, tempoRestanteJogo());
 		return retorno;
+	}
+
+	public int getPtsVermelho() {
+		return ptsVermelho;
+	}
+
+	public int getPtsAzul() {
+		return ptsAzul;
 	}
 
 	private boolean campoVisao(List<Point> line, Ellipse2D ellipse2d) {
@@ -377,7 +411,8 @@ public class JogoServidor {
 						continue;
 					}
 					AvatarCliente avatarCliente = new AvatarCliente(avatarAlvo);
-					if (avatarCliente.gerarCorpo().contains(point)) {
+					if (avatarCliente.gerarCorpo().contains(point)
+							|| avatarCliente.gerarCabeca().contains(point)) {
 						int balas = consomeBalasArma(avatarAtirador);
 						if (balas != 0) {
 							avatarAtirador.setPontoUtlDisparo(point);
@@ -388,8 +423,26 @@ public class JogoServidor {
 								avatarAlvo.getTime())) {
 							return null;
 						} else {
-							avatarAlvo.setVida(avatarAlvo.getVida() - balas);
+							if (avatarCliente.gerarCorpo().contains(point)) {
+								avatarAlvo
+										.setVida(avatarAlvo.getVida() - balas);
+							} else {
+								avatarAlvo.setVida(0);
+							}
+							if (avatarAlvo.getVida() < 1) {
+								if (ConstantesTopWar.TIME_AZUL
+										.equals(avatarAlvo.getTime())) {
+									ptsVermelho++;
+								} else {
+									ptsAzul++;
+								}
+							}
+							avatarAlvo.setDeaths(avatarAlvo.getDeaths() + 1);
+							avatarAtirador
+									.setKills(avatarAtirador.getKills() + 1);
+
 						}
+
 						return ConstantesTopWar.OK;
 					}
 				}

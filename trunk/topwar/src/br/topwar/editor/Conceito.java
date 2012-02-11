@@ -72,7 +72,7 @@ public class Conceito {
 	private Rectangle areaAvatar;
 	private boolean desenhaObjetos;
 	private Point origem;
-	public final static Color lightWhite = new Color(255, 255, 255, 200);
+
 	public final BufferedImage azul = CarregadorRecursos
 			.carregaBufferedImageTransparecia("azul.png", Color.MAGENTA);
 	public final BufferedImage vermelho = CarregadorRecursos
@@ -463,14 +463,69 @@ public class Conceito {
 	}
 
 	protected void desenhaInfoJogo(Graphics2D g2d) {
+		desenhaInfoBaixo(g2d);
+		desenhaInfoCima(g2d);
+
+	}
+
+	private void desenhaInfoCima(Graphics2D g2d) {
+		Shape limitesViewPort = limitesViewPort();
+
+		int x = limitesViewPort.getBounds().x + 300;
+		int y = limitesViewPort.getBounds().y + 40;
+		Font fontOri = g2d.getFont();
+		g2d.setFont(new Font(fontOri.getName(), fontOri.getStyle(), 32));
+		g2d.setColor(ConstantesTopWar.lightBlu);
+		g2d.fillRoundRect(x - 10, y - 30,
+				Util.calculaLarguraText("AZUL", g2d) + 20, 35, 10, 10);
+		g2d.setColor(Color.BLACK);
+		g2d.drawString("AZUL", x, y);
+
+		x += Util.calculaLarguraText("AZUL", g2d) + 30;
+
+		g2d.setColor(ConstantesTopWar.lightBlu);
+		g2d.fillRoundRect(x - 10, y - 30,
+				Util.calculaLarguraText("00", g2d) + 20, 35, 10, 10);
+		g2d.setColor(Color.BLACK);
+		g2d.drawString("00", x, y);
+
+		x += Util.calculaLarguraText("00", g2d) + 30;
+
+		g2d.setColor(ConstantesTopWar.lightWhite);
+
+		String formatarTempo = Util.formatarTempo(System.currentTimeMillis());
+
+		g2d.fillRoundRect(x - 10, y - 30,
+				Util.calculaLarguraText(formatarTempo, g2d) + 20, 35, 10, 10);
+		g2d.setColor(Color.BLACK);
+		g2d.drawString(formatarTempo, x, y);
+
+		x += Util.calculaLarguraText(formatarTempo, g2d) + 30;
+
+		g2d.setColor(ConstantesTopWar.lightRed);
+		g2d.fillRoundRect(x - 10, y - 30,
+				Util.calculaLarguraText("00", g2d) + 20, 35, 10, 10);
+		g2d.setColor(Color.BLACK);
+		g2d.drawString("00", x, y);
+
+		x += Util.calculaLarguraText("00", g2d) + 30;
+
+		g2d.setColor(ConstantesTopWar.lightRed);
+		g2d.fillRoundRect(x - 10, y - 30,
+				Util.calculaLarguraText("VERMELHO", g2d) + 20, 35, 10, 10);
+		g2d.setColor(Color.BLACK);
+		g2d.drawString("VERMELHO", x, y);
+	}
+
+	private void desenhaInfoBaixo(Graphics2D g2d) {
 		Shape limitesViewPort = limitesViewPort();
 		int x = limitesViewPort.getBounds().x
 				+ (limitesViewPort.getBounds().width - 500);
 		int y = limitesViewPort.getBounds().y
-				+ +(limitesViewPort.getBounds().height - 10);
+				+ (limitesViewPort.getBounds().height - 10);
 		Font fontOri = g2d.getFont();
 		g2d.setFont(new Font(fontOri.getName(), fontOri.getStyle(), 32));
-		g2d.setColor(lightWhite);
+		g2d.setColor(ConstantesTopWar.lightWhite);
 		g2d.fillRoundRect(x - 10, y - 30,
 				Util.calculaLarguraText("ASSAULT", g2d) + 20, 35, 10, 10);
 		g2d.setColor(Color.BLACK);
@@ -479,18 +534,17 @@ public class Conceito {
 		x += 180;
 
 		if (false) {
-			g2d.setColor(lightWhite);
+			g2d.setColor(ConstantesTopWar.lightWhite);
 			g2d.fillRoundRect(x - 10, y - 30,
 					Util.calculaLarguraText("50", g2d) + 20, 35, 10, 10);
 			g2d.setColor(Color.BLACK);
 			g2d.drawString("50", x, y);
 			x += 80;
-			g2d.setColor(lightWhite);
+			g2d.setColor(ConstantesTopWar.lightWhite);
 			g2d.fillRoundRect(x - 10, y - 30,
 					Util.calculaLarguraText("3", g2d) + 20, 35, 10, 10);
 			g2d.setColor(Color.BLACK);
 			g2d.drawString("3 ", x, y);
-			g2d.setFont(fontOri);
 		} else {
 			g2d.setColor(new Color(255, 255, 255, ocilaAlphaRecarregando));
 			g2d.fillRoundRect(x - 10, y - 30,
@@ -511,7 +565,7 @@ public class Conceito {
 				ocilaAlphaRecarregandoSobe = false;
 			}
 		}
-
+		g2d.setFont(fontOri);
 	}
 
 	protected Shape gerarCabeca() {
