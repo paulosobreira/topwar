@@ -24,17 +24,25 @@ public class ConstantesTopWar {
 	public static final String TIME_VERMELHO = "vermelho";
 	public static final int VIDA_COMPLETA = 100;
 	public static final int ASSALT_MAX_RANGE = 1000;
-	public final static Color lightRed = new Color(250, 0, 0, 100);
-	public final static Color lightBlu = new Color(0, 0, 250, 100);
-	public static final String LISTA_AVATARES = "LISTA_AVATARES";
-	public static final String BALAS = "BALAS";
-	public static final String CARTUCHO = "CARTUCHO";
+	public final static Color lightWhite = new Color(255, 255, 255, 150);
+	public final static Color lightBlu = new Color(150, 150, 255, 150);
+	public final static Color lightRed = new Color(255, 150, 150, 150);
 	public static final String ATUALIZA_ANGULO = "ATUALIZA_ANGULO";
-	public static final String RECARREGAR = "RECARREGAR";
+	public static final String RECARREGAR = "R";
 	public static final long ATRASO_REDE_PADRAO = 150;
 	public static final long TEMPO_RECARGA = 2000;
 	public static final String ANGULO = "ANGULO";
-	public static final int BALAS_ASSALT = 30;
+	public static final int BALAS_ASSALT = 50;
 	public static final int CARTUCHOS_ASSALT = 5;
+
+	/**
+	 * pela rede
+	 */
+	public static final String LISTA_AVATARES = "L_A";
+	public static final String BALAS = "B";
+	public static final String CARTUCHO = "C";
+	public static final String PTS_VERMELHO = "P_V";
+	public static final String PTS_AZUL = "P_A";
+	public static final Object TEMPO_JOGO_RESTANTE = "T_J_R";
 
 }

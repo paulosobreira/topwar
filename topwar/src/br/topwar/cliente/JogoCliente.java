@@ -38,11 +38,11 @@ public class JogoCliente {
 	private Point pontoAvatar;
 	private Point pontoAvatarDesenha;
 	private double angulo;
-	protected boolean rodando = true;
+	protected boolean jogoEmAndamento = true;
 	protected boolean recarregando;
-	private Thread threadRepaint;
-	private Thread threadDadosSrv;
-	private Thread threadMoverMouse;
+	private int ptsVermelho;
+	private int ptsAzul;
+
 	private PainelTopWar painelTopWar;
 	private List<AvatarCliente> avatarClientes = new ArrayList<AvatarCliente>();
 	private JFrame frameTopWar;
@@ -52,13 +52,26 @@ public class JogoCliente {
 	protected long ultAcao;
 	private int velocidade;
 	protected long atulaizaAvatarSleep = 30;
-	private Thread threadAtualizaPosAvatar;
 	private int balas;
 	private int cartuchos;
 	private double anguloServidor;
 
+	private Thread threadAtualizaPosAvatar;
+	private Thread threadRepaint;
+	private Thread threadDadosSrv;
+	private Thread threadMoverMouse;
+	private Long tempoRestanteJogo;
+
 	public Point getPontoMouseMovendo() {
 		return pontoMouseMovendo;
+	}
+
+	public int getPtsVermelho() {
+		return ptsVermelho;
+	}
+
+	public int getPtsAzul() {
+		return ptsAzul;
 	}
 
 	public JogoCliente(DadosJogoTopWar dadosJogoTopWar,
@@ -107,7 +120,7 @@ public class JogoCliente {
 			@Override
 			public void run() {
 				boolean interrupt = false;
-				while (rodando && !interrupt) {
+				while (jogoEmAndamento && !interrupt) {
 					try {
 						int media = 0;
 						synchronized (avatarClientes) {
@@ -177,13 +190,16 @@ public class JogoCliente {
 			@Override
 			public void run() {
 				boolean interrupt = false;
-				while (controleCliente.isComunicacaoServer() && rodando
+				while (controleCliente.isComunicacaoServer() && jogoEmAndamento
 						&& !interrupt) {
 					try {
 						synchronized (avatarClientes) {
 							atualizaListaAvatares();
 						}
 						Thread.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO);
+						if (tempoRestanteJogo <= 0) {
+							jogoEmAndamento = false;
+						}
 					} catch (InterruptedException e) {
 						interrupt = true;
 						Logger.logarExept(e);
@@ -247,8 +263,8 @@ public class JogoCliente {
 		if ((System.currentTimeMillis() - ultAcao) < ConstantesTopWar.ATRASO_REDE_PADRAO) {
 			return;
 		}
-		ultAcao = System.currentTimeMillis();
 		pararMovimentoMouse();
+		ultAcao = System.currentTimeMillis();
 		Runnable runnable = new Runnable() {
 			@Override
 			public void run() {
@@ -367,7 +383,7 @@ public class JogoCliente {
 			@Override
 			public void run() {
 				boolean interrupt = false;
-				while (rodando && !interrupt) {
+				while (jogoEmAndamento && !interrupt) {
 					try {
 						painelTopWar.atualiza();
 						Thread.sleep(40);
@@ -402,7 +418,7 @@ public class JogoCliente {
 		frameTopWar.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				rodando = false;
+				jogoEmAndamento = false;
 				super.windowClosing(e);
 			}
 		});
@@ -423,7 +439,7 @@ public class JogoCliente {
 	}
 
 	protected void matarTodasThreads() {
-		rodando = false;
+		jogoEmAndamento = false;
 		try {
 			if (threadAtualizaPosAvatar != null) {
 				threadAtualizaPosAvatar.interrupt();
@@ -444,31 +460,51 @@ public class JogoCliente {
 	private void iniciaListenerTeclado() {
 		KeyAdapter keyAdapter = new KeyAdapter() {
 			@Override
-			public void keyPressed(KeyEvent e) {
+			public void keyPressed(final KeyEvent e) {
 				pararMovimentoMouse();
-				if ((System.currentTimeMillis() - ultAcao) < ConstantesTopWar.ATRASO_REDE_PADRAO) {
-					return;
-				}
-				ultAcao = System.currentTimeMillis();
-				int keyCode = e.getKeyCode();
-				if (keyCode == KeyEvent.VK_A || keyCode == KeyEvent.VK_LEFT) {
-					controleCliente.moverEsquerda();
-				}
-				if (keyCode == KeyEvent.VK_S || keyCode == KeyEvent.VK_DOWN) {
-					controleCliente.moverBaixo();
-				}
-				if (keyCode == KeyEvent.VK_D || keyCode == KeyEvent.VK_RIGHT) {
-					controleCliente.moverDireita();
-				}
-				if (keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_UP) {
-					controleCliente.moverCima();
-				}
-				if (keyCode == KeyEvent.VK_SPACE) {
-					atirar();
-				}
-				if (keyCode == KeyEvent.VK_R) {
-					controleCliente.recarregar();
-				}
+				long delay = (System.currentTimeMillis() - ultAcao);
+				final long sleep = ConstantesTopWar.ATRASO_REDE_PADRAO - delay;
+				// if (delay < ConstantesTopWar.ATRASO_REDE_PADRAO) {
+				// return;
+				// }
+				Thread keys = new Thread(new Runnable() {
+					@Override
+					public void run() {
+						try {
+							Thread.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO);
+						} catch (InterruptedException e1) {
+							e1.printStackTrace();
+						}
+						if ((System.currentTimeMillis() - ultAcao) < ConstantesTopWar.ATRASO_REDE_PADRAO) {
+							return;
+						}
+						int keyCode = e.getKeyCode();
+						if (keyCode == KeyEvent.VK_A
+								|| keyCode == KeyEvent.VK_LEFT) {
+							controleCliente.moverEsquerda();
+						}
+						if (keyCode == KeyEvent.VK_S
+								|| keyCode == KeyEvent.VK_DOWN) {
+							controleCliente.moverBaixo();
+						}
+						if (keyCode == KeyEvent.VK_D
+								|| keyCode == KeyEvent.VK_RIGHT) {
+							controleCliente.moverDireita();
+						}
+						if (keyCode == KeyEvent.VK_W
+								|| keyCode == KeyEvent.VK_UP) {
+							controleCliente.moverCima();
+						}
+						if (keyCode == KeyEvent.VK_SPACE) {
+							atirar();
+						}
+						if (keyCode == KeyEvent.VK_R) {
+							controleCliente.recarregar();
+						}
+						ultAcao = System.currentTimeMillis();
+					}
+				});
+				keys.start();
 				super.keyPressed(e);
 			}
 
@@ -495,6 +531,10 @@ public class JogoCliente {
 		balas = (Integer) retorno.get(ConstantesTopWar.BALAS);
 		cartuchos = (Integer) retorno.get(ConstantesTopWar.CARTUCHO);
 		recarregando = (Boolean) retorno.get(ConstantesTopWar.RECARREGAR);
+		ptsAzul = (Integer) retorno.get(ConstantesTopWar.PTS_AZUL);
+		ptsVermelho = (Integer) retorno.get(ConstantesTopWar.PTS_VERMELHO);
+		tempoRestanteJogo = (Long) retorno
+				.get(ConstantesTopWar.TEMPO_JOGO_RESTANTE);
 		List<AvatarTopWar> avatarTopWars = (List<AvatarTopWar>) retorno
 				.get(ConstantesTopWar.LISTA_AVATARES);
 		for (Iterator iterator = avatarTopWars.iterator(); iterator.hasNext();) {
@@ -529,6 +569,10 @@ public class JogoCliente {
 				iterator.remove();
 			}
 		}
+	}
+
+	public Long getTempoRestanteJogo() {
+		return tempoRestanteJogo;
 	}
 
 	public int getBalas() {
