@@ -3,9 +3,11 @@ package br.topwar.cliente;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
@@ -35,12 +37,17 @@ public class PainelTopWar {
 	private JPanel panel;
 	private JScrollPane scrollPane;
 	private MapaTopWar mapaTopWar;
-	private boolean desenhaObjetos = true;
+	private boolean desenhaObjetos = false;
+	private int ocilaAlphaRecarregando = 255;
+	private boolean ocilaAlphaRecarregandoSobe = false;
+	public final BufferedImage crosshair = CarregadorRecursos
+			.carregaBufferedImageTransparecia("crosshair.png", null);
 	public Map<String, BufferedImage> mapImgs = new HashMap<String, BufferedImage>();
 	public final static BufferedImage azul = CarregadorRecursos
 			.carregaBufferedImageTransparecia("azul.png", Color.MAGENTA);
 	public final static BufferedImage vermelho = CarregadorRecursos
 			.carregaBufferedImageTransparecia("vermelho.png", Color.MAGENTA);
+	public final static Color lightWhite = new Color(255, 255, 255, 200);
 
 	public PainelTopWar(JogoCliente jogoCliente) {
 		this.jogoCliente = jogoCliente;
@@ -90,7 +97,6 @@ public class PainelTopWar {
 	private void geraPainel() {
 		final BufferedImage img = CarregadorRecursos
 				.carregaBackGround(mapaTopWar.getBackGround());
-
 		panel = new JPanel() {
 
 			public Dimension getPreferredSize() {
@@ -103,42 +109,14 @@ public class PainelTopWar {
 			protected void paintComponent(java.awt.Graphics g) {
 				super.paintComponent(g);
 				Graphics2D graphics2d = (Graphics2D) g;
-				// if (desenhaObjetos) {
-				// graphics2d.setColor(Color.BLACK);
-				// graphics2d.fillRect(0, 0, img.getWidth(), img.getHeight());
-				// } else {
-				// }
+				setarHints(graphics2d);
 				graphics2d.drawImage(img, null, 0, 0);
-				synchronized (jogoCliente.getAvatarClientes()) {
-					List<AvatarCliente> avatarClientes = jogoCliente
-							.getAvatarClientes();
-					for (Iterator iterator = avatarClientes.iterator(); iterator
-							.hasNext();) {
-						AvatarCliente avatarCliente = (AvatarCliente) iterator
-								.next();
-						desenhaAvatares(graphics2d, avatarCliente);
-						long millisSrv = jogoCliente.getMillisSrv();
-						long tempoUtlDisparo = avatarCliente
-								.getTempoUtlDisparo();
-						if ((millisSrv - tempoUtlDisparo) < 150) {
-							desenhaDisparoAvatar(graphics2d, avatarCliente);
-						}
+				loopDesenhaAvatares(graphics2d);
+				desenhaInfoJogo(graphics2d);
+				desenhaMira(graphics2d);
+				desenhaObjetosDebug(graphics2d);
+			}
 
-					}
-					Logger.logar("avatarClientes.size " + avatarClientes.size());
-				}
-				if (desenhaObjetos) {
-					List<ObjetoMapa> objetoMapaList = mapaTopWar
-							.getObjetoMapaList();
-					for (Iterator iterator = objetoMapaList.iterator(); iterator
-							.hasNext();) {
-						ObjetoMapa objetoMapa = (ObjetoMapa) iterator.next();
-						graphics2d.setColor(new Color(0, 255, 0, objetoMapa
-								.getTransparencia()));
-						graphics2d.draw(objetoMapa.getForma());
-					}
-				}
-			};
 		};
 		scrollPane = new JScrollPane(panel,
 				JScrollPane.VERTICAL_SCROLLBAR_NEVER,
@@ -149,6 +127,100 @@ public class PainelTopWar {
 			}
 		});
 
+	}
+
+	private void desenhaObjetosDebug(Graphics2D graphics2d) {
+		if (desenhaObjetos) {
+			List<ObjetoMapa> objetoMapaList = mapaTopWar.getObjetoMapaList();
+			for (Iterator iterator = objetoMapaList.iterator(); iterator
+					.hasNext();) {
+				ObjetoMapa objetoMapa = (ObjetoMapa) iterator.next();
+				graphics2d.setColor(new Color(0, 255, 0, objetoMapa
+						.getTransparencia()));
+				graphics2d.draw(objetoMapa.getForma());
+			}
+		}
+	}
+
+	private void desenhaMira(Graphics2D graphics2d) {
+		Point pontoMouse = jogoCliente.getPontoMouseMovendo();
+		if (pontoMouse != null) {
+			Point desenha = new Point(
+					pontoMouse.x - (crosshair.getWidth() / 2), pontoMouse.y
+							- (crosshair.getHeight() / 2));
+			graphics2d.drawImage(crosshair, desenha.x, desenha.y, null);
+		}
+	}
+
+	private void loopDesenhaAvatares(Graphics2D graphics2d) {
+		synchronized (jogoCliente.getAvatarClientes()) {
+			List<AvatarCliente> avatarClientes = jogoCliente
+					.getAvatarClientes();
+			for (Iterator iterator = avatarClientes.iterator(); iterator
+					.hasNext();) {
+				AvatarCliente avatarCliente = (AvatarCliente) iterator.next();
+				desenhaAvatares(graphics2d, avatarCliente);
+				long millisSrv = jogoCliente.getMillisSrv();
+				long tempoUtlDisparo = avatarCliente.getTempoUtlDisparo();
+				if ((millisSrv - tempoUtlDisparo) < 150) {
+					desenhaDisparoAvatar(graphics2d, avatarCliente);
+				}
+
+			}
+			Logger.logar("avatarClientes.size " + avatarClientes.size());
+		}
+	}
+
+	protected void desenhaInfoJogo(Graphics2D g2d) {
+		Shape limitesViewPort = limitesViewPort();
+		int x = limitesViewPort.getBounds().x
+				+ (limitesViewPort.getBounds().width - 500);
+		int y = limitesViewPort.getBounds().y
+				+ +(limitesViewPort.getBounds().height - 10);
+		Font fontOri = g2d.getFont();
+		g2d.setFont(new Font(fontOri.getName(), fontOri.getStyle(), 32));
+		g2d.setColor(lightWhite);
+		g2d.fillRoundRect(x - 10, y - 30,
+				Util.calculaLarguraText("ASSAULT", g2d) + 20, 35, 10, 10);
+		g2d.setColor(Color.BLACK);
+		g2d.drawString("ASSAULT", x, y);
+
+		x += 180;
+
+		if (jogoCliente.verificaRecarregando()) {
+			g2d.setColor(new Color(255, 255, 255, ocilaAlphaRecarregando));
+			g2d.fillRoundRect(x - 10, y - 30,
+					Util.calculaLarguraText("RECARREGANDO", g2d) + 20, 35, 10,
+					10);
+			g2d.setColor(Color.BLACK);
+			g2d.drawString("RECARREGANDO", x, y);
+
+			if (ocilaAlphaRecarregandoSobe) {
+				ocilaAlphaRecarregando += 10;
+			} else {
+				ocilaAlphaRecarregando -= 10;
+			}
+			if (ocilaAlphaRecarregando < 50) {
+				ocilaAlphaRecarregandoSobe = true;
+			}
+			if (ocilaAlphaRecarregando > 200) {
+				ocilaAlphaRecarregandoSobe = false;
+			}
+		} else {
+			g2d.setColor(lightWhite);
+			g2d.fillRoundRect(x - 10, y - 30,
+					Util.calculaLarguraText("88", g2d) + 20, 35, 10, 10);
+			g2d.setColor(Color.BLACK);
+			g2d.drawString("" + jogoCliente.getBalas(), x, y);
+			x += 80;
+			g2d.setColor(lightWhite);
+			g2d.fillRoundRect(x - 10, y - 30,
+					Util.calculaLarguraText("8", g2d) + 20, 35, 10, 10);
+			g2d.setColor(Color.BLACK);
+			g2d.drawString("" + jogoCliente.getCartuchos(), x, y);
+			g2d.setFont(fontOri);
+
+		}
 	}
 
 	protected void desenhaDisparoAvatar(Graphics2D graphics2d,
@@ -395,6 +467,18 @@ public class PainelTopWar {
 		if (panel != null) {
 			panel.repaint();
 		}
+	}
+
+	private void setarHints(Graphics2D g2d) {
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+				RenderingHints.VALUE_ANTIALIAS_ON);
+		g2d.setRenderingHint(RenderingHints.KEY_RENDERING,
+				RenderingHints.VALUE_RENDER_QUALITY);
+		g2d.setRenderingHint(RenderingHints.KEY_DITHERING,
+				RenderingHints.VALUE_DITHER_ENABLE);
+		g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+				RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+
 	}
 
 	public Shape limitesViewPort() {

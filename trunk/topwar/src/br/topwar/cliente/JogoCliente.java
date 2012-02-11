@@ -8,6 +8,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,6 +39,7 @@ public class JogoCliente {
 	private Point pontoAvatarDesenha;
 	private double angulo;
 	protected boolean rodando = true;
+	protected boolean recarregando;
 	private Thread threadRepaint;
 	private Thread threadDadosSrv;
 	private Thread threadMoverMouse;
@@ -54,6 +56,10 @@ public class JogoCliente {
 	private int balas;
 	private int cartuchos;
 	private double anguloServidor;
+
+	public Point getPontoMouseMovendo() {
+		return pontoMouseMovendo;
+	}
 
 	public JogoCliente(DadosJogoTopWar dadosJogoTopWar,
 			ControleCliente controleCliente) {
@@ -219,6 +225,7 @@ public class JogoCliente {
 		}
 		if (balas <= 0) {
 			controleCliente.recarregar();
+			return;
 		}
 		controleCliente.atirar();
 	}
@@ -459,6 +466,9 @@ public class JogoCliente {
 				if (keyCode == KeyEvent.VK_SPACE) {
 					atirar();
 				}
+				if (keyCode == KeyEvent.VK_R) {
+					controleCliente.recarregar();
+				}
 				super.keyPressed(e);
 			}
 
@@ -484,6 +494,7 @@ public class JogoCliente {
 		Map retorno = (Map) nnpeTO.getData();
 		balas = (Integer) retorno.get(ConstantesTopWar.BALAS);
 		cartuchos = (Integer) retorno.get(ConstantesTopWar.CARTUCHO);
+		recarregando = (Boolean) retorno.get(ConstantesTopWar.RECARREGAR);
 		List<AvatarTopWar> avatarTopWars = (List<AvatarTopWar>) retorno
 				.get(ConstantesTopWar.LISTA_AVATARES);
 		for (Iterator iterator = avatarTopWars.iterator(); iterator.hasNext();) {
@@ -520,12 +531,24 @@ public class JogoCliente {
 		}
 	}
 
+	public int getBalas() {
+		return balas;
+	}
+
+	public int getCartuchos() {
+		return cartuchos;
+	}
+
 	private void setarPontoMouseMover(MouseEvent e) {
 		if (pontoMouseClicado == null) {
 			pontoMouseClicado = new Point(e.getX(), e.getY());
 		}
 		pontoMouseClicado.x = e.getX();
 		pontoMouseClicado.y = e.getY();
+	}
+
+	public boolean verificaRecarregando() {
+		return (recarregando);
 	}
 
 }

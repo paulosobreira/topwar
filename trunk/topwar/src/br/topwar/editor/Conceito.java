@@ -4,6 +4,7 @@ import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -56,6 +57,8 @@ public class Conceito {
 	final int ESQUERDA = KeyEvent.VK_A;
 	final int DIREIRA = KeyEvent.VK_D;
 	private int anim;
+	private int ocilaAlphaRecarregando = 255;
+	private boolean ocilaAlphaRecarregandoSobe = false;
 	private Thread atirando;
 	protected Set pressed = new HashSet();
 	public Map<String, BufferedImage> mapImgs = new HashMap<String, BufferedImage>();
@@ -69,6 +72,7 @@ public class Conceito {
 	private Rectangle areaAvatar;
 	private boolean desenhaObjetos;
 	private Point origem;
+	public final static Color lightWhite = new Color(255, 255, 255, 200);
 	public final BufferedImage azul = CarregadorRecursos
 			.carregaBufferedImageTransparecia("azul.png", Color.MAGENTA);
 	public final BufferedImage vermelho = CarregadorRecursos
@@ -100,8 +104,8 @@ public class Conceito {
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		Cursor crossHair = new Cursor(Cursor.CROSSHAIR_CURSOR);
 		frame.setCursor(crossHair);
-		ObjectInputStream ois = new ObjectInputStream(CarregadorRecursos
-				.recursoComoStream(mapa));
+		ObjectInputStream ois = new ObjectInputStream(
+				CarregadorRecursos.recursoComoStream(mapa));
 
 		mapaTopWar = (MapaTopWar) ois.readObject();
 		frame.setTitle(mapaTopWar.getNome());
@@ -263,7 +267,7 @@ public class Conceito {
 		List<ObjetoMapa> objetoMapaList = mapaTopWar.getObjetoMapaList();
 		for (Iterator iterator = objetoMapaList.iterator(); iterator.hasNext();) {
 			ObjetoMapa objetoMapa = (ObjetoMapa) iterator.next();
-			if (objetoMapa.getTransparencia() > 100
+			if (objetoMapa.getTransparencia() > 10
 					&& objetoMapa.getEfeito() == null
 					&& objetoMapa.getForma().intersects(novaArea.getBounds())) {
 				return true;
@@ -325,8 +329,8 @@ public class Conceito {
 						Point desenha = new Point(
 								p.x - (imgJog.getWidth() / 2), p.y
 										- (imgJog.getHeight() / 3));
-						areaAvatar = new Rectangle(desenha.x, desenha.y, imgJog
-								.getWidth(), imgJog.getHeight());
+						areaAvatar = new Rectangle(desenha.x, desenha.y,
+								imgJog.getWidth(), imgJog.getHeight());
 						imgJog = processaTransparencia(imgJog, desenha,
 								areaAvatar, mapaTopWar);
 						imgJog = processaGrade(imgJog, desenha, areaAvatar,
@@ -371,12 +375,15 @@ public class Conceito {
 					graphics2d.setColor(Color.RED);
 					graphics2d.draw(gerarCabeca());
 				}
+
+				desenhaInfoJogo(graphics2d);
 				// List linha = GeoUtil.drawBresenhamLine(p, m);
 				// for (Iterator iterator = linha.iterator();
 				// iterator.hasNext();) {
 				// Point ptLinha = (Point) iterator.next();
 				// graphics2d.fillOval(ptLinha.x, ptLinha.y, 2, 2);
 				// }
+
 				if (atirando != null && atirando.isAlive()) {
 
 					/**
@@ -403,8 +410,9 @@ public class Conceito {
 								} else {
 									graphics2d.setColor(Color.LIGHT_GRAY);
 								}
-								graphics2d.drawOval(point.x, point.y, Util
-										.intervalo(1, 2), Util.intervalo(1, 2));
+								graphics2d.drawOval(point.x, point.y,
+										Util.intervalo(1, 2),
+										Util.intervalo(1, 2));
 							}
 						}
 						if (linha.size() > 100) {
@@ -438,8 +446,72 @@ public class Conceito {
 							- (crosshair.getHeight() / 2));
 					graphics2d.drawImage(crosshair, desenha.x, desenha.y, null);
 				}
+				if (mapaTopWar.getPontoTimeAzul() != null) {
+					graphics2d.setColor(ConstantesTopWar.lightBlu);
+					graphics2d.fillOval(mapaTopWar.getPontoTimeAzul().x - 20,
+							mapaTopWar.getPontoTimeAzul().y - 20, 40, 40);
+				}
+				if (mapaTopWar.getPontoTimeVermelho() != null) {
+					graphics2d.setColor(ConstantesTopWar.lightRed);
+					graphics2d.fillOval(
+							mapaTopWar.getPontoTimeVermelho().x - 20,
+							mapaTopWar.getPontoTimeVermelho().y - 20, 40, 40);
+				}
+
 			};
 		};
+	}
+
+	protected void desenhaInfoJogo(Graphics2D g2d) {
+		Shape limitesViewPort = limitesViewPort();
+		int x = limitesViewPort.getBounds().x
+				+ (limitesViewPort.getBounds().width - 500);
+		int y = limitesViewPort.getBounds().y
+				+ +(limitesViewPort.getBounds().height - 10);
+		Font fontOri = g2d.getFont();
+		g2d.setFont(new Font(fontOri.getName(), fontOri.getStyle(), 32));
+		g2d.setColor(lightWhite);
+		g2d.fillRoundRect(x - 10, y - 30,
+				Util.calculaLarguraText("ASSAULT", g2d) + 20, 35, 10, 10);
+		g2d.setColor(Color.BLACK);
+		g2d.drawString("ASSAULT", x, y);
+
+		x += 180;
+
+		if (false) {
+			g2d.setColor(lightWhite);
+			g2d.fillRoundRect(x - 10, y - 30,
+					Util.calculaLarguraText("50", g2d) + 20, 35, 10, 10);
+			g2d.setColor(Color.BLACK);
+			g2d.drawString("50", x, y);
+			x += 80;
+			g2d.setColor(lightWhite);
+			g2d.fillRoundRect(x - 10, y - 30,
+					Util.calculaLarguraText("3", g2d) + 20, 35, 10, 10);
+			g2d.setColor(Color.BLACK);
+			g2d.drawString("3 ", x, y);
+			g2d.setFont(fontOri);
+		} else {
+			g2d.setColor(new Color(255, 255, 255, ocilaAlphaRecarregando));
+			g2d.fillRoundRect(x - 10, y - 30,
+					Util.calculaLarguraText("RECARREGANDO", g2d) + 20, 35, 10,
+					10);
+			g2d.setColor(Color.BLACK);
+			g2d.drawString("RECARREGANDO", x, y);
+
+			if (ocilaAlphaRecarregandoSobe) {
+				ocilaAlphaRecarregando += 10;
+			} else {
+				ocilaAlphaRecarregando -= 10;
+			}
+			if (ocilaAlphaRecarregando < 50) {
+				ocilaAlphaRecarregandoSobe = true;
+			}
+			if (ocilaAlphaRecarregando > 200) {
+				ocilaAlphaRecarregandoSobe = false;
+			}
+		}
+
 	}
 
 	protected Shape gerarCabeca() {
@@ -586,8 +658,9 @@ public class Conceito {
 			}
 		}
 
-		JOptionPane.showMessageDialog(null, new JLabel(new ImageIcon(ImageUtil
-				.gerarFade(bf, 150))), "bf", JOptionPane.INFORMATION_MESSAGE);
+		JOptionPane.showMessageDialog(null,
+				new JLabel(new ImageIcon(ImageUtil.gerarFade(bf, 150))), "bf",
+				JOptionPane.INFORMATION_MESSAGE);
 
 	}
 
