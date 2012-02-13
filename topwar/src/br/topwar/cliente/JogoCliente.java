@@ -61,6 +61,8 @@ public class JogoCliente {
 	private Thread threadDadosSrv;
 	private Thread threadMoverMouse;
 	private Long tempoRestanteJogo;
+	protected boolean seguirMouse;
+	protected Point pontoMouseSegir;
 
 	public Point getPontoMouseMovendo() {
 		return pontoMouseMovendo;
@@ -229,6 +231,12 @@ public class JogoCliente {
 			public void mouseClicked(MouseEvent e) {
 				setarPontoMouse(e);
 				setarPontoMouseMover(e);
+				seguirMouse = false;
+				if (e.getClickCount() > 1) {
+					seguirMouse = true;
+					System.out.println("seguirMouse");
+				}
+				pontoMouseSegir = pontoMouseClicado;
 				moverPeloMouse();
 				super.mouseClicked(e);
 			}
@@ -256,103 +264,44 @@ public class JogoCliente {
 			angulo = GeoUtil.calculaAngulo(pontoAvatar, pontoMouseMovendo, 90);
 		if ((System.currentTimeMillis() - ultAcao) > ConstantesTopWar.ATRASO_REDE_PADRAO) {
 			controleCliente.atualizaAngulo();
+
 		}
+		if (seguirMouse) {
+			pontoMouseSegir = pontoMouseMovendo;
+			moverPeloMouse();
+		}
+
 	}
 
 	protected void moverPeloMouse() {
-		if ((System.currentTimeMillis() - ultAcao) < ConstantesTopWar.ATRASO_REDE_PADRAO) {
-			return;
-		}
 		pararMovimentoMouse();
-		ultAcao = System.currentTimeMillis();
-		Runnable runnable = new Runnable() {
-			@Override
-			public void run() {
-				if (pontoAvatarDesenha != null && pontoMouseClicado != null) {
+		// if ((System.currentTimeMillis() - ultAcao) <
+		// ConstantesTopWar.ATRASO_REDE_PADRAO) {
+		// return;
+		// }
+		if (pontoAvatarDesenha != null && pontoMouseClicado != null) {
+			Runnable runnable = new Runnable() {
+				@Override
+				public void run() {
+					long diff = (System.currentTimeMillis() - ultAcao);
+					if (diff < ConstantesTopWar.ATRASO_REDE_PADRAO) {
+						try {
+							Thread.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO
+									- diff);
+						} catch (InterruptedException e) {
+							return;
+						}
+					}
 					if (GeoUtil.distaciaEntrePontos(pontoAvatar,
-							pontoMouseClicado) < velocidade) {
+							pontoMouseSegir) < velocidade) {
 						return;
 					}
-					List<Point> line = GeoUtil.drawBresenhamLine(pontoAvatar,
-							pontoMouseClicado);
-					int nvelo = velocidade;
-					boolean pathX = false;
-					boolean pathY = false;
-					for (int i = 0; i < line.size(); i += nvelo) {
-						Point p = line.get(i);
-						String ret = null;
-						if (p.x == pontoAvatar.x) {
-							pathX = false;
-						} else if (p.x > pontoAvatar.x + nvelo) {
-							Point novoPt = new Point(pontoAvatar.x + nvelo,
-									pontoAvatar.y);
-							if (!JogoServidor.verificaColisao(novoPt,
-									mapaTopWar)) {
-								ret = (String) controleCliente.moverDireita();
-							}
-						} else if (p.x < pontoAvatar.x - nvelo) {
-							Point novoPt = new Point(pontoAvatar.x - nvelo,
-									pontoAvatar.y);
-							if (!JogoServidor.verificaColisao(novoPt,
-									mapaTopWar)) {
-								ret = (String) controleCliente.moverEsquerda();
-							}
-						} else {
-							pathX = false;
-						}
-						if (ConstantesTopWar.OK.equals(ret)) {
-							pathX = true;
-						} else {
-							pathX = false;
-						}
-						if (pathX) {
-							try {
-								Thread.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO);
-							} catch (InterruptedException e) {
-								Logger.logarExept(e);
-								return;
-							}
-						}
-						ret = null;
-						if (p.y == pontoAvatar.y) {
-							pathY = false;
-						} else if (p.y > pontoAvatar.y + nvelo) {
-							Point novoPt = new Point(pontoAvatar.x,
-									pontoAvatar.y + nvelo);
-							if (!JogoServidor.verificaColisao(novoPt,
-									mapaTopWar)) {
-								ret = (String) controleCliente.moverBaixo();
-							}
-						} else if (p.y < pontoAvatar.y - nvelo) {
-							Point novoPt = new Point(pontoAvatar.x,
-									pontoAvatar.y - nvelo);
-							if (!JogoServidor.verificaColisao(novoPt,
-									mapaTopWar)) {
-								ret = (String) controleCliente.moverCima();
-							}
-						} else {
-							pathY = false;
-						}
-						if (ConstantesTopWar.OK.equals(ret)) {
-							pathY = true;
-						} else {
-							pathY = false;
-						}
-						if (pathY) {
-							try {
-								Thread.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO);
-							} catch (InterruptedException e) {
-								Logger.logarExept(e);
-								return;
-							}
-						}
-
-					}
+					seguirPonto(pontoMouseSegir);
 				}
-			}
-		};
-		threadMoverMouse = new Thread(runnable);
-		threadMoverMouse.start();
+			};
+			threadMoverMouse = new Thread(runnable);
+			threadMoverMouse.start();
+		}
 	}
 
 	public Point getPontoAvatar() {
@@ -595,4 +544,78 @@ public class JogoCliente {
 		return (recarregando);
 	}
 
+	private boolean seguirPonto(Point point) {
+		List<Point> line = GeoUtil.drawBresenhamLine(pontoAvatar, point);
+		int nvelo = velocidade;
+		boolean pathX = false;
+		boolean pathY = false;
+		for (int i = 0; i < line.size(); i += nvelo) {
+			Point p = line.get(i);
+			String ret = null;
+			if (p.x == pontoAvatar.x) {
+				pathX = false;
+			} else if (p.x > pontoAvatar.x + nvelo) {
+				Point novoPt = new Point(pontoAvatar.x + nvelo, pontoAvatar.y);
+				if (!JogoServidor.verificaColisao(novoPt, mapaTopWar)) {
+					ret = (String) controleCliente.moverDireita();
+				}
+			} else if (p.x < pontoAvatar.x - nvelo) {
+				Point novoPt = new Point(pontoAvatar.x - nvelo, pontoAvatar.y);
+				if (!JogoServidor.verificaColisao(novoPt, mapaTopWar)) {
+					ret = (String) controleCliente.moverEsquerda();
+				}
+			} else {
+				pathX = false;
+			}
+			if (ConstantesTopWar.OK.equals(ret)) {
+				pathX = true;
+			} else {
+				pathX = false;
+			}
+			if (pathX) {
+				try {
+					Thread.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO);
+				} catch (InterruptedException e) {
+					Logger.logarExept(e);
+					return false;
+				}
+			}
+			ultAcao = System.currentTimeMillis();
+			ret = null;
+			if (p.y == pontoAvatar.y) {
+				pathY = false;
+			} else if (p.y > pontoAvatar.y + nvelo) {
+				Point novoPt = new Point(pontoAvatar.x, pontoAvatar.y + nvelo);
+				if (!JogoServidor.verificaColisao(novoPt, mapaTopWar)) {
+					ret = (String) controleCliente.moverBaixo();
+				}
+			} else if (p.y < pontoAvatar.y - nvelo) {
+				Point novoPt = new Point(pontoAvatar.x, pontoAvatar.y - nvelo);
+				if (!JogoServidor.verificaColisao(novoPt, mapaTopWar)) {
+					ret = (String) controleCliente.moverCima();
+				}
+			} else {
+				pathY = false;
+			}
+			if (ConstantesTopWar.OK.equals(ret)) {
+				pathY = true;
+			} else {
+				pathY = false;
+			}
+			if (pathY) {
+				try {
+					Thread.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO);
+				} catch (InterruptedException e) {
+					Logger.logarExept(e);
+					return false;
+				}
+			}
+			ultAcao = System.currentTimeMillis();
+		}
+		if (pathX || pathY) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
