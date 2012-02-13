@@ -719,7 +719,7 @@ public class Conceito {
 	}
 
 	protected Shape desenhaCabeca(Point p) {
-		return new Rectangle2D.Double(p.x - 3, p.y - 8, 6, 6);
+		return new Rectangle2D.Double(p.x - 2, p.y - 8, 3, 3);
 	}
 
 	protected static Shape desenhaCorpo(Point p) {

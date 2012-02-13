@@ -29,7 +29,7 @@ public class ConstantesTopWar {
 	public final static Color lightRed = new Color(255, 150, 150, 150);
 	public static final String ATUALIZA_ANGULO = "ATUALIZA_ANGULO";
 	public static final String RECARREGAR = "R";
-	public static final long ATRASO_REDE_PADRAO = 150;
+	public static final long ATRASO_REDE_PADRAO = 120;
 	public static final long TEMPO_RECARGA = 2000;
 	public static final String ANGULO = "ANGULO";
 	public static final int BALAS_ASSALT = 50;
