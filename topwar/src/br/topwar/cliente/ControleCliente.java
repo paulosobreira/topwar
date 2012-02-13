@@ -10,6 +10,23 @@ import br.topwar.tos.DadosJogoTopWar;
 public class ControleCliente extends NnpeChatCliente {
 
 	private JogoCliente jogoCliente;
+	protected long ultAcao;
+
+	public JogoCliente getJogoCliente() {
+		return jogoCliente;
+	}
+
+	public void setJogoCliente(JogoCliente jogoCliente) {
+		this.jogoCliente = jogoCliente;
+	}
+
+	public long getUltAcao() {
+		return ultAcao;
+	}
+
+	public void setUltAcao(long ultAcao) {
+		this.ultAcao = ultAcao;
+	}
 
 	public ControleCliente(NnpeApplet topWarApplet) {
 		super(topWarApplet);
@@ -70,6 +87,9 @@ public class ControleCliente extends NnpeChatCliente {
 	}
 
 	private Object mover(String mover) {
+		if ((System.currentTimeMillis() - ultAcao) < ConstantesTopWar.ATRASO_REDE_PADRAO) {
+			return null;
+		}
 		DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
 		acaoClienteTopWar.setNomeCliente(sessaoCliente.getNomeJogador());
 		acaoClienteTopWar.setAngulo(jogoCliente.getAngulo());
@@ -78,6 +98,7 @@ public class ControleCliente extends NnpeChatCliente {
 		nnpeTO.setComando(ConstantesTopWar.MOVER);
 		nnpeTO.setData(acaoClienteTopWar);
 		Object ret = enviarObjeto(nnpeTO);
+		ultAcao = System.currentTimeMillis();
 		return ret;
 	}
 
@@ -98,6 +119,9 @@ public class ControleCliente extends NnpeChatCliente {
 	}
 
 	public Object atirar() {
+		if ((System.currentTimeMillis() - ultAcao) < ConstantesTopWar.ATRASO_REDE_PADRAO) {
+			return null;
+		}
 		DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
 		acaoClienteTopWar.setNomeCliente(sessaoCliente.getNomeJogador());
 		acaoClienteTopWar.setAngulo(jogoCliente.getAngulo());
@@ -105,6 +129,7 @@ public class ControleCliente extends NnpeChatCliente {
 		nnpeTO.setComando(ConstantesTopWar.ATIRAR);
 		nnpeTO.setData(acaoClienteTopWar);
 		Object ret = enviarObjeto(nnpeTO);
+		ultAcao = System.currentTimeMillis();
 		return ret;
 	}
 
@@ -121,6 +146,9 @@ public class ControleCliente extends NnpeChatCliente {
 	}
 
 	public Object recarregar() {
+		if ((System.currentTimeMillis() - ultAcao) < ConstantesTopWar.ATRASO_REDE_PADRAO) {
+			return null;
+		}
 		DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
 		acaoClienteTopWar.setNomeCliente(sessaoCliente.getNomeJogador());
 		acaoClienteTopWar.setAngulo(jogoCliente.getAngulo());
@@ -128,6 +156,7 @@ public class ControleCliente extends NnpeChatCliente {
 		nnpeTO.setComando(ConstantesTopWar.RECARREGAR);
 		nnpeTO.setData(acaoClienteTopWar);
 		Object ret = enviarObjeto(nnpeTO);
+		ultAcao = System.currentTimeMillis();
 		return ret;
 
 	}
