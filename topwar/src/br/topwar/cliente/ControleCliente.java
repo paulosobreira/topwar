@@ -170,7 +170,7 @@ public class ControleCliente extends NnpeChatCliente {
 
 	public Object moverPonto(Point p) {
 		if ((System.currentTimeMillis() - ultAcao) < ConstantesTopWar.ATRASO_REDE_PADRAO) {
-			return null;
+			return ConstantesTopWar.ESPERE;
 		}
 		DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
 		acaoClienteTopWar.setNomeCliente(sessaoCliente.getNomeJogador());
