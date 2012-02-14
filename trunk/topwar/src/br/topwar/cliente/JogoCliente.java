@@ -239,26 +239,11 @@ public class JogoCliente {
 					threadSeguirMouse = new Thread(new Runnable() {
 						@Override
 						public void run() {
-							Point pontoMouseMovendoOld = null;
 							while (seguirMouse && pontoMouseMovendo != null) {
-								if (!pontoMouseMovendo
-										.equals(pontoMouseMovendoOld)) {
-									moverAvatarPeloMouse(pontoMouseMovendo);
-									System.out.println("pontoMouseMovendo "
-											+ pontoMouseMovendo
-											+ " pontoMouseMovendoOld "
-											+ pontoMouseMovendoOld);
-
-								}
-								if (pontoMouseMovendoOld == null) {
-									pontoMouseMovendoOld = new Point(
-											pontoMouseMovendo.x,
-											pontoMouseMovendo.y);
-								}
-								pontoMouseMovendoOld.x = pontoMouseMovendo.x;
-								pontoMouseMovendoOld.y = pontoMouseMovendo.y;
+								moverAvatarPeloMouse(pontoMouseMovendo);
 								try {
-									Thread.sleep(1000);
+									Thread
+											.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO);
 								} catch (InterruptedException e) {
 									return;
 								}
@@ -319,7 +304,8 @@ public class JogoCliente {
 						}
 					}
 					Object ret = ConstantesTopWar.OK;
-					while (ConstantesTopWar.OK.equals(ret)
+					while ((ConstantesTopWar.OK.equals(ret) || ConstantesTopWar.ESPERE
+							.equals(ret))
 							&& GeoUtil.distaciaEntrePontos(pontoAvatar,
 									pontoMouseSegir) > velocidade) {
 						List<Point> line = GeoUtil.drawBresenhamLine(
@@ -327,13 +313,11 @@ public class JogoCliente {
 						if (line.size() > velocidade) {
 							Point p = line.get(velocidade);
 							ret = controleCliente.moverPonto(p);
-							if (ConstantesTopWar.OK.equals(ret)) {
-								try {
-									Thread
-											.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO);
-								} catch (InterruptedException e) {
-									return;
-								}
+							try {
+								Thread
+										.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO / 2);
+							} catch (InterruptedException e) {
+								return;
 							}
 						}
 					}
