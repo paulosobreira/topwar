@@ -23,6 +23,8 @@ public class ProxyComandos extends NnpeProxyComandos {
 		NnpeTO nnpeTO = (NnpeTO) object;
 		if (ConstantesTopWar.ATUALIZAR_LISTA_AVS.equals(nnpeTO.getComando())) {
 			return atualizarListaAvatares(nnpeTO);
+		} else if (ConstantesTopWar.MOVER_PONTO.equals(nnpeTO.getComando())) {
+			return moverPonto(nnpeTO);
 		} else if (ConstantesTopWar.MOVER.equals(nnpeTO.getComando())) {
 			return mover(nnpeTO);
 		} else if (ConstantesTopWar.ATUALIZA_ANGULO.equals(nnpeTO.getComando())) {
@@ -38,6 +40,10 @@ public class ProxyComandos extends NnpeProxyComandos {
 		} else {
 			return super.processarObjeto(object);
 		}
+	}
+
+	private Object moverPonto(NnpeTO nnpeTO) {
+		return controleJogosServidor.moverPonto(nnpeTO);
 	}
 
 	private Object recarregar(NnpeTO nnpeTO) {
