@@ -205,4 +205,20 @@ public class ControleJogosServidor {
 		return jogoServidor.recarregar(avatarTopWar);
 	}
 
+	public Object moverPonto(NnpeTO nnpeTO) {
+		DadosAcaoClienteTopWar acaoClienteTopWar = (DadosAcaoClienteTopWar) nnpeTO
+				.getData();
+		JogoServidor jogoServidor = obterJogoCliente(acaoClienteTopWar
+				.getNomeCliente());
+		if (jogoServidor == null) {
+			return null;
+		}
+		AvatarTopWar avatarTopWar = obterAvatarTopWarCliente(acaoClienteTopWar
+				.getNomeCliente());
+		if (avatarTopWar == null) {
+			return null;
+		}
+		return jogoServidor.moverPontoAvatar(avatarTopWar, acaoClienteTopWar);
+	}
+
 }

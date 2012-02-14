@@ -1,5 +1,7 @@
 package br.topwar.cliente;
 
+import java.awt.Point;
+
 import br.nnpe.cliente.NnpeApplet;
 import br.nnpe.cliente.NnpeChatCliente;
 import br.nnpe.tos.NnpeTO;
@@ -11,6 +13,7 @@ public class ControleCliente extends NnpeChatCliente {
 
 	private JogoCliente jogoCliente;
 	protected long ultAcao;
+	private long ultAng;
 
 	public JogoCliente getJogoCliente() {
 		return jogoCliente;
@@ -134,6 +137,9 @@ public class ControleCliente extends NnpeChatCliente {
 	}
 
 	public Object atualizaAngulo() {
+		if ((System.currentTimeMillis() - ultAng) < ConstantesTopWar.ATRASO_REDE_PADRAO) {
+			return null;
+		}
 		DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
 		acaoClienteTopWar.setNomeCliente(sessaoCliente.getNomeJogador());
 		acaoClienteTopWar.setAngulo(jogoCliente.getAngulo());
@@ -141,6 +147,7 @@ public class ControleCliente extends NnpeChatCliente {
 		nnpeTO.setComando(ConstantesTopWar.ATUALIZA_ANGULO);
 		nnpeTO.setData(acaoClienteTopWar);
 		Object ret = enviarObjeto(nnpeTO);
+		ultAng = System.currentTimeMillis();
 		return ret;
 
 	}
@@ -154,6 +161,23 @@ public class ControleCliente extends NnpeChatCliente {
 		acaoClienteTopWar.setAngulo(jogoCliente.getAngulo());
 		NnpeTO nnpeTO = new NnpeTO();
 		nnpeTO.setComando(ConstantesTopWar.RECARREGAR);
+		nnpeTO.setData(acaoClienteTopWar);
+		Object ret = enviarObjeto(nnpeTO);
+		ultAcao = System.currentTimeMillis();
+		return ret;
+
+	}
+
+	public Object moverPonto(Point p) {
+		if ((System.currentTimeMillis() - ultAcao) < ConstantesTopWar.ATRASO_REDE_PADRAO) {
+			return null;
+		}
+		DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
+		acaoClienteTopWar.setNomeCliente(sessaoCliente.getNomeJogador());
+		acaoClienteTopWar.setAngulo(jogoCliente.getAngulo());
+		acaoClienteTopWar.setPonto(p);
+		NnpeTO nnpeTO = new NnpeTO();
+		nnpeTO.setComando(ConstantesTopWar.MOVER_PONTO);
 		nnpeTO.setData(acaoClienteTopWar);
 		Object ret = enviarObjeto(nnpeTO);
 		ultAcao = System.currentTimeMillis();
