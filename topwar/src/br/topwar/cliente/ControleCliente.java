@@ -185,4 +185,19 @@ public class ControleCliente extends NnpeChatCliente {
 
 	}
 
+	public Object alternaFaca() {
+		if ((System.currentTimeMillis() - ultAcao) < ConstantesTopWar.ATRASO_REDE_PADRAO) {
+			return null;
+		}
+		DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
+		acaoClienteTopWar.setNomeCliente(sessaoCliente.getNomeJogador());
+		acaoClienteTopWar.setAngulo(jogoCliente.getAngulo());
+		NnpeTO nnpeTO = new NnpeTO();
+		nnpeTO.setComando(ConstantesTopWar.ALTERNA_FACA);
+		nnpeTO.setData(acaoClienteTopWar);
+		Object ret = enviarObjeto(nnpeTO);
+		ultAcao = System.currentTimeMillis();
+		return ret;
+	}
+
 }
