@@ -19,6 +19,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -72,6 +73,8 @@ public class Conceito {
 	private Rectangle areaAvatar;
 	private boolean desenhaObjetos;
 	private Point origem;
+	private int knifeTransp;
+	private boolean knifeTranspMaisTransp = true;
 
 	public final BufferedImage azul = CarregadorRecursos
 			.carregaBufferedImageTransparecia("azul.png", Color.MAGENTA);
@@ -80,6 +83,10 @@ public class Conceito {
 	public final BufferedImage crosshair = CarregadorRecursos
 			.carregaBufferedImageTransparecia("crosshair.png", null);
 
+	public final BufferedImage knifeAtttack = CarregadorRecursos
+			.carregaBufferedImageTransparecia("knifeAtttack.png", null);
+	public BufferedImage[] knifeAtttacks = new BufferedImage[255];
+
 	public static void main(String[] args) throws Exception {
 		Conceito conceito = new Conceito();
 		conceito.incializa("mapa9.topwar", ConstantesTopWar.TIME_AZUL);
@@ -87,6 +94,9 @@ public class Conceito {
 
 	public void incializa(String mapa, String time) throws IOException,
 			ClassNotFoundException {
+		for (int i = 0; i < knifeAtttacks.length; i++) {
+			knifeAtttacks[i] = ImageUtil.gerarFade(knifeAtttack, 255 - i);
+		}
 		this.time = time;
 		if ("azul".equals(time)) {
 			gerarMapaImagens(azul);
@@ -335,11 +345,56 @@ public class Conceito {
 								areaAvatar, mapaTopWar);
 						imgJog = processaGrade(imgJog, desenha, areaAvatar,
 								mapaTopWar);
-						graphics2d
-								.drawImage(imgJog, desenha.x, desenha.y, null);
+
+						/**
+						 * Desenha Faca
+						 */
+						Point pFaca = GeoUtil.calculaPonto(angulo, 10, desenha);
+
+						BufferedImage knife = knifeAtttacks[knifeTransp];
+						AffineTransform afRotate = new AffineTransform();
+						double rad = Math.toRadians((double) angulo - 60);
+						afRotate.setToRotation(rad, knife.getWidth() / 2,
+								knife.getHeight() / 2);
+						AffineTransformOp opRotate = new AffineTransformOp(
+								afRotate, AffineTransformOp.TYPE_BILINEAR);
+						BufferedImage rotBuffer = new BufferedImage(
+								knife.getWidth(), knife.getHeight(),
+								BufferedImage.TYPE_INT_ARGB);
+						opRotate.filter(knife, rotBuffer);
+						if (knifeTransp > 200) {
+							knifeTranspMaisTransp = false;
+						}
+						if (knifeTransp < 50) {
+							knifeTranspMaisTransp = true;
+						}
+						if (knifeTranspMaisTransp) {
+							knifeTransp += 30;
+						} else {
+							knifeTransp -= 30;
+						}
+						if (angulo > 90 && angulo < 300) {
+							graphics2d.drawImage(imgJog, desenha.x, desenha.y,
+									null);
+							graphics2d.drawImage(rotBuffer, pFaca.x, pFaca.y,
+									null);
+						} else {
+							graphics2d.drawImage(rotBuffer, pFaca.x, pFaca.y,
+									null);
+							graphics2d.drawImage(imgJog, desenha.x, desenha.y,
+									null);
+						}
+						System.out.println(angulo);
+
 						if (desenhaObjetos) {
 							graphics2d.setColor(Color.MAGENTA);
 							graphics2d.draw(areaAvatar);
+
+							Point pFacaAv = GeoUtil.calculaPonto(angulo, 10,
+									pontoAvatar);
+							graphics2d.drawOval(pFacaAv.x - 10, pFacaAv.y - 10,
+									20, 20);
+
 							Point back = GeoUtil.calculaPonto(angulo + 180, 30,
 									pontoAvatar);
 							Ellipse2D ellipse2d = new Ellipse2D.Double(

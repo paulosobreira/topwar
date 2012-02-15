@@ -81,9 +81,9 @@ public class JogoCliente {
 		this.controleCliente = controleCliente;
 		ObjectInputStream ois;
 		try {
-			ois = new ObjectInputStream(CarregadorRecursos
-					.recursoComoStream(dadosJogoTopWar.getNomeMapa()
-							+ ".topwar"));
+			ois = new ObjectInputStream(
+					CarregadorRecursos.recursoComoStream(dadosJogoTopWar
+							.getNomeMapa() + ".topwar"));
 			mapaTopWar = (MapaTopWar) ois.readObject();
 		} catch (Exception e1) {
 			Logger.logarExept(e1);
@@ -242,8 +242,7 @@ public class JogoCliente {
 							while (seguirMouse && pontoMouseMovendo != null) {
 								moverAvatarPeloMouse(pontoMouseMovendo);
 								try {
-									Thread
-											.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO);
+									Thread.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO);
 								} catch (InterruptedException e) {
 									return;
 								}
@@ -267,6 +266,7 @@ public class JogoCliente {
 			controleCliente.recarregar();
 			return;
 		}
+		seguirMouse = false;
 		pararMovimentoMouse();
 		controleCliente.atirar();
 	}
@@ -291,18 +291,6 @@ public class JogoCliente {
 			Runnable runnable = new Runnable() {
 				@Override
 				public void run() {
-					long diff = (System.currentTimeMillis() - controleCliente
-							.getUltAcao());
-					if (diff < ConstantesTopWar.ATRASO_REDE_PADRAO) {
-						try {
-							long sleep = ConstantesTopWar.ATRASO_REDE_PADRAO
-									- diff;
-							if (sleep > 0)
-								Thread.sleep(sleep);
-						} catch (InterruptedException e) {
-							return;
-						}
-					}
 					Object ret = ConstantesTopWar.OK;
 					while ((ConstantesTopWar.OK.equals(ret) || ConstantesTopWar.ESPERE
 							.equals(ret))
@@ -312,13 +300,15 @@ public class JogoCliente {
 								pontoAvatar, pontoMouseSegir);
 						if (line.size() > velocidade) {
 							Point p = line.get(velocidade);
-							ret = controleCliente.moverPonto(p);
-							try {
-								Thread
-										.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO / 2);
-							} catch (InterruptedException e) {
-								return;
+							if (GeoUtil.distaciaEntrePontos(pontoAvatar, p) > velocidade) {
+								p = line.get(velocidade - 1);
 							}
+							ret = controleCliente.moverPonto(p);
+						}
+						try {
+							Thread.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO / 2);
+						} catch (InterruptedException e) {
+							return;
 						}
 					}
 				}
@@ -465,6 +455,9 @@ public class JogoCliente {
 						}
 						if (keyCode == KeyEvent.VK_R) {
 							controleCliente.recarregar();
+						}
+						if (keyCode == KeyEvent.VK_CONTROL) {
+							controleCliente.alternaFaca();
 						}
 					}
 				});

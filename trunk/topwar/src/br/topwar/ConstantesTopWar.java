@@ -46,5 +46,6 @@ public class ConstantesTopWar {
 	public static final String TEMPO_JOGO_RESTANTE = "T_J_R";
 	public static final String MOVER_PONTO = "M_P";
 	public static final String ESPERE = "ESPERE";
+	public static final String ALTERNA_FACA = "A_F";
 
 }
