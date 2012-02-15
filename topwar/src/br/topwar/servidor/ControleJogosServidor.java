@@ -156,7 +156,7 @@ public class ControleJogosServidor {
 
 	}
 
-	public Object atirar(NnpeTO nnpeTO) {
+	public Object atacar(NnpeTO nnpeTO) {
 		DadosAcaoClienteTopWar acaoClienteTopWar = (DadosAcaoClienteTopWar) nnpeTO
 				.getData();
 		JogoServidor jogoServidor = obterJogoCliente(acaoClienteTopWar
@@ -169,7 +169,7 @@ public class ControleJogosServidor {
 		if (avatarTopWar == null) {
 			return null;
 		}
-		return jogoServidor.atirar(avatarTopWar, acaoClienteTopWar.getAngulo());
+		return jogoServidor.atacar(avatarTopWar, acaoClienteTopWar.getAngulo());
 	}
 
 	public Object atualizaAngulo(NnpeTO nnpeTO) {
@@ -219,6 +219,22 @@ public class ControleJogosServidor {
 			return null;
 		}
 		return jogoServidor.moverPontoAvatar(avatarTopWar, acaoClienteTopWar);
+	}
+
+	public Object alternarFaca(NnpeTO nnpeTO) {
+		DadosAcaoClienteTopWar acaoClienteTopWar = (DadosAcaoClienteTopWar) nnpeTO
+				.getData();
+		JogoServidor jogoServidor = obterJogoCliente(acaoClienteTopWar
+				.getNomeCliente());
+		if (jogoServidor == null) {
+			return null;
+		}
+		AvatarTopWar avatarTopWar = obterAvatarTopWarCliente(acaoClienteTopWar
+				.getNomeCliente());
+		if (avatarTopWar == null) {
+			return null;
+		}
+		return jogoServidor.alternarFaca(avatarTopWar);
 	}
 
 }

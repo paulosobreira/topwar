@@ -5,14 +5,17 @@ import java.io.Serializable;
 
 import javax.persistence.Transient;
 
+import br.topwar.ConstantesTopWar;
+
 public class AvatarTopWar implements Serializable {
 	private String time;
 	private String nomeJogador;
 	private Point pontoAvatar;
 	private double angulo;
-	private long tempoUtlDisparo;
+	private long tempoUtlAtaque;
 	private int vida = 0;
 	private int velocidade = 10;
+	private int arma = ConstantesTopWar.ARMA_FACA;
 	private transient Point pontoUtlDisparo;
 	private transient int balas = 0;
 	private transient int cartuchos = 0;
@@ -21,6 +24,14 @@ public class AvatarTopWar implements Serializable {
 	private transient long ultimaRequisicao = System.currentTimeMillis();
 	private transient long ultimaMorte;
 	private transient long recarregar;
+
+	public int getArma() {
+		return arma;
+	}
+
+	public void setArma(int arma) {
+		this.arma = arma;
+	}
 
 	@Transient
 	public long getRecarregar() {
@@ -60,7 +71,7 @@ public class AvatarTopWar implements Serializable {
 	}
 
 	public void setPontoUtlDisparo(Point pontoUtlDisparo) {
-		setTempoUtlDisparo(System.currentTimeMillis());
+		setTempoUtlAtaque(System.currentTimeMillis());
 		this.pontoUtlDisparo = pontoUtlDisparo;
 	}
 
@@ -95,12 +106,12 @@ public class AvatarTopWar implements Serializable {
 		this.cartuchos = cartuchos;
 	}
 
-	public long getTempoUtlDisparo() {
-		return tempoUtlDisparo;
+	public long getTempoUtlAtaque() {
+		return tempoUtlAtaque;
 	}
 
-	public void setTempoUtlDisparo(long tempoUtlDisparo) {
-		this.tempoUtlDisparo = tempoUtlDisparo;
+	public void setTempoUtlAtaque(long tempoUtlAtaque) {
+		this.tempoUtlAtaque = tempoUtlAtaque;
 	}
 
 	public int getVida() {

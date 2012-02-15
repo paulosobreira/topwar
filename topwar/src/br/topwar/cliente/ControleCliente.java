@@ -13,7 +13,6 @@ public class ControleCliente extends NnpeChatCliente {
 
 	private JogoCliente jogoCliente;
 	protected long ultAcao;
-	private long ultAng;
 
 	public JogoCliente getJogoCliente() {
 		return jogoCliente;
@@ -121,7 +120,7 @@ public class ControleCliente extends NnpeChatCliente {
 		return mover(ConstantesTopWar.CIMA);
 	}
 
-	public Object atirar() {
+	public Object atacar() {
 		if ((System.currentTimeMillis() - ultAcao) < ConstantesTopWar.ATRASO_REDE_PADRAO) {
 			return null;
 		}
@@ -129,7 +128,7 @@ public class ControleCliente extends NnpeChatCliente {
 		acaoClienteTopWar.setNomeCliente(sessaoCliente.getNomeJogador());
 		acaoClienteTopWar.setAngulo(jogoCliente.getAngulo());
 		NnpeTO nnpeTO = new NnpeTO();
-		nnpeTO.setComando(ConstantesTopWar.ATIRAR);
+		nnpeTO.setComando(ConstantesTopWar.ATACAR);
 		nnpeTO.setData(acaoClienteTopWar);
 		Object ret = enviarObjeto(nnpeTO);
 		ultAcao = System.currentTimeMillis();
@@ -137,7 +136,7 @@ public class ControleCliente extends NnpeChatCliente {
 	}
 
 	public Object atualizaAngulo() {
-		if ((System.currentTimeMillis() - ultAng) < ConstantesTopWar.ATRASO_REDE_PADRAO) {
+		if ((System.currentTimeMillis() - ultAcao) < ConstantesTopWar.ATRASO_REDE_PADRAO) {
 			return null;
 		}
 		DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
@@ -147,7 +146,7 @@ public class ControleCliente extends NnpeChatCliente {
 		nnpeTO.setComando(ConstantesTopWar.ATUALIZA_ANGULO);
 		nnpeTO.setData(acaoClienteTopWar);
 		Object ret = enviarObjeto(nnpeTO);
-		ultAng = System.currentTimeMillis();
+		ultAcao = System.currentTimeMillis();
 		return ret;
 
 	}

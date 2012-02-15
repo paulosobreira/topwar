@@ -11,6 +11,7 @@ import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -49,6 +50,8 @@ public class PainelTopWar {
 			.carregaBufferedImageTransparecia("azul.png", Color.MAGENTA);
 	public final static BufferedImage vermelho = CarregadorRecursos
 			.carregaBufferedImageTransparecia("vermelho.png", Color.MAGENTA);
+	public final BufferedImage knifeAtttack = CarregadorRecursos
+			.carregaBufferedImageTransparecia("knifeAtttack.png", null);
 
 	public PainelTopWar(JogoCliente jogoCliente) {
 		this.jogoCliente = jogoCliente;
@@ -56,6 +59,14 @@ public class PainelTopWar {
 		gerarMapaImagens(azul, "azul");
 		gerarMapaImagens(vermelho, "vermelho");
 		geraPainel();
+	}
+
+	public boolean isDesenhaObjetos() {
+		return desenhaObjetos;
+	}
+
+	public void setDesenhaObjetos(boolean desenhaObjetos) {
+		this.desenhaObjetos = desenhaObjetos;
 	}
 
 	public void gerarMapaImagens(BufferedImage src, String time) {
@@ -166,15 +177,55 @@ public class PainelTopWar {
 			for (Iterator iterator = avatarClientes.iterator(); iterator
 					.hasNext();) {
 				AvatarCliente avatarCliente = (AvatarCliente) iterator.next();
-				desenhaAvatares(graphics2d, avatarCliente);
+				double angulo = avatarCliente.getAngulo();
+				if (angulo > 90 && angulo < 300) {
+					desenhaAvatares(graphics2d, avatarCliente);
+					desenhaAvataresCombateCorpoACorpo(graphics2d,
+							avatarCliente, angulo);
+				} else {
+					desenhaAvataresCombateCorpoACorpo(graphics2d,
+							avatarCliente, angulo);
+					desenhaAvatares(graphics2d, avatarCliente);
+				}
+
 				long millisSrv = jogoCliente.getMillisSrv();
-				long tempoUtlDisparo = avatarCliente.getTempoUtlDisparo();
-				if ((millisSrv - tempoUtlDisparo) < 150) {
+				long tempoUtlDisparo = avatarCliente.getTempoUtlAtaque();
+				if (ConstantesTopWar.ARMA_CLASSE == avatarCliente.getArma()
+						&& (millisSrv - tempoUtlDisparo) < 150) {
 					desenhaDisparoAvatar(graphics2d, avatarCliente);
 				}
 
 			}
 		}
+	}
+
+	private void desenhaAvataresCombateCorpoACorpo(Graphics2D graphics2d,
+			AvatarCliente avatarCliente, double angulo) {
+		if (ConstantesTopWar.ARMA_FACA != avatarCliente.getArma()) {
+			return;
+		}
+		long millisSrv = jogoCliente.getMillisSrv();
+		long tempoUtlDisparo = avatarCliente.getTempoUtlAtaque();
+		if ((millisSrv - tempoUtlDisparo) > 150) {
+			return;
+		}
+
+		Point desenha = avatarCliente.getPontoDesenha();
+		/**
+		 * Desenha Faca
+		 */
+		Point pFaca = GeoUtil.calculaPonto(angulo, 10, desenha);
+		AffineTransform afRotate = new AffineTransform();
+		double rad = Math.toRadians((double) angulo - 60);
+		afRotate.setToRotation(rad, knifeAtttack.getWidth() / 2, knifeAtttack
+				.getHeight() / 2);
+		AffineTransformOp opRotate = new AffineTransformOp(afRotate,
+				AffineTransformOp.TYPE_BILINEAR);
+		BufferedImage rotBuffer = new BufferedImage(knifeAtttack.getWidth(),
+				knifeAtttack.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		opRotate.filter(knifeAtttack, rotBuffer);
+		graphics2d.drawImage(rotBuffer, pFaca.x, pFaca.y, null);
+
 	}
 
 	protected void desenhaInfoJogo(Graphics2D g2d) {
@@ -192,10 +243,17 @@ public class PainelTopWar {
 		Font fontOri = g2d.getFont();
 		g2d.setFont(new Font(fontOri.getName(), fontOri.getStyle(), 32));
 		g2d.setColor(ConstantesTopWar.lightWhite);
-		g2d.fillRoundRect(x - 10, y - 30, Util.calculaLarguraText(Lang
-				.msg("ASSAULT"), g2d) + 20, 35, 10, 10);
+
+		String arma = "";
+		arma = Lang.msg("ASSAULT");
+		if (jogoCliente.getArma() == ConstantesTopWar.ARMA_FACA) {
+			arma = Lang.msg("FACA");
+		}
+
+		g2d.fillRoundRect(x - 10, y - 30,
+				Util.calculaLarguraText(arma, g2d) + 20, 35, 10, 10);
 		g2d.setColor(Color.BLACK);
-		g2d.drawString(Lang.msg("ASSAULT"), x, y);
+		g2d.drawString(arma, x, y);
 
 		x += 180;
 
@@ -425,9 +483,8 @@ public class PainelTopWar {
 			if (imgJog == null) {
 				Logger.logar("Angulo nulo " + angulo);
 			} else {
-				Point desenha = new Point(pontoAvatar.x
-						- (imgJog.getWidth() / 2), pontoAvatar.y
-						- (imgJog.getHeight() / 3));
+
+				Point desenha = avatarCliente.getPontoDesenhaSuave();
 				Rectangle areaAvatar = new Rectangle(desenha.x, desenha.y,
 						imgJog.getWidth(), imgJog.getHeight());
 				imgJog = processaSobreposicoesAvatar(imgJog, desenha,
