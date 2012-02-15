@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Rectangle2D;
 
@@ -58,8 +59,17 @@ public class AvatarCliente {
 		return gpCabeca.createTransformedShape(afRotate);
 	}
 
+	public static Shape desenhaAreaFaca(Point pontoAvatar, double angulo) {
+		Point pFacaAv = GeoUtil.calculaPonto(angulo, 10, pontoAvatar);
+		return new Ellipse2D.Double(pFacaAv.x - 10, pFacaAv.y - 10, 20, 20);
+	}
+
 	public static Shape desenhaCorpo(Point p) {
 		return new Rectangle2D.Double(p.x - 8, p.y, 18, 18);
+	}
+
+	public int getArma() {
+		return avatarTopWar.getArma();
 	}
 
 	public Shape obeterAreaAvatar() {
@@ -89,7 +99,7 @@ public class AvatarCliente {
 		return gpCorpo.createTransformedShape(afRotate);
 	}
 
-	protected Shape desenhaCabeca(Point p) {
+	public static Shape desenhaCabeca(Point p) {
 		return new Rectangle2D.Double(p.x - 2, p.y - 8, 3, 3);
 	}
 
@@ -176,8 +186,8 @@ public class AvatarCliente {
 		this.local = local;
 	}
 
-	public long getTempoUtlDisparo() {
-		return avatarTopWar.getTempoUtlDisparo();
+	public long getTempoUtlAtaque() {
+		return avatarTopWar.getTempoUtlAtaque();
 	}
 
 	public long getUltimaMorte() {
@@ -198,7 +208,7 @@ public class AvatarCliente {
 		return areaAvatar;
 	}
 
-	private Point getPontoDesenhaSuave() {
+	public Point getPontoDesenhaSuave() {
 		if (pontoAvatarSuave == null) {
 			return null;
 		}

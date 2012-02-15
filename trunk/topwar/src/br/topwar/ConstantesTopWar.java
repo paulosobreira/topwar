@@ -19,7 +19,6 @@ public class ConstantesTopWar {
 	public static final int LARGURA_AREA_AVATAR = LARGURA_AVATAR / 2;
 	public static final int ALTURA_AREA_AVATAR = ALTURA_AVATAR / 3;
 	public static final String OK = "K";
-	public static final String ATIRAR = "ATIRAR";
 	public static final String TIME_AZUL = "azul";
 	public static final String TIME_VERMELHO = "vermelho";
 	public static final int VIDA_COMPLETA = 100;
@@ -47,5 +46,8 @@ public class ConstantesTopWar {
 	public static final String MOVER_PONTO = "M_P";
 	public static final String ESPERE = "ESPERE";
 	public static final String ALTERNA_FACA = "A_F";
+	public static final int ARMA_CLASSE = 0;
+	public static final int ARMA_FACA = 1;
+	public static final String ATACAR = "A";
 
 }

@@ -29,8 +29,10 @@ public class ProxyComandos extends NnpeProxyComandos {
 			return mover(nnpeTO);
 		} else if (ConstantesTopWar.ATUALIZA_ANGULO.equals(nnpeTO.getComando())) {
 			return atualizaAngulo(nnpeTO);
-		} else if (ConstantesTopWar.ATIRAR.equals(nnpeTO.getComando())) {
-			return atirar(nnpeTO);
+		} else if (ConstantesTopWar.ATACAR.equals(nnpeTO.getComando())) {
+			return atacar(nnpeTO);
+		} else if (ConstantesTopWar.ALTERNA_FACA.equals(nnpeTO.getComando())) {
+			return alternarFaca(nnpeTO);
 		} else if (ConstantesTopWar.RECARREGAR.equals(nnpeTO.getComando())) {
 			return recarregar(nnpeTO);
 		} else if (ConstantesTopWar.ENTRAR_JOGO.equals(nnpeTO.getComando())) {
@@ -40,6 +42,10 @@ public class ProxyComandos extends NnpeProxyComandos {
 		} else {
 			return super.processarObjeto(object);
 		}
+	}
+
+	private Object alternarFaca(NnpeTO nnpeTO) {
+		return controleJogosServidor.alternarFaca(nnpeTO);
 	}
 
 	private Object moverPonto(NnpeTO nnpeTO) {
@@ -54,8 +60,8 @@ public class ProxyComandos extends NnpeProxyComandos {
 		return controleJogosServidor.atualizaAngulo(nnpeTO);
 	}
 
-	private Object atirar(NnpeTO nnpeTO) {
-		return controleJogosServidor.atirar(nnpeTO);
+	private Object atacar(NnpeTO nnpeTO) {
+		return controleJogosServidor.atacar(nnpeTO);
 	}
 
 	private Object entrarJogo(NnpeTO nnpeTO) {

@@ -42,7 +42,6 @@ public class JogoCliente {
 	protected boolean recarregando;
 	private int ptsVermelho;
 	private int ptsAzul;
-
 	private PainelTopWar painelTopWar;
 	private List<AvatarCliente> avatarClientes = new ArrayList<AvatarCliente>();
 	private JFrame frameTopWar;
@@ -53,6 +52,7 @@ public class JogoCliente {
 	protected long atulaizaAvatarSleep = 30;
 	private int balas;
 	private int cartuchos;
+	private int arma;
 	private double anguloServidor;
 
 	private Thread threadAtualizaPosAvatar;
@@ -81,9 +81,9 @@ public class JogoCliente {
 		this.controleCliente = controleCliente;
 		ObjectInputStream ois;
 		try {
-			ois = new ObjectInputStream(
-					CarregadorRecursos.recursoComoStream(dadosJogoTopWar
-							.getNomeMapa() + ".topwar"));
+			ois = new ObjectInputStream(CarregadorRecursos
+					.recursoComoStream(dadosJogoTopWar.getNomeMapa()
+							+ ".topwar"));
 			mapaTopWar = (MapaTopWar) ois.readObject();
 		} catch (Exception e1) {
 			Logger.logarExept(e1);
@@ -242,7 +242,7 @@ public class JogoCliente {
 							while (seguirMouse && pontoMouseMovendo != null) {
 								moverAvatarPeloMouse(pontoMouseMovendo);
 								try {
-									Thread.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO);
+									Thread.sleep(1000);
 								} catch (InterruptedException e) {
 									return;
 								}
@@ -258,17 +258,17 @@ public class JogoCliente {
 		});
 	}
 
-	protected void atirar() {
+	protected void atacar() {
 		if (avatarClientes == null) {
 			return;
 		}
-		if (balas <= 0) {
+		if (ConstantesTopWar.ARMA_CLASSE == arma && balas <= 0) {
 			controleCliente.recarregar();
 			return;
 		}
 		seguirMouse = false;
 		pararMovimentoMouse();
-		controleCliente.atirar();
+		controleCliente.atacar();
 	}
 
 	private void setarPontoMouseMover(MouseEvent e) {
@@ -280,12 +280,14 @@ public class JogoCliente {
 		if (pontoAvatar != null)
 			angulo = GeoUtil.calculaAngulo(pontoAvatar, pontoMouseMovendo, 90);
 		if (!seguirMouse) {
-			controleCliente.atualizaAngulo();
+			if (!(threadMoverMouse != null && threadMoverMouse.isAlive())) {
+				controleCliente.atualizaAngulo();
+			}
 		}
 
 	}
 
-	protected void moverAvatarPeloMouse(final Point pontoMouseSegir) {
+	public void moverAvatarPeloMouse(final Point pontoMouseSegir) {
 		pararMovimentoMouse();
 		if (pontoAvatar != null && pontoMouseSegir != null) {
 			Runnable runnable = new Runnable() {
@@ -306,7 +308,8 @@ public class JogoCliente {
 							ret = controleCliente.moverPonto(p);
 						}
 						try {
-							Thread.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO / 2);
+							Thread
+									.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO / 2);
 						} catch (InterruptedException e) {
 							return;
 						}
@@ -451,13 +454,17 @@ public class JogoCliente {
 							controleCliente.moverCima();
 						}
 						if (keyCode == KeyEvent.VK_SPACE) {
-							atirar();
+							atacar();
 						}
 						if (keyCode == KeyEvent.VK_R) {
 							controleCliente.recarregar();
 						}
 						if (keyCode == KeyEvent.VK_CONTROL) {
 							controleCliente.alternaFaca();
+						}
+						if (keyCode == KeyEvent.VK_F12) {
+							painelTopWar.setDesenhaObjetos(!painelTopWar
+									.isDesenhaObjetos());
 						}
 					}
 				});
@@ -508,6 +515,7 @@ public class JogoCliente {
 							avatarTopWar.getNomeJogador())) {
 						avatarCliente.setLocal(true);
 						anguloServidor = avatarCliente.getAngulo();
+						arma = avatarCliente.getArma();
 						velocidade = avatarCliente.getVelocidade();
 						pontoAvatar = avatarCliente.getPontoAvatar();
 						pontoAvatarDesenha = avatarCliente.getPontoDesenha();
@@ -530,6 +538,10 @@ public class JogoCliente {
 
 	public Long getTempoRestanteJogo() {
 		return tempoRestanteJogo;
+	}
+
+	public int getArma() {
+		return arma;
 	}
 
 	public int getBalas() {
