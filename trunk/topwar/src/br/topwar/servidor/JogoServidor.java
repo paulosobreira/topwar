@@ -119,7 +119,7 @@ public class JogoServidor {
 				AvatarTopWar avatarTopWar = (AvatarTopWar) iterator.next();
 				long tempDesdeUltMorte = System.currentTimeMillis()
 						- avatarTopWar.getUltimaMorte();
-				if (avatarTopWar.getVida() <= 0 && tempDesdeUltMorte > 10000) {
+				if (avatarTopWar.getVida() <= 0 && tempDesdeUltMorte > 5000) {
 					avatarTopWar.setMortoPor(null);
 					avatarTopWar.setVida(ConstantesTopWar.VIDA_COMPLETA);
 					avatarTopWar.setBalas(ConstantesTopWar.BALAS_ASSALT);
@@ -203,8 +203,9 @@ public class JogoServidor {
 		retorno.put(ConstantesTopWar.PTS_VERMELHO, getPtsVermelho());
 		retorno.put(ConstantesTopWar.PTS_AZUL, getPtsAzul());
 		retorno.put(ConstantesTopWar.TEMPO_JOGO_RESTANTE, tempoRestanteJogo());
-		retorno.put(ConstantesTopWar.KILL_CAM, avatarTopWarJog.getMortoPor()
-				.getNomeJogador());
+		if (avatarTopWarJog.getMortoPor() != null)
+			retorno.put(ConstantesTopWar.KILL_CAM, avatarTopWarJog
+					.getMortoPor().getNomeJogador());
 		return retorno;
 	}
 
@@ -252,6 +253,9 @@ public class JogoServidor {
 
 	public String moverAvatar(AvatarTopWar avatarTopWar,
 			DadosAcaoClienteTopWar acaoClienteTopWar) {
+		if (avatarTopWar.getVida() <= 0) {
+			return null;
+		}
 		Point novoPonto = new Point(avatarTopWar.getPontoAvatar().x,
 				avatarTopWar.getPontoAvatar().y);
 		if (ConstantesTopWar.ESQUERDA.equals(acaoClienteTopWar.getMoverPara())) {
@@ -379,6 +383,9 @@ public class JogoServidor {
 	}
 
 	public Object atacar(AvatarTopWar avatarAtacando, double angulo) {
+		if (avatarAtacando.getVida() <= 0) {
+			return null;
+		}
 		if (ConstantesTopWar.ARMA_CLASSE == avatarAtacando.getArma()
 				&& verificaRecarregando(avatarAtacando)) {
 			return null;
@@ -418,6 +425,7 @@ public class JogoServidor {
 	}
 
 	private boolean atirar(AvatarTopWar avatarAtacando, double angulo) {
+
 		List<ObjetoMapa> objetoMapaList = mapaTopWar.getObjetoMapaList();
 		Point pontoTiro = GeoUtil.calculaPonto(angulo,
 				ConstantesTopWar.ASSALT_MAX_RANGE, avatarAtacando
@@ -544,11 +552,17 @@ public class JogoServidor {
 	}
 
 	public Object atualizaAngulo(AvatarTopWar avatarTopWar, double angulo) {
+		if (avatarTopWar.getVida() <= 0) {
+			return null;
+		}
 		avatarTopWar.setAngulo(angulo);
 		return ConstantesTopWar.OK;
 	}
 
 	public Object recarregar(AvatarTopWar avatarTopWar) {
+		if (avatarTopWar.getVida() <= 0) {
+			return null;
+		}
 		if (avatarTopWar.getCartuchos() <= 0) {
 			return null;
 		}
@@ -560,6 +574,9 @@ public class JogoServidor {
 
 	public Object moverPontoAvatar(AvatarTopWar avatarTopWar,
 			DadosAcaoClienteTopWar acaoClienteTopWar) {
+		if (avatarTopWar.getVida() <= 0) {
+			return null;
+		}
 		double distaciaEntrePontos = GeoUtil.distaciaEntrePontos(avatarTopWar
 				.getPontoAvatar(), acaoClienteTopWar.getPonto());
 		// Logger.logar("distaciaEntrePontos " + distaciaEntrePontos);
@@ -579,6 +596,9 @@ public class JogoServidor {
 	}
 
 	public Object alternarFaca(AvatarTopWar avatarTopWar) {
+		if (avatarTopWar.getVida() <= 0) {
+			return null;
+		}
 		if (avatarTopWar.getArma() == ConstantesTopWar.ARMA_FACA) {
 			avatarTopWar.setArma(ConstantesTopWar.ARMA_CLASSE);
 		} else {

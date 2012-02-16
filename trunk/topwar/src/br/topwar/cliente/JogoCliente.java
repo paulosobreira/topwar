@@ -54,7 +54,6 @@ public class JogoCliente {
 	private int cartuchos;
 	private int arma;
 	private double anguloServidor;
-
 	private Thread threadAtualizaPosAvatar;
 	private Thread threadRepaint;
 	private Thread threadDadosSrv;
@@ -462,6 +461,10 @@ public class JogoCliente {
 						}
 						if (keyCode == KeyEvent.VK_CONTROL) {
 							controleCliente.alternaFaca();
+						}
+						if (keyCode == KeyEvent.VK_F11) {
+							painelTopWar.setDesenhaImagens(!painelTopWar
+									.isDesenhaImagens());
 						}
 						if (keyCode == KeyEvent.VK_F12) {
 							painelTopWar.setDesenhaObjetos(!painelTopWar

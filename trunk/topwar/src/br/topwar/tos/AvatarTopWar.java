@@ -86,11 +86,6 @@ public class AvatarTopWar implements Serializable {
 	}
 
 	@Transient
-	public void setUltimaMorte(long ultimaMorte) {
-		this.ultimaMorte = ultimaMorte;
-	}
-
-	@Transient
 	public long getUltimaRequisicao() {
 		return ultimaRequisicao;
 	}
@@ -129,6 +124,9 @@ public class AvatarTopWar implements Serializable {
 	}
 
 	public void setVida(int vida) {
+		if (vida <= 0) {
+			ultimaMorte = System.currentTimeMillis();
+		}
 		this.vida = vida;
 	}
 
