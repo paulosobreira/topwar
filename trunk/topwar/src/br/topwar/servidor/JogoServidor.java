@@ -8,9 +8,11 @@ import java.awt.geom.Rectangle2D;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javassist.bytecode.analysis.Analyzer;
 
@@ -117,7 +119,8 @@ public class JogoServidor {
 				AvatarTopWar avatarTopWar = (AvatarTopWar) iterator.next();
 				long tempDesdeUltMorte = System.currentTimeMillis()
 						- avatarTopWar.getUltimaMorte();
-				if (avatarTopWar.getVida() <= 0 && tempDesdeUltMorte > 3000) {
+				if (avatarTopWar.getVida() <= 0 && tempDesdeUltMorte > 10000) {
+					avatarTopWar.setMortoPor(null);
 					avatarTopWar.setVida(ConstantesTopWar.VIDA_COMPLETA);
 					avatarTopWar.setBalas(ConstantesTopWar.BALAS_ASSALT);
 					avatarTopWar
@@ -135,7 +138,6 @@ public class JogoServidor {
 				}
 			}
 		}
-
 	}
 
 	public List<AvatarTopWar> getAvatarTopWars() {
@@ -147,7 +149,7 @@ public class JogoServidor {
 				.getNomeJogador());
 		if (avatarTopWarJog == null)
 			return null;
-		List<AvatarTopWar> ret = new ArrayList<AvatarTopWar>();
+		Set<AvatarTopWar> ret = new HashSet<AvatarTopWar>();
 		synchronized (avatarTopWars) {
 			for (Iterator iterator = avatarTopWars.iterator(); iterator
 					.hasNext();) {
@@ -184,6 +186,11 @@ public class JogoServidor {
 						ret.add(avatarTopWar);
 					}
 				}
+				if (avatarTopWarJog.getVida() <= 0
+						&& avatarTopWarJog.getMortoPor() != null
+						&& avatarTopWarJog.getMortoPor().equals(avatarTopWar)) {
+					ret.add(avatarTopWar);
+				}
 
 			}
 		}
@@ -196,6 +203,8 @@ public class JogoServidor {
 		retorno.put(ConstantesTopWar.PTS_VERMELHO, getPtsVermelho());
 		retorno.put(ConstantesTopWar.PTS_AZUL, getPtsAzul());
 		retorno.put(ConstantesTopWar.TEMPO_JOGO_RESTANTE, tempoRestanteJogo());
+		retorno.put(ConstantesTopWar.KILL_CAM, avatarTopWarJog.getMortoPor()
+				.getNomeJogador());
 		return retorno;
 	}
 
@@ -473,6 +482,7 @@ public class JogoServidor {
 		if (desenhaAreaFaca.intersects(desenhaCorpoAlvo.getBounds2D())
 				|| desenhaAreaFaca.intersects(desenhaCabecaAlvo.getBounds2D())) {
 			avatarAlvo.setVida(0);
+			avatarAlvo.setMortoPor(avatarAtacando);
 			if (ConstantesTopWar.TIME_AZUL.equals(avatarAlvo.getTime())) {
 				ptsVermelho++;
 			} else {
@@ -500,6 +510,7 @@ public class JogoServidor {
 					avatarAlvo.setVida(avatarAlvo.getVida() - balas);
 				} else {
 					avatarAlvo.setVida(0);
+					avatarAlvo.setMortoPor(avatarAtirador);
 				}
 				if (avatarAlvo.getVida() < 1) {
 					if (ConstantesTopWar.TIME_AZUL.equals(avatarAlvo.getTime())) {

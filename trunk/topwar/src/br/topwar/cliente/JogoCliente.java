@@ -62,6 +62,7 @@ public class JogoCliente {
 	private Long tempoRestanteJogo;
 	protected boolean seguirMouse;
 	protected Thread threadSeguirMouse;
+	private String killCam;
 
 	public Point getPontoMouseMovendo() {
 		return pontoMouseMovendo;
@@ -476,6 +477,10 @@ public class JogoCliente {
 		frameTopWar.addKeyListener(keyAdapter);
 	}
 
+	public String getKillCam() {
+		return killCam;
+	}
+
 	public double getAngulo() {
 		return angulo;
 	}
@@ -499,7 +504,8 @@ public class JogoCliente {
 		ptsVermelho = (Integer) retorno.get(ConstantesTopWar.PTS_VERMELHO);
 		tempoRestanteJogo = (Long) retorno
 				.get(ConstantesTopWar.TEMPO_JOGO_RESTANTE);
-		List<AvatarTopWar> avatarTopWars = (List<AvatarTopWar>) retorno
+		killCam = (String) retorno.get(ConstantesTopWar.KILL_CAM);
+		Set<AvatarTopWar> avatarTopWars = (HashSet<AvatarTopWar>) retorno
 				.get(ConstantesTopWar.LISTA_AVATARES);
 		for (Iterator iterator = avatarTopWars.iterator(); iterator.hasNext();) {
 			AvatarTopWar avatarTopWar = (AvatarTopWar) iterator.next();
