@@ -40,7 +40,7 @@ public class PainelTopWar {
 	private JScrollPane scrollPane;
 	private MapaTopWar mapaTopWar;
 	private boolean desenhaObjetos = false;
-	private boolean desenhaImagens = true;
+	private boolean desenhaImagens = false;
 	private int ocilaAlphaRecarregando = 255;
 	private boolean ocilaAlphaRecarregandoSobe = false;
 	public final BufferedImage crosshair = CarregadorRecursos
@@ -67,6 +67,14 @@ public class PainelTopWar {
 
 	public void setDesenhaObjetos(boolean desenhaObjetos) {
 		this.desenhaObjetos = desenhaObjetos;
+	}
+
+	public boolean isDesenhaImagens() {
+		return desenhaImagens;
+	}
+
+	public void setDesenhaImagens(boolean desenhaImagens) {
+		this.desenhaImagens = desenhaImagens;
 	}
 
 	public void gerarMapaImagens(BufferedImage src, String time) {

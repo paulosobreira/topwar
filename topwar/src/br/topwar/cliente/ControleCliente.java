@@ -2,6 +2,7 @@ package br.topwar.cliente;
 
 import java.awt.Point;
 
+import br.nnpe.Util;
 import br.nnpe.cliente.NnpeApplet;
 import br.nnpe.cliente.NnpeChatCliente;
 import br.nnpe.tos.NnpeTO;
@@ -89,6 +90,9 @@ public class ControleCliente extends NnpeChatCliente {
 	}
 
 	private Object mover(String mover) {
+		if (!Util.isNullOrEmpty(jogoCliente.getKillCam())) {
+			return null;
+		}
 		if ((System.currentTimeMillis() - ultAcao) < ConstantesTopWar.ATRASO_REDE_PADRAO) {
 			return null;
 		}
@@ -121,6 +125,9 @@ public class ControleCliente extends NnpeChatCliente {
 	}
 
 	public Object atacar() {
+		if (!Util.isNullOrEmpty(jogoCliente.getKillCam())) {
+			return null;
+		}
 		if ((System.currentTimeMillis() - ultAcao) < ConstantesTopWar.ATRASO_REDE_PADRAO) {
 			return null;
 		}
@@ -136,6 +143,9 @@ public class ControleCliente extends NnpeChatCliente {
 	}
 
 	public Object atualizaAngulo() {
+		if (!Util.isNullOrEmpty(jogoCliente.getKillCam())) {
+			return null;
+		}
 		if ((System.currentTimeMillis() - ultAcao) < ConstantesTopWar.ATRASO_REDE_PADRAO) {
 			return null;
 		}
@@ -152,6 +162,9 @@ public class ControleCliente extends NnpeChatCliente {
 	}
 
 	public Object recarregar() {
+		if (!Util.isNullOrEmpty(jogoCliente.getKillCam())) {
+			return null;
+		}
 		if ((System.currentTimeMillis() - ultAcao) < ConstantesTopWar.ATRASO_REDE_PADRAO) {
 			return null;
 		}
@@ -168,6 +181,9 @@ public class ControleCliente extends NnpeChatCliente {
 	}
 
 	public Object moverPonto(Point p) {
+		if (!Util.isNullOrEmpty(jogoCliente.getKillCam())) {
+			return null;
+		}
 		if ((System.currentTimeMillis() - ultAcao) < ConstantesTopWar.ATRASO_REDE_PADRAO) {
 			return ConstantesTopWar.ESPERE;
 		}
@@ -185,6 +201,9 @@ public class ControleCliente extends NnpeChatCliente {
 	}
 
 	public Object alternaFaca() {
+		if (!Util.isNullOrEmpty(jogoCliente.getKillCam())) {
+			return null;
+		}
 		if ((System.currentTimeMillis() - ultAcao) < ConstantesTopWar.ATRASO_REDE_PADRAO) {
 			return null;
 		}
