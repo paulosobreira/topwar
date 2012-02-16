@@ -574,18 +574,26 @@ public class PainelTopWar {
 		List<AvatarCliente> avatarClientes = jogoCliente.getAvatarClientes();
 		for (Iterator iterator = avatarClientes.iterator(); iterator.hasNext();) {
 			AvatarCliente avatarCliente = (AvatarCliente) iterator.next();
-			if (avatarCliente.isLocal()) {
-				Point pontoAv = avatarCliente.getPontoAvatarSuave();
-				if (pontoAv == null) {
-					pontoAv = avatarCliente.getPontoAvatar();
-				}
-				centralizarPontoDireto(pontoAv);
-
+			if (avatarCliente.isLocal() && avatarCliente.getVida() > 0) {
+				contralizaPontoNoAvatar(avatarCliente);
+			}
+			if (!Util.isNullOrEmpty(jogoCliente.getKillCam())
+					&& avatarCliente.getNomeJogador().equals(
+							jogoCliente.getKillCam())) {
+				contralizaPontoNoAvatar(avatarCliente);
 			}
 		}
 		if (panel != null) {
 			panel.repaint();
 		}
+	}
+
+	private void contralizaPontoNoAvatar(AvatarCliente avatarCliente) {
+		Point pontoAv = avatarCliente.getPontoAvatarSuave();
+		if (pontoAv == null) {
+			pontoAv = avatarCliente.getPontoAvatar();
+		}
+		centralizarPontoDireto(pontoAv);
 	}
 
 	private void setarHints(Graphics2D g2d) {

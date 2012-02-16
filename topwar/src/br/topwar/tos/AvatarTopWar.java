@@ -17,6 +17,7 @@ public class AvatarTopWar implements Serializable {
 	private int velocidade = 10;
 	private int arma = ConstantesTopWar.ARMA_FACA;
 	private transient Point pontoUtlDisparo;
+	private transient AvatarTopWar mortoPor;
 	private transient int balas = 0;
 	private transient int cartuchos = 0;
 	private transient int kills = 0;
@@ -24,6 +25,15 @@ public class AvatarTopWar implements Serializable {
 	private transient long ultimaRequisicao = System.currentTimeMillis();
 	private transient long ultimaMorte;
 	private transient long recarregar;
+
+	@Transient
+	public AvatarTopWar getMortoPor() {
+		return mortoPor;
+	}
+
+	public void setMortoPor(AvatarTopWar mortoPor) {
+		this.mortoPor = mortoPor;
+	}
 
 	public int getArma() {
 		return arma;
