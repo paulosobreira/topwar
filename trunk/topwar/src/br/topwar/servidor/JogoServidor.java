@@ -177,9 +177,10 @@ public class JogoServidor {
 				/**
 				 * Campo Audição Tiro 360
 				 */
-				if ((System.currentTimeMillis() - avatarTopWar
-						.getTempoUtlAtaque()) < 300) {
-					Point pontoTiro = avatarTopWar.getPontoUtlDisparo();
+				Point pontoTiro = avatarTopWar.getPontoUtlDisparo();
+				if (pontoTiro != null
+						&& (System.currentTimeMillis() - avatarTopWar
+								.getTempoUtlAtaque()) < 300) {
 					line = GeoUtil.drawBresenhamLine(avatarTopWarJog
 							.getPontoAvatar(), pontoTiro);
 					if (campoVisao(line, null)) {
@@ -566,7 +567,7 @@ public class JogoServidor {
 		if (avatarTopWar.getCartuchos() <= 0) {
 			return null;
 		}
-		avatarTopWar.setBalas(30);
+		avatarTopWar.setBalas(ConstantesTopWar.BALAS_ASSALT);
 		avatarTopWar.setCartuchos(avatarTopWar.getCartuchos() - 1);
 		avatarTopWar.setRecarregar(System.currentTimeMillis());
 		return ConstantesTopWar.OK;
