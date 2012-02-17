@@ -19,6 +19,7 @@ import javassist.bytecode.analysis.Analyzer;
 import br.nnpe.GeoUtil;
 import br.nnpe.Logger;
 import br.nnpe.Util;
+import br.nnpe.tos.NnpeTO;
 import br.nnpe.tos.SessaoCliente;
 import br.topwar.ConstantesTopWar;
 import br.topwar.ProxyComandos;
@@ -29,6 +30,7 @@ import br.topwar.serial.ObjetoMapa;
 import br.topwar.tos.AvatarTopWar;
 import br.topwar.tos.DadosAcaoClienteTopWar;
 import br.topwar.tos.DadosJogoTopWar;
+import br.topwar.tos.PlacarTopWar;
 
 public class JogoServidor {
 	private DadosJogoTopWar dadosJogoTopWar;
@@ -73,7 +75,6 @@ public class JogoServidor {
 		tempoJogoMilis = tempoJogoMinutos * 60 * 1000;
 		inicioJogoMilis = System.currentTimeMillis();
 		fimJogoMilis = inicioJogoMilis + tempoJogoMilis;
-
 		monitorJogo = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -606,5 +607,24 @@ public class JogoServidor {
 			avatarTopWar.setArma(ConstantesTopWar.ARMA_FACA);
 		}
 		return ConstantesTopWar.OK;
+	}
+
+	public Object obterPlacarJogo() {
+		List<PlacarTopWar> placar = new ArrayList<PlacarTopWar>();
+		synchronized (avatarTopWars) {
+			for (Iterator iterator = avatarTopWars.iterator(); iterator
+					.hasNext();) {
+				AvatarTopWar avatarTopWar = (AvatarTopWar) iterator.next();
+				PlacarTopWar placarTopWar = new PlacarTopWar();
+				placarTopWar.setJogador(avatarTopWar.getNomeJogador());
+				placarTopWar.setTime(avatarTopWar.getTime());
+				placarTopWar.setKills(avatarTopWar.getKills());
+				placarTopWar.setDeaths(avatarTopWar.getDeaths());
+				placar.add(placarTopWar);
+			}
+		}
+		NnpeTO nnpeTO = new NnpeTO();
+		nnpeTO.setData(placar);
+		return nnpeTO;
 	}
 }

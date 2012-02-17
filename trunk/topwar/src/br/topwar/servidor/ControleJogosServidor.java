@@ -237,4 +237,15 @@ public class ControleJogosServidor {
 		return jogoServidor.alternarFaca(avatarTopWar);
 	}
 
+	public Object obterPlacarJogo(NnpeTO nnpeTO) {
+		DadosAcaoClienteTopWar acaoClienteTopWar = (DadosAcaoClienteTopWar) nnpeTO
+				.getData();
+		JogoServidor jogoServidor = obterJogoCliente(acaoClienteTopWar
+				.getNomeCliente());
+		if (jogoServidor == null) {
+			return null;
+		}
+		return jogoServidor.obterPlacarJogo();
+	}
+
 }
