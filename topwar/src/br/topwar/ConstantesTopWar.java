@@ -50,5 +50,6 @@ public class ConstantesTopWar {
 	public static final int ARMA_FACA = 1;
 	public static final String ATACAR = "A";
 	public static final String KILL_CAM = "K_C";
+	public static final String OBTER_PLCAR = "O_P";
 
 }

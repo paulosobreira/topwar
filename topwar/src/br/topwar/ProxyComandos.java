@@ -39,9 +39,15 @@ public class ProxyComandos extends NnpeProxyComandos {
 			return entrarJogo(nnpeTO);
 		} else if (ConstantesTopWar.CRIAR_JOGO.equals(nnpeTO.getComando())) {
 			return criarJogo(nnpeTO);
+		} else if (ConstantesTopWar.OBTER_PLCAR.equals(nnpeTO.getComando())) {
+			return obterPlacarJogo(nnpeTO);
 		} else {
 			return super.processarObjeto(object);
 		}
+	}
+
+	private Object obterPlacarJogo(NnpeTO nnpeTO) {
+		return controleJogosServidor.obterPlacarJogo(nnpeTO);
 	}
 
 	private Object alternarFaca(NnpeTO nnpeTO) {

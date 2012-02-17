@@ -170,7 +170,6 @@ public class ControleCliente extends NnpeChatCliente {
 		}
 		DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
 		acaoClienteTopWar.setNomeCliente(sessaoCliente.getNomeJogador());
-		acaoClienteTopWar.setAngulo(jogoCliente.getAngulo());
 		NnpeTO nnpeTO = new NnpeTO();
 		nnpeTO.setComando(ConstantesTopWar.RECARREGAR);
 		nnpeTO.setData(acaoClienteTopWar);
@@ -189,7 +188,6 @@ public class ControleCliente extends NnpeChatCliente {
 		}
 		DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
 		acaoClienteTopWar.setNomeCliente(sessaoCliente.getNomeJogador());
-		acaoClienteTopWar.setAngulo(jogoCliente.getAngulo());
 		acaoClienteTopWar.setPonto(p);
 		NnpeTO nnpeTO = new NnpeTO();
 		nnpeTO.setComando(ConstantesTopWar.MOVER_PONTO);
@@ -216,6 +214,16 @@ public class ControleCliente extends NnpeChatCliente {
 		Object ret = enviarObjeto(nnpeTO);
 		ultAcao = System.currentTimeMillis();
 		return ret;
+	}
+
+	public Object obterPlacar() {
+		DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
+		acaoClienteTopWar.setNomeCliente(sessaoCliente.getNomeJogador());
+		acaoClienteTopWar.setAngulo(jogoCliente.getAngulo());
+		NnpeTO nnpeTO = new NnpeTO();
+		nnpeTO.setComando(ConstantesTopWar.OBTER_PLCAR);
+		nnpeTO.setData(acaoClienteTopWar);
+		return enviarObjeto(nnpeTO);
 	}
 
 }

@@ -11,6 +11,8 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -30,6 +32,7 @@ import br.topwar.serial.MapaTopWar;
 import br.topwar.servidor.JogoServidor;
 import br.topwar.tos.AvatarTopWar;
 import br.topwar.tos.DadosJogoTopWar;
+import br.topwar.tos.PlacarTopWar;
 
 public class JogoCliente {
 	private MapaTopWar mapaTopWar;
@@ -62,6 +65,8 @@ public class JogoCliente {
 	protected boolean seguirMouse;
 	protected Thread threadSeguirMouse;
 	private String killCam;
+	private List<PlacarTopWar> placar;
+	private int timerTab;
 
 	public Point getPontoMouseMovendo() {
 		return pontoMouseMovendo;
@@ -73,6 +78,14 @@ public class JogoCliente {
 
 	public int getPtsAzul() {
 		return ptsAzul;
+	}
+
+	public int getTimerTab() {
+		return timerTab;
+	}
+
+	public void setTimerTab(int timerTab) {
+		this.timerTab = timerTab;
 	}
 
 	public JogoCliente(DadosJogoTopWar dadosJogoTopWar,
@@ -429,6 +442,7 @@ public class JogoCliente {
 			public void keyPressed(final KeyEvent e) {
 				pararMovimentoMouse();
 				Thread keys = new Thread(new Runnable() {
+
 					@Override
 					public void run() {
 						try {
@@ -462,6 +476,13 @@ public class JogoCliente {
 						if (keyCode == KeyEvent.VK_CONTROL) {
 							controleCliente.alternaFaca();
 						}
+						if (keyCode == KeyEvent.VK_TAB) {
+							NnpeTO nnpeTO = (NnpeTO) controleCliente
+									.obterPlacar();
+							placar = (List<PlacarTopWar>) nnpeTO.getData();
+							timerTab = 50;
+						}
+
 						if (keyCode == KeyEvent.VK_F11) {
 							painelTopWar.setDesenhaImagens(!painelTopWar
 									.isDesenhaImagens());
@@ -571,6 +592,24 @@ public class JogoCliente {
 
 	public boolean verificaRecarregando() {
 		return (recarregando);
+	}
+
+	public List<PlacarTopWar> geraListaPlacarOrdenada(String time) {
+		List<PlacarTopWar> list = new ArrayList<PlacarTopWar>();
+		for (Iterator iterator = placar.iterator(); iterator.hasNext();) {
+			PlacarTopWar placarTopWar = (PlacarTopWar) iterator.next();
+			if (time.equals(placarTopWar.getTime())) {
+				list.add(placarTopWar);
+			}
+		}
+		Collections.sort(list, new Comparator<PlacarTopWar>() {
+			@Override
+			public int compare(PlacarTopWar o1, PlacarTopWar o2) {
+				return o1.ordenacao().compareTo(o2.ordenacao());
+			}
+		});
+
+		return list;
 	}
 
 }

@@ -33,6 +33,7 @@ import br.topwar.recursos.CarregadorRecursos;
 import br.topwar.recursos.idiomas.Lang;
 import br.topwar.serial.MapaTopWar;
 import br.topwar.serial.ObjetoMapa;
+import br.topwar.tos.PlacarTopWar;
 
 public class PainelTopWar {
 	private JogoCliente jogoCliente;
@@ -238,11 +239,53 @@ public class PainelTopWar {
 
 	protected void desenhaInfoJogo(Graphics2D g2d) {
 		desenhaInfoCima(g2d);
-		desnhaInfoBaixo(g2d);
+		desenhaInfoBaixo(g2d);
+		desenhaPlacar(g2d);
 
 	}
 
-	private void desnhaInfoBaixo(Graphics2D g2d) {
+	private void desenhaPlacar(Graphics2D g2d) {
+		if (jogoCliente.getTimerTab() < 0) {
+			return;
+		}
+		Shape limitesViewPort = limitesViewPort();
+		int x = limitesViewPort.getBounds().x
+				+ limitesViewPort.getBounds().width / 4;
+		int y = limitesViewPort.getBounds().y + 100;
+
+		List<PlacarTopWar> list = jogoCliente
+				.geraListaPlacarOrdenada(ConstantesTopWar.TIME_AZUL);
+		int xJogador = x;
+		int yTemp = y;
+
+		int xKills = xJogador + 110;
+		int xDeaths = xKills + 10;
+
+		g2d.setColor(ConstantesTopWar.lightBlu);
+		g2d.fillRoundRect(xJogador - 5, yTemp - 5, 100, 20, 10, 10);
+		g2d.setColor(Color.BLACK);
+		g2d.drawString(Lang.msg("jogador"), xJogador, yTemp);
+
+		g2d.setColor(ConstantesTopWar.lightBlu);
+		g2d.fillRoundRect(xKills - 5, yTemp - 5, 20, 20, 10, 10);
+		g2d.setColor(Color.BLACK);
+		g2d.drawString(Lang.msg("kills"), xKills, yTemp);
+
+		g2d.setColor(ConstantesTopWar.lightBlu);
+		g2d.fillRoundRect(xDeaths - 5, yTemp - 5, 20, 20, 10, 10);
+		g2d.setColor(Color.BLACK);
+		g2d.drawString(Lang.msg("kills"), xDeaths, yTemp);
+
+		yTemp += 20;
+		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+			PlacarTopWar placarTopWar = (PlacarTopWar) iterator.next();
+			g2d.drawString(placarTopWar.getJogador(), xJogador, yTemp);
+			yTemp += 20;
+		}
+
+	}
+
+	private void desenhaInfoBaixo(Graphics2D g2d) {
 		Shape limitesViewPort = limitesViewPort();
 		int x = limitesViewPort.getBounds().x
 				+ (limitesViewPort.getBounds().width - 500);
