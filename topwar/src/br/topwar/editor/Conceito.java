@@ -80,6 +80,12 @@ public class Conceito {
 			.carregaBufferedImageTransparecia("azul.png", Color.MAGENTA);
 	public final BufferedImage vermelho = CarregadorRecursos
 			.carregaBufferedImageTransparecia("vermelho.png", Color.MAGENTA);
+
+	public final BufferedImage azulMortes = CarregadorRecursos
+			.carregaBufferedImageTransparecia("blue-dead.png", null);
+	public final BufferedImage vermelhoMortes = CarregadorRecursos
+			.carregaBufferedImageTransparecia("red-dead.png", null);
+
 	public final BufferedImage crosshair = CarregadorRecursos
 			.carregaBufferedImageTransparecia("crosshair.png", null);
 
@@ -770,6 +776,26 @@ public class Conceito {
 		JOptionPane.showMessageDialog(null,
 				new JLabel(new ImageIcon(ImageUtil.gerarFade(bf, 150))), "bf",
 				JOptionPane.INFORMATION_MESSAGE);
+
+		bf = new BufferedImage(azulMortes.getWidth(), azulMortes.getHeight(),
+				BufferedImage.TYPE_INT_ARGB);
+		graphics = (Graphics2D) bf.getGraphics();
+		// graphics.drawImage(src, 0, 0, null);
+		graphics.setColor(Color.MAGENTA);
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 2; j++) {
+				Rectangle rect = new Rectangle(i * largura, j * altura,
+						largura, altura);
+				graphics.draw(rect);
+				graphics.drawString("i=" + i + " j=" + j, rect.x, rect.y
+						+ altura - 10);
+				BufferedImage bufferedImage = ImageUtil.gerarSubImagem(
+						azulMortes, rect);
+				graphics.drawImage(bufferedImage, rect.x, rect.y, null);
+			}
+		}
+		JOptionPane.showMessageDialog(null, new JLabel(new ImageIcon(bf)),
+				"bf", JOptionPane.INFORMATION_MESSAGE);
 
 	}
 

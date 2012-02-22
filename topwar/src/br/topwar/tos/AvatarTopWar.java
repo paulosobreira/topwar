@@ -16,6 +16,7 @@ public class AvatarTopWar implements Serializable {
 	private int vida = 0;
 	private int velocidade = 10;
 	private int arma = ConstantesTopWar.ARMA_FACA;
+	private boolean invencivel;
 	private transient Point pontoUtlDisparo;
 	private transient AvatarTopWar mortoPor;
 	private transient int balas = 0;
@@ -25,6 +26,16 @@ public class AvatarTopWar implements Serializable {
 	private transient long ultimaRequisicao = System.currentTimeMillis();
 	private transient long ultimaMorte;
 	private transient long recarregar;
+
+	
+	
+	public boolean isInvencivel() {
+		return invencivel;
+	}
+
+	public void setInvencivel(boolean invencivel) {
+		this.invencivel = invencivel;
+	}
 
 	@Transient
 	public AvatarTopWar getMortoPor() {

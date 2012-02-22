@@ -14,8 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javassist.bytecode.analysis.Analyzer;
-
 import br.nnpe.GeoUtil;
 import br.nnpe.Logger;
 import br.nnpe.Util;
@@ -51,9 +49,9 @@ public class JogoServidor {
 		this.proxyComandos = proxyComandos;
 		ObjectInputStream ois;
 		try {
-			ois = new ObjectInputStream(CarregadorRecursos
-					.recursoComoStream(dadosJogoTopWar.getNomeMapa()
-							+ ".topwar"));
+			ois = new ObjectInputStream(
+					CarregadorRecursos.recursoComoStream(dadosJogoTopWar
+							.getNomeMapa() + ".topwar"));
 			mapaTopWar = (MapaTopWar) ois.readObject();
 		} catch (Exception e) {
 			Logger.logarExept(e);
@@ -137,6 +135,12 @@ public class JogoServidor {
 								.getPontoTimeVermelho());
 					}
 				}
+				if (avatarTopWar.getVida() > 0 && tempDesdeUltMorte < 10000) {
+					avatarTopWar.setInvencivel(true);
+				} else {
+					avatarTopWar.setInvencivel(false);
+				}
+
 			}
 		}
 	}
@@ -165,13 +169,14 @@ public class JogoServidor {
 				 * Campo Visao Jogador Meia Lua
 				 */
 				Point back = GeoUtil.calculaPonto(
-						avatarTopWarJog.getAngulo() + 180, 30, avatarTopWarJog
-								.getPontoAvatar());
+						avatarTopWarJog.getAngulo() + 180, 30,
+						avatarTopWarJog.getPontoAvatar());
 				Ellipse2D ellipse2d = new Ellipse2D.Double(back.x - 25,
 						back.y - 25, 50, 50);
 
-				List<Point> line = GeoUtil.drawBresenhamLine(avatarTopWarJog
-						.getPontoAvatar(), avatarTopWar.getPontoAvatar());
+				List<Point> line = GeoUtil.drawBresenhamLine(
+						avatarTopWarJog.getPontoAvatar(),
+						avatarTopWar.getPontoAvatar());
 				if (campoVisao(line, ellipse2d)) {
 					ret.add(avatarTopWar);
 				}
@@ -182,8 +187,8 @@ public class JogoServidor {
 				if (pontoTiro != null
 						&& (System.currentTimeMillis() - avatarTopWar
 								.getTempoUtlAtaque()) < 300) {
-					line = GeoUtil.drawBresenhamLine(avatarTopWarJog
-							.getPontoAvatar(), pontoTiro);
+					line = GeoUtil.drawBresenhamLine(
+							avatarTopWarJog.getPontoAvatar(), pontoTiro);
 					if (campoVisao(line, null)) {
 						ret.add(avatarTopWar);
 					}
@@ -413,6 +418,9 @@ public class JogoServidor {
 				if (avatarAlvo.equals(avatarAtacando)) {
 					continue;
 				}
+				if (avatarAlvo.isInvencivel()) {
+					continue;
+				}
 				AvatarCliente avatarClienteAlvo = new AvatarCliente(avatarAlvo);
 				if (ConstantesTopWar.ARMA_FACA == avatarAtacando.getArma()) {
 					if (processaDanoCombateCorpoCorpo(avatarAtacando,
@@ -430,10 +438,10 @@ public class JogoServidor {
 
 		List<ObjetoMapa> objetoMapaList = mapaTopWar.getObjetoMapaList();
 		Point pontoTiro = GeoUtil.calculaPonto(angulo,
-				ConstantesTopWar.ASSALT_MAX_RANGE, avatarAtacando
-						.getPontoAvatar());
-		List<Point> linhaTiro = GeoUtil.drawBresenhamLine(avatarAtacando
-				.getPontoAvatar(), pontoTiro);
+				ConstantesTopWar.ASSALT_MAX_RANGE,
+				avatarAtacando.getPontoAvatar());
+		List<Point> linhaTiro = GeoUtil.drawBresenhamLine(
+				avatarAtacando.getPontoAvatar(), pontoTiro);
 		Point pointAnt = null;
 		for (Iterator iteratorPtsBala = linhaTiro.iterator(); iteratorPtsBala
 				.hasNext();) {
@@ -464,6 +472,9 @@ public class JogoServidor {
 					if (avatarAlvo.equals(avatarAtacando)) {
 						continue;
 					}
+					if (avatarAlvo.isInvencivel()) {
+						continue;
+					}
 					AvatarCliente avatarClienteAlvo = new AvatarCliente(
 							avatarAlvo);
 					if (processaDanoTiro(avatarAtacando, point, avatarAlvo,
@@ -483,8 +494,8 @@ public class JogoServidor {
 		if (avatarAtacando.getTime().equals(avatarAlvo.getTime())) {
 			return false;
 		}
-		Shape desenhaAreaFaca = AvatarCliente.desenhaAreaFaca(avatarAtacando
-				.getPontoAvatar(), avatarAtacando.getAngulo());
+		Shape desenhaAreaFaca = AvatarCliente.desenhaAreaFaca(
+				avatarAtacando.getPontoAvatar(), avatarAtacando.getAngulo());
 		Shape desenhaCorpoAlvo = AvatarCliente.desenhaCorpo(avatarAlvo
 				.getPontoAvatar());
 		Shape desenhaCabecaAlvo = AvatarCliente.desenhaCabeca(avatarAlvo
@@ -516,11 +527,11 @@ public class JogoServidor {
 			if (avatarAtirador.getTime().equals(avatarAlvo.getTime())) {
 				return false;
 			} else {
-				if (avatarCliente.gerarCorpo().contains(point)) {
-					avatarAlvo.setVida(avatarAlvo.getVida() - balas);
-				} else {
+				if (avatarCliente.gerarCabeca().contains(point)) {
 					avatarAlvo.setVida(0);
-					avatarAlvo.setMortoPor(avatarAtirador);
+				} else {
+					avatarAlvo.setVida(avatarAlvo.getVida()
+							- (balas * Util.intervalo(1, 2)));
 				}
 				if (avatarAlvo.getVida() < 1) {
 					if (ConstantesTopWar.TIME_AZUL.equals(avatarAlvo.getTime())) {
@@ -528,9 +539,10 @@ public class JogoServidor {
 					} else {
 						ptsAzul++;
 					}
+					avatarAlvo.setMortoPor(avatarAtirador);
+					avatarAlvo.setDeaths(avatarAlvo.getDeaths() + 1);
+					avatarAtirador.setKills(avatarAtirador.getKills() + 1);
 				}
-				avatarAlvo.setDeaths(avatarAlvo.getDeaths() + 1);
-				avatarAtirador.setKills(avatarAtirador.getKills() + 1);
 				return true;
 			}
 		}
@@ -579,8 +591,8 @@ public class JogoServidor {
 		if (avatarTopWar.getVida() <= 0) {
 			return null;
 		}
-		double distaciaEntrePontos = GeoUtil.distaciaEntrePontos(avatarTopWar
-				.getPontoAvatar(), acaoClienteTopWar.getPonto());
+		double distaciaEntrePontos = GeoUtil.distaciaEntrePontos(
+				avatarTopWar.getPontoAvatar(), acaoClienteTopWar.getPonto());
 		// Logger.logar("distaciaEntrePontos " + distaciaEntrePontos);
 		// Logger.logar("avatarTopWar.getVelocidade() * 1.3 "
 		// + avatarTopWar.getVelocidade() * 1.3);
@@ -588,8 +600,6 @@ public class JogoServidor {
 			return null;
 		}
 		if (verificaColisao(acaoClienteTopWar.getPonto(), mapaTopWar)) {
-			Logger
-					.logar("verificaColisao(acaoClienteTopWar.getPonto(), mapaTopWar");
 			return null;
 		}
 		avatarTopWar.setPontoAvatar(acaoClienteTopWar.getPonto());
@@ -603,8 +613,10 @@ public class JogoServidor {
 		}
 		if (avatarTopWar.getArma() == ConstantesTopWar.ARMA_FACA) {
 			avatarTopWar.setArma(ConstantesTopWar.ARMA_CLASSE);
+			avatarTopWar.setVelocidade(7);
 		} else {
 			avatarTopWar.setArma(ConstantesTopWar.ARMA_FACA);
+			avatarTopWar.setVelocidade(10);
 		}
 		return ConstantesTopWar.OK;
 	}
