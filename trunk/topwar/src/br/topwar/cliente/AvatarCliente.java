@@ -15,13 +15,24 @@ import br.topwar.tos.AvatarTopWar;
 public class AvatarCliente {
 	private boolean local;
 	private int quadroAnimacao;
+	private int quadroAnimacaoMorte;
 	private long lastAnim;
 	private Point pontoAvatarSuave;
 	private Point pontoAvatarOld;
 	private AvatarTopWar avatarTopWar;
 
+	
+	
+	public boolean isInvencivel() {
+		return avatarTopWar.isInvencivel();
+	}
+
 	public AvatarTopWar getAvatarTopWar() {
 		return avatarTopWar;
+	}
+
+	public void setQuadroAnimacaoMorte(int quadroAnimacaoMorte) {
+		this.quadroAnimacaoMorte = quadroAnimacaoMorte;
 	}
 
 	public Point getPontoAvatarOld() {
@@ -73,7 +84,6 @@ public class AvatarCliente {
 	}
 
 	public Shape obeterAreaAvatar() {
-
 		Point desenha = getPontoDesenha();
 		Rectangle areaAvatar = new Rectangle(desenha.x, desenha.y,
 				ConstantesTopWar.LARGURA_AVATAR, ConstantesTopWar.ALTURA_AVATAR);
@@ -114,6 +124,25 @@ public class AvatarCliente {
 		quadroAnimacao++;
 		if (quadroAnimacao > 3) {
 			quadroAnimacao = 0;
+		}
+		lastAnim = System.currentTimeMillis();
+	}
+
+	public int getQuadroAnimacaoMorte() {
+		return quadroAnimacaoMorte;
+	}
+
+	public void animarDesenhoMorte() {
+		int intMin = (120 - (50 * getVelocidade()));
+		if (intMin < 60) {
+			intMin = 60;
+		}
+		if ((System.currentTimeMillis() - lastAnim) < intMin) {
+			return;
+		}
+		quadroAnimacaoMorte++;
+		if (quadroAnimacaoMorte > 3) {
+			quadroAnimacaoMorte = 3;
 		}
 		lastAnim = System.currentTimeMillis();
 	}

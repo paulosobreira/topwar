@@ -56,6 +56,8 @@ public class JogoCliente {
 	private int balas;
 	private int cartuchos;
 	private int arma;
+	private int vida;
+	private String time;
 	private double anguloServidor;
 	private Thread threadAtualizaPosAvatar;
 	private Thread threadRepaint;
@@ -94,9 +96,9 @@ public class JogoCliente {
 		this.controleCliente = controleCliente;
 		ObjectInputStream ois;
 		try {
-			ois = new ObjectInputStream(CarregadorRecursos
-					.recursoComoStream(dadosJogoTopWar.getNomeMapa()
-							+ ".topwar"));
+			ois = new ObjectInputStream(
+					CarregadorRecursos.recursoComoStream(dadosJogoTopWar
+							.getNomeMapa() + ".topwar"));
 			mapaTopWar = (MapaTopWar) ois.readObject();
 		} catch (Exception e1) {
 			Logger.logarExept(e1);
@@ -264,11 +266,33 @@ public class JogoCliente {
 					});
 					threadSeguirMouse.start();
 				} else {
-					moverAvatarPeloMouse(pontoMouseClicado);
+					if (ConstantesTopWar.ARMA_FACA != arma
+							&& clicouAvatarAdversario(e.getPoint())) {
+						atacar();
+					} else {
+						moverAvatarPeloMouse(pontoMouseClicado);
+					}
 				}
 				super.mouseClicked(e);
 			}
 		});
+	}
+
+	protected boolean clicouAvatarAdversario(Point p) {
+		synchronized (avatarClientes) {
+			for (Iterator iterator = avatarClientes.iterator(); iterator
+					.hasNext();) {
+				AvatarCliente avatarCliente = (AvatarCliente) iterator.next();
+				if (avatarCliente.getTime().equals(time)) {
+					continue;
+				}
+				if ((avatarCliente.obeterAreaAvatar().contains(p) || avatarCliente
+						.obeterAreaAvatarSuave().contains(p))) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	protected void atacar() {
@@ -307,8 +331,9 @@ public class JogoCliente {
 				@Override
 				public void run() {
 					Object ret = ConstantesTopWar.OK;
-					while ((ConstantesTopWar.OK.equals(ret) || ConstantesTopWar.ESPERE
-							.equals(ret))
+					while (vida > 0
+							&& (ConstantesTopWar.OK.equals(ret) || ConstantesTopWar.ESPERE
+									.equals(ret))
 							&& GeoUtil.distaciaEntrePontos(pontoAvatar,
 									pontoMouseSegir) > velocidade) {
 						List<Point> line = GeoUtil.drawBresenhamLine(
@@ -321,8 +346,7 @@ public class JogoCliente {
 							ret = controleCliente.moverPonto(p);
 						}
 						try {
-							Thread
-									.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO / 2);
+							Thread.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO / 2);
 						} catch (InterruptedException e) {
 							return;
 						}
@@ -545,16 +569,26 @@ public class JogoCliente {
 							avatarTopWar.getNomeJogador())) {
 						avatarCliente.setLocal(true);
 						anguloServidor = avatarCliente.getAngulo();
+						time = avatarCliente.getTime();
 						arma = avatarCliente.getArma();
+						vida = avatarCliente.getVida();
 						velocidade = avatarCliente.getVelocidade();
 						pontoAvatar = avatarCliente.getPontoAvatar();
 						pontoAvatarDesenha = avatarCliente.getPontoDesenha();
+						if (vida <= 0) {
+							seguirMouse = false;
+						}
 					}
 					break;
 				}
 			}
 			AvatarCliente avatarCliente = new AvatarCliente(avatarTopWar);
 			if (!avatarClientes.contains(avatarCliente)) {
+				if (avatarCliente.getVida() <= 0) {
+					avatarCliente.setQuadroAnimacaoMorte(3);
+				} else {
+					avatarCliente.setQuadroAnimacaoMorte(0);
+				}
 				avatarClientes.add(avatarCliente);
 			}
 		}

@@ -189,6 +189,7 @@ public class ControleCliente extends NnpeChatCliente {
 		DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
 		acaoClienteTopWar.setNomeCliente(sessaoCliente.getNomeJogador());
 		acaoClienteTopWar.setPonto(p);
+		acaoClienteTopWar.setAngulo(jogoCliente.getAngulo());
 		NnpeTO nnpeTO = new NnpeTO();
 		nnpeTO.setComando(ConstantesTopWar.MOVER_PONTO);
 		nnpeTO.setData(acaoClienteTopWar);
