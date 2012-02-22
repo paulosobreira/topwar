@@ -219,9 +219,8 @@ public class PainelTopWar {
 	}
 
 	private void loopDesenhaAvatares(Graphics2D graphics2d) {
-		synchronized (jogoCliente.getAvatarClientes()) {
-			List<AvatarCliente> avatarClientes = jogoCliente
-					.getAvatarClientes();
+		List<AvatarCliente> avatarClientes = jogoCliente.getAvatarClientes();
+		synchronized (avatarClientes) {
 			for (Iterator iterator = avatarClientes.iterator(); iterator
 					.hasNext();) {
 				AvatarCliente avatarCliente = (AvatarCliente) iterator.next();
@@ -577,8 +576,9 @@ public class PainelTopWar {
 				} else if (angulo > 22.5 && angulo <= 67.5) {
 					imgJog = mapImgs.get(time + "-" + anim + "-7");
 				}
-				if (!avatarCliente.getPontoAvatar().equals(
-						avatarCliente.getPontoAvatarOld())) {
+				if (avatarCliente.getPontoAvatar() != null
+						&& !avatarCliente.getPontoAvatar().equals(
+								avatarCliente.getPontoAvatarOld())) {
 					avatarCliente.animar();
 				}
 			} else {
@@ -594,7 +594,6 @@ public class PainelTopWar {
 			if (imgJog == null) {
 				Logger.logar("Angulo nulo " + angulo);
 			} else {
-
 				Point desenha = avatarCliente.getPontoDesenhaSuave();
 				Rectangle areaAvatar = new Rectangle(desenha.x, desenha.y,
 						imgJog.getWidth(), imgJog.getHeight());
@@ -669,7 +668,7 @@ public class PainelTopWar {
 				ocilaAlphaMorteSobe = false;
 			}
 
-			graphics2d.fillOval(ar.x - 5, ar.y, ar.width, ar.height);
+			graphics2d.fillOval(ar.x, ar.y, ar.width, ar.height);
 		}
 
 		if (desenhaObjetos) {

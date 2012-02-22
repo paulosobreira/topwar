@@ -135,7 +135,7 @@ public class JogoServidor {
 								.getPontoTimeVermelho());
 					}
 				}
-				if (avatarTopWar.getVida() > 0 && tempDesdeUltMorte < 10000) {
+				if (avatarTopWar.getVida() > 0 && tempDesdeUltMorte < 12000) {
 					avatarTopWar.setInvencivel(true);
 				} else {
 					avatarTopWar.setInvencivel(false);
@@ -421,6 +421,9 @@ public class JogoServidor {
 				if (avatarAlvo.isInvencivel()) {
 					continue;
 				}
+				if (avatarAlvo.getVida() < 1) {
+					continue;
+				}
 				AvatarCliente avatarClienteAlvo = new AvatarCliente(avatarAlvo);
 				if (ConstantesTopWar.ARMA_FACA == avatarAtacando.getArma()) {
 					if (processaDanoCombateCorpoCorpo(avatarAtacando,
@@ -475,6 +478,9 @@ public class JogoServidor {
 					if (avatarAlvo.isInvencivel()) {
 						continue;
 					}
+					if (avatarAlvo.getVida() < 1) {
+						continue;
+					}
 					AvatarCliente avatarClienteAlvo = new AvatarCliente(
 							avatarAlvo);
 					if (processaDanoTiro(avatarAtacando, point, avatarAlvo,
@@ -509,6 +515,8 @@ public class JogoServidor {
 			} else {
 				ptsAzul++;
 			}
+			avatarAlvo.setDeaths(avatarAlvo.getDeaths() + 1);
+			avatarAtacando.setKills(avatarAtacando.getKills() + 1);
 			return true;
 		}
 		return false;
