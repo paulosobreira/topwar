@@ -17,12 +17,11 @@ public class AvatarCliente {
 	private int quadroAnimacao;
 	private int quadroAnimacaoMorte;
 	private long lastAnim;
+	private long lastAnimMorte;
 	private Point pontoAvatarSuave;
 	private Point pontoAvatarOld;
 	private AvatarTopWar avatarTopWar;
 
-	
-	
 	public boolean isInvencivel() {
 		return avatarTopWar.isInvencivel();
 	}
@@ -133,18 +132,18 @@ public class AvatarCliente {
 	}
 
 	public void animarDesenhoMorte() {
-		int intMin = (120 - (50 * getVelocidade()));
+		int intMin = (200 - (10 * getVelocidade()));
 		if (intMin < 60) {
 			intMin = 60;
 		}
-		if ((System.currentTimeMillis() - lastAnim) < intMin) {
+		if ((System.currentTimeMillis() - lastAnimMorte) < intMin) {
 			return;
 		}
 		quadroAnimacaoMorte++;
 		if (quadroAnimacaoMorte > 3) {
 			quadroAnimacaoMorte = 3;
 		}
-		lastAnim = System.currentTimeMillis();
+		lastAnimMorte = System.currentTimeMillis();
 	}
 
 	public AvatarCliente(AvatarTopWar avatarTopWar) {
