@@ -41,7 +41,7 @@ public class PainelTopWar {
 	private JScrollPane scrollPane;
 	private MapaTopWar mapaTopWar;
 	private boolean desenhaObjetos = false;
-	private boolean desenhaImagens = true;
+	private boolean desenhaImagens = false;
 	private int ocilaAlphaRecarregando = 255;
 	private boolean ocilaAlphaRecarregandoSobe = false;
 	private int ocilaAlphaMorte = 255;
@@ -268,8 +268,8 @@ public class PainelTopWar {
 		Point pFaca = GeoUtil.calculaPonto(angulo, 10, desenha);
 		AffineTransform afRotate = new AffineTransform();
 		double rad = Math.toRadians((double) angulo - 60);
-		afRotate.setToRotation(rad, knifeAtttack.getWidth() / 2,
-				knifeAtttack.getHeight() / 2);
+		afRotate.setToRotation(rad, knifeAtttack.getWidth() / 2, knifeAtttack
+				.getHeight() / 2);
 		AffineTransformOp opRotate = new AffineTransformOp(afRotate,
 				AffineTransformOp.TYPE_BILINEAR);
 		BufferedImage rotBuffer = new BufferedImage(knifeAtttack.getWidth(),
@@ -351,11 +351,8 @@ public class PainelTopWar {
 
 		if (jogoCliente.verificaRecarregando()) {
 			g2d.setColor(new Color(255, 255, 255, ocilaAlphaRecarregando));
-			g2d.fillRoundRect(
-					x - 10,
-					y - 30,
-					Util.calculaLarguraText(Lang.msg("RECARREGANDO"), g2d) + 20,
-					35, 10, 10);
+			g2d.fillRoundRect(x - 10, y - 30, Util.calculaLarguraText(Lang
+					.msg("RECARREGANDO"), g2d) + 20, 35, 10, 10);
 			g2d.setColor(Color.BLACK);
 			g2d.drawString(Lang.msg("RECARREGANDO"), x, y);
 
@@ -372,8 +369,8 @@ public class PainelTopWar {
 			}
 		} else {
 			g2d.setColor(ConstantesTopWar.lightWhite);
-			g2d.fillRoundRect(x - 10, y - 30,
-					Util.calculaLarguraText("88", g2d) + 20, 35, 10, 10);
+			g2d.fillRoundRect(x - 10, y - 30, Util
+					.calculaLarguraText("88", g2d) + 20, 35, 10, 10);
 			g2d.setColor(Color.BLACK);
 			g2d.drawString("" + jogoCliente.getBalas(), x, y);
 			x += 80;
@@ -388,34 +385,36 @@ public class PainelTopWar {
 
 	private void desenhaInfoCima(Graphics2D g2d) {
 		Shape limitesViewPort = limitesViewPort();
-		int x = limitesViewPort.getBounds().x
-				+ limitesViewPort.getBounds().width / 4;
-		int y = limitesViewPort.getBounds().y + 40;
 		Font fontOri = g2d.getFont();
 		g2d.setFont(new Font(fontOri.getName(), fontOri.getStyle(), 32));
+		String formatarTempo = Util.formatarTempo(jogoCliente
+				.getTempoRestanteJogo());
+		int larguraTimer = Util.calculaLarguraText(formatarTempo, g2d) + 20;
+
+		int x = limitesViewPort.getBounds().x
+				+ limitesViewPort.getBounds().width / 2 - (larguraTimer / 2);
+		int y = limitesViewPort.getBounds().y + 40;
+
+		int larguraPlacarAzul = Util.calculaLarguraText("00", g2d) + 20;
+		int xleft = x - larguraPlacarAzul;
+
 		g2d.setColor(ConstantesTopWar.lightBlu);
-
-		g2d.fillRoundRect(x - 10, y - 30, blueFlag.getWidth() + 20,
-				blueFlag.getHeight() + 5, 10, 10);
-		g2d.drawImage(blueFlag, x - 5, y - 25, null);
-
-		x += blueFlag.getWidth() + 30;
-
-		g2d.setColor(ConstantesTopWar.lightBlu);
-		g2d.fillRoundRect(x - 10, y - 30,
-				Util.calculaLarguraText("00", g2d) + 20, 35, 10, 10);
+		g2d.fillRoundRect(xleft - 10, y - 30, larguraPlacarAzul, 35, 10, 10);
 		g2d.setColor(Color.BLACK);
-		g2d.drawString("" + jogoCliente.getPtsAzul(), x, y);
+		g2d.drawString("" + jogoCliente.getPtsAzul(), xleft, y);
+
+		xleft -= blueFlag.getWidth() + 30;
+
+		g2d.setColor(ConstantesTopWar.lightBlu);
+		g2d.fillRoundRect(xleft - 10, y - 30, blueFlag.getWidth() + 20,
+				blueFlag.getHeight() + 5, 10, 10);
+		g2d.drawImage(blueFlag, xleft - 5, y - 25, null);
 
 		x += Util.calculaLarguraText("00", g2d) + 30;
 
 		g2d.setColor(ConstantesTopWar.lightWhite);
+		g2d.fillRoundRect(x - 10, y - 30, larguraTimer, 35, 10, 10);
 
-		String formatarTempo = Util.formatarTempo(jogoCliente
-				.getTempoRestanteJogo());
-
-		g2d.fillRoundRect(x - 10, y - 30,
-				Util.calculaLarguraText(formatarTempo, g2d) + 20, 35, 10, 10);
 		g2d.setColor(Color.BLACK);
 		g2d.drawString(formatarTempo, x, y);
 
@@ -430,8 +429,8 @@ public class PainelTopWar {
 		x += Util.calculaLarguraText("00", g2d) + 30;
 
 		g2d.setColor(ConstantesTopWar.lightRed);
-		g2d.fillRoundRect(x - 10, y - 30, redFlag.getWidth() + 20,
-				redFlag.getHeight() + 5, 10, 10);
+		g2d.fillRoundRect(x - 10, y - 30, redFlag.getWidth() + 20, redFlag
+				.getHeight() + 5, 10, 10);
 		g2d.drawImage(redFlag, x - 5, y - 25, null);
 		g2d.setFont(fontOri);
 	}
@@ -605,8 +604,8 @@ public class PainelTopWar {
 				 */
 				if (jogoCliente.getPontoAvatar() != null
 						&& !avatarCliente.isLocal()) {
-					List<Point> line = GeoUtil.drawBresenhamLine(
-							jogoCliente.getPontoAvatar(), pontoAvatar);
+					List<Point> line = GeoUtil.drawBresenhamLine(jogoCliente
+							.getPontoAvatar(), pontoAvatar);
 					if (line.size() > 200) {
 						int transp = (510 - (line.size() - 200)) / 2;
 						if (transp > 255) {
