@@ -229,7 +229,7 @@ public class AvatarCliente {
 	public Shape obeterAreaAvatarSuave() {
 		Point desenha = getPontoDesenhaSuave();
 		if (desenha == null) {
-			return null;
+			return obeterAreaAvatar();
 		}
 		Rectangle areaAvatar = new Rectangle(desenha.x, desenha.y,
 				ConstantesTopWar.LARGURA_AVATAR, ConstantesTopWar.ALTURA_AVATAR);

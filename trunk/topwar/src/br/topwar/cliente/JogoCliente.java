@@ -32,6 +32,7 @@ import br.topwar.serial.MapaTopWar;
 import br.topwar.servidor.JogoServidor;
 import br.topwar.tos.AvatarTopWar;
 import br.topwar.tos.DadosJogoTopWar;
+import br.topwar.tos.EventoJogo;
 import br.topwar.tos.PlacarTopWar;
 
 public class JogoCliente {
@@ -68,7 +69,6 @@ public class JogoCliente {
 	protected Thread threadSeguirMouse;
 	private String killCam;
 	private List<PlacarTopWar> placar;
-	private int timerTab;
 
 	public Point getPontoMouseMovendo() {
 		return pontoMouseMovendo;
@@ -80,14 +80,6 @@ public class JogoCliente {
 
 	public int getPtsAzul() {
 		return ptsAzul;
-	}
-
-	public int getTimerTab() {
-		return timerTab;
-	}
-
-	public void setTimerTab(int timerTab) {
-		this.timerTab = timerTab;
 	}
 
 	public JogoCliente(DadosJogoTopWar dadosJogoTopWar,
@@ -299,7 +291,7 @@ public class JogoCliente {
 		if (avatarClientes == null) {
 			return;
 		}
-		if (ConstantesTopWar.ARMA_CLASSE == arma && balas <= 0) {
+		if (ConstantesTopWar.ARMA_ASSALT == arma && balas <= 0) {
 			controleCliente.recarregar();
 			return;
 		}
@@ -500,11 +492,16 @@ public class JogoCliente {
 						if (keyCode == KeyEvent.VK_CONTROL) {
 							controleCliente.alternaFaca();
 						}
-						if (keyCode == KeyEvent.VK_TAB) {
+						if (keyCode == KeyEvent.VK_P
+								|| keyCode == KeyEvent.VK_TAB) {
+							if (painelTopWar.getTabCont() > 0) {
+								painelTopWar.setTabCont(-1);
+								return;
+							}
+							painelTopWar.setTabCont(100);
 							NnpeTO nnpeTO = (NnpeTO) controleCliente
 									.obterPlacar();
 							placar = (List<PlacarTopWar>) nnpeTO.getData();
-							timerTab = 50;
 						}
 
 						if (keyCode == KeyEvent.VK_F11) {
@@ -538,6 +535,7 @@ public class JogoCliente {
 		nnpeTO.setComando(ConstantesTopWar.ATUALIZAR_LISTA_AVS);
 		nnpeTO.setSessaoCliente(controleCliente.getSessaoCliente());
 		nnpeTO.setData(dadosJogoTopWar.getNomeJogo());
+		nnpeTO.setMillisSrv(millisSrv);
 		Object ret = controleCliente.enviarObjeto(nnpeTO);
 		if (!(ret instanceof NnpeTO)) {
 			return;
@@ -553,6 +551,12 @@ public class JogoCliente {
 		tempoRestanteJogo = (Long) retorno
 				.get(ConstantesTopWar.TEMPO_JOGO_RESTANTE);
 		killCam = (String) retorno.get(ConstantesTopWar.KILL_CAM);
+		EventoJogo eventoJogo = (EventoJogo) retorno
+				.get(ConstantesTopWar.EVENTO_JOGO);
+		if(eventoJogo!=null){
+			Logger.logar(eventoJogo.toString());
+		}
+		
 		Set<AvatarTopWar> avatarTopWars = (HashSet<AvatarTopWar>) retorno
 				.get(ConstantesTopWar.LISTA_AVATARES);
 		for (Iterator iterator = avatarTopWars.iterator(); iterator.hasNext();) {
@@ -630,19 +634,20 @@ public class JogoCliente {
 
 	public List<PlacarTopWar> geraListaPlacarOrdenada(String time) {
 		List<PlacarTopWar> list = new ArrayList<PlacarTopWar>();
-		for (Iterator iterator = placar.iterator(); iterator.hasNext();) {
-			PlacarTopWar placarTopWar = (PlacarTopWar) iterator.next();
-			if (time.equals(placarTopWar.getTime())) {
-				list.add(placarTopWar);
+		if (placar != null) {
+			for (Iterator iterator = placar.iterator(); iterator.hasNext();) {
+				PlacarTopWar placarTopWar = (PlacarTopWar) iterator.next();
+				if (time.equals(placarTopWar.getTime())) {
+					list.add(placarTopWar);
+				}
 			}
+			Collections.sort(list, new Comparator<PlacarTopWar>() {
+				@Override
+				public int compare(PlacarTopWar o1, PlacarTopWar o2) {
+					return o2.ordenacao().compareTo(o1.ordenacao());
+				}
+			});
 		}
-		Collections.sort(list, new Comparator<PlacarTopWar>() {
-			@Override
-			public int compare(PlacarTopWar o1, PlacarTopWar o2) {
-				return o1.ordenacao().compareTo(o2.ordenacao());
-			}
-		});
-
 		return list;
 	}
 
