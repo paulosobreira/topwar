@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -28,6 +29,7 @@ import br.topwar.serial.ObjetoMapa;
 import br.topwar.tos.AvatarTopWar;
 import br.topwar.tos.DadosAcaoClienteTopWar;
 import br.topwar.tos.DadosJogoTopWar;
+import br.topwar.tos.EventoJogo;
 import br.topwar.tos.PlacarTopWar;
 
 public class JogoServidor {
@@ -42,6 +44,7 @@ public class JogoServidor {
 	private int tempoJogoMilis;
 	private long inicioJogoMilis;
 	private long fimJogoMilis;
+	private List<EventoJogo> eventos = new LinkedList<EventoJogo>();
 
 	public JogoServidor(DadosJogoTopWar dadosJogoTopWar,
 			ProxyComandos proxyComandos) {
@@ -149,9 +152,9 @@ public class JogoServidor {
 		return avatarTopWars;
 	}
 
-	public Object atualizaListaAvatares(SessaoCliente sessaoCliente) {
-		AvatarTopWar avatarTopWarJog = obterAvatarTopWar(sessaoCliente
-				.getNomeJogador());
+	public Object atualizaListaAvatares(NnpeTO nnpeTO) {
+		AvatarTopWar avatarTopWarJog = obterAvatarTopWar(nnpeTO
+				.getSessaoCliente().getNomeJogador());
 		if (avatarTopWarJog == null)
 			return null;
 		Set<AvatarTopWar> ret = new HashSet<AvatarTopWar>();
@@ -213,6 +216,14 @@ public class JogoServidor {
 		if (avatarTopWarJog.getMortoPor() != null)
 			retorno.put(ConstantesTopWar.KILL_CAM, avatarTopWarJog
 					.getMortoPor().getNomeJogador());
+		for (Iterator iterator = eventos.iterator(); iterator.hasNext();) {
+			EventoJogo eventoJogo = (EventoJogo) iterator.next();
+			if (eventoJogo.getTempo() > nnpeTO.getMillisSrv()
+					&& (System.currentTimeMillis() - eventoJogo.getTempo() < 5000)) {
+				retorno.put(ConstantesTopWar.EVENTO_JOGO, eventoJogo);
+			}
+
+		}
 		return retorno;
 	}
 
@@ -393,7 +404,7 @@ public class JogoServidor {
 		if (avatarAtacando.getVida() <= 0) {
 			return null;
 		}
-		if (ConstantesTopWar.ARMA_CLASSE == avatarAtacando.getArma()
+		if (ConstantesTopWar.ARMA_ASSALT == avatarAtacando.getArma()
 				&& verificaRecarregando(avatarAtacando)) {
 			return null;
 		}
@@ -402,7 +413,7 @@ public class JogoServidor {
 			return ConstantesTopWar.OK;
 		}
 
-		if (ConstantesTopWar.ARMA_CLASSE == avatarAtacando.getArma()
+		if (ConstantesTopWar.ARMA_ASSALT == avatarAtacando.getArma()
 				&& (atirar(avatarAtacando, angulo))) {
 			return ConstantesTopWar.OK;
 		}
@@ -458,8 +469,9 @@ public class JogoServidor {
 						&& objetoMapa.getForma().contains(point)) {
 					if (pointAnt != null) {
 						int balas = consomeBalasArma(avatarAtacando);
-						if (balas != 0) {
+						if (balas > 0) {
 							avatarAtacando.setPontoUtlDisparo(point);
+							return true;
 						} else {
 							return false;
 						}
@@ -487,7 +499,6 @@ public class JogoServidor {
 							avatarClienteAlvo)) {
 						return true;
 					}
-
 				}
 			}
 			pointAnt = point;
@@ -517,6 +528,12 @@ public class JogoServidor {
 			}
 			avatarAlvo.setDeaths(avatarAlvo.getDeaths() + 1);
 			avatarAtacando.setKills(avatarAtacando.getKills() + 1);
+			EventoJogo eventoJogo = new EventoJogo();
+			eventoJogo.setArma(avatarAtacando.getArma());
+			eventoJogo.setAtacante(avatarAtacando.getNomeJogador());
+			eventoJogo.setMorto(avatarAlvo.getNomeJogador());
+			eventoJogo.setTempo(System.currentTimeMillis());
+			eventos.add(eventoJogo);
 			return true;
 		}
 		return false;
@@ -527,13 +544,13 @@ public class JogoServidor {
 		if (avatarCliente.gerarCorpo().contains(point)
 				|| avatarCliente.gerarCabeca().contains(point)) {
 			int balas = consomeBalasArma(avatarAtirador);
-			if (balas != 0) {
+			if (balas > 0) {
 				avatarAtirador.setPontoUtlDisparo(point);
 			} else {
 				return false;
 			}
 			if (avatarAtirador.getTime().equals(avatarAlvo.getTime())) {
-				return false;
+				return true;
 			} else {
 				if (avatarCliente.gerarCabeca().contains(point)) {
 					avatarAlvo.setVida(0);
@@ -550,6 +567,12 @@ public class JogoServidor {
 					avatarAlvo.setMortoPor(avatarAtirador);
 					avatarAlvo.setDeaths(avatarAlvo.getDeaths() + 1);
 					avatarAtirador.setKills(avatarAtirador.getKills() + 1);
+					EventoJogo eventoJogo = new EventoJogo();
+					eventoJogo.setArma(avatarAtirador.getArma());
+					eventoJogo.setAtacante(avatarAtirador.getNomeJogador());
+					eventoJogo.setMorto(avatarAlvo.getNomeJogador());
+					eventoJogo.setTempo(System.currentTimeMillis());
+					eventos.add(eventoJogo);
 				}
 				return true;
 			}
@@ -620,7 +643,7 @@ public class JogoServidor {
 			return null;
 		}
 		if (avatarTopWar.getArma() == ConstantesTopWar.ARMA_FACA) {
-			avatarTopWar.setArma(ConstantesTopWar.ARMA_CLASSE);
+			avatarTopWar.setArma(ConstantesTopWar.ARMA_ASSALT);
 			avatarTopWar.setVelocidade(7);
 		} else {
 			avatarTopWar.setArma(ConstantesTopWar.ARMA_FACA);

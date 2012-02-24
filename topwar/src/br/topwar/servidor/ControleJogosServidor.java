@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import br.nnpe.Logger;
+import br.nnpe.tos.MsgSrv;
 import br.nnpe.tos.NnpeDados;
 import br.nnpe.tos.NnpeTO;
 import br.nnpe.tos.SessaoCliente;
@@ -39,6 +40,12 @@ public class ControleJogosServidor {
 	}
 
 	public Object criarJogo(NnpeTO nnpeTO) {
+		if (nnpeTO.getSessaoCliente() == null) {
+			return new MsgSrv(Lang.msg("usuarioSemSessao"));
+		}
+		if (verificaJaEmUmJogo(nnpeTO.getSessaoCliente())) {
+			return new MsgSrv(Lang.msg("jaEstaEmUmjogo"));
+		}
 		DadosJogoTopWar dadosJogoTopWar = (DadosJogoTopWar) nnpeTO.getData();
 		dadosJogoTopWar.setNomeJogo(Lang.msg("jogo") + contadorJogos++);
 		nnpeDados.getJogosAndamento().add(dadosJogoTopWar.getNomeJogo());
@@ -50,7 +57,17 @@ public class ControleJogosServidor {
 		return nnpeTO;
 	}
 
+	private boolean verificaJaEmUmJogo(SessaoCliente sessaoCliente) {
+		return obterJogoCliente(sessaoCliente.getNomeJogador()) != null;
+	}
+
 	public Object entrarJogo(NnpeTO nnpeTO) {
+		if (nnpeTO.getSessaoCliente() == null) {
+			return new MsgSrv(Lang.msg("usuarioSemSessao"));
+		}
+		if (verificaJaEmUmJogo(nnpeTO.getSessaoCliente())) {
+			return new MsgSrv(Lang.msg("jaEstaEmUmjogo"));
+		}
 		DadosJogoTopWar dadosJogoTopWar = (DadosJogoTopWar) nnpeTO.getData();
 		JogoServidor jogoServidor = obterJogo(dadosJogoTopWar.getNomeJogo());
 		jogoServidor.entrarNoJogo(dadosJogoTopWar.getNomeJogador());
@@ -78,8 +95,7 @@ public class ControleJogosServidor {
 		String nomeJogo = (String) nnpeTO.getData();
 		JogoServidor jogoServidor = obterJogo(nomeJogo);
 		if (jogoServidor != null) {
-			nnpeTO.setData(jogoServidor.atualizaListaAvatares(nnpeTO
-					.getSessaoCliente()));
+			nnpeTO.setData(jogoServidor.atualizaListaAvatares(nnpeTO));
 			nnpeTO.setMillisSrv(System.currentTimeMillis());
 			return nnpeTO;
 		}
@@ -185,8 +201,8 @@ public class ControleJogosServidor {
 		if (avatarTopWar == null) {
 			return null;
 		}
-		return jogoServidor.atualizaAngulo(avatarTopWar, acaoClienteTopWar
-				.getAngulo());
+		return jogoServidor.atualizaAngulo(avatarTopWar,
+				acaoClienteTopWar.getAngulo());
 	}
 
 	public Object recarregar(NnpeTO nnpeTO) {
