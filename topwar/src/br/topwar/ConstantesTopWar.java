@@ -24,8 +24,8 @@ public class ConstantesTopWar {
 	public static final int VIDA_COMPLETA = 100;
 	public static final int ASSALT_MAX_RANGE = 1000;
 	public final static Color lightWhite = new Color(255, 255, 255, 150);
-	public final static Color lightBlu = new Color(150, 150, 255, 150);
-	public final static Color lightRed = new Color(255, 150, 150, 150);
+	public final static Color lightBlu = new Color(180, 180, 255, 150);
+	public final static Color lightRed = new Color(255, 180, 180, 150);
 	public static final String ATUALIZA_ANGULO = "ATUALIZA_ANGULO";
 	public static final String RECARREGAR = "R";
 	public static final long ATRASO_REDE_PADRAO = 120;
@@ -52,5 +52,6 @@ public class ConstantesTopWar {
 	public static final String KILL_CAM = "K_C";
 	public static final String OBTER_PLCAR = "O_P";
 	public static final String EVENTO_JOGO = "E_J";
+	public static final int HEADSHOT = 0;
 
 }

@@ -5,9 +5,27 @@ import java.io.Serializable;
 public class EventoJogo implements Serializable {
 
 	private String atacante;
+	private String timeAtacante;
 	private String morto;
+	private String timeMorto;
 	private int arma;
 	private long tempo;
+
+	public String getTimeAtacante() {
+		return timeAtacante;
+	}
+
+	public void setTimeAtacante(String timeAtacante) {
+		this.timeAtacante = timeAtacante;
+	}
+
+	public String getTimeMorto() {
+		return timeMorto;
+	}
+
+	public void setTimeMorto(String timeMorto) {
+		this.timeMorto = timeMorto;
+	}
 
 	public String getAtacante() {
 		return atacante;
