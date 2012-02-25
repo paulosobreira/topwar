@@ -8,12 +8,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -29,7 +27,6 @@ import br.nnpe.tos.NnpeTO;
 import br.topwar.ConstantesTopWar;
 import br.topwar.recursos.CarregadorRecursos;
 import br.topwar.serial.MapaTopWar;
-import br.topwar.servidor.JogoServidor;
 import br.topwar.tos.AvatarTopWar;
 import br.topwar.tos.DadosJogoTopWar;
 import br.topwar.tos.EventoJogo;
@@ -69,6 +66,9 @@ public class JogoCliente {
 	protected Thread threadSeguirMouse;
 	private String killCam;
 	private List<PlacarTopWar> placar;
+	private List<EventoJogo> eventos = new ArrayList<EventoJogo>();
+	protected Set keysSet = new HashSet();
+	private Thread threadTeclado;
 
 	public Point getPontoMouseMovendo() {
 		return pontoMouseMovendo;
@@ -88,9 +88,9 @@ public class JogoCliente {
 		this.controleCliente = controleCliente;
 		ObjectInputStream ois;
 		try {
-			ois = new ObjectInputStream(CarregadorRecursos
-					.recursoComoStream(dadosJogoTopWar.getNomeMapa()
-							+ ".topwar"));
+			ois = new ObjectInputStream(
+					CarregadorRecursos.recursoComoStream(dadosJogoTopWar
+							.getNomeMapa() + ".topwar"));
 			mapaTopWar = (MapaTopWar) ois.readObject();
 		} catch (Exception e1) {
 			Logger.logarExept(e1);
@@ -117,7 +117,12 @@ public class JogoCliente {
 		iniciaThreadAtualizaTela();
 		iniciaThreadAtualizaDadosServidor();
 		iniciaListenerTeclado();
+		iniciaThreadTeclado();
 		iniciaThreadAtualizaPosAvatar();
+	}
+
+	public List<EventoJogo> getEventos() {
+		return eventos;
 	}
 
 	private void iniciaThreadAtualizaPosAvatar() {
@@ -338,8 +343,7 @@ public class JogoCliente {
 							ret = controleCliente.moverPonto(p);
 						}
 						try {
-							Thread
-									.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO / 2);
+							Thread.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO / 2);
 						} catch (InterruptedException e) {
 							return;
 						}
@@ -442,7 +446,9 @@ public class JogoCliente {
 			if (threadDadosSrv != null) {
 				threadDadosSrv.interrupt();
 			}
-
+			if (threadTeclado != null) {
+				threadTeclado.interrupt();
+			}
 		} catch (Exception e) {
 			Logger.logarExept(e);
 		}
@@ -454,16 +460,69 @@ public class JogoCliente {
 			@Override
 			public void keyPressed(final KeyEvent e) {
 				pararMovimentoMouse();
-				Thread keys = new Thread(new Runnable() {
+				int keyCode = e.getKeyCode();
+				synchronized (keysSet) {
+					if (keysSet.size() > 5) {
+						Integer key = (Integer) keysSet.iterator().next();
+						keysSet.remove(key);
+					}
+					keysSet.add(keyCode);
+				}
+				if (keyCode == KeyEvent.VK_P || keyCode == KeyEvent.VK_TAB) {
+					if (painelTopWar.getTabCont() > 0) {
+						painelTopWar.setTabCont(-1);
+						return;
+					}
+					NnpeTO nnpeTO = (NnpeTO) controleCliente.obterPlacar();
+					placar = (List<PlacarTopWar>) nnpeTO.getData();
+					painelTopWar.setTabCont(100);
+				}
 
-					@Override
-					public void run() {
-						try {
-							Thread.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO);
-						} catch (InterruptedException e1) {
-							e1.printStackTrace();
+				if (keyCode == KeyEvent.VK_F11) {
+					painelTopWar.setDesenhaImagens(!painelTopWar
+							.isDesenhaImagens());
+				}
+				if (keyCode == KeyEvent.VK_F12) {
+					painelTopWar.setDesenhaObjetos(!painelTopWar
+							.isDesenhaObjetos());
+				}
+				super.keyPressed(e);
+			}
+
+		};
+		frameTopWar.addKeyListener(keyAdapter);
+	}
+
+	private void iniciaThreadTeclado() {
+		if (threadTeclado != null && threadTeclado.isAlive()) {
+			return;
+		}
+		threadTeclado = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				boolean interrupt = false;
+				while (jogoEmAndamento && !interrupt) {
+					synchronized (keysSet) {
+						if (keysSet.isEmpty()) {
+							try {
+								Thread.sleep(5);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+								interrupt = true;
+							}
+							continue;
 						}
-						int keyCode = e.getKeyCode();
+						Integer key = (Integer) keysSet.iterator().next();
+						keysSet.remove(key);
+						int keyCode = key.intValue();
+						while (controleCliente.verificaDelay()) {
+							try {
+								Thread.sleep(20);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+								interrupt = true;
+							}
+						}
 						if (keyCode == KeyEvent.VK_A
 								|| keyCode == KeyEvent.VK_LEFT) {
 							controleCliente.moverEsquerda();
@@ -489,34 +548,17 @@ public class JogoCliente {
 						if (keyCode == KeyEvent.VK_CONTROL) {
 							controleCliente.alternaFaca();
 						}
-						if (keyCode == KeyEvent.VK_P
-								|| keyCode == KeyEvent.VK_TAB) {
-							if (painelTopWar.getTabCont() > 0) {
-								painelTopWar.setTabCont(-1);
-								return;
-							}
-							painelTopWar.setTabCont(100);
-							NnpeTO nnpeTO = (NnpeTO) controleCliente
-									.obterPlacar();
-							placar = (List<PlacarTopWar>) nnpeTO.getData();
-						}
-
-						if (keyCode == KeyEvent.VK_F11) {
-							painelTopWar.setDesenhaImagens(!painelTopWar
-									.isDesenhaImagens());
-						}
-						if (keyCode == KeyEvent.VK_F12) {
-							painelTopWar.setDesenhaObjetos(!painelTopWar
-									.isDesenhaObjetos());
-						}
 					}
-				});
-				keys.start();
-				super.keyPressed(e);
+					try {
+						Thread.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO / 2);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+						interrupt = true;
+					}
+				}
 			}
-
-		};
-		frameTopWar.addKeyListener(keyAdapter);
+		});
+		threadTeclado.start();
 	}
 
 	public String getKillCam() {
@@ -551,7 +593,7 @@ public class JogoCliente {
 		EventoJogo eventoJogo = (EventoJogo) retorno
 				.get(ConstantesTopWar.EVENTO_JOGO);
 		if (eventoJogo != null) {
-			Logger.logar(eventoJogo.toString());
+			eventos.add(eventoJogo);
 		}
 
 		Set<AvatarTopWar> avatarTopWars = (HashSet<AvatarTopWar>) retorno
