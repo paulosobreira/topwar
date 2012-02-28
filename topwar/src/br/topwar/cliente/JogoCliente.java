@@ -88,9 +88,9 @@ public class JogoCliente {
 		this.controleCliente = controleCliente;
 		ObjectInputStream ois;
 		try {
-			ois = new ObjectInputStream(
-					CarregadorRecursos.recursoComoStream(dadosJogoTopWar
-							.getNomeMapa() + ".topwar"));
+			ois = new ObjectInputStream(CarregadorRecursos
+					.recursoComoStream(dadosJogoTopWar.getNomeMapa()
+							+ ".topwar"));
 			mapaTopWar = (MapaTopWar) ois.readObject();
 		} catch (Exception e1) {
 			Logger.logarExept(e1);
@@ -343,7 +343,8 @@ public class JogoCliente {
 							ret = controleCliente.moverPonto(p);
 						}
 						try {
-							Thread.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO / 2);
+							Thread
+									.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO / 2);
 						} catch (InterruptedException e) {
 							return;
 						}
@@ -502,52 +503,59 @@ public class JogoCliente {
 			public void run() {
 				boolean interrupt = false;
 				while (jogoEmAndamento && !interrupt) {
+					Integer key = null;
 					synchronized (keysSet) {
 						if (keysSet.isEmpty()) {
 							try {
-								Thread.sleep(5);
+								Thread.sleep(15);
 							} catch (InterruptedException e) {
 								e.printStackTrace();
 								interrupt = true;
 							}
 							continue;
 						}
-						Integer key = (Integer) keysSet.iterator().next();
+						key = (Integer) keysSet.iterator().next();
 						keysSet.remove(key);
-						int keyCode = key.intValue();
-						while (controleCliente.verificaDelay()) {
-							try {
-								Thread.sleep(20);
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-								interrupt = true;
-							}
+					}
+					if (key == null) {
+						try {
+							Thread.sleep(15);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+							interrupt = true;
 						}
-						if (keyCode == KeyEvent.VK_A
-								|| keyCode == KeyEvent.VK_LEFT) {
-							controleCliente.moverEsquerda();
+						continue;
+					}
+					int keyCode = key.intValue();
+					while (controleCliente.verificaDelay()) {
+						try {
+							Thread.sleep(25);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+							interrupt = true;
 						}
-						if (keyCode == KeyEvent.VK_S
-								|| keyCode == KeyEvent.VK_DOWN) {
-							controleCliente.moverBaixo();
-						}
-						if (keyCode == KeyEvent.VK_D
-								|| keyCode == KeyEvent.VK_RIGHT) {
-							controleCliente.moverDireita();
-						}
-						if (keyCode == KeyEvent.VK_W
-								|| keyCode == KeyEvent.VK_UP) {
-							controleCliente.moverCima();
-						}
-						if (keyCode == KeyEvent.VK_SPACE) {
-							atacar();
-						}
-						if (keyCode == KeyEvent.VK_R) {
-							controleCliente.recarregar();
-						}
-						if (keyCode == KeyEvent.VK_CONTROL) {
-							controleCliente.alternaFaca();
-						}
+					}
+					if (keyCode == KeyEvent.VK_A || keyCode == KeyEvent.VK_LEFT) {
+						controleCliente.moverEsquerda();
+					}
+					if (keyCode == KeyEvent.VK_S || keyCode == KeyEvent.VK_DOWN) {
+						controleCliente.moverBaixo();
+					}
+					if (keyCode == KeyEvent.VK_D
+							|| keyCode == KeyEvent.VK_RIGHT) {
+						controleCliente.moverDireita();
+					}
+					if (keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_UP) {
+						controleCliente.moverCima();
+					}
+					if (keyCode == KeyEvent.VK_SPACE) {
+						atacar();
+					}
+					if (keyCode == KeyEvent.VK_R) {
+						controleCliente.recarregar();
+					}
+					if (keyCode == KeyEvent.VK_CONTROL) {
+						controleCliente.alternaFaca();
 					}
 					try {
 						Thread.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO / 2);
@@ -688,6 +696,22 @@ public class JogoCliente {
 			});
 		}
 		return list;
+	}
+
+	public List<AvatarCliente> getAvatarClientesCopia() {
+		List<AvatarCliente> avataresCopy = new ArrayList<AvatarCliente>();
+		synchronized (avatarClientes) {
+			avataresCopy.addAll(avatarClientes);
+		}
+		return avataresCopy;
+	}
+
+	public List<EventoJogo> getEventosCopia() {
+		List<EventoJogo> eventosCopy = new ArrayList<EventoJogo>();
+		synchronized (eventos) {
+			eventosCopy.addAll(eventos);
+		}
+		return eventosCopy;
 	}
 
 }
