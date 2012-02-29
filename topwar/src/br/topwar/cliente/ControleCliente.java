@@ -162,7 +162,7 @@ public class ControleCliente extends NnpeChatCliente {
 		nnpeTO.setComando(ConstantesTopWar.ATUALIZA_ANGULO);
 		nnpeTO.setData(acaoClienteTopWar);
 		Object ret = enviarObjeto(nnpeTO);
-//		ultAcao = System.currentTimeMillis();
+		ultAcao = System.currentTimeMillis();
 		return ret;
 
 	}
