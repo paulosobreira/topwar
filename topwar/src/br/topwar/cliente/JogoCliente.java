@@ -276,17 +276,16 @@ public class JogoCliente {
 	}
 
 	protected boolean clicouAvatarAdversario(Point p) {
-		synchronized (avatarClientes) {
-			for (Iterator iterator = avatarClientes.iterator(); iterator
-					.hasNext();) {
-				AvatarCliente avatarCliente = (AvatarCliente) iterator.next();
-				if (avatarCliente.getTime().equals(time)) {
-					continue;
-				}
-				if ((avatarCliente.obeterAreaAvatar().contains(p) || avatarCliente
-						.obeterAreaAvatarSuave().contains(p))) {
-					return true;
-				}
+		List<AvatarCliente> avatarClientesCopia = getAvatarClientesCopia();
+		for (Iterator iterator = avatarClientesCopia.iterator(); iterator
+				.hasNext();) {
+			AvatarCliente avatarCliente = (AvatarCliente) iterator.next();
+			if (avatarCliente.getTime().equals(time)) {
+				continue;
+			}
+			if ((avatarCliente.obeterAreaAvatar().contains(p) || avatarCliente
+					.obeterAreaAvatarSuave().contains(p))) {
+				return true;
 			}
 		}
 		return false;
@@ -344,7 +343,7 @@ public class JogoCliente {
 						}
 						try {
 							Thread
-									.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO / 2);
+									.sleep(ConstantesTopWar.MEIO_ATRASO_REDE_PADRAO);
 						} catch (InterruptedException e) {
 							return;
 						}
@@ -507,7 +506,8 @@ public class JogoCliente {
 					synchronized (keysSet) {
 						if (keysSet.isEmpty()) {
 							try {
-								Thread.sleep(15);
+								Thread
+										.sleep(ConstantesTopWar.MEIO_ATRASO_REDE_PADRAO);
 							} catch (InterruptedException e) {
 								e.printStackTrace();
 								interrupt = true;
@@ -529,7 +529,7 @@ public class JogoCliente {
 					int keyCode = key.intValue();
 					while (controleCliente.verificaDelay()) {
 						try {
-							Thread.sleep(25);
+							Thread.sleep(50);
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 							interrupt = true;
@@ -558,7 +558,7 @@ public class JogoCliente {
 						controleCliente.alternaFaca();
 					}
 					try {
-						Thread.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO / 2);
+						Thread.sleep(ConstantesTopWar.MEIO_ATRASO_REDE_PADRAO);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 						interrupt = true;
