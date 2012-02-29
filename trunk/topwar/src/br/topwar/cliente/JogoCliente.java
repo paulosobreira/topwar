@@ -67,8 +67,6 @@ public class JogoCliente {
 	private String killCam;
 	private List<PlacarTopWar> placar;
 	private List<EventoJogo> eventos = new ArrayList<EventoJogo>();
-	protected Set keysSet = new HashSet();
-	private Thread threadTeclado;
 
 	public Point getPontoMouseMovendo() {
 		return pontoMouseMovendo;
@@ -117,7 +115,6 @@ public class JogoCliente {
 		iniciaThreadAtualizaTela();
 		iniciaThreadAtualizaDadosServidor();
 		iniciaListenerTeclado();
-		iniciaThreadTeclado();
 		iniciaThreadAtualizaPosAvatar();
 	}
 
@@ -168,8 +165,8 @@ public class JogoCliente {
 						}
 						if (media > velocidade) {
 							atulaizaAvatarSleep -= (media - velocidade);
-							if (atulaizaAvatarSleep < 5) {
-								atulaizaAvatarSleep = 5;
+							if (atulaizaAvatarSleep < 10) {
+								atulaizaAvatarSleep = 10;
 							}
 						} else {
 							atulaizaAvatarSleep = 30;
@@ -242,30 +239,30 @@ public class JogoCliente {
 			public void mouseClicked(MouseEvent e) {
 				setarPontoMouseClicado(e);
 				seguirMouse = false;
-				if (e.getClickCount() > 1) {
-					seguirMouse = true;
-					if (threadSeguirMouse != null
-							&& threadSeguirMouse.isAlive()) {
-						threadSeguirMouse.interrupt();
-					}
-					threadSeguirMouse = new Thread(new Runnable() {
-						@Override
-						public void run() {
-							while (seguirMouse && pontoMouseMovendo != null) {
-								moverAvatarPeloMouse(pontoMouseMovendo);
-								try {
-									Thread.sleep(1000);
-								} catch (InterruptedException e) {
-									return;
+				if (ConstantesTopWar.ARMA_FACA != arma
+						&& clicouAvatarAdversario(e.getPoint())) {
+					atacar();
+				} else {
+					if (e.getClickCount() > 1) {
+						seguirMouse = true;
+						if (threadSeguirMouse != null
+								&& threadSeguirMouse.isAlive()) {
+							threadSeguirMouse.interrupt();
+						}
+						threadSeguirMouse = new Thread(new Runnable() {
+							@Override
+							public void run() {
+								while (seguirMouse && pontoMouseMovendo != null) {
+									moverAvatarPeloMouse(pontoMouseMovendo);
+									try {
+										Thread.sleep(1000);
+									} catch (InterruptedException e) {
+										return;
+									}
 								}
 							}
-						}
-					});
-					threadSeguirMouse.start();
-				} else {
-					if (ConstantesTopWar.ARMA_FACA != arma
-							&& clicouAvatarAdversario(e.getPoint())) {
-						atacar();
+						});
+						threadSeguirMouse.start();
 					} else {
 						moverAvatarPeloMouse(pontoMouseClicado);
 					}
@@ -446,9 +443,6 @@ public class JogoCliente {
 			if (threadDadosSrv != null) {
 				threadDadosSrv.interrupt();
 			}
-			if (threadTeclado != null) {
-				threadTeclado.interrupt();
-			}
 		} catch (Exception e) {
 			Logger.logarExept(e);
 		}
@@ -461,13 +455,7 @@ public class JogoCliente {
 			public void keyPressed(final KeyEvent e) {
 				pararMovimentoMouse();
 				int keyCode = e.getKeyCode();
-				synchronized (keysSet) {
-					if (keysSet.size() > 5) {
-						Integer key = (Integer) keysSet.iterator().next();
-						keysSet.remove(key);
-					}
-					keysSet.add(keyCode);
-				}
+				processaComandosTeclado(keyCode);
 				if (keyCode == KeyEvent.VK_P || keyCode == KeyEvent.VK_TAB) {
 					if (painelTopWar.getTabCont() > 0) {
 						painelTopWar.setTabCont(-1);
@@ -491,82 +479,6 @@ public class JogoCliente {
 
 		};
 		frameTopWar.addKeyListener(keyAdapter);
-	}
-
-	private void iniciaThreadTeclado() {
-		if (threadTeclado != null && threadTeclado.isAlive()) {
-			return;
-		}
-		threadTeclado = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				boolean interrupt = false;
-				while (jogoEmAndamento && !interrupt) {
-					Integer key = null;
-					synchronized (keysSet) {
-						if (keysSet.isEmpty()) {
-							try {
-								Thread
-										.sleep(ConstantesTopWar.MEIO_ATRASO_REDE_PADRAO);
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-								interrupt = true;
-							}
-							continue;
-						}
-						key = (Integer) keysSet.iterator().next();
-						keysSet.remove(key);
-					}
-					if (key == null) {
-						try {
-							Thread.sleep(15);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-							interrupt = true;
-						}
-						continue;
-					}
-					int keyCode = key.intValue();
-					while (controleCliente.verificaDelay()) {
-						try {
-							Thread.sleep(50);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-							interrupt = true;
-						}
-					}
-					if (keyCode == KeyEvent.VK_A || keyCode == KeyEvent.VK_LEFT) {
-						controleCliente.moverEsquerda();
-					}
-					if (keyCode == KeyEvent.VK_S || keyCode == KeyEvent.VK_DOWN) {
-						controleCliente.moverBaixo();
-					}
-					if (keyCode == KeyEvent.VK_D
-							|| keyCode == KeyEvent.VK_RIGHT) {
-						controleCliente.moverDireita();
-					}
-					if (keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_UP) {
-						controleCliente.moverCima();
-					}
-					if (keyCode == KeyEvent.VK_SPACE) {
-						atacar();
-					}
-					if (keyCode == KeyEvent.VK_R) {
-						controleCliente.recarregar();
-					}
-					if (keyCode == KeyEvent.VK_CONTROL) {
-						controleCliente.alternaFaca();
-					}
-					try {
-						Thread.sleep(ConstantesTopWar.MEIO_ATRASO_REDE_PADRAO);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-						interrupt = true;
-					}
-				}
-			}
-		});
-		threadTeclado.start();
 	}
 
 	public String getKillCam() {
@@ -712,6 +624,30 @@ public class JogoCliente {
 			eventosCopy.addAll(eventos);
 		}
 		return eventosCopy;
+	}
+
+	private void processaComandosTeclado(int keyCode) {
+		if (keyCode == KeyEvent.VK_A || keyCode == KeyEvent.VK_LEFT) {
+			controleCliente.moverEsquerda();
+		}
+		if (keyCode == KeyEvent.VK_S || keyCode == KeyEvent.VK_DOWN) {
+			controleCliente.moverBaixo();
+		}
+		if (keyCode == KeyEvent.VK_D || keyCode == KeyEvent.VK_RIGHT) {
+			controleCliente.moverDireita();
+		}
+		if (keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_UP) {
+			controleCliente.moverCima();
+		}
+		if (keyCode == KeyEvent.VK_SPACE) {
+			atacar();
+		}
+		if (keyCode == KeyEvent.VK_R) {
+			controleCliente.recarregar();
+		}
+		if (keyCode == KeyEvent.VK_CONTROL) {
+			controleCliente.alternaFaca();
+		}
 	}
 
 }
