@@ -56,6 +56,9 @@ public class JogoServidor {
 		incluirAvatarCriadorJogo(dadosJogoTopWar);
 		iniciarContadorTempoJogo();
 		iniciaMonitorDeJogo();
+		controleBots.incializar();
+		controleBots.adicionarBot();
+
 	}
 
 	private void iniciaMonitorDeJogo() {
@@ -313,6 +316,10 @@ public class JogoServidor {
 		return ConstantesTopWar.OK;
 	}
 
+	public boolean verificaColisao(Point novoPonto) {
+		return verificaColisao(novoPonto, mapaTopWar);
+	}
+
 	public static boolean verificaColisao(Point novoPonto, MapaTopWar mapaTopWar) {
 		Rectangle areaMapa = new Rectangle(0, 0, mapaTopWar.getLargura(),
 				mapaTopWar.getAltura());
@@ -333,7 +340,7 @@ public class JogoServidor {
 		return false;
 	}
 
-	public void entrarNoJogo(String nomeJogador) {
+	public AvatarTopWar entrarNoJogo(String nomeJogador) {
 		AvatarTopWar avatarTopWar = new AvatarTopWar();
 		avatarTopWar.setVida(ConstantesTopWar.VIDA_COMPLETA);
 		avatarTopWar.setBalas(ConstantesTopWar.BALAS_ASSALT);
@@ -358,6 +365,7 @@ public class JogoServidor {
 
 		avatarTopWar.setNomeJogador(nomeJogador);
 		avatarTopWars.add(avatarTopWar);
+		return avatarTopWar;
 	}
 
 	private int contarJogadores(String time) {
