@@ -26,9 +26,17 @@ public class AvatarTopWar implements Serializable {
 	private transient long ultimaRequisicao = System.currentTimeMillis();
 	private transient long ultimaMorte;
 	private transient long recarregar;
+	private transient BotInfo botInfo;
 
-	
-	
+	@Transient
+	public BotInfo getBotInfo() {
+		return botInfo;
+	}
+
+	public void setBotInfo(BotInfo botInfo) {
+		this.botInfo = botInfo;
+	}
+
 	public boolean isInvencivel() {
 		return invencivel;
 	}
