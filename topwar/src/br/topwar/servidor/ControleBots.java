@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import br.nnpe.GeoUtil;
+import br.nnpe.Logger;
 import br.nnpe.Util;
 import br.topwar.ConstantesTopWar;
 import br.topwar.tos.AvatarTopWar;
@@ -30,7 +31,7 @@ public class ControleBots {
 			@Override
 			public void run() {
 				boolean interrupt = false;
-				while (!jogoServidor.isFinalizado() && !interrupt) {
+				while (!jogoServidor.verificaFinalizado() && !interrupt) {
 					synchronized (bots) {
 						processarAcoesBots();
 					}
@@ -51,35 +52,40 @@ public class ControleBots {
 			AvatarTopWar avatarTopWar = (AvatarTopWar) iterator.next();
 			BotInfo botInfo = avatarTopWar.getBotInfo();
 			if (botInfo.getPontoDestino() == null) {
-				Point calculaPonto = GeoUtil.calculaPonto(Util
-						.intervalo(0, 360), 100, avatarTopWar.getPontoAvatar());
-				while (jogoServidor.verificaColisao(calculaPonto)) {
+				Point calculaPonto = GeoUtil.calculaPonto(
+						Util.intervalo(0, 360), 100,
+						avatarTopWar.getPontoAvatar());
+				while (!jogoServidor.verificaAndavel(
+						avatarTopWar.getPontoAvatar(), calculaPonto)) {
 					calculaPonto = GeoUtil.calculaPonto(Util.intervalo(0, 360),
 							100, avatarTopWar.getPontoAvatar());
 				}
 				botInfo.setPontoDestino(calculaPonto);
 			}
 
-			List<Point> lineMove = GeoUtil.drawBresenhamLine(avatarTopWar
-					.getPontoAvatar(), botInfo.getPontoDestino());
+			List<Point> lineMove = GeoUtil.drawBresenhamLine(
+					avatarTopWar.getPontoAvatar(), botInfo.getPontoDestino());
 			if (lineMove.size() < avatarTopWar.getVelocidade()) {
 				botInfo.setPontoDestino(null);
 			} else {
-				Point dstMover = lineMove.get(avatarTopWar.getVelocidade());
-				avatarTopWar.setAngulo(GeoUtil.calculaAngulo(avatarTopWar
-						.getPontoAvatar(), dstMover, 90));
+				Point dstMover = lineMove.get(avatarTopWar.getVelocidade() - 1);
+				avatarTopWar.setAngulo(GeoUtil.calculaAngulo(
+						avatarTopWar.getPontoAvatar(), dstMover, 90));
 				DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
 				acaoClienteTopWar.setPonto(dstMover);
-				jogoServidor.moverAvatar(avatarTopWar, acaoClienteTopWar);
+				jogoServidor.moverPontoAvatar(avatarTopWar, acaoClienteTopWar);
 			}
 
 		}
 	}
 
 	public void adicionarBot() {
-		AvatarTopWar bot = jogoServidor.entrarNoJogo("boTeste");
-		bot.setBotInfo(new BotInfo());
-		bots.add(bot);
+		for (int i = 0; i < 16; i++) {
+			AvatarTopWar bot = jogoServidor.entrarNoJogo("boTeste " + i);
+			bot.setBotInfo(new BotInfo());
+			bots.add(bot);
+			Logger.logar("Adicionou " + bot);
+		}
 	}
 
 }
