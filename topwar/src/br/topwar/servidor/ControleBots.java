@@ -52,35 +52,39 @@ public class ControleBots {
 			AvatarTopWar avatarTopWar = (AvatarTopWar) iterator.next();
 			BotInfo botInfo = avatarTopWar.getBotInfo();
 			if (botInfo.getPontoDestino() == null) {
-				Point calculaPonto = GeoUtil.calculaPonto(
-						Util.intervalo(0, 360), 100,
+				Point calculaPonto = GeoUtil.calculaPonto(Util
+						.intervalo(0, 360), Util.intervalo(100, 200),
 						avatarTopWar.getPontoAvatar());
-				while (!jogoServidor.verificaAndavel(
-						avatarTopWar.getPontoAvatar(), calculaPonto)) {
+				while (!jogoServidor.verificaAndavel(avatarTopWar
+						.getPontoAvatar(), calculaPonto)) {
 					calculaPonto = GeoUtil.calculaPonto(Util.intervalo(0, 360),
 							100, avatarTopWar.getPontoAvatar());
 				}
 				botInfo.setPontoDestino(calculaPonto);
 			}
 
-			List<Point> lineMove = GeoUtil.drawBresenhamLine(
-					avatarTopWar.getPontoAvatar(), botInfo.getPontoDestino());
+			List<Point> lineMove = GeoUtil.drawBresenhamLine(avatarTopWar
+					.getPontoAvatar(), botInfo.getPontoDestino());
 			if (lineMove.size() < avatarTopWar.getVelocidade()) {
 				botInfo.setPontoDestino(null);
 			} else {
 				Point dstMover = lineMove.get(avatarTopWar.getVelocidade() - 1);
-				avatarTopWar.setAngulo(GeoUtil.calculaAngulo(
-						avatarTopWar.getPontoAvatar(), dstMover, 90));
 				DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
 				acaoClienteTopWar.setPonto(dstMover);
-				jogoServidor.moverPontoAvatar(avatarTopWar, acaoClienteTopWar);
+				acaoClienteTopWar.setAngulo(GeoUtil.calculaAngulo(avatarTopWar
+						.getPontoAvatar(), dstMover, 90));
+				String mover = (String) jogoServidor.moverPontoAvatar(
+						avatarTopWar, acaoClienteTopWar);
+				if (!ConstantesTopWar.OK.equals(mover)) {
+					botInfo.setPontoDestino(null);
+				}
 			}
 
 		}
 	}
 
 	public void adicionarBot() {
-		for (int i = 0; i < 16; i++) {
+		for (int i = 0; i < 15; i++) {
 			AvatarTopWar bot = jogoServidor.entrarNoJogo("boTeste " + i);
 			bot.setBotInfo(new BotInfo());
 			bots.add(bot);
