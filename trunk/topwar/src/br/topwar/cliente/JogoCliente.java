@@ -44,6 +44,7 @@ public class JogoCliente {
 	private int ptsVermelho;
 	private int ptsAzul;
 	private PainelTopWar painelTopWar;
+	private AvatarCliente avatarLocal;
 	private List<AvatarCliente> avatarClientes = new ArrayList<AvatarCliente>();
 	private JFrame frameTopWar;
 	private ControleCliente controleCliente;
@@ -138,6 +139,9 @@ public class JogoCliente {
 									.hasNext();) {
 								AvatarCliente avatarCliente = (AvatarCliente) iterator
 										.next();
+								if (avatarCliente.isLocal()) {
+									avatarLocal = avatarCliente;
+								}
 								if (avatarCliente.getPontoAvatarSuave() == null) {
 									avatarCliente
 											.setPontoAvatarSuave(avatarCliente
@@ -165,8 +169,8 @@ public class JogoCliente {
 						}
 						if (media > velocidade) {
 							atulaizaAvatarSleep -= (media - velocidade);
-							if (atulaizaAvatarSleep < 10) {
-								atulaizaAvatarSleep = 10;
+							if (atulaizaAvatarSleep < 15) {
+								atulaizaAvatarSleep = 15;
 							}
 						} else {
 							atulaizaAvatarSleep = 30;
@@ -296,8 +300,6 @@ public class JogoCliente {
 			controleCliente.recarregar();
 			return;
 		}
-		seguirMouse = false;
-		pararMovimentoMouse();
 		controleCliente.atacar();
 	}
 
@@ -453,7 +455,6 @@ public class JogoCliente {
 		KeyAdapter keyAdapter = new KeyAdapter() {
 			@Override
 			public void keyPressed(final KeyEvent e) {
-				pararMovimentoMouse();
 				int keyCode = e.getKeyCode();
 				processaComandosTeclado(keyCode);
 				if (keyCode == KeyEvent.VK_P || keyCode == KeyEvent.VK_TAB) {
@@ -612,8 +613,17 @@ public class JogoCliente {
 
 	public List<AvatarCliente> getAvatarClientesCopia() {
 		List<AvatarCliente> avataresCopy = new ArrayList<AvatarCliente>();
-		synchronized (avatarClientes) {
-			avataresCopy.addAll(avatarClientes);
+		while (avataresCopy.isEmpty()) {
+			try {
+				avataresCopy.addAll(avatarClientes);
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+			}
 		}
 		return avataresCopy;
 	}
@@ -627,16 +637,38 @@ public class JogoCliente {
 	}
 
 	private void processaComandosTeclado(int keyCode) {
+		seguirMouse = false;
+		pararMovimentoMouse();
 		if (keyCode == KeyEvent.VK_A || keyCode == KeyEvent.VK_LEFT) {
+			if (avatarLocal != null) {
+				Point p = avatarLocal.getPontoAvatarSuave();
+				p.x -= 1;
+				avatarLocal.setPontoAvatarSuave(p);
+			}
 			controleCliente.moverEsquerda();
 		}
 		if (keyCode == KeyEvent.VK_S || keyCode == KeyEvent.VK_DOWN) {
+			if (avatarLocal != null) {
+				Point p = avatarLocal.getPontoAvatarSuave();
+				p.y += 1;
+				avatarLocal.setPontoAvatarSuave(p);
+			}
 			controleCliente.moverBaixo();
 		}
 		if (keyCode == KeyEvent.VK_D || keyCode == KeyEvent.VK_RIGHT) {
+			if (avatarLocal != null) {
+				Point p = avatarLocal.getPontoAvatarSuave();
+				p.x += 1;
+				avatarLocal.setPontoAvatarSuave(p);
+			}
 			controleCliente.moverDireita();
 		}
 		if (keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_UP) {
+			if (avatarLocal != null) {
+				Point p = avatarLocal.getPontoAvatarSuave();
+				p.y -= 1;
+				avatarLocal.setPontoAvatarSuave(p);
+			}
 			controleCliente.moverCima();
 		}
 		if (keyCode == KeyEvent.VK_SPACE) {
@@ -649,5 +681,4 @@ public class JogoCliente {
 			controleCliente.alternaFaca();
 		}
 	}
-
 }

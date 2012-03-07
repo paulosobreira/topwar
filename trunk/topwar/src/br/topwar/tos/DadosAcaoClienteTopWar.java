@@ -8,7 +8,16 @@ public class DadosAcaoClienteTopWar implements Serializable {
 	private String nomeCliente;
 	private String moverPara;
 	private Point ponto;
+	private int range;
 	private double angulo;
+
+	public int getRange() {
+		return range;
+	}
+
+	public void setRange(int range) {
+		this.range = range;
+	}
 
 	public Point getPonto() {
 		return ponto;

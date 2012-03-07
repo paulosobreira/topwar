@@ -2,6 +2,7 @@ package br.topwar.cliente;
 
 import java.awt.Point;
 
+import br.nnpe.GeoUtil;
 import br.nnpe.Util;
 import br.nnpe.cliente.NnpeApplet;
 import br.nnpe.cliente.NnpeChatCliente;
@@ -140,6 +141,10 @@ public class ControleCliente extends NnpeChatCliente {
 		DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
 		acaoClienteTopWar.setNomeCliente(sessaoCliente.getNomeJogador());
 		acaoClienteTopWar.setAngulo(jogoCliente.getAngulo());
+		double distaciaEntrePontos = GeoUtil.distaciaEntrePontos(jogoCliente
+				.getPontoAvatar(), jogoCliente.getPontoMouseMovendo());
+		distaciaEntrePontos *= 1.2;
+		acaoClienteTopWar.setRange((int) distaciaEntrePontos);
 		NnpeTO nnpeTO = new NnpeTO();
 		nnpeTO.setComando(ConstantesTopWar.ATACAR);
 		nnpeTO.setData(acaoClienteTopWar);
@@ -152,9 +157,9 @@ public class ControleCliente extends NnpeChatCliente {
 		if (!Util.isNullOrEmpty(jogoCliente.getKillCam())) {
 			return null;
 		}
-		if (verificaDelay()) {
-			return null;
-		}
+		// if (verificaDelay()) {
+		// return null;
+		// }
 		DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
 		acaoClienteTopWar.setNomeCliente(sessaoCliente.getNomeJogador());
 		acaoClienteTopWar.setAngulo(jogoCliente.getAngulo());
@@ -162,7 +167,7 @@ public class ControleCliente extends NnpeChatCliente {
 		nnpeTO.setComando(ConstantesTopWar.ATUALIZA_ANGULO);
 		nnpeTO.setData(acaoClienteTopWar);
 		Object ret = enviarObjeto(nnpeTO);
-		ultAcao = System.currentTimeMillis();
+		// ultAcao = System.currentTimeMillis();
 		return ret;
 
 	}
