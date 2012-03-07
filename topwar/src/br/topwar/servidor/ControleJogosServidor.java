@@ -185,7 +185,8 @@ public class ControleJogosServidor {
 		if (avatarTopWar == null) {
 			return null;
 		}
-		return jogoServidor.atacar(avatarTopWar, acaoClienteTopWar.getAngulo());
+		return jogoServidor.atacar(avatarTopWar, acaoClienteTopWar.getAngulo(),
+				acaoClienteTopWar.getRange());
 	}
 
 	public Object atualizaAngulo(NnpeTO nnpeTO) {
@@ -201,8 +202,8 @@ public class ControleJogosServidor {
 		if (avatarTopWar == null) {
 			return null;
 		}
-		return jogoServidor.atualizaAngulo(avatarTopWar,
-				acaoClienteTopWar.getAngulo());
+		return jogoServidor.atualizaAngulo(avatarTopWar, acaoClienteTopWar
+				.getAngulo());
 	}
 
 	public Object recarregar(NnpeTO nnpeTO) {

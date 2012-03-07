@@ -188,7 +188,7 @@ public class PainelTopWar {
 			protected void paintComponent(java.awt.Graphics g) {
 				super.paintComponent(g);
 				Graphics2D graphics2d = (Graphics2D) g;
-//				setarHints(graphics2d);
+				// setarHints(graphics2d);
 				if (desenhaImagens) {
 					graphics2d.drawImage(img, null, 0, 0);
 				} else {
@@ -198,7 +198,7 @@ public class PainelTopWar {
 				}
 				loopDesenhaAvatares(graphics2d);
 				desenhaInfoJogo(graphics2d);
-				desenhaMira(graphics2d);
+				// desenhaMira(graphics2d);
 				desenhaObjetosDebug(graphics2d);
 			}
 
@@ -271,7 +271,7 @@ public class PainelTopWar {
 			long millisSrv = jogoCliente.getMillisSrv();
 			long tempoUtlDisparo = avatarCliente.getTempoUtlAtaque();
 			if (ConstantesTopWar.ARMA_ASSALT == avatarCliente.getArma()
-					&& (millisSrv - tempoUtlDisparo) < 150) {
+					&& (millisSrv - tempoUtlDisparo) < 300) {
 				desenhaDisparoAvatar(graphics2d, avatarCliente, avatarClientes);
 			}
 
@@ -614,7 +614,7 @@ public class PainelTopWar {
 			AvatarCliente avatarCliente, List<AvatarCliente> avatarClientes) {
 		Point pontoAvatar = avatarCliente.getPontoAvatar();
 		Point pontoTiro = GeoUtil.calculaPonto(avatarCliente.getAngulo(),
-				ConstantesTopWar.ASSALT_MAX_RANGE, pontoAvatar);
+				avatarCliente.getRangeUtlDisparo(), pontoAvatar);
 		for (int i = 0; i < 5; i++) {
 			Point nOri = new Point(pontoAvatar.x, pontoAvatar.y);
 			Point nDst = new Point(pontoTiro.x + Util.intervalo(-15, 15),
@@ -632,9 +632,9 @@ public class PainelTopWar {
 				pontoTiro);
 		List<ObjetoMapa> objetoMapaList = mapaTopWar.getObjetoMapaList();
 		AvatarCliente avatarClienteBateu = null;
+		boolean bateu = false;
 		for (int i = 0; i < linhaDisparo.size(); i++) {
 			Point tiro = linhaDisparo.get(i);
-			boolean bateu = false;
 			for (Iterator iterator = avatarClientes.iterator(); iterator
 					.hasNext();) {
 				AvatarCliente avatarClienteAnalizar = (AvatarCliente) iterator
@@ -685,7 +685,6 @@ public class PainelTopWar {
 						graphics2d.drawLine(pIni.x, pIni.y, pFim.x, pFim.y);
 					}
 				}
-
 			}
 			/**
 			 * Sangue Jogador
@@ -714,6 +713,32 @@ public class PainelTopWar {
 				break;
 			}
 		}
+
+		if (!bateu) {
+			int noAnt = linhaDisparo.size() - 41;
+			while (noAnt < 0) {
+				noAnt++;
+			}
+			Point ptAcertoAnt = linhaDisparo.get(noAnt);
+			Point nOri = linhaDisparo.get(linhaDisparo.size() - 1);
+			for (int j = 0; j < 5; j++) {
+				Point nDst = new Point(ptAcertoAnt.x + Util.intervalo(-10, 10),
+						ptAcertoAnt.y + Util.intervalo(-10, 10));
+				if (Math.random() > 0.5) {
+					graphics2d.setColor(Color.YELLOW);
+				} else {
+					graphics2d.setColor(Color.WHITE);
+				}
+				List<Point> linha = GeoUtil.drawBresenhamLine(nOri, nDst);
+				if (linha.size() > 40) {
+					int intIni = Util.intervalo(5, 10);
+					Point pIni = linha.get(intIni);
+					Point pFim = linha.get(intIni + Util.intervalo(1, 20));
+					graphics2d.drawLine(pIni.x, pIni.y, pFim.x, pFim.y);
+				}
+			}
+		}
+
 	}
 
 	protected void desenhaAvatares(Graphics2D graphics2d,

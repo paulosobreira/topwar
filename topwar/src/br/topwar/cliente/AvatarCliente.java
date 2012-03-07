@@ -22,6 +22,14 @@ public class AvatarCliente {
 	private Point pontoAvatarOld;
 	private AvatarTopWar avatarTopWar;
 
+	public int getRangeUtlDisparo() {
+		return avatarTopWar.getRangeUtlDisparo();
+	}
+
+	public void setRangeUtlDisparo(int rangeUtlDisparo) {
+		avatarTopWar.setRangeUtlDisparo(rangeUtlDisparo);
+	}
+
 	public boolean isInvencivel() {
 		return avatarTopWar.isInvencivel();
 	}
