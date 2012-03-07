@@ -188,7 +188,7 @@ public class PainelTopWar {
 			protected void paintComponent(java.awt.Graphics g) {
 				super.paintComponent(g);
 				Graphics2D graphics2d = (Graphics2D) g;
-				setarHints(graphics2d);
+//				setarHints(graphics2d);
 				if (desenhaImagens) {
 					graphics2d.drawImage(img, null, 0, 0);
 				} else {
@@ -899,7 +899,6 @@ public class PainelTopWar {
 	}
 
 	public void atualiza() {
-
 		List<AvatarCliente> avatarClientes = jogoCliente
 				.getAvatarClientesCopia();
 		if (avatarClientes == null) {
@@ -909,11 +908,13 @@ public class PainelTopWar {
 			AvatarCliente avatarCliente = (AvatarCliente) iterator.next();
 			if (avatarCliente.isLocal() && avatarCliente.getVida() > 0) {
 				contralizaPontoNoAvatar(avatarCliente);
+				break;
 			}
 			if (!Util.isNullOrEmpty(jogoCliente.getKillCam())
 					&& avatarCliente.getNomeJogador().equals(
 							jogoCliente.getKillCam())) {
 				contralizaPontoNoAvatar(avatarCliente);
+				break;
 			}
 		}
 		if (panel != null) {
