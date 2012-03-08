@@ -84,12 +84,12 @@ public class ControleBots {
 	}
 
 	public void adicionarBot() {
-		for (int i = 0; i < 127; i++) {
-			AvatarTopWar bot = jogoServidor.entrarNoJogo("boTeste " + i);
-			bot.setBotInfo(new BotInfo());
-			bots.add(bot);
-			Logger.logar("Adicionou " + bot);
-		}
+//		for (int i = 0; i < 255; i++) {
+//			AvatarTopWar bot = jogoServidor.entrarNoJogo("boTeste " + i);
+//			bot.setBotInfo(new BotInfo());
+//			bots.add(bot);
+//			Logger.logar("Adicionou " + bot);
+//		}
 	}
 
 }
