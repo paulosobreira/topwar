@@ -633,7 +633,7 @@ public class PainelTopWar {
 		List<ObjetoMapa> objetoMapaList = mapaTopWar.getObjetoMapaList();
 		AvatarCliente avatarClienteBateu = null;
 		boolean bateu = false;
-		for (int i = 0; i < linhaDisparo.size(); i++) {
+		for (int i = 0; i < linhaDisparo.size(); i += 2) {
 			Point tiro = linhaDisparo.get(i);
 			for (Iterator iterator = avatarClientes.iterator(); iterator
 					.hasNext();) {
