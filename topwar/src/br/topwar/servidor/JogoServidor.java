@@ -185,6 +185,12 @@ public class JogoServidor {
 					ret.add(avatarTopWar);
 					continue;
 				}
+
+				double distacia = GeoUtil.distaciaEntrePontos(avatarTopWarJog
+						.getPontoAvatar(), avatarTopWar.getPontoAvatar());
+				if (distacia > 600) {
+					continue;
+				}
 				/**
 				 * Campo Visao Jogador Meia Lua
 				 */
@@ -253,8 +259,8 @@ public class JogoServidor {
 
 	public boolean campoVisao(List<Point> line, Ellipse2D ellipse2d) {
 		List<ObjetoMapa> objetoMapaList = mapaTopWar.getObjetoMapaList();
-		for (Iterator iterator = line.iterator(); iterator.hasNext();) {
-			Point point = (Point) iterator.next();
+		for (int i = 0; i < line.size(); i += 2) {
+			Point point = line.get(i);
 			if (ellipse2d != null
 					&& ellipse2d.intersects(new Rectangle2D.Double(point.x,
 							point.y, 1, 1))) {

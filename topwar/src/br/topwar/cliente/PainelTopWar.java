@@ -812,10 +812,10 @@ public class PainelTopWar {
 			 */
 			if (jogoCliente.getPontoAvatar() != null
 					&& !avatarCliente.isLocal()) {
-				List<Point> line = GeoUtil.drawBresenhamLine(jogoCliente
+				int distacia = (int) GeoUtil.distaciaEntrePontos(jogoCliente
 						.getPontoAvatar(), pontoAvatar);
-				if (line.size() > 200) {
-					int transp = (510 - (line.size() - 200)) / 2;
+				if (distacia > 200) {
+					int transp = (510 - (distacia - 200)) / 2;
 					if (transp > 255) {
 						transp = 255;
 					}
