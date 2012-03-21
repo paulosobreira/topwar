@@ -169,6 +169,23 @@ public class JogoServidor {
 		return avatarTopWars;
 	}
 
+	public List<AvatarTopWar> getAvatarTopWarsCopia() {
+		List<AvatarTopWar> avataresCopy = new ArrayList<AvatarTopWar>();
+		while (avataresCopy.isEmpty()) {
+			try {
+				avataresCopy.addAll(avatarTopWars);
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+			}
+		}
+		return avataresCopy;
+	}
+
 	public Object atualizaListaAvatares(NnpeTO nnpeTO) {
 		AvatarTopWar avatarTopWarJog = obterAvatarTopWar(nnpeTO
 				.getSessaoCliente().getNomeJogador());
@@ -188,21 +205,13 @@ public class JogoServidor {
 
 				double distacia = GeoUtil.distaciaEntrePontos(avatarTopWarJog
 						.getPontoAvatar(), avatarTopWar.getPontoAvatar());
-				if (distacia > 600) {
+				if (distacia > ConstantesTopWar.LIMITE_VISAO) {
 					continue;
 				}
-				/**
-				 * Campo Visao Jogador Meia Lua
-				 */
-				Point back = GeoUtil.calculaPonto(
-						avatarTopWarJog.getAngulo() + 180, 30, avatarTopWarJog
-								.getPontoAvatar());
-				Ellipse2D ellipse2d = new Ellipse2D.Double(back.x - 25,
-						back.y - 25, 50, 50);
 
 				List<Point> line = GeoUtil.drawBresenhamLine(avatarTopWarJog
 						.getPontoAvatar(), avatarTopWar.getPontoAvatar());
-				if (campoVisao(line, ellipse2d)) {
+				if (campoVisao(line, avatarTopWarJog, false)) {
 					ret.add(avatarTopWar);
 				}
 				/**
@@ -214,7 +223,7 @@ public class JogoServidor {
 								.getTempoUtlAtaque()) < 300) {
 					line = GeoUtil.drawBresenhamLine(avatarTopWarJog
 							.getPontoAvatar(), pontoTiro);
-					if (campoVisao(line, null)) {
+					if (campoVisao(line, null, true)) {
 						ret.add(avatarTopWar);
 					}
 				}
@@ -257,19 +266,38 @@ public class JogoServidor {
 		return ptsAzul;
 	}
 
-	public boolean campoVisao(List<Point> line, Ellipse2D ellipse2d) {
+	public boolean campoVisao(List<Point> line, AvatarTopWar avatarTopWar,
+			boolean tiro) {
+		if (line == null) {
+			return false;
+		}
+
+		if (line.size() > ConstantesTopWar.LIMITE_VISAO) {
+			return false;
+		}
+		/**
+		 * Campo Visao Jogador Meia Lua
+		 */
+		Ellipse2D ellipse2dCostas = null;
+		if (avatarTopWar != null) {
+			Point back = GeoUtil.calculaPonto(avatarTopWar.getAngulo() + 180,
+					30, avatarTopWar.getPontoAvatar());
+			ellipse2dCostas = new Ellipse2D.Double(back.x - 25, back.y - 25,
+					50, 50);
+		}
 		List<ObjetoMapa> objetoMapaList = mapaTopWar.getObjetoMapaList();
 		for (int i = 0; i < line.size(); i += 2) {
 			Point point = line.get(i);
-			if (ellipse2d != null
-					&& ellipse2d.intersects(new Rectangle2D.Double(point.x,
-							point.y, 1, 1))) {
+			if (ellipse2dCostas != null
+					&& ellipse2dCostas.intersects(new Rectangle2D.Double(
+							point.x, point.y, 1, 1))) {
 				return false;
 			}
 			for (Iterator iterator2 = objetoMapaList.iterator(); iterator2
 					.hasNext();) {
 				ObjetoMapa objetoMapa = (ObjetoMapa) iterator2.next();
-				if (!ConstantesTopWar.GRADE.equals(objetoMapa.getEfeito())
+				if ((!tiro && !ConstantesTopWar.GRADE.equals(objetoMapa
+						.getEfeito()))
 						&& objetoMapa.getTransparencia() > 50
 						&& objetoMapa.getForma().contains(point)) {
 					return false;

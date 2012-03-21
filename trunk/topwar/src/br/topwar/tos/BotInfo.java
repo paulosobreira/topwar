@@ -4,6 +4,16 @@ import java.awt.Point;
 
 public class BotInfo {
 
+	private String estado;
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+
 	private Point pontoDestino;
 
 	public Point getPontoDestino() {
