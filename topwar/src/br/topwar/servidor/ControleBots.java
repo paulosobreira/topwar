@@ -1,6 +1,7 @@
 package br.topwar.servidor;
 
 import java.awt.Point;
+import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -36,7 +37,7 @@ public class ControleBots {
 						processarAcoesBots();
 					}
 					try {
-						Thread.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO);
+						Thread.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO_BOTS);
 					} catch (InterruptedException e) {
 						interrupt = true;
 					}
@@ -48,9 +49,59 @@ public class ControleBots {
 	}
 
 	protected void processarAcoesBots() {
+		List<AvatarTopWar> avatarTopWarsCopia = jogoServidor
+				.getAvatarTopWarsCopia();
 		for (Iterator iterator = bots.iterator(); iterator.hasNext();) {
 			AvatarTopWar avatarTopWar = (AvatarTopWar) iterator.next();
 			BotInfo botInfo = avatarTopWar.getBotInfo();
+
+			/**
+			 * Seguir avatar inimigo
+			 */
+			for (Iterator iterator2 = avatarTopWarsCopia.iterator(); iterator2
+					.hasNext();) {
+				AvatarTopWar avatarTopWarCopia = (AvatarTopWar) iterator2
+						.next();
+				if (avatarTopWar.getTime().equals(avatarTopWarCopia.getTime())
+						|| avatarTopWarCopia.getVida() <= 0) {
+					continue;
+				}
+
+				List<Point> line = GeoUtil.drawBresenhamLine(avatarTopWar
+						.getPontoAvatar(), avatarTopWarCopia.getPontoAvatar());
+				if (jogoServidor.campoVisao(line, avatarTopWar, true)) {
+					if (line.size() <= 5
+							&& avatarTopWar.getArma() == ConstantesTopWar.ARMA_ASSALT) {
+						jogoServidor.alternarFaca(avatarTopWar);
+					} else if (line.size() > 5
+							&& avatarTopWar.getArma() == ConstantesTopWar.ARMA_FACA) {
+						jogoServidor.alternarFaca(avatarTopWar);
+					}
+					if (line.size() <= 5
+							&& avatarTopWar.getArma() == ConstantesTopWar.ARMA_FACA) {
+						jogoServidor.atacar(avatarTopWar, avatarTopWar
+								.getAngulo(), 5);
+					} else if (line.size() < ConstantesTopWar.MEIO_LIMITE_VISAO
+							&& avatarTopWar.getArma() == ConstantesTopWar.ARMA_ASSALT) {
+						if (avatarTopWar.getBalas() == 0
+								&& avatarTopWar.getCartuchos() == 0) {
+							jogoServidor.alternarFaca(avatarTopWar);
+						} else {
+							jogoServidor.atacar(avatarTopWar, avatarTopWar
+									.getAngulo(), line.size());
+						}
+					} else {
+						botInfo.setPontoDestino(avatarTopWarCopia
+								.getPontoAvatar());
+					}
+					break;
+				}
+
+			}
+
+			/**
+			 * Patrulhando
+			 */
 			if (botInfo.getPontoDestino() == null) {
 				Point calculaPonto = GeoUtil.calculaPonto(Util
 						.intervalo(0, 360), Util.intervalo(100, 200),
@@ -84,12 +135,12 @@ public class ControleBots {
 	}
 
 	public void adicionarBot() {
-//		for (int i = 0; i < 255; i++) {
-//			AvatarTopWar bot = jogoServidor.entrarNoJogo("boTeste " + i);
-//			bot.setBotInfo(new BotInfo());
-//			bots.add(bot);
-//			Logger.logar("Adicionou " + bot);
-//		}
+		for (int i = 0; i < 31; i++) {
+			AvatarTopWar bot = jogoServidor.entrarNoJogo("boTeste " + i);
+			bot.setBotInfo(new BotInfo());
+			bots.add(bot);
+			Logger.logar("Adicionou " + bot);
+		}
 	}
 
 }

@@ -54,5 +54,8 @@ public class ConstantesTopWar {
 	public static final String OBTER_PLCAR = "O_P";
 	public static final String EVENTO_JOGO = "E_J";
 	public static final int HEADSHOT = 0;
+	public static final int LIMITE_VISAO = 600;
+	public static final int MEIO_LIMITE_VISAO = LIMITE_VISAO / 2;
+	public static final long ATRASO_REDE_PADRAO_BOTS = (long) (ATRASO_REDE_PADRAO * 1.5);
 
 }
