@@ -33,8 +33,10 @@ public class ControleBots {
 			public void run() {
 				boolean interrupt = false;
 				while (!jogoServidor.verificaFinalizado() && !interrupt) {
+					List<AvatarTopWar> avatarTopWarsCopia = jogoServidor
+							.getAvatarTopWarsCopia();
 					synchronized (bots) {
-						processarAcoesBots();
+						processarAcoesBots(avatarTopWarsCopia);
 					}
 					try {
 						Thread.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO_BOTS);
@@ -48,15 +50,13 @@ public class ControleBots {
 		threadBots.start();
 	}
 
-	protected void processarAcoesBots() {
-		List<AvatarTopWar> avatarTopWarsCopia = jogoServidor
-				.getAvatarTopWarsCopia();
+	protected void processarAcoesBots(List<AvatarTopWar> avatarTopWarsCopia) {
 		for (Iterator iterator = bots.iterator(); iterator.hasNext();) {
 			AvatarTopWar avatarTopWar = (AvatarTopWar) iterator.next();
 			BotInfo botInfo = avatarTopWar.getBotInfo();
-
+			boolean executouAcaoAtaque = false;
 			/**
-			 * Seguir avatar inimigo
+			 * Seguir/Atacar avatar inimigo
 			 */
 			for (Iterator iterator2 = avatarTopWarsCopia.iterator(); iterator2
 					.hasNext();) {
@@ -67,67 +67,99 @@ public class ControleBots {
 					continue;
 				}
 
-				List<Point> line = GeoUtil.drawBresenhamLine(avatarTopWar
-						.getPontoAvatar(), avatarTopWarCopia.getPontoAvatar());
+				List<Point> line = GeoUtil.drawBresenhamLine(
+						avatarTopWar.getPontoAvatar(),
+						avatarTopWarCopia.getPontoAvatar());
 				if (jogoServidor.campoVisao(line, avatarTopWar, true)) {
-					if (line.size() <= 5
-							&& avatarTopWar.getArma() == ConstantesTopWar.ARMA_ASSALT) {
+					if (!BotInfo.ATACANDO.equals(botInfo.getEstado())) {
+						botInfo.setPontoDestino(avatarTopWarCopia
+								.getPontoAvatar());
+					} else if ((avatarTopWar.getBalas() != 0 || avatarTopWar
+							.getCartuchos() != 0)
+							&& avatarTopWar.getArma() != ConstantesTopWar.ARMA_ASSALT) {
 						jogoServidor.alternarFaca(avatarTopWar);
-					} else if (line.size() > 5
+						executouAcaoAtaque = true;
+					} else if (line.size() < 10
 							&& avatarTopWar.getArma() == ConstantesTopWar.ARMA_FACA) {
-						jogoServidor.alternarFaca(avatarTopWar);
-					}
-					if (line.size() <= 5
-							&& avatarTopWar.getArma() == ConstantesTopWar.ARMA_FACA) {
-						jogoServidor.atacar(avatarTopWar, avatarTopWar
-								.getAngulo(), 5);
+						jogoServidor.atacar(avatarTopWar,
+								avatarTopWar.getAngulo(), 0);
+						executouAcaoAtaque = true;
 					} else if (line.size() < ConstantesTopWar.MEIO_LIMITE_VISAO
 							&& avatarTopWar.getArma() == ConstantesTopWar.ARMA_ASSALT) {
-						if (avatarTopWar.getBalas() == 0
-								&& avatarTopWar.getCartuchos() == 0) {
-							jogoServidor.alternarFaca(avatarTopWar);
+						if (avatarTopWar.getBalas() == 0) {
+							if (avatarTopWar.getCartuchos() == 0) {
+								jogoServidor.alternarFaca(avatarTopWar);
+								executouAcaoAtaque = true;
+							} else {
+								jogoServidor.recarregar(avatarTopWar);
+								executouAcaoAtaque = true;
+							}
 						} else {
-							jogoServidor.atacar(avatarTopWar, avatarTopWar
-									.getAngulo(), line.size());
+							jogoServidor.atacar(avatarTopWar, GeoUtil
+									.calculaAngulo(
+											avatarTopWar.getPontoAvatar(),
+											avatarTopWarCopia.getPontoAvatar(),
+											90), line.size());
+							executouAcaoAtaque = true;
 						}
 					} else {
 						botInfo.setPontoDestino(avatarTopWarCopia
 								.getPontoAvatar());
 					}
+					botInfo.setEstado(BotInfo.ATACANDO);
 					break;
 				}
 
 			}
+			if (!executouAcaoAtaque) {
+				/**
+				 * Patrulhando
+				 */
+				if (botInfo.getPontoDestino() == null) {
+					if (botInfo.vaiBaseInimiga()) {
+						if (avatarTopWar.getTime() == ConstantesTopWar.TIME_VERMELHO) {
+							botInfo.setPontoDestino(jogoServidor
+									.getMapaTopWar().getPontoTimeAzul());
+						} else {
+							botInfo.setPontoDestino(jogoServidor
+									.getMapaTopWar().getPontoTimeVermelho());
+						}
+						botInfo.setEstado(BotInfo.PATRULHANDO);
 
-			/**
-			 * Patrulhando
-			 */
-			if (botInfo.getPontoDestino() == null) {
-				Point calculaPonto = GeoUtil.calculaPonto(Util
-						.intervalo(0, 360), Util.intervalo(100, 200),
-						avatarTopWar.getPontoAvatar());
-				while (!jogoServidor.verificaAndavel(avatarTopWar
-						.getPontoAvatar(), calculaPonto)) {
-					calculaPonto = GeoUtil.calculaPonto(Util.intervalo(0, 360),
-							100, avatarTopWar.getPontoAvatar());
+					} else {
+						Point calculaPonto = GeoUtil.calculaPonto(
+								Util.intervalo(0, 360),
+								Util.intervalo(100, 200),
+								avatarTopWar.getPontoAvatar());
+						while (!jogoServidor.verificaAndavel(
+								avatarTopWar.getPontoAvatar(), calculaPonto)) {
+							calculaPonto = GeoUtil.calculaPonto(
+									Util.intervalo(0, 360), 100,
+									avatarTopWar.getPontoAvatar());
+						}
+						botInfo.setPontoDestino(calculaPonto);
+						botInfo.setEstado(BotInfo.PATRULHANDO);
+
+					}
 				}
-				botInfo.setPontoDestino(calculaPonto);
-			}
 
-			List<Point> lineMove = GeoUtil.drawBresenhamLine(avatarTopWar
-					.getPontoAvatar(), botInfo.getPontoDestino());
-			if (lineMove.size() < avatarTopWar.getVelocidade()) {
-				botInfo.setPontoDestino(null);
-			} else {
-				Point dstMover = lineMove.get(avatarTopWar.getVelocidade() - 1);
-				DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
-				acaoClienteTopWar.setPonto(dstMover);
-				acaoClienteTopWar.setAngulo(GeoUtil.calculaAngulo(avatarTopWar
-						.getPontoAvatar(), dstMover, 90));
-				String mover = (String) jogoServidor.moverPontoAvatar(
-						avatarTopWar, acaoClienteTopWar);
-				if (!ConstantesTopWar.OK.equals(mover)) {
+				List<Point> lineMove = GeoUtil.drawBresenhamLine(
+						avatarTopWar.getPontoAvatar(),
+						botInfo.getPontoDestino());
+				if (lineMove.size() < avatarTopWar.getVelocidade()) {
 					botInfo.setPontoDestino(null);
+				} else {
+					Point dstMover = lineMove
+							.get(avatarTopWar.getVelocidade() - 1);
+					DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
+					acaoClienteTopWar.setPonto(dstMover);
+					acaoClienteTopWar.setAngulo(GeoUtil.calculaAngulo(
+							avatarTopWar.getPontoAvatar(), dstMover, 90));
+					String mover = (String) jogoServidor.moverPontoAvatar(
+							avatarTopWar, acaoClienteTopWar);
+					if (!ConstantesTopWar.OK.equals(mover)) {
+						botInfo.setPontoDestino(null);
+					}
 				}
 			}
 
@@ -135,10 +167,12 @@ public class ControleBots {
 	}
 
 	public void adicionarBot() {
-		for (int i = 0; i < 31; i++) {
+		for (int i = 0; i < 63; i++) {
 			AvatarTopWar bot = jogoServidor.entrarNoJogo("boTeste " + i);
 			bot.setBotInfo(new BotInfo());
-			bots.add(bot);
+			synchronized (bots) {
+				bots.add(bot);
+			}
 			Logger.logar("Adicionou " + bot);
 		}
 	}
