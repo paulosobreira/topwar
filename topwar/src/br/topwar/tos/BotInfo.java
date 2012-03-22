@@ -4,6 +4,10 @@ import java.awt.Point;
 
 public class BotInfo {
 
+	public static String PATRULHANDO = "PATRULHANDO";
+	public static String ATACANDO = "ATACANDO";
+	private int contPatrulha;
+
 	private String estado;
 
 	public String getEstado() {
@@ -22,6 +26,15 @@ public class BotInfo {
 
 	public void setPontoDestino(Point pontoDestino) {
 		this.pontoDestino = pontoDestino;
+	}
+
+	public boolean vaiBaseInimiga() {
+		if (contPatrulha < 10) {
+			contPatrulha++;
+			return false;
+		}
+		contPatrulha = 0;
+		return true;
 	}
 
 }
