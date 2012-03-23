@@ -308,8 +308,8 @@ public class JogoServidor {
 				 */
 
 				if (campoVisaoTiro
-						&& ConstantesTopWar.GRADE
-								.equals(objetoMapa.getEfeito())
+						&& (ConstantesTopWar.GRADE.equals(objetoMapa
+								.getEfeito()) || objetoMapa.getTransparencia() > 10)
 						&& objetoMapa.getForma().contains(point)) {
 					return false;
 				}

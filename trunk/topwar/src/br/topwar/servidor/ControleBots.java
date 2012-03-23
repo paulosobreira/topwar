@@ -167,7 +167,7 @@ public class ControleBots {
 	}
 
 	public void adicionarBot() {
-		for (int i = 0; i < 63; i++) {
+		for (int i = 0; i < 15; i++) {
 			AvatarTopWar bot = jogoServidor.entrarNoJogo("boTeste " + i);
 			bot.setBotInfo(new BotInfo());
 			synchronized (bots) {
