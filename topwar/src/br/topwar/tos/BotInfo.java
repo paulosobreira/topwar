@@ -29,7 +29,7 @@ public class BotInfo {
 	}
 
 	public boolean vaiBaseInimiga() {
-		if (contPatrulha < 10) {
+		if (contPatrulha < 3) {
 			contPatrulha++;
 			return false;
 		}

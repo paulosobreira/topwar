@@ -384,7 +384,7 @@ public class JogoCliente {
 				while (jogoEmAndamento && !interrupt) {
 					try {
 						painelTopWar.atualiza();
-						Thread.sleep(50);
+						Thread.sleep(40);
 					} catch (InterruptedException e) {
 						interrupt = true;
 						Logger.logarExept(e);
