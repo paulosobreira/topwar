@@ -2,14 +2,20 @@ package br.topwar.servidor;
 
 import java.awt.Point;
 import java.awt.geom.Ellipse2D;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import com.octo.captcha.service.image.DefaultManageableImageCaptchaService;
+
 import br.nnpe.GeoUtil;
 import br.nnpe.Logger;
+import br.nnpe.NameGenerator;
 import br.nnpe.Util;
 import br.topwar.ConstantesTopWar;
+import br.topwar.serial.ObjetoMapa;
 import br.topwar.tos.AvatarTopWar;
 import br.topwar.tos.BotInfo;
 import br.topwar.tos.DadosAcaoClienteTopWar;
@@ -19,6 +25,13 @@ public class ControleBots {
 	private JogoServidor jogoServidor;
 	private Thread threadBots;
 	private List<AvatarTopWar> bots = new ArrayList<AvatarTopWar>();
+
+	public static void main(String[] args) throws IOException {
+		NameGenerator nameGenerator = new NameGenerator("silabas");
+		System.out.println(" ->  "
+				+ nameGenerator.compose(Util.intervalo(2, 4)));
+
+	}
 
 	public ControleBots(JogoServidor jogoServidor) {
 		this.jogoServidor = jogoServidor;
@@ -116,7 +129,44 @@ public class ControleBots {
 				 * Patrulhando
 				 */
 				if (botInfo.getPontoDestino() == null) {
-					if (botInfo.vaiBaseInimiga()) {
+					if (botInfo.vaiGuia()) {
+						List<ObjetoMapa> objetoMapaList = jogoServidor
+								.getMapaTopWar().getObjetoMapaList();
+						ArrayList<Point> canidatos = new ArrayList<Point>();
+						for (Iterator iterator2 = objetoMapaList.iterator(); iterator2
+								.hasNext();) {
+							ObjetoMapa objetoMapa = (ObjetoMapa) iterator2
+									.next();
+							if (!ConstantesTopWar.BOT_GUIA.equals(objetoMapa
+									.getEfeito())) {
+								continue;
+							}
+							Point analizar = objetoMapa.getForma().getBounds()
+									.getLocation();
+							if (analizar.equals(botInfo.getUltimaGuia())) {
+								continue;
+							}
+							List<Point> drawBresenhamLine = GeoUtil
+									.drawBresenhamLine(
+											avatarTopWar.getPontoAvatar(),
+											analizar);
+							if (jogoServidor.campoVisao(drawBresenhamLine,
+									avatarTopWar, true)
+									&& drawBresenhamLine.size() > avatarTopWar
+											.getVelocidade()) {
+								canidatos.add(analizar);
+							}
+						}
+						if (!canidatos.isEmpty()) {
+							Collections.shuffle(canidatos);
+							Point point = canidatos.get(0);
+							botInfo.setPontoDestino(point);
+							botInfo.setUltimaGuia(point);
+						} else {
+							botVaiPontoAleatorio(avatarTopWar, botInfo);
+						}
+
+					} else if (botInfo.vaiBaseInimiga()) {
 						if (avatarTopWar.getTime() == ConstantesTopWar.TIME_VERMELHO) {
 							botInfo.setPontoDestino(jogoServidor
 									.getMapaTopWar().getPontoTimeAzul());
@@ -124,23 +174,10 @@ public class ControleBots {
 							botInfo.setPontoDestino(jogoServidor
 									.getMapaTopWar().getPontoTimeVermelho());
 						}
-						botInfo.setEstado(BotInfo.PATRULHANDO);
-
 					} else {
-						Point calculaPonto = GeoUtil.calculaPonto(
-								Util.intervalo(0, 360),
-								Util.intervalo(100, 200),
-								avatarTopWar.getPontoAvatar());
-						while (!jogoServidor.verificaAndavel(
-								avatarTopWar.getPontoAvatar(), calculaPonto)) {
-							calculaPonto = GeoUtil.calculaPonto(
-									Util.intervalo(0, 360), 100,
-									avatarTopWar.getPontoAvatar());
-						}
-						botInfo.setPontoDestino(calculaPonto);
-						botInfo.setEstado(BotInfo.PATRULHANDO);
-
+						botVaiPontoAleatorio(avatarTopWar, botInfo);
 					}
+					botInfo.setEstado(BotInfo.PATRULHANDO);
 				}
 
 				List<Point> lineMove = GeoUtil.drawBresenhamLine(
@@ -166,14 +203,31 @@ public class ControleBots {
 		}
 	}
 
+	private void botVaiPontoAleatorio(AvatarTopWar avatarTopWar, BotInfo botInfo) {
+		Point calculaPonto = GeoUtil.calculaPonto(Util.intervalo(0, 360),
+				Util.intervalo(100, 200), avatarTopWar.getPontoAvatar());
+		while (!jogoServidor.verificaAndavel(avatarTopWar.getPontoAvatar(),
+				calculaPonto)) {
+			calculaPonto = GeoUtil.calculaPonto(Util.intervalo(0, 360), 100,
+					avatarTopWar.getPontoAvatar());
+		}
+		botInfo.setPontoDestino(calculaPonto);
+	}
+
 	public void adicionarBot() {
-		for (int i = 0; i < 15; i++) {
-			AvatarTopWar bot = jogoServidor.entrarNoJogo("boTeste " + i);
-			bot.setBotInfo(new BotInfo());
-			synchronized (bots) {
-				bots.add(bot);
+		try {
+			NameGenerator nameGenerator = new NameGenerator("silabas");
+			for (int i = 0; i < 23; i++) {
+				String nome = nameGenerator.compose(Util.intervalo(2, 3));
+				AvatarTopWar bot = jogoServidor.entrarNoJogo(nome);
+				bot.setBotInfo(new BotInfo());
+				synchronized (bots) {
+					bots.add(bot);
+				}
+				Logger.logar("Adicionou " + bot.getNomeJogador());
 			}
-			Logger.logar("Adicionou " + bot);
+		} catch (IOException e) {
+			Logger.logarExept(e);
 		}
 	}
 

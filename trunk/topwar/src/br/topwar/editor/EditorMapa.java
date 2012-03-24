@@ -13,6 +13,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -35,6 +36,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
+
+import org.hibernate.id.GUIDGenerator;
 
 import br.nnpe.ExampleFileFilter;
 import br.nnpe.Util;
@@ -78,8 +81,8 @@ public class EditorMapa {
 				if (backGround == null) {
 					return super.getPreferredSize();
 				}
-				return new Dimension(backGround.getWidth(), backGround
-						.getHeight());
+				return new Dimension(backGround.getWidth(),
+						backGround.getHeight());
 			}
 		};
 		scrollPane = new JScrollPane(painelEditor,
@@ -120,6 +123,8 @@ public class EditorMapa {
 					excluirUltimoNo();
 				} else if (keyCoode == KeyEvent.VK_3) {
 					efeitoGrade();
+				} else if (keyCoode == KeyEvent.VK_W) {
+					novoGuiaBot();
 				} else if (keyCoode == KeyEvent.VK_SPACE) {
 					desenhaAvatar = !desenhaAvatar;
 				}
@@ -154,6 +159,7 @@ public class EditorMapa {
 				}
 			}
 		});
+		frame.setTitle("TopWar - Editor de Mapas");
 	}
 
 	protected void efeitoGrade() {
@@ -266,6 +272,14 @@ public class EditorMapa {
 			mapaTopWar.setPontoTimeAzul(e.getPoint());
 		} else if (PONTO_TIME_VERMELHO.equals(clickState)) {
 			mapaTopWar.setPontoTimeVermelho(e.getPoint());
+		} else if (ConstantesTopWar.BOT_GUIA.equals(clickState)) {
+			ObjetoMapa objetoMapa = new ObjetoMapa();
+			objetoMapa.setEfeito(ConstantesTopWar.BOT_GUIA);
+			objetoMapa.setForma(new Ellipse2D.Double(point.x - 5, point.y - 5,
+					10, 10));
+			mapaTopWar.getObjetoMapaList().add(objetoMapa);
+			clickState = null;
+			objetoMapaSelecionado = objetoMapa;
 		} else if (mapaTopWar != null) {
 			List<ObjetoMapa> objetoMapaList = mapaTopWar.getObjetoMapaList();
 			for (Iterator iterator = objetoMapaList.iterator(); iterator
@@ -356,17 +370,6 @@ public class EditorMapa {
 		}
 		Rectangle limitesViewPort = (Rectangle) limitesViewPort();
 		g2d.drawImage(backGround, 0, 0, null);
-		g2d.setColor(Color.CYAN);
-		g2d.drawString("Transparencia = 0", limitesViewPort.x + 10,
-				limitesViewPort.y + 10);
-		g2d.drawString("Terreno Dificil % = 1 -> 10", limitesViewPort.x + 10,
-				limitesViewPort.y + 25);
-		g2d.drawString("Estrutura Resistente (Ver Atraves) % = 11 -> 50",
-				limitesViewPort.x + 10, limitesViewPort.y + 40);
-		g2d.drawString("Estrutura Resistente (Não Ver Atraves) % = 51 -> 100",
-				limitesViewPort.x + 10, limitesViewPort.y + 55);
-		g2d.drawString("Estrutura Solida = maior que 100",
-				limitesViewPort.x + 10, limitesViewPort.y + 70);
 		if (pontosNovoObj != null) {
 			Point ptAnt = null;
 			for (Iterator iterator = pontosNovoObj.iterator(); iterator
@@ -397,8 +400,8 @@ public class EditorMapa {
 				g2d.drawString("C:" + cont++, x, y);
 				g2d.drawString("T:" + objetoMapa.getTransparencia(), x, y + 10);
 				g2d.draw(objetoMapa.getForma());
-				Color color = new Color(255, 255, 255, objetoMapa
-						.getTransparencia());
+				Color color = new Color(255, 255, 255,
+						objetoMapa.getTransparencia());
 				g2d.setColor(color);
 				if (objetoMapa.getEfeito() == null) {
 					g2d.fill(objetoMapa.getForma());
@@ -409,8 +412,8 @@ public class EditorMapa {
 			}
 			if (mapaTopWar.getPontoTimeAzul() != null) {
 				g2d.setColor(ConstantesTopWar.lightBlu);
-				g2d.fillOval(mapaTopWar.getPontoTimeAzul().x - 20, mapaTopWar
-						.getPontoTimeAzul().y - 20, 40, 40);
+				g2d.fillOval(mapaTopWar.getPontoTimeAzul().x - 20,
+						mapaTopWar.getPontoTimeAzul().y - 20, 40, 40);
 			}
 			if (mapaTopWar.getPontoTimeVermelho() != null) {
 				g2d.setColor(ConstantesTopWar.lightRed);
@@ -439,6 +442,20 @@ public class EditorMapa {
 			// }
 			// g2d.draw(areaAvatar);
 		}
+		g2d.setColor(new Color(100, 100, 100, 150));
+		g2d.fillRoundRect(limitesViewPort.x + 3, limitesViewPort.y + 2, 300,
+				80, 10, 10);
+		g2d.setColor(Color.WHITE);
+		g2d.drawString("Transparencia = 0", limitesViewPort.x + 10,
+				limitesViewPort.y + 10);
+		g2d.drawString("Terreno Dificil % = 1 -> 10", limitesViewPort.x + 10,
+				limitesViewPort.y + 25);
+		g2d.drawString("Estrutura Resistente (Ver Atraves) % = 11 -> 50",
+				limitesViewPort.x + 10, limitesViewPort.y + 40);
+		g2d.drawString("Estrutura Resistente (Não Ver Atraves) % = 51 -> 100",
+				limitesViewPort.x + 10, limitesViewPort.y + 55);
+		g2d.drawString("Estrutura Solida = maior que 100",
+				limitesViewPort.x + 10, limitesViewPort.y + 70);
 	}
 
 	private void desenhaObjetoEfeito(Graphics2D g2d, ObjetoMapa objetoMapa) {
@@ -453,8 +470,8 @@ public class EditorMapa {
 			int inicioLinha = 0;
 			int fimLinha = 0 + bounds.width;
 			int inicioCol = 0;
-			Color color = new Color(255, 255, 255, objetoMapa
-					.getTransparencia());
+			Color color = new Color(255, 255, 255,
+					objetoMapa.getTransparencia());
 			graphics.setColor(color);
 			for (int i = 0; i < bounds.getHeight(); i++) {
 				if (i % 2 == 0)
@@ -754,6 +771,26 @@ public class EditorMapa {
 			}
 		});
 
+		JMenuItem guiaBot = new JMenuItem() {
+			public String getText() {
+				return Lang.msg("guiaBot");
+			}
+
+		};
+		menuPontos.add(guiaBot);
+		guiaBot.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				novoGuiaBot();
+			}
+		});
+
+	}
+
+	protected void novoGuiaBot() {
+		clickState = ConstantesTopWar.BOT_GUIA;
+		objetoMapaSelecionado = null;
+		desenhaAvatar = false;
 	}
 
 	protected void testarMapa() throws IOException, ClassNotFoundException {
@@ -828,23 +865,23 @@ public class EditorMapa {
 			return;
 		}
 
-		FileInputStream inputStream = new FileInputStream(fileChooser
-				.getSelectedFile());
+		FileInputStream inputStream = new FileInputStream(
+				fileChooser.getSelectedFile());
 		ObjectInputStream ois = new ObjectInputStream(inputStream);
 
 		mapaTopWar = (MapaTopWar) ois.readObject();
 		frame.setTitle(mapaTopWar.getNome());
 
-		backGround = CarregadorRecursos.carregaBackGround(mapaTopWar
-				.getBackGround(), painelEditor);
+		backGround = CarregadorRecursos.carregaBackGround(
+				mapaTopWar.getBackGround(), painelEditor);
 	}
 
 	private void novoMapa() {
-		String nomeMapa = JOptionPane.showInputDialog(frame, Lang
-				.msg("nomeDoMapa"));
+		String nomeMapa = JOptionPane.showInputDialog(frame,
+				Lang.msg("nomeDoMapa"));
 		if (Util.isNullOrEmpty(nomeMapa)) {
-			JOptionPane.showMessageDialog(frame, Lang.msg("nomeInvalido"), Lang
-					.msg("erro"), JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(frame, Lang.msg("nomeInvalido"),
+					Lang.msg("erro"), JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 

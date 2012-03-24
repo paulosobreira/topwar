@@ -568,7 +568,7 @@ public class JogoServidor {
 					if (avatarAlvo.isInvencivel()) {
 						continue;
 					}
-					if (avatarAlvo.getVida() < 1) {
+					if (avatarAlvo.getVida() <= 0) {
 						continue;
 					}
 
@@ -647,7 +647,7 @@ public class JogoServidor {
 			if (avatarAtirador.getTime().equals(avatarAlvo.getTime())) {
 				return true;
 			} else {
-				if (Math.random() > 0.9 && gerarCabeca.contains(point)) {
+				if (Math.random() > 0.8 && gerarCabeca.contains(point)) {
 					avatarAlvo.setVida(0);
 					headShot = true;
 				} else if (gerarCorpo.contains(point)
@@ -656,7 +656,7 @@ public class JogoServidor {
 					for (int i = indice; i < indice
 							+ ConstantesTopWar.LARGURA_AVATAR; i++) {
 						Point p = (Point) linha.get(i);
-						if (Math.random() > 0.9 && gerarCabeca.contains(p)) {
+						if (Math.random() > 0.8 && gerarCabeca.contains(p)) {
 							avatarAlvo.setVida(0);
 							headShot = true;
 							break;

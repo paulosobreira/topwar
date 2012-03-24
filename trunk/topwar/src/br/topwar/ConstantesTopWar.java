@@ -5,6 +5,7 @@ import java.awt.Color;
 public class ConstantesTopWar {
 
 	public static final String GRADE = "GRADE";
+	public static final String BOT_GUIA = "BOT_GUIA";
 	public static final String OBTER_DADOS_JOGO = "OBTER_DADOS_JOGO";
 	public static final String CRIAR_JOGO = "CRIAR_JOGO";
 	public static final String MOVER = "MOVER";
