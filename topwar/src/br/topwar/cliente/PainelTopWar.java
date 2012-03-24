@@ -390,7 +390,8 @@ public class PainelTopWar {
 		if (tabCont <= 0) {
 			return;
 		}
-		tabCont--;
+		if (jogoCliente.isJogoEmAndamento())
+			tabCont--;
 		Shape limitesViewPort = limitesViewPort();
 		int meio = limitesViewPort.getBounds().x
 				+ limitesViewPort.getBounds().width / 2;
@@ -654,7 +655,7 @@ public class PainelTopWar {
 				AvatarCliente avatarClienteAnalizar = (AvatarCliente) iterator
 						.next();
 				if (!avatarCliente.equals(avatarClienteAnalizar)
-						&& tiro != null
+						&& avatarCliente.getVida() > 0 && tiro != null
 						&& avatarClienteAnalizar.gerarCorpo().contains(tiro)) {
 					bateu = true;
 					avatarClienteBateu = avatarClienteAnalizar;

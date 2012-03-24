@@ -39,8 +39,8 @@ public class JogoCliente {
 	private Point pontoAvatar;
 	private Point pontoAvatarDesenha;
 	private double angulo;
-	protected boolean jogoEmAndamento = true;
-	protected boolean recarregando;
+	private boolean jogoEmAndamento = true;
+	private boolean recarregando;
 	private int ptsVermelho;
 	private int ptsAzul;
 	private PainelTopWar painelTopWar;
@@ -63,11 +63,15 @@ public class JogoCliente {
 	private Thread threadDadosSrv;
 	private Thread threadMoverMouse;
 	private Long tempoRestanteJogo;
-	protected boolean seguirMouse;
-	protected Thread threadSeguirMouse;
+	private boolean seguirMouse;
+	private Thread threadSeguirMouse;
 	private String killCam;
 	private List<PlacarTopWar> placar;
 	private List<EventoJogo> eventos = new ArrayList<EventoJogo>();
+
+	public boolean isJogoEmAndamento() {
+		return jogoEmAndamento;
+	}
 
 	public Point getPontoMouseMovendo() {
 		return pontoMouseMovendo;
@@ -213,6 +217,7 @@ public class JogoCliente {
 						Thread.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO);
 						if (tempoRestanteJogo <= 0) {
 							jogoEmAndamento = false;
+							painelTopWar.setTabCont(100);
 						}
 					} catch (InterruptedException e) {
 						interrupt = true;
