@@ -108,11 +108,11 @@ public class ControleBots {
 								executouAcaoAtaque = true;
 							}
 						} else {
-							jogoServidor.atacar(avatarTopWar, GeoUtil
-									.calculaAngulo(
-											avatarTopWar.getPontoAvatar(),
-											avatarTopWarCopia.getPontoAvatar(),
-											90), line.size());
+							avatarTopWar.setAngulo(GeoUtil.calculaAngulo(
+									avatarTopWar.getPontoAvatar(),
+									avatarTopWarCopia.getPontoAvatar(), 90));
+							jogoServidor.atacar(avatarTopWar,
+									avatarTopWar.getAngulo(), line.size());
 							executouAcaoAtaque = true;
 						}
 					} else {
