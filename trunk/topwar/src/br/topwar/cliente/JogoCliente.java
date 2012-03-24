@@ -62,6 +62,12 @@ public class JogoCliente {
 	private Thread threadRepaint;
 	private Thread threadDadosSrv;
 	private Thread threadMoverMouse;
+
+	private Thread threadAtacar;
+	private Thread threadRecarregar;
+	private Thread threadAlternaFaca;
+	private Thread threadMouseCliqueUnico;
+
 	private Long tempoRestanteJogo;
 	private boolean seguirMouse;
 	private Thread threadSeguirMouse;
@@ -217,7 +223,6 @@ public class JogoCliente {
 						Thread.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO);
 						if (tempoRestanteJogo <= 0) {
 							jogoEmAndamento = false;
-							painelTopWar.setTabCont(100);
 						}
 					} catch (InterruptedException e) {
 						interrupt = true;
@@ -273,7 +278,25 @@ public class JogoCliente {
 						});
 						threadSeguirMouse.start();
 					} else {
-						moverAvatarPeloMouse(pontoMouseClicado);
+						if (threadMouseCliqueUnico != null
+								&& threadMouseCliqueUnico.isAlive()) {
+							return;
+						}
+						threadMouseCliqueUnico = new Thread(new Runnable() {
+							@Override
+							public void run() {
+								while (controleCliente.verificaDelay()) {
+									try {
+										Thread.sleep(5);
+									} catch (InterruptedException e) {
+										Logger.logarExept(e);
+									}
+								}
+								moverAvatarPeloMouse(pontoMouseClicado);
+							}
+						});
+						threadMouseCliqueUnico.start();
+
 					}
 				}
 				super.mouseClicked(e);
@@ -289,6 +312,9 @@ public class JogoCliente {
 			if (avatarCliente.getTime().equals(time)) {
 				continue;
 			}
+			if (avatarCliente.getVida() <= 0) {
+				continue;
+			}
 			if ((avatarCliente.obeterAreaAvatar().contains(p) || avatarCliente
 					.obeterAreaAvatarSuave().contains(p))) {
 				return true;
@@ -302,10 +328,26 @@ public class JogoCliente {
 			return;
 		}
 		if (ConstantesTopWar.ARMA_ASSALT == arma && balas <= 0) {
-			controleCliente.recarregar();
+			recarregar();
 			return;
 		}
-		controleCliente.atacar();
+		if (threadAtacar != null && threadAtacar.isAlive()) {
+			return;
+		}
+		threadAtacar = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while (controleCliente.verificaDelay()) {
+					try {
+						Thread.sleep(5);
+					} catch (InterruptedException e) {
+						Logger.logarExept(e);
+					}
+				}
+				controleCliente.atacar();
+			}
+		});
+		threadAtacar.start();
 	}
 
 	private void setarPontoMouseMover(MouseEvent e) {
@@ -395,6 +437,8 @@ public class JogoCliente {
 						Logger.logarExept(e);
 					}
 				}
+				painelTopWar.setTabCont(100);
+				painelTopWar.atualiza();
 			}
 		});
 		threadRepaint.start();
@@ -686,10 +730,52 @@ public class JogoCliente {
 			atacar();
 		}
 		if (keyCode == KeyEvent.VK_R) {
-			controleCliente.recarregar();
+			recarregar();
 		}
 		if (keyCode == KeyEvent.VK_CONTROL) {
-			controleCliente.alternaFaca();
+			alternaFaca();
+
 		}
+	}
+
+	private void alternaFaca() {
+		if (threadAlternaFaca != null && threadAlternaFaca.isAlive()) {
+			return;
+		}
+		threadAlternaFaca = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while (controleCliente.verificaDelay()) {
+					try {
+						Thread.sleep(5);
+					} catch (InterruptedException e) {
+						Logger.logarExept(e);
+					}
+				}
+				controleCliente.alternaFaca();
+			}
+		});
+		threadAlternaFaca.start();
+
+	}
+
+	private void recarregar() {
+		if (threadRecarregar != null && threadRecarregar.isAlive()) {
+			return;
+		}
+		threadRecarregar = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while (controleCliente.verificaDelay()) {
+					try {
+						Thread.sleep(5);
+					} catch (InterruptedException e) {
+						Logger.logarExept(e);
+					}
+				}
+				controleCliente.recarregar();
+			}
+		});
+		threadRecarregar.start();
 	}
 }

@@ -54,7 +54,7 @@ public class ControleCliente extends NnpeChatCliente {
 		dadosJogoTopWar.setNomeMapa("mapa9");
 		nnpeTO.setData(dadosJogoTopWar);
 		Object ret = enviarObjeto(nnpeTO);
-		if (nnpeTO instanceof NnpeTO) {
+		if (ret instanceof NnpeTO) {
 			nnpeTO = (NnpeTO) ret;
 			dadosJogoTopWar = (DadosJogoTopWar) nnpeTO.getData();
 			jogoCliente = new JogoCliente(dadosJogoTopWar, this);
@@ -76,7 +76,7 @@ public class ControleCliente extends NnpeChatCliente {
 		dadosJogoTopWar.setNomeJogador(sessaoCliente.getNomeJogador());
 		nnpeTO.setData(dadosJogoTopWar);
 		Object ret = enviarObjeto(nnpeTO);
-		if (nnpeTO instanceof NnpeTO) {
+		if (ret instanceof NnpeTO) {
 			nnpeTO = (NnpeTO) ret;
 			dadosJogoTopWar = (DadosJogoTopWar) nnpeTO.getData();
 			jogoCliente = new JogoCliente(dadosJogoTopWar, this);
@@ -141,8 +141,9 @@ public class ControleCliente extends NnpeChatCliente {
 		DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
 		acaoClienteTopWar.setNomeCliente(sessaoCliente.getNomeJogador());
 		acaoClienteTopWar.setAngulo(jogoCliente.getAngulo());
-		double distaciaEntrePontos = GeoUtil.distaciaEntrePontos(jogoCliente
-				.getPontoAvatar(), jogoCliente.getPontoMouseMovendo());
+		double distaciaEntrePontos = GeoUtil.distaciaEntrePontos(
+				jogoCliente.getPontoAvatar(),
+				jogoCliente.getPontoMouseMovendo());
 		distaciaEntrePontos *= 1.2;
 		acaoClienteTopWar.setRange((int) distaciaEntrePontos);
 		NnpeTO nnpeTO = new NnpeTO();
