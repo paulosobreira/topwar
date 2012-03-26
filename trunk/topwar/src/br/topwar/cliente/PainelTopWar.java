@@ -674,7 +674,7 @@ public class PainelTopWar {
 				for (Iterator iterator = objetoMapaList.iterator(); iterator
 						.hasNext();) {
 					ObjetoMapa objetoMapa = (ObjetoMapa) iterator.next();
-					if (objetoMapa.getTransparencia() > 11 && tiro != null
+					if (objetoMapa.getTransparencia() > 50 && tiro != null
 							&& objetoMapa.getForma().contains(tiro)) {
 						bateu = true;
 						break;
