@@ -541,7 +541,7 @@ public class JogoServidor {
 					.hasNext();) {
 				ObjetoMapa objetoMapa = (ObjetoMapa) iterator.next();
 				if (!ConstantesTopWar.GRADE.equals(objetoMapa.getEfeito())
-						&& objetoMapa.getTransparencia() > 10
+						&& objetoMapa.getTransparencia() > 50
 						&& objetoMapa.getForma().contains(point)) {
 					if (pointAnt != null) {
 						int balas = consomeBalasArma(avatarAtacando);
