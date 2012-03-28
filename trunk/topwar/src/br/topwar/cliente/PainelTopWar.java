@@ -196,7 +196,7 @@ public class PainelTopWar {
 			protected void paintComponent(java.awt.Graphics g) {
 				super.paintComponent(g);
 				Graphics2D graphics2d = (Graphics2D) g;
-				// setarHints(graphics2d);
+				setarHints(graphics2d);
 				if (desenhaImagens) {
 					graphics2d.drawImage(img, null, 0, 0);
 				} else {
@@ -206,7 +206,7 @@ public class PainelTopWar {
 				}
 				loopDesenhaAvatares(graphics2d);
 				desenhaInfoJogo(graphics2d);
-				// desenhaMira(graphics2d);
+				desenhaMira(graphics2d);
 				desenhaObjetosDebug(graphics2d);
 			}
 
@@ -245,7 +245,8 @@ public class PainelTopWar {
 
 	private void desenhaMira(Graphics2D graphics2d) {
 		Point pontoMouse = jogoCliente.getPontoMouseMovendo();
-		if (pontoMouse != null) {
+		if (pontoMouse != null
+				&& jogoCliente.clicouAvatarAdversario(pontoMouse)) {
 			Point desenha = new Point(
 					pontoMouse.x - (crosshair.getWidth() / 2), pontoMouse.y
 							- (crosshair.getHeight() / 2));
