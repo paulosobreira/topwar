@@ -74,6 +74,7 @@ public class JogoCliente {
 	private String killCam;
 	private List<PlacarTopWar> placar;
 	private List<EventoJogo> eventos = new ArrayList<EventoJogo>();
+	protected long clickTime;
 
 	public boolean isJogoEmAndamento() {
 		return jogoEmAndamento;
@@ -634,10 +635,15 @@ public class JogoCliente {
 		}
 		pontoMouseClicado.x = e.getX();
 		pontoMouseClicado.y = e.getY();
+		clickTime = System.currentTimeMillis();
 	}
 
 	public boolean verificaRecarregando() {
 		return (recarregando);
+	}
+
+	public long getClickTime() {
+		return clickTime;
 	}
 
 	public List<PlacarTopWar> geraListaPlacarOrdenada(String time) {
