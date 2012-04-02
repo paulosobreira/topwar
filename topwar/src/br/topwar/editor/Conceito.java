@@ -306,7 +306,7 @@ public class Conceito {
 			protected void paintComponent(java.awt.Graphics g) {
 				super.paintComponent(g);
 				Graphics2D graphics2d = (Graphics2D) g;
-				graphics2d.drawImage(img, null, 0, 0);
+//				graphics2d.drawImage(img, null, 0, 0);
 				double angulo = GeoUtil.calculaAngulo(pontoAvatar, pontoMouse,
 						90);
 				if (angulo < 0) {
@@ -355,41 +355,7 @@ public class Conceito {
 						/**
 						 * Desenha Faca
 						 */
-						Point pFaca = GeoUtil.calculaPonto(angulo, 10, desenha);
-
-						BufferedImage knife = knifeAtttacks[knifeTransp];
-						AffineTransform afRotate = new AffineTransform();
-						double rad = Math.toRadians((double) angulo - 60);
-						afRotate.setToRotation(rad, knife.getWidth() / 2,
-								knife.getHeight() / 2);
-						AffineTransformOp opRotate = new AffineTransformOp(
-								afRotate, AffineTransformOp.TYPE_BILINEAR);
-						BufferedImage rotBuffer = new BufferedImage(
-								knife.getWidth(), knife.getHeight(),
-								BufferedImage.TYPE_INT_ARGB);
-						opRotate.filter(knife, rotBuffer);
-						if (knifeTransp > 200) {
-							knifeTranspMaisTransp = false;
-						}
-						if (knifeTransp < 50) {
-							knifeTranspMaisTransp = true;
-						}
-						if (knifeTranspMaisTransp) {
-							knifeTransp += 30;
-						} else {
-							knifeTransp -= 30;
-						}
-						if (angulo > 90 && angulo < 300) {
-							graphics2d.drawImage(imgJog, desenha.x, desenha.y,
-									null);
-							graphics2d.drawImage(rotBuffer, pFaca.x, pFaca.y,
-									null);
-						} else {
-							graphics2d.drawImage(rotBuffer, pFaca.x, pFaca.y,
-									null);
-							graphics2d.drawImage(imgJog, desenha.x, desenha.y,
-									null);
-						}
+//						desenhaFacada(graphics2d, angulo, imgJog, desenha);
 						System.out.println(angulo);
 
 						if (desenhaObjetos) {
@@ -845,5 +811,44 @@ public class Conceito {
 		rectangle.x = scrollPane.getViewport().getViewPosition().x;
 		rectangle.y = scrollPane.getViewport().getViewPosition().y;
 		return rectangle;
+	}
+
+	private void desenhaFacada(Graphics2D graphics2d, double angulo,
+			BufferedImage imgJog, Point desenha) {
+		Point pFaca = GeoUtil.calculaPonto(angulo, 10, desenha);
+
+		BufferedImage knife = knifeAtttacks[knifeTransp];
+		AffineTransform afRotate = new AffineTransform();
+		double rad = Math.toRadians((double) angulo - 60);
+		afRotate.setToRotation(rad, knife.getWidth() / 2,
+				knife.getHeight() / 2);
+		AffineTransformOp opRotate = new AffineTransformOp(
+				afRotate, AffineTransformOp.TYPE_BILINEAR);
+		BufferedImage rotBuffer = new BufferedImage(
+				knife.getWidth(), knife.getHeight(),
+				BufferedImage.TYPE_INT_ARGB);
+		opRotate.filter(knife, rotBuffer);
+		if (knifeTransp > 200) {
+			knifeTranspMaisTransp = false;
+		}
+		if (knifeTransp < 50) {
+			knifeTranspMaisTransp = true;
+		}
+		if (knifeTranspMaisTransp) {
+			knifeTransp += 30;
+		} else {
+			knifeTransp -= 30;
+		}
+		if (angulo > 90 && angulo < 300) {
+			graphics2d.drawImage(imgJog, desenha.x, desenha.y,
+					null);
+			graphics2d.drawImage(rotBuffer, pFaca.x, pFaca.y,
+					null);
+		} else {
+			graphics2d.drawImage(rotBuffer, pFaca.x, pFaca.y,
+					null);
+			graphics2d.drawImage(imgJog, desenha.x, desenha.y,
+					null);
+		}
 	}
 }
