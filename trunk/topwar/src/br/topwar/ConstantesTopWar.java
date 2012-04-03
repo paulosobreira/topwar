@@ -50,6 +50,7 @@ public class ConstantesTopWar {
 	public static final String ALTERNA_FACA = "A_F";
 	public static final int ARMA_FACA = 1;
 	public static final int ARMA_ASSALT = 2;
+	public static final int ARMA_SHOTGUN = 3;
 	public static final String ATACAR = "A";
 	public static final String KILL_CAM = "K_C";
 	public static final String OBTER_PLCAR = "O_P";
@@ -58,5 +59,7 @@ public class ConstantesTopWar {
 	public static final int LIMITE_VISAO = 600;
 	public static final int MEIO_LIMITE_VISAO = LIMITE_VISAO / 2;
 	public static final long ATRASO_REDE_PADRAO_BOTS = (long) (ATRASO_REDE_PADRAO * 1.5);
+	public static final String ASSAULT = "assault";
+	public static final String SHOTGUN = "shotgun";
 
 }

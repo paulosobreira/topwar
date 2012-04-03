@@ -306,7 +306,7 @@ public class Conceito {
 			protected void paintComponent(java.awt.Graphics g) {
 				super.paintComponent(g);
 				Graphics2D graphics2d = (Graphics2D) g;
-				graphics2d.setColor(Color.WHITE);
+				graphics2d.setColor(Color.white);
 				graphics2d.fillRect(0, 0, mapaTopWar.getLargura(), mapaTopWar
 						.getAltura());
 				// graphics2d.drawImage(img, null, 0, 0);
