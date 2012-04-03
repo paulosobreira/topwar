@@ -249,15 +249,15 @@ img {
 				<a id="link" 
 					href="../../f1mane" style="text-align: center;"
 					target="_BLANK">  F1-mane </a><br>
-				<a href="./../f1mane/fm1.jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img  src="./../f1mane/fm1.jpg" width="130" height="120" /></a>
-				<a href="./../f1mane/fm2.jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img  src="./../f1mane/fm2.jpg" width="130" height="120" /></a>
+				<a href="./../f1mane/fm1.-jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img  src="./../f1mane/fm1.-jpg" width="130" height="120" /></a>
+				<a href="./../f1mane/fm2.-jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img  src="./../f1mane/fm2.-jpg" width="130" height="120" /></a>
 			</td>
 			<td>				
 				<a id="link" 
 					href="../../mesa11" style="text-align: center;"
 					target="_BLANK">  Mesa-11 </a><br>
-				<a href="../../mesa11/m11-1.jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img  src="../../mesa11/m11-1.jpg" width="130" height="120" /></a>
-				<a href="../../mesa11/m11-2.jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img  src="../../mesa11/m11-2.jpg" width="130" height="120" /></a>
+				<a href="../../mesa11/m11-1.-jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img  src="../../mesa11/m11-1.-jpg" width="130" height="120" /></a>
+				<a href="../../mesa11/m11-2.-jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img  src="../../mesa11/m11-2.-jpg" width="130" height="120" /></a>
 			</td></tr>
 			</table>
 		</div>		

@@ -71,7 +71,7 @@ public class Conceito {
 	private Point pontoMouse;
 	private Point pontoAvatar;
 	private Rectangle areaAvatar;
-	private boolean desenhaObjetos;
+	private boolean desenhaObjetos = true;
 	private Point origem;
 	private int knifeTransp;
 	private boolean knifeTranspMaisTransp = true;
@@ -120,8 +120,8 @@ public class Conceito {
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		Cursor crossHair = new Cursor(Cursor.CROSSHAIR_CURSOR);
 		frame.setCursor(crossHair);
-		ObjectInputStream ois = new ObjectInputStream(
-				CarregadorRecursos.recursoComoStream(mapa));
+		ObjectInputStream ois = new ObjectInputStream(CarregadorRecursos
+				.recursoComoStream(mapa));
 
 		mapaTopWar = (MapaTopWar) ois.readObject();
 		frame.setTitle(mapaTopWar.getNome());
@@ -306,7 +306,10 @@ public class Conceito {
 			protected void paintComponent(java.awt.Graphics g) {
 				super.paintComponent(g);
 				Graphics2D graphics2d = (Graphics2D) g;
-//				graphics2d.drawImage(img, null, 0, 0);
+				graphics2d.setColor(Color.WHITE);
+				graphics2d.fillRect(0, 0, mapaTopWar.getLargura(), mapaTopWar
+						.getAltura());
+				// graphics2d.drawImage(img, null, 0, 0);
 				double angulo = GeoUtil.calculaAngulo(pontoAvatar, pontoMouse,
 						90);
 				if (angulo < 0) {
@@ -345,17 +348,18 @@ public class Conceito {
 						Point desenha = new Point(
 								p.x - (imgJog.getWidth() / 2), p.y
 										- (imgJog.getHeight() / 3));
-						areaAvatar = new Rectangle(desenha.x, desenha.y,
-								imgJog.getWidth(), imgJog.getHeight());
+						areaAvatar = new Rectangle(desenha.x, desenha.y, imgJog
+								.getWidth(), imgJog.getHeight());
 						imgJog = processaTransparencia(imgJog, desenha,
 								areaAvatar, mapaTopWar);
 						imgJog = processaGrade(imgJog, desenha, areaAvatar,
 								mapaTopWar);
-
+						// graphics2d
+						// .drawImage(imgJog, desenha.x, desenha.y, null);
 						/**
 						 * Desenha Faca
 						 */
-//						desenhaFacada(graphics2d, angulo, imgJog, desenha);
+						// desenhaFacada(graphics2d, angulo, imgJog, desenha);
 						System.out.println(angulo);
 
 						if (desenhaObjetos) {
@@ -411,50 +415,23 @@ public class Conceito {
 				// graphics2d.fillOval(ptLinha.x, ptLinha.y, 2, 2);
 				// }
 
+				Point front = GeoUtil.calculaPonto(angulo, 20, pontoAvatar);
+				Ellipse2D ellipse2d = new Ellipse2D.Double(front.x - 10,
+						front.y - 10, 20, 20);
+				graphics2d.draw(ellipse2d);
+				front = GeoUtil.calculaPonto(angulo, 45, pontoAvatar);
+				ellipse2d = new Ellipse2D.Double(front.x - 15, front.y - 15,
+						30, 30);
+				graphics2d.draw(ellipse2d);
+				front = GeoUtil.calculaPonto(angulo, 80, pontoAvatar);
+				ellipse2d = new Ellipse2D.Double(front.x - 20, front.y - 20,
+						40, 40);
+				graphics2d.draw(ellipse2d);
 				if (atirando != null && atirando.isAlive()) {
-
 					/**
 					 * shotgun
 					 */
-					for (int i = 0; i < 3; i++) {
-						Point nOri = new Point(p.x, p.y);
-						Point nDst = new Point(m.x + Util.intervalo(-30, 30),
-								m.y + Util.intervalo(-30, 30));
-
-						List<Point> linha = GeoUtil.drawBresenhamLine(nOri,
-								nDst);
-						int cont = 0;
-						for (Iterator iterator = linha.iterator(); iterator
-								.hasNext();) {
-							cont++;
-							if (cont > 100) {
-								break;
-							}
-							Point point = (Point) iterator.next();
-							if (Math.random() > .9) {
-								if (Math.random() > .7) {
-									graphics2d.setColor(Color.WHITE);
-								} else {
-									graphics2d.setColor(Color.LIGHT_GRAY);
-								}
-								graphics2d.drawOval(point.x, point.y,
-										Util.intervalo(1, 2),
-										Util.intervalo(1, 2));
-							}
-						}
-						if (linha.size() > 100) {
-							int intIni = Util.intervalo(1, 20);
-							Point pIni = linha.get(intIni);
-							Point pFim = linha.get(intIni
-									+ Util.intervalo(1, 30));
-							if (Math.random() > .7) {
-								graphics2d.setColor(Color.WHITE);
-							} else {
-								graphics2d.setColor(Color.LIGHT_GRAY);
-							}
-							graphics2d.drawLine(pIni.x, pIni.y, pFim.x, pFim.y);
-						}
-					}
+					desenhaTioShotGun(p, m, graphics2d);
 
 				}
 				if (desenhaObjetos) {
@@ -522,8 +499,8 @@ public class Conceito {
 
 		String formatarTempo = Util.formatarTempo(System.currentTimeMillis());
 
-		g2d.fillRoundRect(x - 10, y - 30,
-				Util.calculaLarguraText(formatarTempo, g2d) + 20, 35, 10, 10);
+		g2d.fillRoundRect(x - 10, y - 30, Util.calculaLarguraText(
+				formatarTempo, g2d) + 20, 35, 10, 10);
 		g2d.setColor(Color.BLACK);
 		g2d.drawString(formatarTempo, x, y);
 
@@ -538,8 +515,8 @@ public class Conceito {
 		x += Util.calculaLarguraText("00", g2d) + 30;
 
 		g2d.setColor(ConstantesTopWar.lightRed);
-		g2d.fillRoundRect(x - 10, y - 30,
-				Util.calculaLarguraText("VERMELHO", g2d) + 20, 35, 10, 10);
+		g2d.fillRoundRect(x - 10, y - 30, Util.calculaLarguraText("VERMELHO",
+				g2d) + 20, 35, 10, 10);
 		g2d.setColor(Color.BLACK);
 		g2d.drawString("VERMELHO", x, y);
 	}
@@ -553,8 +530,8 @@ public class Conceito {
 		Font fontOri = g2d.getFont();
 		g2d.setFont(new Font(fontOri.getName(), fontOri.getStyle(), 32));
 		g2d.setColor(ConstantesTopWar.lightWhite);
-		g2d.fillRoundRect(x - 10, y - 30,
-				Util.calculaLarguraText("ASSAULT", g2d) + 20, 35, 10, 10);
+		g2d.fillRoundRect(x - 10, y - 30, Util.calculaLarguraText("ASSAULT",
+				g2d) + 20, 35, 10, 10);
 		g2d.setColor(Color.BLACK);
 		g2d.drawString("ASSAULT", x, y);
 
@@ -562,8 +539,8 @@ public class Conceito {
 
 		if (false) {
 			g2d.setColor(ConstantesTopWar.lightWhite);
-			g2d.fillRoundRect(x - 10, y - 30,
-					Util.calculaLarguraText("50", g2d) + 20, 35, 10, 10);
+			g2d.fillRoundRect(x - 10, y - 30, Util
+					.calculaLarguraText("50", g2d) + 20, 35, 10, 10);
 			g2d.setColor(Color.BLACK);
 			g2d.drawString("50", x, y);
 			x += 80;
@@ -574,9 +551,8 @@ public class Conceito {
 			g2d.drawString("3 ", x, y);
 		} else {
 			g2d.setColor(new Color(255, 255, 255, ocilaAlphaRecarregando));
-			g2d.fillRoundRect(x - 10, y - 30,
-					Util.calculaLarguraText("RECARREGANDO", g2d) + 20, 35, 10,
-					10);
+			g2d.fillRoundRect(x - 10, y - 30, Util.calculaLarguraText(
+					"RECARREGANDO", g2d) + 20, 35, 10, 10);
 			g2d.setColor(Color.BLACK);
 			g2d.drawString("RECARREGANDO", x, y);
 
@@ -739,9 +715,9 @@ public class Conceito {
 			}
 		}
 
-		JOptionPane.showMessageDialog(null,
-				new JLabel(new ImageIcon(ImageUtil.gerarFade(bf, 150))), "bf",
-				JOptionPane.INFORMATION_MESSAGE);
+		// JOptionPane.showMessageDialog(null, new JLabel(new
+		// ImageIcon(ImageUtil
+		// .gerarFade(bf, 150))), "bf", JOptionPane.INFORMATION_MESSAGE);
 
 		bf = new BufferedImage(azulMortes.getWidth(), azulMortes.getHeight(),
 				BufferedImage.TYPE_INT_ARGB);
@@ -760,8 +736,8 @@ public class Conceito {
 				graphics.drawImage(bufferedImage, rect.x, rect.y, null);
 			}
 		}
-		JOptionPane.showMessageDialog(null, new JLabel(new ImageIcon(bf)),
-				"bf", JOptionPane.INFORMATION_MESSAGE);
+		// JOptionPane.showMessageDialog(null, new JLabel(new ImageIcon(bf)),
+		// "bf", JOptionPane.INFORMATION_MESSAGE);
 
 	}
 
@@ -820,13 +796,12 @@ public class Conceito {
 		BufferedImage knife = knifeAtttacks[knifeTransp];
 		AffineTransform afRotate = new AffineTransform();
 		double rad = Math.toRadians((double) angulo - 60);
-		afRotate.setToRotation(rad, knife.getWidth() / 2,
-				knife.getHeight() / 2);
-		AffineTransformOp opRotate = new AffineTransformOp(
-				afRotate, AffineTransformOp.TYPE_BILINEAR);
-		BufferedImage rotBuffer = new BufferedImage(
-				knife.getWidth(), knife.getHeight(),
-				BufferedImage.TYPE_INT_ARGB);
+		afRotate
+				.setToRotation(rad, knife.getWidth() / 2, knife.getHeight() / 2);
+		AffineTransformOp opRotate = new AffineTransformOp(afRotate,
+				AffineTransformOp.TYPE_BILINEAR);
+		BufferedImage rotBuffer = new BufferedImage(knife.getWidth(), knife
+				.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		opRotate.filter(knife, rotBuffer);
 		if (knifeTransp > 200) {
 			knifeTranspMaisTransp = false;
@@ -840,15 +815,50 @@ public class Conceito {
 			knifeTransp -= 30;
 		}
 		if (angulo > 90 && angulo < 300) {
-			graphics2d.drawImage(imgJog, desenha.x, desenha.y,
-					null);
-			graphics2d.drawImage(rotBuffer, pFaca.x, pFaca.y,
-					null);
+
+			graphics2d.drawImage(rotBuffer, pFaca.x, pFaca.y, null);
 		} else {
-			graphics2d.drawImage(rotBuffer, pFaca.x, pFaca.y,
-					null);
-			graphics2d.drawImage(imgJog, desenha.x, desenha.y,
-					null);
+			graphics2d.drawImage(rotBuffer, pFaca.x, pFaca.y, null);
+			graphics2d.drawImage(imgJog, desenha.x, desenha.y, null);
+		}
+	}
+
+	private void desenhaTioShotGun(final Point p, final Point m,
+			Graphics2D graphics2d) {
+		for (int i = 0; i < 3; i++) {
+			Point nOri = new Point(p.x, p.y);
+			Point nDst = new Point(m.x + Util.intervalo(-30, 30), m.y
+					+ Util.intervalo(-30, 30));
+
+			List<Point> linha = GeoUtil.drawBresenhamLine(nOri, nDst);
+			int cont = 0;
+			for (Iterator iterator = linha.iterator(); iterator.hasNext();) {
+				cont++;
+				if (cont > 100) {
+					break;
+				}
+				Point point = (Point) iterator.next();
+				if (Math.random() > .9) {
+					if (Math.random() > .7) {
+						graphics2d.setColor(Color.WHITE);
+					} else {
+						graphics2d.setColor(Color.LIGHT_GRAY);
+					}
+					graphics2d.drawOval(point.x, point.y, Util.intervalo(1, 2),
+							Util.intervalo(1, 2));
+				}
+			}
+			if (linha.size() > 100) {
+				int intIni = Util.intervalo(1, 20);
+				Point pIni = linha.get(intIni);
+				Point pFim = linha.get(intIni + Util.intervalo(1, 30));
+				if (Math.random() > .7) {
+					graphics2d.setColor(Color.WHITE);
+				} else {
+					graphics2d.setColor(Color.LIGHT_GRAY);
+				}
+				graphics2d.drawLine(pIni.x, pIni.y, pFim.x, pFim.y);
+			}
 		}
 	}
 }
