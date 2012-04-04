@@ -500,7 +500,7 @@ public class JogoCliente {
 		} catch (Exception e) {
 			Logger.logarExept(e);
 		}
-
+		controleCliente.sairJogo();
 	}
 
 	private void iniciaListenerTeclado() {

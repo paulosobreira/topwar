@@ -15,6 +15,7 @@ public class ConstantesTopWar {
 	public static final String CIMA = "CIMA";
 	public static final String ATUALIZAR_LISTA_AVS = "ATUALIZAR_LISTA_AVS";
 	public static final String ENTRAR_JOGO = "ENTRAR_JOGO";
+	public static final String SAIR_JOGO = "SAIR_JOGO";
 	public static final int LARGURA_AVATAR = 35;
 	public static final int ALTURA_AVATAR = 47;
 	public static final int LARGURA_AREA_AVATAR = LARGURA_AVATAR / 2;
@@ -61,5 +62,6 @@ public class ConstantesTopWar {
 	public static final long ATRASO_REDE_PADRAO_BOTS = (long) (ATRASO_REDE_PADRAO * 1.5);
 	public static final String ASSAULT = "assault";
 	public static final String SHOTGUN = "shotgun";
+	
 
 }

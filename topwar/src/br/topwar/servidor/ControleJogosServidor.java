@@ -12,6 +12,7 @@ import br.nnpe.tos.MsgSrv;
 import br.nnpe.tos.NnpeDados;
 import br.nnpe.tos.NnpeTO;
 import br.nnpe.tos.SessaoCliente;
+import br.topwar.ConstantesTopWar;
 import br.topwar.ProxyComandos;
 import br.topwar.recursos.idiomas.Lang;
 import br.topwar.tos.AvatarTopWar;
@@ -102,7 +103,7 @@ public class ControleJogosServidor {
 		return null;
 	}
 
-	private JogoServidor obterJogo(String nomeJogo) {
+	protected JogoServidor obterJogo(String nomeJogo) {
 		return mapaJogos.get(nomeJogo);
 	}
 
@@ -263,6 +264,14 @@ public class ControleJogosServidor {
 			return null;
 		}
 		return jogoServidor.obterPlacarJogo();
+	}
+
+	public Object sairJogo(NnpeTO nnpeTO) {
+		DadosJogoTopWar dadosJogoTopWar = (DadosJogoTopWar) nnpeTO.getData();
+		JogoServidor jogoServidor = obterJogoCliente(dadosJogoTopWar
+				.getNomeJogador());
+		jogoServidor.sairJogo(dadosJogoTopWar.getNomeJogador());
+		return ConstantesTopWar.OK;
 	}
 
 }
