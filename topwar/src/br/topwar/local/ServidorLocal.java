@@ -33,4 +33,6 @@ public class ServidorLocal extends ControleJogosServidor {
 		return ConstantesTopWar.OK;
 	}
 
+	public void removerClienteInativo(SessaoCliente sessaoClienteRemover) {
+	}
 }

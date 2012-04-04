@@ -1,6 +1,5 @@
 package br.topwar;
 
-import br.nnpe.Logger;
 import br.nnpe.servidor.NnpeProxyComandos;
 import br.nnpe.tos.NnpeTO;
 import br.nnpe.tos.SessaoCliente;
@@ -11,6 +10,12 @@ public class ProxyComandos extends NnpeProxyComandos {
 
 	private ControlePersistencia controlePersistencia;
 	private ControleJogosServidor controleJogosServidor;
+	private boolean removeInativos = true;
+
+	public ProxyComandos() {
+		this(null, null);
+		removeInativos = false;
+	}
 
 	public ProxyComandos(String webDir, String webInfDir) {
 		super(webDir, webInfDir);
@@ -94,8 +99,10 @@ public class ProxyComandos extends NnpeProxyComandos {
 
 	@Override
 	public void removerClienteInativo(SessaoCliente sessaoClienteRemover) {
-		super.removerClienteInativo(sessaoClienteRemover);
-		controleJogosServidor.removerClienteInativo(sessaoClienteRemover);
+		if (removeInativos) {
+			super.removerClienteInativo(sessaoClienteRemover);
+			controleJogosServidor.removerClienteInativo(sessaoClienteRemover);
+		}
 	}
 
 	@Override
