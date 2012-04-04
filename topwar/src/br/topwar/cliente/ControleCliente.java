@@ -52,7 +52,10 @@ public class ControleCliente extends NnpeChatCliente {
 			logar();
 			return;
 		}
+		criarJogoSemLogar();
+	}
 
+	public void criarJogoSemLogar() {
 		JPanel classesPanel = new JPanel();
 		JComboBox classesCombo = new JComboBox();
 

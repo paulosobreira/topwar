@@ -555,6 +555,9 @@ public class JogoCliente {
 		nnpeTO = (NnpeTO) ret;
 		millisSrv = nnpeTO.getMillisSrv();
 		Map retorno = (Map) nnpeTO.getData();
+		if (retorno == null) {
+			return;
+		}
 		balas = (Integer) retorno.get(ConstantesTopWar.BALAS);
 		cartuchos = (Integer) retorno.get(ConstantesTopWar.CARTUCHO);
 		recarregando = (Boolean) retorno.get(ConstantesTopWar.RECARREGAR);
