@@ -10,7 +10,7 @@ public class MainFrame {
 	private ProxyComandos proxyComandos;
 
 	public MainFrame() {
-		proxyComandos = new ProxyComandos(null, null);
+		proxyComandos = new ProxyComandos();
 		servidorLocal = new ServidorLocal(proxyComandos);
 		clienteLocal = new ClienteLocal(proxyComandos);
 		clienteLocal.criarJogoSemLogar();
