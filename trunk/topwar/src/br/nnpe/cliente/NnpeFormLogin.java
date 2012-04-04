@@ -62,7 +62,9 @@ public class NnpeFormLogin extends JPanel {
 
 	public NnpeFormLogin(NnpeApplet nnpeApplet) {
 		this.nnpeApplet = nnpeApplet;
-
+		if (nnpeApplet == null) {
+			return;
+		}
 		setLayout(new BorderLayout());
 		JTabbedPane jTabbedPane = new JTabbedPane();
 		JPanel abaEntrar = new JPanel(new BorderLayout(15, 15));
@@ -105,9 +107,8 @@ public class NnpeFormLogin extends JPanel {
 
 		JPanel newPanel = new JPanel(new BorderLayout());
 		newPanel.add(registrarPanel, BorderLayout.NORTH);
-		newPanel.add(
-				gerarCapchaPanel(capchaTextoRecuperar, Constantes.RECUPERAR),
-				BorderLayout.CENTER);
+		newPanel.add(gerarCapchaPanel(capchaTextoRecuperar,
+				Constantes.RECUPERAR), BorderLayout.CENTER);
 		return newPanel;
 	}
 
@@ -153,6 +154,9 @@ public class NnpeFormLogin extends JPanel {
 	}
 
 	private JPanel gerarRegistrar() {
+		if (nnpeApplet == null) {
+			return null;
+		}
 		JPanel registrarPanel = new JPanel(new GridLayout(4, 2));
 		registrarPanel.setBorder(new TitledBorder("Registrar") {
 			public String getTitle() {
@@ -180,6 +184,9 @@ public class NnpeFormLogin extends JPanel {
 
 	private Component gerarCapchaPanel(JTextField capchaTexto,
 			final String cpachaChave) {
+		if (nnpeApplet == null) {
+			return null;
+		}
 		JPanel capchaPanel = new JPanel(new BorderLayout());
 		final JLabel capchaImage = new JLabel();
 		JPanel capchaImagePanel = new JPanel();
@@ -276,8 +283,8 @@ public class NnpeFormLogin extends JPanel {
 		// encoder.close();
 		NnpeFormLogin formEntrada = new NnpeFormLogin(null);
 		formEntrada.setToolTipText(Lang.msg("formularioLogin"));
-		int result = JOptionPane.showConfirmDialog(null, formEntrada,
-				Lang.msg("formularioLogin"), JOptionPane.OK_CANCEL_OPTION);
+		int result = JOptionPane.showConfirmDialog(null, formEntrada, Lang
+				.msg("formularioLogin"), JOptionPane.OK_CANCEL_OPTION);
 
 		if (JOptionPane.OK_OPTION == result) {
 			Logger.logar("ok");

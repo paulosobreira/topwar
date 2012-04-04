@@ -31,6 +31,9 @@ public abstract class NnpeChatCliente {
 
 	public NnpeChatCliente(NnpeApplet nnpeApplet) {
 		this.nnpeApplet = nnpeApplet;
+		if (nnpeApplet == null) {
+			return;
+		}
 		threadAtualizadora = new Thread(new Runnable() {
 
 			public void run() {
@@ -55,7 +58,9 @@ public abstract class NnpeChatCliente {
 	}
 
 	public boolean isComunicacaoServer() {
-		return nnpeApplet.isComunicacaoServer();
+		if (nnpeApplet != null)
+			return nnpeApplet.isComunicacaoServer();
+		return true;
 	}
 
 	public void definirImplementacaoChatWindow() {
@@ -79,6 +84,9 @@ public abstract class NnpeChatCliente {
 	}
 
 	public void logar() {
+		if (nnpeApplet == null) {
+			return;
+		}
 		nnpeFormLogin = getNnpeFormLogin();
 		nnpeFormLogin.setToolTipText(Lang.msg("formularioLogin"));
 		try {
@@ -238,10 +246,6 @@ public abstract class NnpeChatCliente {
 	}
 
 	public Object enviarObjeto(NnpeTO nnpeTO) {
-		if (nnpeApplet == null) {
-			Logger.logar("enviarObjeto nnpeApplet null");
-			return null;
-		}
 		return nnpeApplet.enviarObjeto(nnpeTO);
 	}
 
@@ -253,11 +257,15 @@ public abstract class NnpeChatCliente {
 	}
 
 	public int getLatenciaMinima() {
-		return nnpeApplet.getLatenciaMinima();
+		if (nnpeApplet != null)
+			return nnpeApplet.getLatenciaMinima();
+		return 0;
 	}
 
 	public int getLatenciaReal() {
-		return nnpeApplet.getLatenciaReal();
+		if (nnpeApplet != null)
+			return nnpeApplet.getLatenciaReal();
+		return 0;
 	}
 
 	public void atualizaInfo() {
@@ -267,7 +275,9 @@ public abstract class NnpeChatCliente {
 	}
 
 	public String getVersao() {
-		return nnpeApplet.getVersao();
+		if (nnpeApplet != null)
+			return nnpeApplet.getVersao();
+		return "impl ver local";
 	}
 
 	public void sair() {
