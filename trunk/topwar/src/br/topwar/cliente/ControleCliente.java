@@ -265,4 +265,14 @@ public class ControleCliente extends NnpeChatCliente {
 		return enviarObjeto(nnpeTO);
 	}
 
+	public void sairJogo() {
+		NnpeTO nnpeTO = new NnpeTO();
+		nnpeTO.setComando(ConstantesTopWar.SAIR_JOGO);
+		nnpeTO.setSessaoCliente(sessaoCliente);
+		DadosJogoTopWar dadosJogoTopWar = new DadosJogoTopWar();
+		dadosJogoTopWar.setNomeJogador(sessaoCliente.getNomeJogador());
+		nnpeTO.setData(dadosJogoTopWar);
+		Object ret = enviarObjeto(nnpeTO);
+	}
+
 }

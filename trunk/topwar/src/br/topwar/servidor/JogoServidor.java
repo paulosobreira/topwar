@@ -830,4 +830,8 @@ public class JogoServidor {
 		}
 		return true;
 	}
+
+	public void sairJogo(String nomeJogador) {
+		removerJogador(nomeJogador);
+	}
 }

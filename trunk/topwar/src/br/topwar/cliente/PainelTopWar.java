@@ -42,8 +42,8 @@ public class PainelTopWar {
 	private JPanel panel;
 	private JScrollPane scrollPane;
 	private MapaTopWar mapaTopWar;
-	private boolean desenhaObjetos = false;
-	private boolean desenhaImagens = true;
+	private boolean desenhaObjetos = true;
+	private boolean desenhaImagens = false;
 	private int ocilaAlphaRecarregando = 255;
 	private boolean ocilaAlphaRecarregandoSobe = false;
 	private int ocilaAlphaMorte = 255;
@@ -200,7 +200,7 @@ public class PainelTopWar {
 				if (desenhaImagens) {
 					graphics2d.drawImage(img, null, 0, 0);
 				} else {
-					graphics2d.setColor(Color.BLACK);
+					graphics2d.setColor(Color.WHITE);
 					graphics2d.fillRect(0, 0, mapaTopWar.getLargura(),
 							mapaTopWar.getAltura());
 				}
@@ -946,10 +946,10 @@ public class PainelTopWar {
 			}
 
 			Point ptMin = GeoUtil.calculaPonto(angMinJogador, 500, pontoAvatar);
-			graphics2d.setColor(Color.BLACK);
+			graphics2d.setColor(Color.ORANGE);
 			graphics2d.drawLine(pontoAvatar.x, pontoAvatar.y, ptMin.x, ptMin.y);
 			Point ptMax = GeoUtil.calculaPonto(angMaxJogador, 500, pontoAvatar);
-			graphics2d.setColor(Color.WHITE);
+			graphics2d.setColor(Color.ORANGE);
 			graphics2d.drawLine(pontoAvatar.x, pontoAvatar.y, ptMax.x, ptMax.y);
 		}
 
