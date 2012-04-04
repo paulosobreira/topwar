@@ -200,7 +200,7 @@ public class PainelTopWar {
 				if (desenhaImagens) {
 					graphics2d.drawImage(img, null, 0, 0);
 				} else {
-					graphics2d.setColor(Color.WHITE);
+					graphics2d.setColor(Color.LIGHT_GRAY);
 					graphics2d.fillRect(0, 0, mapaTopWar.getLargura(),
 							mapaTopWar.getAltura());
 				}
