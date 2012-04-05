@@ -56,9 +56,7 @@ public class JogoServidor {
 		incluirAvatarCriadorJogo(dadosJogoTopWar);
 		iniciarContadorTempoJogo();
 		iniciaMonitorDeJogo();
-		controleBots.incializar();
 		controleBots.adicionarBot();
-
 	}
 
 	public MapaTopWar getMapaTopWar() {
