@@ -47,6 +47,7 @@ public class BotInfo {
 
 			}
 		});
+		threadBots.setPriority(Thread.MIN_PRIORITY);
 		threadBots.start();
 	}
 
