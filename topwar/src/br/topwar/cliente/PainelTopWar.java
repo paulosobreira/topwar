@@ -42,8 +42,8 @@ public class PainelTopWar {
 	private JPanel panel;
 	private JScrollPane scrollPane;
 	private MapaTopWar mapaTopWar;
-	private boolean desenhaObjetos = true;
-	private boolean desenhaImagens = false;
+	private boolean desenhaObjetos = false;
+	private boolean desenhaImagens = true;
 	private int ocilaAlphaRecarregando = 255;
 	private boolean ocilaAlphaRecarregandoSobe = false;
 	private int ocilaAlphaMorte = 255;
