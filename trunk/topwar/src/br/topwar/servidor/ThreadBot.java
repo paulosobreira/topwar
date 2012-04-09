@@ -32,7 +32,12 @@ public class ThreadBot implements Runnable {
 				}
 			}
 			try {
-				Thread.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO_BOTS);
+				long sleep = (ConstantesTopWar.ATRASO_REDE_PADRAO_BOTS)
+						- myBots.size();
+				if (sleep < 10) {
+					sleep = 10;
+				}
+				Thread.sleep(sleep);
 			} catch (InterruptedException e) {
 				interrupt = true;
 			}
