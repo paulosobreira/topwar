@@ -17,6 +17,10 @@ public class ControleBots {
 	private ThreadBot thBot1;
 	private ThreadBot thBot2;
 
+	private Thread thread1;
+
+	private Thread thread2;
+
 	public static void main(String[] args) throws IOException {
 		NameGenerator nameGenerator = new NameGenerator("silabas");
 		System.out.println(" ->  "
@@ -27,14 +31,19 @@ public class ControleBots {
 	public ControleBots(JogoServidor jogoServidor) {
 		this.jogoServidor = jogoServidor;
 		thBot1 = new ThreadBot(jogoServidor);
-		Thread thread1 = new Thread(thBot1);
-		thread1.start();
+		thread1 = new Thread(thBot1);
 		thBot2 = new ThreadBot(jogoServidor);
-		Thread thread2 = new Thread(thBot2);
-		thread2.start();
+		thread2 = new Thread(thBot2);
 	}
 
 	public void adicionarBot() {
+
+		if (!thread1.isAlive()) {
+			thread1.start();
+		}
+		if (!thread2.isAlive()) {
+			thread2.start();
+		}
 		try {
 			NameGenerator nameGenerator = new NameGenerator("silabas");
 			for (int i = 0; i < 127; i++) {
@@ -53,5 +62,4 @@ public class ControleBots {
 			Logger.logarExept(e);
 		}
 	}
-
 }
