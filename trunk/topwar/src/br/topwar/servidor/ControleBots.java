@@ -14,7 +14,8 @@ public class ControleBots {
 
 	private JogoServidor jogoServidor;
 
-	private List<AvatarTopWar> bots = new ArrayList<AvatarTopWar>();
+	private ThreadBot thBot1;
+	private ThreadBot thBot2;
 
 	public static void main(String[] args) throws IOException {
 		NameGenerator nameGenerator = new NameGenerator("silabas");
@@ -25,6 +26,12 @@ public class ControleBots {
 
 	public ControleBots(JogoServidor jogoServidor) {
 		this.jogoServidor = jogoServidor;
+		thBot1 = new ThreadBot(jogoServidor);
+		Thread thread1 = new Thread(thBot1);
+		thread1.start();
+		thBot2 = new ThreadBot(jogoServidor);
+		Thread thread2 = new Thread(thBot2);
+		thread2.start();
 	}
 
 	public void adicionarBot() {
@@ -34,9 +41,11 @@ public class ControleBots {
 				String nome = nameGenerator.compose(Util.intervalo(2, 3));
 				AvatarTopWar bot = jogoServidor.entrarNoJogo(nome);
 				bot.setBotInfo(new BotInfo(bot, jogoServidor));
-				synchronized (bots) {
-					bots.add(bot);
-					bot.getBotInfo().incializar();
+				bot.getBotInfo();
+				if (i % 2 == 0) {
+					thBot1.addBot(bot);
+				} else {
+					thBot2.addBot(bot);
 				}
 				Logger.logar("Adicionou " + bot.getNomeJogador());
 			}

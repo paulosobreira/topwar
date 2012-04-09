@@ -21,34 +21,10 @@ public class BotInfo {
 	private Point ultimaGuia;
 	private AvatarTopWar avatarTopWar;
 	private JogoServidor jogoServidor;
-	private Thread threadBots;
 
 	public BotInfo(AvatarTopWar bot, JogoServidor jogoServidor) {
 		this.avatarTopWar = bot;
 		this.jogoServidor = jogoServidor;
-	}
-
-	public void incializar() {
-		if (threadBots != null) {
-			threadBots.interrupt();
-		}
-		threadBots = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				boolean interrupt = false;
-				while (!jogoServidor.verificaFinalizado() && !interrupt) {
-					processaAcaoBot();
-					try {
-						Thread.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO_BOTS);
-					} catch (InterruptedException e) {
-						interrupt = true;
-					}
-				}
-
-			}
-		});
-		threadBots.setPriority(Thread.MIN_PRIORITY);
-		threadBots.start();
 	}
 
 	public void processaAcaoBot() {
