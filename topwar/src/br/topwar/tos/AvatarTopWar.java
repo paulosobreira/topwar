@@ -9,6 +9,7 @@ import br.topwar.ConstantesTopWar;
 
 public class AvatarTopWar implements Serializable {
 	private String time;
+	private String classe;
 	private String nomeJogador;
 	private Point pontoAvatar;
 	private double angulo;
@@ -28,6 +29,14 @@ public class AvatarTopWar implements Serializable {
 	private transient long ultimaMorte;
 	private transient long recarregar;
 	private transient BotInfo botInfo;
+
+	public String getClasse() {
+		return classe;
+	}
+
+	public void setClasse(String classe) {
+		this.classe = classe;
+	}
 
 	public int getRangeUtlDisparo() {
 		return rangeUtlDisparo;

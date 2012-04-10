@@ -10,6 +10,18 @@ public class DadosJogoTopWar implements Serializable {
 
 	private String nomeMapa;
 
+	private String classe;
+	
+	
+
+	public String getClasse() {
+		return classe;
+	}
+
+	public void setClasse(String classe) {
+		this.classe = classe;
+	}
+
 	public String getNomeJogo() {
 		return nomeJogo;
 	}

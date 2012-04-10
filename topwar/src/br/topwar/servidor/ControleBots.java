@@ -46,7 +46,7 @@ public class ControleBots {
 		}
 		try {
 			NameGenerator nameGenerator = new NameGenerator("silabas");
-			for (int i = 0; i < 127; i++) {
+			for (int i = 0; i < 20; i++) {
 				String nome = nameGenerator.compose(Util.intervalo(2, 3));
 				AvatarTopWar bot = jogoServidor.entrarNoJogo(nome);
 				bot.setBotInfo(new BotInfo(bot, jogoServidor));
