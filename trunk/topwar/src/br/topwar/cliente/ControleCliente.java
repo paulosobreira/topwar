@@ -78,6 +78,7 @@ public class ControleCliente extends NnpeChatCliente {
 			DadosJogoTopWar dadosJogoTopWar = new DadosJogoTopWar();
 			dadosJogoTopWar.setNomeJogador(getNomeJogador());
 			dadosJogoTopWar.setNomeMapa("mapa9");
+			dadosJogoTopWar.setClasse(ConstantesTopWar.SHOTGUN);
 			nnpeTO.setData(dadosJogoTopWar);
 			Object ret = enviarObjeto(nnpeTO);
 			if (ret instanceof NnpeTO) {

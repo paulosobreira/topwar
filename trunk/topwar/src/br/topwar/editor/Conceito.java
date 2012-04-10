@@ -309,7 +309,7 @@ public class Conceito {
 				graphics2d.setColor(Color.white);
 				graphics2d.fillRect(0, 0, mapaTopWar.getLargura(), mapaTopWar
 						.getAltura());
-				// graphics2d.drawImage(img, null, 0, 0);
+				graphics2d.drawImage(img, null, 0, 0);
 				double angulo = GeoUtil.calculaAngulo(pontoAvatar, pontoMouse,
 						90);
 				if (angulo < 0) {
@@ -354,14 +354,13 @@ public class Conceito {
 								areaAvatar, mapaTopWar);
 						imgJog = processaGrade(imgJog, desenha, areaAvatar,
 								mapaTopWar);
-						// graphics2d
-						// .drawImage(imgJog, desenha.x, desenha.y, null);
+						graphics2d
+								.drawImage(imgJog, desenha.x, desenha.y, null);
 						/**
 						 * Desenha Faca
 						 */
 						// desenhaFacada(graphics2d, angulo, imgJog, desenha);
 						System.out.println(angulo);
-
 						if (desenhaObjetos) {
 							graphics2d.setColor(Color.MAGENTA);
 							graphics2d.draw(areaAvatar);
