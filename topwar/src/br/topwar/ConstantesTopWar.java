@@ -36,6 +36,8 @@ public class ConstantesTopWar {
 	public static final String ANGULO = "ANGULO";
 	public static final int BALAS_ASSALT = 50;
 	public static final int CARTUCHOS_ASSALT = 5;
+	public static final int BALAS_SHOTGUN = 6;
+	public static final int CARTUCHOS_SHOTGUN = 2;
 
 	/**
 	 * pela rede
@@ -62,6 +64,5 @@ public class ConstantesTopWar {
 	public static final long ATRASO_REDE_PADRAO_BOTS = (long) (ATRASO_REDE_PADRAO * 1.5);
 	public static final String ASSAULT = "assault";
 	public static final String SHOTGUN = "shotgun";
-	
 
 }
