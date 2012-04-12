@@ -9,7 +9,6 @@ import br.topwar.ConstantesTopWar;
 
 public class AvatarTopWar implements Serializable {
 	private String time;
-	private String classe;
 	private String nomeJogador;
 	private Point pontoAvatar;
 	private double angulo;
@@ -19,6 +18,7 @@ public class AvatarTopWar implements Serializable {
 	private int arma = ConstantesTopWar.ARMA_FACA;
 	private int rangeUtlDisparo;
 	private boolean invencivel;
+	private transient String classe;
 	private transient Point pontoUtlDisparo;
 	private transient AvatarTopWar mortoPor;
 	private transient int balas = 0;

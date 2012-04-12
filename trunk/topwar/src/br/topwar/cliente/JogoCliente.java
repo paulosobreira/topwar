@@ -328,7 +328,7 @@ public class JogoCliente {
 		if (avatarClientes == null) {
 			return;
 		}
-		if (ConstantesTopWar.ARMA_ASSALT == arma && balas <= 0) {
+		if (ConstantesTopWar.ARMA_FACA != arma && balas <= 0) {
 			recarregar();
 			return;
 		}
