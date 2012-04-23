@@ -96,17 +96,7 @@ public class JogoServidor {
 	private void incluirAvatarCriadorJogo(DadosJogoTopWar dadosJogoTopWar) {
 		AvatarTopWar avatarTopWar = new AvatarTopWar();
 		avatarTopWar.setClasse(dadosJogoTopWar.getClasse());
-		avatarTopWar.setVida(ConstantesTopWar.VIDA_COMPLETA);
-		if (ConstantesTopWar.ASSAULT.equals(avatarTopWar.getClasse())) {
-			avatarTopWar.setArma(ConstantesTopWar.ARMA_ASSALT);
-			avatarTopWar.setBalas(ConstantesTopWar.BALAS_ASSALT);
-			avatarTopWar.setCartuchos(ConstantesTopWar.CARTUCHOS_ASSALT);
-		} else if (ConstantesTopWar.SHOTGUN.equals(avatarTopWar.getClasse())) {
-			avatarTopWar.setArma(ConstantesTopWar.ARMA_SHOTGUN);
-			avatarTopWar.setBalas(ConstantesTopWar.BALAS_SHOTGUN);
-			avatarTopWar.setCartuchos(ConstantesTopWar.CARTUCHOS_SHOTGUN);
-		}
-
+		setupCalsseJogador(avatarTopWar);
 		if (Math.random() > .5) {
 			avatarTopWar.setTime(ConstantesTopWar.TIME_VERMELHO);
 			avatarTopWar.setPontoAvatar(mapaTopWar.getPontoTimeVermelho());
@@ -394,9 +384,7 @@ public class JogoServidor {
 
 	public AvatarTopWar entrarNoJogo(String nomeJogador) {
 		AvatarTopWar avatarTopWar = new AvatarTopWar();
-		avatarTopWar.setVida(ConstantesTopWar.VIDA_COMPLETA);
-		avatarTopWar.setBalas(ConstantesTopWar.BALAS_ASSALT);
-		avatarTopWar.setCartuchos(ConstantesTopWar.CARTUCHOS_ASSALT);
+		setupCalsseJogador(avatarTopWar);
 		int contAzul = contarJogadores(ConstantesTopWar.TIME_AZUL);
 		int contVermelho = contarJogadores(ConstantesTopWar.TIME_VERMELHO);
 		if (contAzul > contVermelho) {
@@ -418,6 +406,35 @@ public class JogoServidor {
 		avatarTopWar.setNomeJogador(nomeJogador);
 		avatarTopWars.add(avatarTopWar);
 		return avatarTopWar;
+	}
+
+	private void setupCalsseJogador(AvatarTopWar avatarTopWar) {
+		avatarTopWar.setVida(ConstantesTopWar.VIDA_COMPLETA);
+		if (ConstantesTopWar.ASSAULT.equals(avatarTopWar.getClasse())) {
+			avatarTopWar.setArma(ConstantesTopWar.ARMA_ASSAULT);
+			avatarTopWar.setBalas(ConstantesTopWar.BALAS_ASSALT);
+			avatarTopWar.setCartuchos(ConstantesTopWar.CARTUCHOS_ASSALT);
+		} else if (ConstantesTopWar.SHOTGUN.equals(avatarTopWar.getClasse())) {
+			avatarTopWar.setArma(ConstantesTopWar.ARMA_SHOTGUN);
+			avatarTopWar.setBalas(ConstantesTopWar.BALAS_SHOTGUN);
+			avatarTopWar.setCartuchos(ConstantesTopWar.CARTUCHOS_SHOTGUN);
+		} else if (ConstantesTopWar.SNIPER.equals(avatarTopWar.getClasse())) {
+			avatarTopWar.setArma(ConstantesTopWar.ARMA_SNIPER);
+			avatarTopWar.setBalas(ConstantesTopWar.BALAS_SNIPER);
+			avatarTopWar.setCartuchos(ConstantesTopWar.CARTUCHOS_SNIPER);
+		} else if (ConstantesTopWar.MACHINEGUN.equals(avatarTopWar.getClasse())) {
+			avatarTopWar.setArma(ConstantesTopWar.ARMA_MACHINEGUN);
+			avatarTopWar.setBalas(ConstantesTopWar.BALAS_MACHINEGUN);
+			avatarTopWar.setCartuchos(ConstantesTopWar.CARTUCHOS_MACHINEGUN);
+		} else if (ConstantesTopWar.ROCKET.equals(avatarTopWar.getClasse())) {
+			avatarTopWar.setArma(ConstantesTopWar.ARMA_ROCKET);
+			avatarTopWar.setBalas(ConstantesTopWar.BALAS_ROCKET);
+			avatarTopWar.setCartuchos(ConstantesTopWar.CARTUCHOS_ROCKET);
+		} else if (ConstantesTopWar.SHIELD.equals(avatarTopWar.getClasse())) {
+			avatarTopWar.setArma(ConstantesTopWar.ARMA_SHIELD);
+			avatarTopWar.setBalas(0);
+			avatarTopWar.setCartuchos(0);
+		}
 	}
 
 	private int contarJogadores(String time) {
@@ -484,7 +501,7 @@ public class JogoServidor {
 		if (avatarAtacando.getVida() <= 0) {
 			return null;
 		}
-		if (ConstantesTopWar.ARMA_ASSALT == avatarAtacando.getArma()
+		if (ConstantesTopWar.ARMA_ASSAULT == avatarAtacando.getArma()
 				&& verificaRecarregando(avatarAtacando)) {
 			return null;
 		}
@@ -493,7 +510,7 @@ public class JogoServidor {
 			return ConstantesTopWar.OK;
 		}
 
-		if (ConstantesTopWar.ARMA_ASSALT == avatarAtacando.getArma()
+		if (ConstantesTopWar.ARMA_ASSAULT == avatarAtacando.getArma()
 				&& (atirar(avatarAtacando, angulo, range))) {
 			return ConstantesTopWar.OK;
 		}
@@ -857,10 +874,18 @@ public class JogoServidor {
 		if (avatarTopWar.getArma() == ConstantesTopWar.ARMA_FACA) {
 			if (ConstantesTopWar.SHOTGUN.equals(avatarTopWar.getClasse())) {
 				avatarTopWar.setArma(ConstantesTopWar.ARMA_SHOTGUN);
-				avatarTopWar.setVelocidade(10);
-			} else {
-				avatarTopWar.setArma(ConstantesTopWar.ARMA_ASSALT);
-				avatarTopWar.setVelocidade(7);
+			} else if (ConstantesTopWar.ASSAULT
+					.equals(avatarTopWar.getClasse())) {
+				avatarTopWar.setArma(ConstantesTopWar.ARMA_ASSAULT);
+			} else if (ConstantesTopWar.SNIPER.equals(avatarTopWar.getClasse())) {
+				avatarTopWar.setArma(ConstantesTopWar.ARMA_SNIPER);
+			} else if (ConstantesTopWar.MACHINEGUN.equals(avatarTopWar
+					.getClasse())) {
+				avatarTopWar.setArma(ConstantesTopWar.ARMA_MACHINEGUN);
+			} else if (ConstantesTopWar.ROCKET.equals(avatarTopWar.getClasse())) {
+				avatarTopWar.setArma(ConstantesTopWar.ARMA_ROCKET);
+			} else if (ConstantesTopWar.SHIELD.equals(avatarTopWar.getClasse())) {
+				avatarTopWar.setArma(ConstantesTopWar.ARMA_SHIELD);
 			}
 		} else {
 			avatarTopWar.setArma(ConstantesTopWar.ARMA_FACA);

@@ -3,7 +3,33 @@ package br.topwar;
 import java.awt.Color;
 
 public class ConstantesTopWar {
+	/**
+	 * Rede
+	 */
+	public static final String LISTA_AVATARES = "L_A";
+	public static final String BALAS = "B";
+	public static final String CARTUCHO = "C";
+	public static final String PTS_VERMELHO = "P_V";
+	public static final String PTS_AZUL = "P_A";
+	public static final String TEMPO_JOGO_RESTANTE = "T_J_R";
+	public static final String MOVER_PONTO = "M_P";
+	public static final String ESPERE = "ESPERE";
+	public static final String ALTERNA_FACA = "A_F";
+	public static final int ARMA_FACA = 1;
+	public static final int ARMA_ASSAULT = 2;
+	public static final int ARMA_SHOTGUN = 3;
+	public static final int ARMA_SNIPER = 4;
+	public static final int ARMA_MACHINEGUN = 5;
+	public static final int ARMA_ROCKET = 6;
+	public static final int ARMA_SHIELD = 7;
+	public static final String ATACAR = "A";
+	public static final String KILL_CAM = "K_C";
+	public static final String OBTER_PLCAR = "O_P";
+	public static final String EVENTO_JOGO = "E_J";
 
+	/**
+	 * Gerais
+	 */
 	public static final String GRADE = "GRADE";
 	public static final String BOT_GUIA = "BOT_GUIA";
 	public static final String OBTER_DADOS_JOGO = "OBTER_DADOS_JOGO";
@@ -34,35 +60,25 @@ public class ConstantesTopWar {
 	public static final long MEIO_ATRASO_REDE_PADRAO = ATRASO_REDE_PADRAO / 2;
 	public static final long TEMPO_RECARGA = 2000;
 	public static final String ANGULO = "ANGULO";
-	public static final int BALAS_ASSALT = 50;
-	public static final int CARTUCHOS_ASSALT = 5;
-	public static final int BALAS_SHOTGUN = 6;
-	public static final int CARTUCHOS_SHOTGUN = 2;
 
-	/**
-	 * pela rede
-	 */
-	public static final String LISTA_AVATARES = "L_A";
-	public static final String BALAS = "B";
-	public static final String CARTUCHO = "C";
-	public static final String PTS_VERMELHO = "P_V";
-	public static final String PTS_AZUL = "P_A";
-	public static final String TEMPO_JOGO_RESTANTE = "T_J_R";
-	public static final String MOVER_PONTO = "M_P";
-	public static final String ESPERE = "ESPERE";
-	public static final String ALTERNA_FACA = "A_F";
-	public static final int ARMA_FACA = 1;
-	public static final int ARMA_ASSALT = 2;
-	public static final int ARMA_SHOTGUN = 3;
-	public static final String ATACAR = "A";
-	public static final String KILL_CAM = "K_C";
-	public static final String OBTER_PLCAR = "O_P";
-	public static final String EVENTO_JOGO = "E_J";
 	public static final int HEADSHOT = 0;
 	public static final int LIMITE_VISAO = 600;
 	public static final int MEIO_LIMITE_VISAO = LIMITE_VISAO / 2;
 	public static final long ATRASO_REDE_PADRAO_BOTS = (long) (ATRASO_REDE_PADRAO * 1.5);
 	public static final String ASSAULT = "assault";
+	public static final int BALAS_ASSALT = 50;
+	public static final int CARTUCHOS_ASSALT = 7;
 	public static final String SHOTGUN = "shotgun";
-
+	public static final int BALAS_SHOTGUN = 6;
+	public static final int CARTUCHOS_SHOTGUN = 2;
+	public static final String SNIPER = "sniper";
+	public static final int BALAS_SNIPER = 1;
+	public static final int CARTUCHOS_SNIPER = 10;
+	public static final String MACHINEGUN = "machinegun";
+	public static final int BALAS_MACHINEGUN = 200;
+	public static final int CARTUCHOS_MACHINEGUN = 5;
+	public static final String ROCKET = "rocket";
+	public static final int BALAS_ROCKET = 1;
+	public static final int CARTUCHOS_ROCKET = 8;
+	public static final String SHIELD = "shield";
 }
