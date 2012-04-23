@@ -52,15 +52,18 @@ public class ControleCliente extends NnpeChatCliente {
 			logar();
 			return;
 		}
-		criarJogoSemLogar();
+		criarJogoDepoisDeLogar();
 	}
 
-	public void criarJogoSemLogar() {
+	public void criarJogoDepoisDeLogar() {
 		JPanel classesPanel = new JPanel();
 		JComboBox classesCombo = new JComboBox();
-
 		classesCombo.addItem(Lang.msg(ConstantesTopWar.ASSAULT));
 		classesCombo.addItem(Lang.msg(ConstantesTopWar.SHOTGUN));
+		classesCombo.addItem(Lang.msg(ConstantesTopWar.SNIPER));
+		classesCombo.addItem(Lang.msg(ConstantesTopWar.MACHINEGUN));
+		classesCombo.addItem(Lang.msg(ConstantesTopWar.ROCKET));
+		classesCombo.addItem(Lang.msg(ConstantesTopWar.SHIELD));
 		classesPanel.add(new JLabel() {
 			@Override
 			public String getText() {
@@ -78,7 +81,8 @@ public class ControleCliente extends NnpeChatCliente {
 			DadosJogoTopWar dadosJogoTopWar = new DadosJogoTopWar();
 			dadosJogoTopWar.setNomeJogador(getNomeJogador());
 			dadosJogoTopWar.setNomeMapa("mapa9");
-			dadosJogoTopWar.setClasse(ConstantesTopWar.SHOTGUN);
+			dadosJogoTopWar.setClasse(Lang.key((String) classesCombo
+					.getSelectedItem()));
 			nnpeTO.setData(dadosJogoTopWar);
 			Object ret = enviarObjeto(nnpeTO);
 			if (ret instanceof NnpeTO) {
@@ -95,6 +99,25 @@ public class ControleCliente extends NnpeChatCliente {
 			logar();
 			return;
 		}
+		JPanel classesPanel = new JPanel();
+		JComboBox classesCombo = new JComboBox();
+		classesCombo.addItem(Lang.msg(ConstantesTopWar.ASSAULT));
+		classesCombo.addItem(Lang.msg(ConstantesTopWar.SHOTGUN));
+		classesCombo.addItem(Lang.msg(ConstantesTopWar.SNIPER));
+		classesCombo.addItem(Lang.msg(ConstantesTopWar.MACHINEGUN));
+		classesCombo.addItem(Lang.msg(ConstantesTopWar.ROCKET));
+		classesCombo.addItem(Lang.msg(ConstantesTopWar.SHIELD));
+		classesPanel.add(new JLabel() {
+			@Override
+			public String getText() {
+				return Lang.msg("classe");
+			}
+		});
+		classesPanel.add(classesCombo);
+		int result = JOptionPane.showConfirmDialog(this.nnpeChatWindow
+				.getMainPanel(), classesPanel, Lang.msg("entarJogo"),
+				JOptionPane.YES_NO_OPTION);
+
 		NnpeTO nnpeTO = new NnpeTO();
 		nnpeTO.setComando(ConstantesTopWar.ENTRAR_JOGO);
 		nnpeTO.setSessaoCliente(sessaoCliente);
@@ -102,6 +125,8 @@ public class ControleCliente extends NnpeChatCliente {
 		DadosJogoTopWar dadosJogoTopWar = new DadosJogoTopWar();
 		dadosJogoTopWar.setNomeJogo(chatWindow.obterJogoSelecionado());
 		dadosJogoTopWar.setNomeJogador(sessaoCliente.getNomeJogador());
+		dadosJogoTopWar.setClasse(Lang.key((String) classesCombo
+				.getSelectedItem()));
 		nnpeTO.setData(dadosJogoTopWar);
 		Object ret = enviarObjeto(nnpeTO);
 		if (ret instanceof NnpeTO) {

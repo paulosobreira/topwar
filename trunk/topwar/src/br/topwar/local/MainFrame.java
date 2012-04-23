@@ -13,7 +13,7 @@ public class MainFrame {
 		proxyComandos = new ProxyComandos();
 		servidorLocal = new ServidorLocal(proxyComandos);
 		clienteLocal = new ClienteLocal(proxyComandos);
-		clienteLocal.criarJogoSemLogar();
+		clienteLocal.criarJogoDepoisDeLogar();
 	}
 
 	public static void main(String[] args) {

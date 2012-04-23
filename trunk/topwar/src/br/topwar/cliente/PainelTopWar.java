@@ -285,7 +285,7 @@ public class PainelTopWar {
 
 			long millisSrv = jogoCliente.getMillisSrv();
 			long tempoUtlDisparo = avatarCliente.getTempoUtlAtaque();
-			if (ConstantesTopWar.ARMA_ASSALT == avatarCliente.getArma()
+			if (ConstantesTopWar.ARMA_ASSAULT == avatarCliente.getArma()
 					&& (millisSrv - tempoUtlDisparo) < 300) {
 				desenhaDisparoAvatarAssault(graphics2d, avatarCliente,
 						avatarClientes);
@@ -399,7 +399,7 @@ public class PainelTopWar {
 			if (eventoJogo.getArma() == ConstantesTopWar.ARMA_FACA) {
 				arma = miniKnife;
 			}
-			if (eventoJogo.getArma() == ConstantesTopWar.ARMA_ASSALT) {
+			if (eventoJogo.getArma() == ConstantesTopWar.ARMA_ASSAULT) {
 				arma = miniAssalt;
 			}
 			if (eventoJogo.getArma() == ConstantesTopWar.ARMA_SHOTGUN) {
@@ -585,7 +585,7 @@ public class PainelTopWar {
 		BufferedImage arma = null;
 		if (jogoCliente.getArma() == ConstantesTopWar.ARMA_FACA) {
 			arma = knife;
-		} else if (jogoCliente.getArma() == ConstantesTopWar.ARMA_ASSALT) {
+		} else if (jogoCliente.getArma() == ConstantesTopWar.ARMA_ASSAULT) {
 			arma = assault;
 		}else if (jogoCliente.getArma() == ConstantesTopWar.ARMA_SHOTGUN) {
 			arma = assault;

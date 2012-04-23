@@ -77,6 +77,32 @@ public class AvatarTopWar implements Serializable {
 	}
 
 	public void setArma(int arma) {
+		switch (arma) {
+		case ConstantesTopWar.ARMA_ASSAULT:
+			setVelocidade(7);
+			break;
+		case ConstantesTopWar.ARMA_FACA:
+			setVelocidade(10);
+			break;
+		case ConstantesTopWar.ARMA_MACHINEGUN:
+			setVelocidade(5);
+			break;
+		case ConstantesTopWar.ARMA_ROCKET:
+			setVelocidade(5);
+			break;
+		case ConstantesTopWar.ARMA_SHIELD:
+			setVelocidade(10);
+			break;
+		case ConstantesTopWar.ARMA_SHOTGUN:
+			setVelocidade(10);
+			break;
+		case ConstantesTopWar.ARMA_SNIPER:
+			setVelocidade(5);
+			break;
+		default:
+			setVelocidade(1);
+			break;
+		}
 		this.arma = arma;
 	}
 
