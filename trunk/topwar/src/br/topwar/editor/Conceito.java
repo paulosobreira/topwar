@@ -306,10 +306,10 @@ public class Conceito {
 			protected void paintComponent(java.awt.Graphics g) {
 				super.paintComponent(g);
 				Graphics2D graphics2d = (Graphics2D) g;
-				graphics2d.setColor(Color.white);
+				graphics2d.setColor(Color.lightGray);
 				graphics2d.fillRect(0, 0, mapaTopWar.getLargura(), mapaTopWar
 						.getAltura());
-				graphics2d.drawImage(img, null, 0, 0);
+				// graphics2d.drawImage(img, null, 0, 0);
 				double angulo = GeoUtil.calculaAngulo(pontoAvatar, pontoMouse,
 						90);
 				if (angulo < 0) {
@@ -360,7 +360,6 @@ public class Conceito {
 						 * Desenha Faca
 						 */
 						// desenhaFacada(graphics2d, angulo, imgJog, desenha);
-						System.out.println(angulo);
 						if (desenhaObjetos) {
 							graphics2d.setColor(Color.MAGENTA);
 							graphics2d.draw(areaAvatar);
@@ -407,25 +406,32 @@ public class Conceito {
 				}
 
 				desenhaInfoJogo(graphics2d);
-				// List linha = GeoUtil.drawBresenhamLine(p, m);
-				// for (Iterator iterator = linha.iterator();
-				// iterator.hasNext();) {
-				// Point ptLinha = (Point) iterator.next();
-				// graphics2d.fillOval(ptLinha.x, ptLinha.y, 2, 2);
-				// }
 
-				Point front = GeoUtil.calculaPonto(angulo, 20, pontoAvatar);
-				Ellipse2D ellipse2d = new Ellipse2D.Double(front.x - 10,
-						front.y - 10, 20, 20);
-				graphics2d.draw(ellipse2d);
-				front = GeoUtil.calculaPonto(angulo, 45, pontoAvatar);
-				ellipse2d = new Ellipse2D.Double(front.x - 15, front.y - 15,
-						30, 30);
-				graphics2d.draw(ellipse2d);
-				front = GeoUtil.calculaPonto(angulo, 80, pontoAvatar);
-				ellipse2d = new Ellipse2D.Double(front.x - 20, front.y - 20,
-						40, 40);
-				graphics2d.draw(ellipse2d);
+				/**
+				 * Escudo
+				 */
+				int distEscudo = 3;
+//				if (angulo > 140 && angulo < 230) {
+////					distEscudo = 7;
+//				}
+				Point centroCorpo = new Point((int) gerarCorpo().getBounds()
+						.getCenterX(), (int) gerarCorpo().getBounds()
+						.getCenterY());
+				Point front = GeoUtil.calculaPonto(angulo, distEscudo,
+						centroCorpo);
+				Ellipse2D ellipse2d = new Ellipse2D.Double(front.x - 20,
+						front.y - 20, 40, 10);
+				AffineTransform affineTransform = AffineTransform
+						.getScaleInstance(1, 1);
+				GeneralPath generalPath = new GeneralPath(ellipse2d);
+				generalPath.transform(affineTransform);
+				double rad = Math.toRadians((double) angulo);
+				affineTransform.setToRotation(rad, front.x, front.y);
+				graphics2d.draw(generalPath
+						.createTransformedShape(affineTransform));
+//				graphics2d.setColor(Color.ORANGE);
+//				graphics2d.drawString("" + angulo, front.x, front.y);
+
 				if (atirando != null && atirando.isAlive()) {
 					/**
 					 * shotgun
