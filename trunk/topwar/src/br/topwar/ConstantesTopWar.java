@@ -51,6 +51,8 @@ public class ConstantesTopWar {
 	public static final String TIME_VERMELHO = "vermelho";
 	public static final int VIDA_COMPLETA = 100;
 	public static final int ASSALT_MAX_RANGE = 1000;
+	public static final int SNIPER_MAX_RANGE = ASSALT_MAX_RANGE * 2;
+	public static final int MACHINEGUN_MAX_RANGE = (int) (ASSALT_MAX_RANGE * 0.7);
 	public final static Color lightWhite = new Color(255, 255, 255, 150);
 	public final static Color lightBlu = new Color(180, 180, 255, 150);
 	public final static Color lightRed = new Color(255, 180, 180, 150);
@@ -81,4 +83,8 @@ public class ConstantesTopWar {
 	public static final int BALAS_ROCKET = 1;
 	public static final int CARTUCHOS_ROCKET = 8;
 	public static final String SHIELD = "shield";
+	public static final int DESVIO_ASSAULT = 2;
+	public static final int DESVIO_SNIPER = 0;
+	public static final int DESVIO_MACHINEGUN = 5;
+
 }
