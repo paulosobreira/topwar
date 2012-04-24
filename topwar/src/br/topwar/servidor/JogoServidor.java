@@ -501,7 +501,7 @@ public class JogoServidor {
 		if (avatarAtacando.getVida() <= 0) {
 			return null;
 		}
-		if (ConstantesTopWar.ARMA_ASSAULT == avatarAtacando.getArma()
+		if (ConstantesTopWar.ARMA_FACA != avatarAtacando.getArma()
 				&& verificaRecarregando(avatarAtacando)) {
 			return null;
 		}
@@ -510,7 +510,9 @@ public class JogoServidor {
 			return ConstantesTopWar.OK;
 		}
 
-		if (ConstantesTopWar.ARMA_ASSAULT == avatarAtacando.getArma()
+		if ((ConstantesTopWar.ARMA_ASSAULT == avatarAtacando.getArma()
+				|| ConstantesTopWar.ARMA_MACHINEGUN == avatarAtacando.getArma() || ConstantesTopWar.ARMA_SNIPER == avatarAtacando
+				.getArma())
 				&& (atirar(avatarAtacando, angulo, range))) {
 			return ConstantesTopWar.OK;
 		}
@@ -624,14 +626,36 @@ public class JogoServidor {
 	}
 
 	private boolean atirar(AvatarTopWar avatarAtacando, double angulo, int range) {
-		if (range > ConstantesTopWar.ASSALT_MAX_RANGE) {
+
+		if (ConstantesTopWar.ARMA_ASSAULT == avatarAtacando.getArma()
+				&& range > ConstantesTopWar.ASSALT_MAX_RANGE) {
 			range = ConstantesTopWar.ASSALT_MAX_RANGE;
 		}
+		if (ConstantesTopWar.ARMA_SNIPER == avatarAtacando.getArma()
+				&& range > ConstantesTopWar.SNIPER_MAX_RANGE) {
+			range = ConstantesTopWar.SNIPER_MAX_RANGE;
+		}
+		if (ConstantesTopWar.ARMA_MACHINEGUN == avatarAtacando.getArma()
+				&& range > ConstantesTopWar.MACHINEGUN_MAX_RANGE) {
+			range = ConstantesTopWar.MACHINEGUN_MAX_RANGE;
+		}
+
 		avatarAtacando.setRangeUtlDisparo(range);
 		List<ObjetoMapa> objetoMapaList = mapaTopWar.getObjetoMapaList();
-		Point pontoTiro = GeoUtil.calculaPonto(angulo + Util.intervalo(-2, 2),
-				ConstantesTopWar.ASSALT_MAX_RANGE, avatarAtacando
-						.getPontoAvatar());
+
+		int desvio = 0;
+
+		if (ConstantesTopWar.ARMA_ASSAULT == avatarAtacando.getArma()) {
+			desvio = ConstantesTopWar.DESVIO_ASSAULT;
+		} else if (ConstantesTopWar.ARMA_SNIPER == avatarAtacando.getArma()) {
+			desvio = ConstantesTopWar.DESVIO_SNIPER;
+		} else if (ConstantesTopWar.ARMA_MACHINEGUN == avatarAtacando.getArma()) {
+			desvio = ConstantesTopWar.DESVIO_MACHINEGUN;
+		}
+
+		Point pontoTiro = GeoUtil.calculaPonto(angulo
+				+ Util.intervalo(-desvio, desvio), range, avatarAtacando
+				.getPontoAvatar());
 		List<Point> linhaTiro = GeoUtil.drawBresenhamLine(avatarAtacando
 				.getPontoAvatar(), pontoTiro);
 		Point pointAnt = null;
@@ -640,8 +664,7 @@ public class JogoServidor {
 			for (Iterator iterator = objetoMapaList.iterator(); iterator
 					.hasNext();) {
 				ObjetoMapa objetoMapa = (ObjetoMapa) iterator.next();
-				if (!ConstantesTopWar.GRADE.equals(objetoMapa.getEfeito())
-						&& objetoMapa.getTransparencia() > 50
+				if (objetoMapa.getTransparencia() > 11
 						&& objetoMapa.getForma().contains(point)) {
 					if (pointAnt != null) {
 						int balas = consomeBalasArma(avatarAtacando);
@@ -765,8 +788,14 @@ public class JogoServidor {
 					}
 				}
 				if (!headShot) {
-					avatarAlvo.setVida(avatarAlvo.getVida()
-							- (balas * Util.intervalo(1, 2)));
+					if (ConstantesTopWar.ARMA_SNIPER == avatarAtirador
+							.getArma()) {
+						avatarAlvo.setVida(avatarAlvo.getVida()
+								- (Util.intervalo(70, 99)));
+					} else {
+						avatarAlvo.setVida(avatarAlvo.getVida()
+								- (balas * Util.intervalo(1, 2)));
+					}
 				}
 				if (avatarAlvo.getVida() < 1) {
 					if (ConstantesTopWar.TIME_AZUL.equals(avatarAlvo.getTime())) {
