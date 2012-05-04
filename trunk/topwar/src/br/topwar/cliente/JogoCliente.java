@@ -10,6 +10,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -293,7 +294,7 @@ public class JogoCliente {
 	}
 
 	protected boolean clicouAvatarAdversario(Point p) {
-		List<AvatarCliente> avatarClientesCopia = getAvatarClientesCopia();
+		Collection<AvatarCliente> avatarClientesCopia = getAvatarClientesCopia();
 		for (Iterator iterator = avatarClientesCopia.iterator(); iterator
 				.hasNext();) {
 			AvatarCliente avatarCliente = (AvatarCliente) iterator.next();
@@ -665,8 +666,8 @@ public class JogoCliente {
 		return list;
 	}
 
-	public List<AvatarCliente> getAvatarClientesCopia() {
-		List<AvatarCliente> avataresCopy = new ArrayList<AvatarCliente>();
+	public Collection<AvatarCliente> getAvatarClientesCopia() {
+		Set<AvatarCliente> avataresCopy = new HashSet<AvatarCliente>();
 		while (avataresCopy.isEmpty()) {
 			try {
 				avataresCopy.addAll(avatarClientes);
