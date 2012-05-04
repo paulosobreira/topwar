@@ -106,19 +106,6 @@ public class JogoCliente {
 			Logger.logarExept(e1);
 		}
 		painelTopWar = new PainelTopWar(this);
-		// AvatarCliente avatarCliente = new AvatarCliente("azul",
-		// new AvatarTopWar());
-		// avatarCliente.setPontoAvatar(new Point(30, 30));
-		// double angulo = GeoUtil.calculaAngulo(avatarCliente.getPontoAvatar(),
-		// new Point(40, 40), 90);
-		// avatarCliente.setAngulo(angulo);
-		// avatarClientes.add(avatarCliente);
-		// avatarCliente = new AvatarCliente("vermelho", new AvatarTopWar());
-		// avatarCliente.setPontoAvatar(new Point(50, 50));
-		// angulo = GeoUtil.calculaAngulo(avatarCliente.getPontoAvatar(),
-		// new Point(40, 40), 90);
-		// avatarCliente.setAngulo(angulo);
-		// avatarClientes.add(avatarCliente);
 	}
 
 	public void inciaJogo() {
@@ -460,7 +447,12 @@ public class JogoCliente {
 		return avatarClientes;
 	}
 
-	private void iniciaJFrame() {
+	public void iniciaJFrame() {
+		if (frameTopWar != null && frameTopWar.isVisible()) {
+			frameTopWar.setTitle(mapaTopWar.getNome());
+			frameTopWar.getContentPane().add(painelTopWar.getScrollPane());
+			return;
+		}
 		frameTopWar = new JFrame();
 		frameTopWar.addWindowListener(new WindowAdapter() {
 			@Override
@@ -472,8 +464,10 @@ public class JogoCliente {
 		frameTopWar.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		Cursor crossHair = new Cursor(Cursor.CROSSHAIR_CURSOR);
 		frameTopWar.setCursor(crossHair);
-		frameTopWar.setTitle(mapaTopWar.getNome());
-		frameTopWar.getContentPane().add(painelTopWar.getScrollPane());
+		if (mapaTopWar != null) {
+			frameTopWar.setTitle(mapaTopWar.getNome());
+			frameTopWar.getContentPane().add(painelTopWar.getScrollPane());
+		}
 		frameTopWar.setSize(800, 600);
 		frameTopWar.setVisible(true);
 		frameTopWar.addWindowListener(new WindowAdapter() {
