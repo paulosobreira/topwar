@@ -918,7 +918,6 @@ public class JogoServidor {
 			}
 		} else {
 			avatarTopWar.setArma(ConstantesTopWar.ARMA_FACA);
-			avatarTopWar.setVelocidade(10);
 		}
 		return ConstantesTopWar.OK;
 	}
