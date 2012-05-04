@@ -382,8 +382,9 @@ public class JogoServidor {
 		return false;
 	}
 
-	public AvatarTopWar entrarNoJogo(String nomeJogador) {
+	public AvatarTopWar entrarNoJogo(DadosJogoTopWar dadosJogoTopWar) {
 		AvatarTopWar avatarTopWar = new AvatarTopWar();
+		avatarTopWar.setClasse(dadosJogoTopWar.getClasse());
 		setupCalsseJogador(avatarTopWar);
 		int contAzul = contarJogadores(ConstantesTopWar.TIME_AZUL);
 		int contVermelho = contarJogadores(ConstantesTopWar.TIME_VERMELHO);
@@ -402,8 +403,7 @@ public class JogoServidor {
 				avatarTopWar.setTime(ConstantesTopWar.TIME_AZUL);
 			}
 		}
-
-		avatarTopWar.setNomeJogador(nomeJogador);
+		avatarTopWar.setNomeJogador(dadosJogoTopWar.getNomeJogador());
 		avatarTopWars.add(avatarTopWar);
 		return avatarTopWar;
 	}

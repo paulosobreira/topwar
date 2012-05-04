@@ -71,9 +71,11 @@ public class BotInfo {
 						avatarTopWar.setAngulo(GeoUtil.calculaAngulo(
 								avatarTopWar.getPontoAvatar(),
 								avatarTopWarCopia.getPontoAvatar(), 90));
+						int vida = avatarTopWar.getVida();
 						jogoServidor.atacar(avatarTopWar, avatarTopWar
-								.getAngulo(), line.size());
-						executouAcaoAtaque = true;
+								.getAngulo(), line.size() + 20);
+						if (vida != avatarTopWar.getVida())
+							executouAcaoAtaque = true;
 					}
 				} else {
 					setPontoDestino(avatarTopWarCopia.getPontoAvatar());
