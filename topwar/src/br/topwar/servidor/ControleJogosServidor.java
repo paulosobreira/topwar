@@ -71,7 +71,7 @@ public class ControleJogosServidor {
 		}
 		DadosJogoTopWar dadosJogoTopWar = (DadosJogoTopWar) nnpeTO.getData();
 		JogoServidor jogoServidor = obterJogo(dadosJogoTopWar.getNomeJogo());
-		jogoServidor.entrarNoJogo(dadosJogoTopWar.getNomeJogador());
+		jogoServidor.entrarNoJogo(dadosJogoTopWar);
 		nnpeTO.setData(jogoServidor.getDadosJogoTopWar());
 		return nnpeTO;
 	}

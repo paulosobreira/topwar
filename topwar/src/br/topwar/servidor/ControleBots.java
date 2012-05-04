@@ -7,8 +7,10 @@ import java.util.List;
 import br.nnpe.Logger;
 import br.nnpe.NameGenerator;
 import br.nnpe.Util;
+import br.topwar.ConstantesTopWar;
 import br.topwar.tos.AvatarTopWar;
 import br.topwar.tos.BotInfo;
+import br.topwar.tos.DadosJogoTopWar;
 
 public class ControleBots {
 
@@ -46,9 +48,12 @@ public class ControleBots {
 		}
 		try {
 			NameGenerator nameGenerator = new NameGenerator("silabas");
-			for (int i = 0; i < 20; i++) {
+			for (int i = 0; i < 10; i++) {
 				String nome = nameGenerator.compose(Util.intervalo(2, 3));
-				AvatarTopWar bot = jogoServidor.entrarNoJogo(nome);
+				DadosJogoTopWar dadosJogoTopWar = new DadosJogoTopWar();
+				dadosJogoTopWar.setClasse(ConstantesTopWar.ASSAULT);
+				dadosJogoTopWar.setNomeJogador(nome);
+				AvatarTopWar bot = jogoServidor.entrarNoJogo(dadosJogoTopWar);
 				bot.setBotInfo(new BotInfo(bot, jogoServidor));
 				bot.getBotInfo();
 				if (i % 2 == 0) {
