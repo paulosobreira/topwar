@@ -740,7 +740,6 @@ public class JogoCliente {
 		}
 		if (keyCode == KeyEvent.VK_CONTROL) {
 			alternaFaca();
-
 		}
 	}
 
