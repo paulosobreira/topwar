@@ -43,7 +43,7 @@ public class PainelTopWar {
 	private JPanel panel;
 	private JScrollPane scrollPane;
 	private MapaTopWar mapaTopWar;
-	private boolean desenhaObjetos = true;
+	private boolean desenhaObjetos = false;
 	private boolean desenhaImagens = true;
 	private int ocilaAlphaRecarregando = 255;
 	private boolean ocilaAlphaRecarregandoSobe = false;
@@ -98,6 +98,10 @@ public class PainelTopWar {
 	private BufferedImage miniShotgun;
 	private boolean gerouImagens;
 	private AvatarCliente avatarLocal;
+	private BufferedImage lifeBarAssalt;
+	private BufferedImage lifeBarMachineGun;
+	private BufferedImage lifeBarKnife;
+	private BufferedImage lifeBarShotgun;
 
 	public PainelTopWar(JogoCliente jogoCliente) {
 		this.jogoCliente = jogoCliente;
@@ -115,10 +119,16 @@ public class PainelTopWar {
 
 	private void gerarMinis() {
 		miniAssalt = ImageUtil.geraResize(assault, 0.5);
+		lifeBarAssalt = ImageUtil.geraResize(assault, 0.55, 0.4);
 		miniKnife = ImageUtil.geraResize(knife, 0.5);
+		lifeBarKnife = ImageUtil.geraResize(knife, 0.85, 0.75);
+
 		miniHeadShot = ImageUtil.geraResize(headShot, 0.5);
 		miniMachineGun = ImageUtil.geraResize(machinegun, 0.5);
+		lifeBarMachineGun = ImageUtil.geraResize(machinegun, 0.45, 0.27);
+
 		miniShotgun = ImageUtil.geraResize(shotgun, 0.5);
+		lifeBarShotgun = ImageUtil.geraResize(shotgun, 0.6, 0.5);
 	}
 
 	private void gerarMapaImagensMortes(BufferedImage src, String time) {
@@ -901,7 +911,6 @@ public class PainelTopWar {
 		}
 		int anim = avatarCliente.getQuadroAnimacao();
 		int aniMorte = avatarCliente.getQuadroAnimacaoMorte();
-		int velocidade = avatarCliente.getVelocidade();
 		String time = avatarCliente.getTime();
 		double angulo = avatarCliente.getAngulo();
 		if (angulo < 0) {
@@ -1012,6 +1021,23 @@ public class PainelTopWar {
 				graphics2d.fillRoundRect(desenha.x - 20, desenha.y - 20,
 						avatarCliente.getVida(), 20, 5, 5);
 				graphics2d.setColor(Color.WHITE);
+				if (ConstantesTopWar.ARMA_ASSAULT == avatarCliente.getArma()) {
+					graphics2d.drawImage(lifeBarAssalt, desenha.x - 20,
+							desenha.y - 20, null);
+				} else if (ConstantesTopWar.ARMA_MACHINEGUN == avatarCliente
+						.getArma()) {
+					graphics2d.drawImage(lifeBarMachineGun, desenha.x - 20,
+							desenha.y - 20, null);
+				} else if (ConstantesTopWar.ARMA_FACA == avatarCliente
+						.getArma()) {
+					graphics2d.drawImage(lifeBarKnife, desenha.x - 20,
+							desenha.y - 20, null);
+				} else if (ConstantesTopWar.ARMA_SHOTGUN == avatarCliente
+						.getArma()) {
+					graphics2d.drawImage(lifeBarShotgun, desenha.x - 20,
+							desenha.y - 20, null);
+				}
+
 				graphics2d.drawString("" + avatarCliente.getNomeJogador() + " "
 						+ avatarCliente.getVida(), desenha.x,
 						pontoAvatar.y - 20);
