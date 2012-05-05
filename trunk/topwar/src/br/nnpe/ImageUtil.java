@@ -239,10 +239,15 @@ public class ImageUtil {
 	}
 
 	public static BufferedImage geraResize(BufferedImage src, double fator) {
+		return geraResize(src, fator, fator);
+	}
+
+	public static BufferedImage geraResize(BufferedImage src, double fatorx,
+			double fatory) {
 		AffineTransform afZoom = new AffineTransform();
-		afZoom.setToScale(fator, fator);
+		afZoom.setToScale(fatorx, fatory);
 		BufferedImage dst = new BufferedImage((int) Math.round(src.getWidth()
-				* fator), (int) Math.round(src.getHeight() * fator),
+				* fatorx), (int) Math.round(src.getHeight() * fatory),
 				BufferedImage.TYPE_INT_ARGB);
 		AffineTransformOp op = new AffineTransformOp(afZoom,
 				AffineTransformOp.TYPE_BILINEAR);

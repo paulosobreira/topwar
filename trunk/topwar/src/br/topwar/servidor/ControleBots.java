@@ -48,7 +48,7 @@ public class ControleBots {
 		}
 		try {
 			NameGenerator nameGenerator = new NameGenerator("silabas");
-			for (int i = 0; i < 4; i++) {
+			for (int i = 0; i < 3; i++) {
 				String nome = nameGenerator.compose(Util.intervalo(2, 3));
 				DadosJogoTopWar dadosJogoTopWar = new DadosJogoTopWar();
 				dadosJogoTopWar.setClasse(ConstantesTopWar.ASSAULT);

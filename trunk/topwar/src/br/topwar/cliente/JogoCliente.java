@@ -46,7 +46,7 @@ public class JogoCliente {
 	private int ptsAzul;
 	private PainelTopWar painelTopWar;
 	private AvatarCliente avatarLocal;
-	private List<AvatarCliente> avatarClientes = new ArrayList<AvatarCliente>();
+	private Collection<AvatarCliente> avatarClientes = new HashSet<AvatarCliente>();
 	private JFrame frameTopWar;
 	private ControleCliente controleCliente;
 	private DadosJogoTopWar dadosJogoTopWar;
@@ -99,9 +99,9 @@ public class JogoCliente {
 		this.controleCliente = controleCliente;
 		ObjectInputStream ois;
 		try {
-			ois = new ObjectInputStream(CarregadorRecursos
-					.recursoComoStream(dadosJogoTopWar.getNomeMapa()
-							+ ".topwar"));
+			ois = new ObjectInputStream(
+					CarregadorRecursos.recursoComoStream(dadosJogoTopWar
+							.getNomeMapa() + ".topwar"));
 			mapaTopWar = (MapaTopWar) ois.readObject();
 		} catch (Exception e1) {
 			Logger.logarExept(e1);
@@ -377,8 +377,7 @@ public class JogoCliente {
 							ret = controleCliente.moverPonto(p);
 						}
 						try {
-							Thread
-									.sleep(ConstantesTopWar.MEIO_ATRASO_REDE_PADRAO);
+							Thread.sleep(ConstantesTopWar.MEIO_ATRASO_REDE_PADRAO);
 						} catch (InterruptedException e) {
 							return;
 						}
@@ -444,7 +443,7 @@ public class JogoCliente {
 		this.mapaTopWar = mapaTopWar;
 	}
 
-	public List<AvatarCliente> getAvatarClientes() {
+	public Collection<AvatarCliente> getAvatarClientes() {
 		return avatarClientes;
 	}
 
