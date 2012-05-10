@@ -7,7 +7,7 @@ import javax.persistence.Transient;
 
 import br.topwar.ConstantesTopWar;
 
-public class AvatarTopWar implements Serializable {
+public class AvatarTopWar {
 	private String time;
 	private String nomeJogador;
 	private Point pontoAvatar;

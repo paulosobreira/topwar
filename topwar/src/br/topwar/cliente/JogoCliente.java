@@ -29,6 +29,7 @@ import br.topwar.ConstantesTopWar;
 import br.topwar.recursos.CarregadorRecursos;
 import br.topwar.serial.MapaTopWar;
 import br.topwar.tos.AvatarTopWar;
+import br.topwar.tos.DadosAvatar;
 import br.topwar.tos.DadosJogoTopWar;
 import br.topwar.tos.EventoJogo;
 import br.topwar.tos.PlacarTopWar;
@@ -99,9 +100,9 @@ public class JogoCliente {
 		this.controleCliente = controleCliente;
 		ObjectInputStream ois;
 		try {
-			ois = new ObjectInputStream(
-					CarregadorRecursos.recursoComoStream(dadosJogoTopWar
-							.getNomeMapa() + ".topwar"));
+			ois = new ObjectInputStream(CarregadorRecursos
+					.recursoComoStream(dadosJogoTopWar.getNomeMapa()
+							+ ".topwar"));
 			mapaTopWar = (MapaTopWar) ois.readObject();
 		} catch (Exception e1) {
 			Logger.logarExept(e1);
@@ -247,48 +248,55 @@ public class JogoCliente {
 					atacar();
 				} else {
 					if (e.getClickCount() > 1) {
-						seguirMouse = true;
-						if (threadSeguirMouse != null
-								&& threadSeguirMouse.isAlive()) {
-							threadSeguirMouse.interrupt();
-						}
-						threadSeguirMouse = new Thread(new Runnable() {
-							@Override
-							public void run() {
-								while (seguirMouse && pontoMouseMovendo != null) {
-									moverAvatarPeloMouse(pontoMouseMovendo);
-									try {
-										Thread.sleep(1000);
-									} catch (InterruptedException e) {
-										return;
-									}
-								}
-							}
-						});
-						threadSeguirMouse.start();
+						doisCliques();
 					} else {
-						if (threadMouseCliqueUnico != null
-								&& threadMouseCliqueUnico.isAlive()) {
-							return;
-						}
-						threadMouseCliqueUnico = new Thread(new Runnable() {
-							@Override
-							public void run() {
-								while (controleCliente.verificaDelay()) {
-									try {
-										Thread.sleep(5);
-									} catch (InterruptedException e) {
-										Logger.logarExept(e);
-									}
-								}
-								moverAvatarPeloMouse(pontoMouseClicado);
-							}
-						});
-						threadMouseCliqueUnico.start();
-
+						umClique();
 					}
 				}
 				super.mouseClicked(e);
+			}
+
+			private void umClique() {
+				if ((threadMouseCliqueUnico != null && threadMouseCliqueUnico
+						.isAlive())) {
+					System.out.println("Retorno Clique");
+					return;
+				}
+				threadMouseCliqueUnico = new Thread(new Runnable() {
+					@Override
+					public void run() {
+						while (controleCliente.verificaDelay()) {
+							try {
+								Thread.sleep(5);
+							} catch (InterruptedException e) {
+								Logger.logarExept(e);
+							}
+						}
+						moverAvatarPeloMouse(pontoMouseClicado);
+					}
+				});
+				threadMouseCliqueUnico.start();
+			}
+
+			private void doisCliques() {
+				seguirMouse = true;
+				if (threadSeguirMouse != null && threadSeguirMouse.isAlive()) {
+					threadSeguirMouse.interrupt();
+				}
+				threadSeguirMouse = new Thread(new Runnable() {
+					@Override
+					public void run() {
+						while (seguirMouse && pontoMouseMovendo != null) {
+							moverAvatarPeloMouse(pontoMouseMovendo);
+							try {
+								Thread.sleep(1000);
+							} catch (InterruptedException e) {
+								return;
+							}
+						}
+					}
+				});
+				threadSeguirMouse.start();
 			}
 		});
 	}
@@ -377,7 +385,8 @@ public class JogoCliente {
 							ret = controleCliente.moverPonto(p);
 						}
 						try {
-							Thread.sleep(ConstantesTopWar.MEIO_ATRASO_REDE_PADRAO);
+							Thread
+									.sleep(ConstantesTopWar.MEIO_ATRASO_REDE_PADRAO);
 						} catch (InterruptedException e) {
 							return;
 						}
@@ -566,8 +575,8 @@ public class JogoCliente {
 			eventos.add(eventoJogo);
 		}
 
-		Set<AvatarTopWar> avatarTopWars = (HashSet<AvatarTopWar>) retorno
-				.get(ConstantesTopWar.LISTA_AVATARES);
+		Set<AvatarTopWar> avatarTopWars = (HashSet<AvatarTopWar>) DadosAvatar
+				.desEmpacotarLista(retorno.get(ConstantesTopWar.LISTA_AVATARES));
 		for (Iterator iterator = avatarTopWars.iterator(); iterator.hasNext();) {
 			AvatarTopWar avatarTopWar = (AvatarTopWar) iterator.next();
 			for (Iterator iterator2 = avatarClientes.iterator(); iterator2
