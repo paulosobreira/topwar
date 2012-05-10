@@ -270,7 +270,8 @@ public class ControleJogosServidor {
 		DadosJogoTopWar dadosJogoTopWar = (DadosJogoTopWar) nnpeTO.getData();
 		JogoServidor jogoServidor = obterJogoCliente(dadosJogoTopWar
 				.getNomeJogador());
-		jogoServidor.sairJogo(dadosJogoTopWar.getNomeJogador());
+		if (jogoServidor != null)
+			jogoServidor.sairJogo(dadosJogoTopWar.getNomeJogador());
 		return ConstantesTopWar.OK;
 	}
 
