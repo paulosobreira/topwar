@@ -1084,7 +1084,6 @@ public class PainelTopWar {
 			if (ocilaAlphaMorte > 200) {
 				ocilaAlphaMorteSobe = false;
 			}
-			System.out.println("invencivel");
 			graphics2d.fillOval(ar.x, ar.y, ar.width, ar.height);
 		}
 
