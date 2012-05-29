@@ -16,11 +16,12 @@ public class DadosAvatar {
 	private int vida;
 	private int arma;
 	private int rangeUtlDisparo;
+	private boolean invencivel;
 
 	public String encode() {
 		return time + "!" + nomeJogador + "!" + x + "!" + y + "!" + angulo
 				+ "!" + tempoUtlAtaque + "!" + vida + "!" + arma + "!"
-				+ rangeUtlDisparo;
+				+ rangeUtlDisparo + "!" + (invencivel ? "1" : "0");
 	}
 
 	public void decode(String val) {
@@ -34,6 +35,7 @@ public class DadosAvatar {
 		vida = parseInt(sp[6]);
 		arma = parseInt(sp[7]);
 		rangeUtlDisparo = parseInt(sp[8]);
+		invencivel = "1".equals(sp[9]);
 	}
 
 	private double parseDouble(String string) {
@@ -76,6 +78,7 @@ public class DadosAvatar {
 			dadosAvatar.vida = avatarTopWar.getVida();
 			dadosAvatar.arma = avatarTopWar.getArma();
 			dadosAvatar.rangeUtlDisparo = avatarTopWar.getRangeUtlDisparo();
+			dadosAvatar.invencivel = avatarTopWar.isInvencivel();
 			buffer.append(dadosAvatar.encode() + "@");
 		}
 		return buffer.toString();
@@ -98,6 +101,7 @@ public class DadosAvatar {
 			avatarTopWar.setVida(dadosAvatar.vida);
 			avatarTopWar.setArma(dadosAvatar.arma);
 			avatarTopWar.setRangeUtlDisparo(dadosAvatar.rangeUtlDisparo);
+			avatarTopWar.setInvencivel(dadosAvatar.invencivel);
 			avatarTopWars.add(avatarTopWar);
 		}
 		return avatarTopWars;
