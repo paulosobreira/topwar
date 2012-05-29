@@ -76,13 +76,15 @@ public class PainelTopWar {
 	public final BufferedImage knife = CarregadorRecursos
 			.carregaBufferedImageTransparecia("knife.png", null);
 	public Map<String, BufferedImage> mapImgs = new HashMap<String, BufferedImage>();
-	public final static BufferedImage azul = CarregadorRecursos
+	public final BufferedImage azul = CarregadorRecursos
 			.carregaBufferedImageTransparecia("azul.png", Color.MAGENTA);
-	public final static BufferedImage azul_faca = CarregadorRecursos
+	public final BufferedImage azul_shotgun = CarregadorRecursos
+			.carregaBufferedImageTransparecia("azul_shotgun.png", Color.MAGENTA);
+	public final BufferedImage azul_faca = CarregadorRecursos
 			.carregaBufferedImageTransparecia("azul_faca.png", Color.MAGENTA);
-	public final static BufferedImage vermelho = CarregadorRecursos
+	public final BufferedImage vermelho = CarregadorRecursos
 			.carregaBufferedImageTransparecia("vermelho.png", Color.MAGENTA);
-	public final static BufferedImage vermelho_faca = CarregadorRecursos
+	public final BufferedImage vermelho_faca = CarregadorRecursos
 			.carregaBufferedImageTransparecia("vermelho_faca.png",
 					Color.MAGENTA);
 	public final BufferedImage knifeAtttack = CarregadorRecursos
@@ -109,6 +111,7 @@ public class PainelTopWar {
 		gerarMapaImagens(azul, "azul");
 		gerarMapaImagens(vermelho, "vermelho");
 		gerarMapaImagens(azul_faca, "azul_faca");
+		gerarMapaImagens(azul_shotgun, "azul_shotgun");
 		gerarMapaImagens(vermelho_faca, "vermelho_faca");
 		gerarMapaImagensMortes(azulMortes, "azul");
 		gerarMapaImagensMortes(vermelhoMortes, "vermelho");
@@ -929,6 +932,9 @@ public class PainelTopWar {
 			String timeClasse = time;
 			if (ConstantesTopWar.ARMA_FACA == avatarCliente.getArma()) {
 				timeClasse += "_faca";
+			}
+			if (ConstantesTopWar.ARMA_SHOTGUN == avatarCliente.getArma()) {
+				timeClasse += "_shotgun";
 			}
 			if (angulo >= 0 && angulo <= 22.5 || angulo > 337.5) {
 				imgJog = mapImgs.get(timeClasse + "-" + anim + "-0");
