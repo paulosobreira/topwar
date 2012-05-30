@@ -789,8 +789,8 @@ public class PainelTopWar {
 				break;
 			}
 			Point tiro = linhaDisparo.get(i);
-			int indexPtFaiscaFim = (i + 5);
-			if (indexPtFaiscaFim < linhaDisparo.size() && Math.random() > .99) {
+			int indexPtFaiscaFim = (i + Util.intervalo(5, 25));
+			if (indexPtFaiscaFim < linhaDisparo.size() && Math.random() > .989) {
 				Point ptFaiscaFim = linhaDisparo.get(indexPtFaiscaFim);
 				graphics2d.setColor(Color.YELLOW);
 				graphics2d.drawLine(tiro.x, tiro.y, ptFaiscaFim.x,
