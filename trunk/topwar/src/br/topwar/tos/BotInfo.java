@@ -21,6 +21,7 @@ public class BotInfo {
 	private Point ultimaGuia;
 	private AvatarTopWar avatarTopWar;
 	private JogoServidor jogoServidor;
+	private int vidaUltAlvo;
 
 	public BotInfo(AvatarTopWar bot, JogoServidor jogoServidor) {
 		this.avatarTopWar = bot;
@@ -77,10 +78,11 @@ public class BotInfo {
 						avatarTopWar.setAngulo(GeoUtil.calculaAngulo(
 								avatarTopWar.getPontoAvatar(),
 								avatarTopWarCopia.getPontoAvatar(), 90));
-						int vida = avatarTopWar.getVida();
+						vidaUltAlvo = avatarTopWar.getVida();
 						jogoServidor.atacar(avatarTopWar,
-								avatarTopWar.getAngulo(), line.size() + 20);
-						if (vida != avatarTopWar.getVida()) {
+								avatarTopWar.getAngulo(),
+								line.size() + Util.intervalo(20, 40));
+						if (vidaUltAlvo != avatarTopWar.getVida()) {
 							executouAcaoAtaque = true;
 						} else {
 							setPontoDestino(avatarTopWarCopia.getPontoAvatar());
