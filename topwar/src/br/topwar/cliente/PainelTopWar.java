@@ -39,7 +39,7 @@ import br.topwar.tos.EventoJogo;
 import br.topwar.tos.PlacarTopWar;
 
 public class PainelTopWar {
-	private static final int FADE_MINIS = 150;
+	private static final int FADE_MINIS = 100;
 	private JogoCliente jogoCliente;
 	private JPanel panel;
 	private JScrollPane scrollPane;
@@ -1033,7 +1033,7 @@ public class PainelTopWar {
 				}
 				graphics2d.fillRoundRect(desenha.x - 20, desenha.y - 20,
 						avatarCliente.getVida(), 20, 5, 5);
-				graphics2d.setColor(Color.WHITE);
+
 				if (ConstantesTopWar.ARMA_ASSAULT == avatarCliente.getArma()) {
 					graphics2d.drawImage(lifeBarAssalt, desenha.x - 20,
 							desenha.y - 20, null);
@@ -1050,7 +1050,11 @@ public class PainelTopWar {
 					graphics2d.drawImage(lifeBarShotgun, desenha.x - 20,
 							desenha.y - 20, null);
 				}
-
+				if (ConstantesTopWar.TIME_AZUL.equals(avatarCliente.getTime())) {
+					graphics2d.setColor(Color.WHITE);
+				} else {
+					graphics2d.setColor(Color.BLACK);
+				}
 				graphics2d.drawString("" + avatarCliente.getNomeJogador() + " "
 						+ avatarCliente.getVida(), desenha.x,
 						pontoAvatar.y - 20);
