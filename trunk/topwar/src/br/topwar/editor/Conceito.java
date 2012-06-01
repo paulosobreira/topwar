@@ -21,6 +21,8 @@ import java.awt.geom.GeneralPath;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
+import java.awt.image.Raster;
+import java.awt.image.WritableRaster;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.HashMap;
@@ -352,8 +354,14 @@ public class Conceito {
 								.getWidth(), imgJog.getHeight());
 						imgJog = processaTransparencia(imgJog, desenha,
 								areaAvatar, mapaTopWar);
+
 						imgJog = processaGrade(imgJog, desenha, areaAvatar,
 								mapaTopWar);
+
+						graphics2d.drawImage(processaSombra(imgJog, desenha,
+								areaAvatar, mapaTopWar), desenha.x, desenha.y,
+								null);
+
 						graphics2d
 								.drawImage(imgJog, desenha.x, desenha.y, null);
 						/**
@@ -411,9 +419,9 @@ public class Conceito {
 				 * Escudo
 				 */
 				int distEscudo = 3;
-//				if (angulo > 140 && angulo < 230) {
-////					distEscudo = 7;
-//				}
+				// if (angulo > 140 && angulo < 230) {
+				// // distEscudo = 7;
+				// }
 				Point centroCorpo = new Point((int) gerarCorpo().getBounds()
 						.getCenterX(), (int) gerarCorpo().getBounds()
 						.getCenterY());
@@ -429,8 +437,8 @@ public class Conceito {
 				affineTransform.setToRotation(rad, front.x, front.y);
 				graphics2d.draw(generalPath
 						.createTransformedShape(affineTransform));
-//				graphics2d.setColor(Color.ORANGE);
-//				graphics2d.drawString("" + angulo, front.x, front.y);
+				// graphics2d.setColor(Color.ORANGE);
+				// graphics2d.drawString("" + angulo, front.x, front.y);
 
 				if (atirando != null && atirando.isAlive()) {
 					/**
@@ -629,6 +637,55 @@ public class Conceito {
 			}
 		}
 		return imgJog;
+	}
+
+	protected static BufferedImage processaSombra(BufferedImage imgJog,
+			Point desenha, Rectangle areaAvatar, MapaTopWar mapaTopWar) {
+
+		BufferedImage novaImg = new BufferedImage(imgJog.getWidth(), imgJog
+				.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2d = novaImg.createGraphics();
+		AlphaComposite composite = AlphaComposite.getInstance(
+				AlphaComposite.SRC_OUT, 1);
+		g2d.drawImage(imgJog, 0, 0, null);
+		g2d.setComposite(composite);
+		g2d.fill(new Rectangle(0, 0, areaAvatar.width, areaAvatar.height));
+
+		g2d.dispose();
+
+		BufferedImage imgSombraProcessada = new BufferedImage(novaImg
+				.getWidth(), novaImg.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		Raster srcRaster = novaImg.getData();
+		WritableRaster destRaster = imgSombraProcessada.getRaster();
+		int[] argbArray = new int[4];
+
+		for (int i = 0; i < imgJog.getWidth(); i++) {
+			for (int j = 0; j < imgJog.getHeight(); j++) {
+				argbArray = new int[4];
+				argbArray = srcRaster.getPixel(i, j, argbArray);
+				Color c = new Color(argbArray[0], argbArray[1], argbArray[2],
+						argbArray[3]);
+				if (argbArray[3] == 255) {
+					argbArray[3] = 0;
+				} else {
+					argbArray[0] = 155;
+					argbArray[1] = 155;
+					argbArray[2] = 155;
+					argbArray[3] = 255;
+				}
+
+				destRaster.setPixel(i, j, argbArray);
+			}
+		}
+		novaImg = new BufferedImage(imgJog.getWidth(), imgJog.getHeight(),
+				BufferedImage.TYPE_INT_ARGB);
+		g2d = novaImg.createGraphics();
+		AffineTransform sat = AffineTransform.getTranslateInstance(0, 0);
+		sat.shear(.3, 0);
+		g2d.transform(sat);
+		g2d.drawImage(imgSombraProcessada, -10, 0, null);
+		g2d.dispose();
+		return novaImg;
 	}
 
 	protected static BufferedImage processaGrade(BufferedImage imgJog,
