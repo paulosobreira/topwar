@@ -1,12 +1,15 @@
 package br.nnpe;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Transparency;
 import java.awt.geom.AffineTransform;
@@ -19,6 +22,8 @@ import java.awt.image.WritableRaster;
 
 import javax.swing.ImageIcon;
 
+import br.topwar.serial.MapaTopWar;
+
 /**
  * @author Paulo Sobreira Criado Em 21/08/2005
  */
@@ -30,8 +35,8 @@ public class ImageUtil {
 				img.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
 		srcBufferedImage.getGraphics().drawImage(img.getImage(), 0, 0, null);
 
-		BufferedImage bufferedImageRetorno = new BufferedImage(
-				img.getIconWidth(), img.getIconHeight(),
+		BufferedImage bufferedImageRetorno = new BufferedImage(img
+				.getIconWidth(), img.getIconHeight(),
 				BufferedImage.TYPE_INT_ARGB);
 		Raster srcRaster = srcBufferedImage.getData();
 		WritableRaster destRaster = bufferedImageRetorno.getRaster();
@@ -88,8 +93,8 @@ public class ImageUtil {
 
 			GraphicsConfiguration gc = gs.getDefaultConfiguration();
 
-			bimage = gc.createCompatibleImage(image.getWidth(null),
-					image.getHeight(null), transparency);
+			bimage = gc.createCompatibleImage(image.getWidth(null), image
+					.getHeight(null), transparency);
 		} catch (HeadlessException e) {
 			// The system does not have a screen
 		}
@@ -102,8 +107,8 @@ public class ImageUtil {
 				type = BufferedImage.TYPE_INT_ARGB;
 			}
 
-			bimage = new BufferedImage(image.getWidth(null),
-					image.getHeight(null), type);
+			bimage = new BufferedImage(image.getWidth(null), image
+					.getHeight(null), type);
 		}
 
 		// Copy image to buffered image
@@ -161,8 +166,8 @@ public class ImageUtil {
 				img.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
 		srcBufferedImage.getGraphics().drawImage(img.getImage(), 0, 0, null);
 
-		BufferedImage bufferedImageRetorno = new BufferedImage(
-				img.getIconWidth(), img.getIconHeight(),
+		BufferedImage bufferedImageRetorno = new BufferedImage(img
+				.getIconWidth(), img.getIconHeight(),
 				BufferedImage.TYPE_INT_ARGB);
 		Raster srcRaster = srcBufferedImage.getData();
 		WritableRaster destRaster = bufferedImageRetorno.getRaster();
@@ -187,6 +192,54 @@ public class ImageUtil {
 		}
 
 		return bufferedImageRetorno;
+	}
+
+	public static BufferedImage processaSombra(BufferedImage imgJog) {
+
+		BufferedImage novaImg = new BufferedImage(imgJog.getWidth(), imgJog
+				.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2d = novaImg.createGraphics();
+		AlphaComposite composite = AlphaComposite.getInstance(
+				AlphaComposite.SRC_OUT, 1);
+		g2d.drawImage(imgJog, 0, 0, null);
+		g2d.setComposite(composite);
+		g2d.fill(new Rectangle(0, 0, imgJog.getWidth(), imgJog.getHeight()));
+
+		g2d.dispose();
+
+		BufferedImage imgSombraProcessada = new BufferedImage(novaImg
+				.getWidth(), novaImg.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		Raster srcRaster = novaImg.getData();
+		WritableRaster destRaster = imgSombraProcessada.getRaster();
+		int[] argbArray = new int[4];
+
+		for (int i = 0; i < imgJog.getWidth(); i++) {
+			for (int j = 0; j < imgJog.getHeight(); j++) {
+				argbArray = new int[4];
+				argbArray = srcRaster.getPixel(i, j, argbArray);
+				Color c = new Color(argbArray[0], argbArray[1], argbArray[2],
+						argbArray[3]);
+				if (argbArray[3] == 255) {
+					argbArray[3] = 0;
+				} else {
+					argbArray[0] = 45;
+					argbArray[1] = 45;
+					argbArray[2] = 45;
+					argbArray[3] = 100;
+				}
+
+				destRaster.setPixel(i, j, argbArray);
+			}
+		}
+		novaImg = new BufferedImage(imgJog.getWidth(), imgJog.getHeight(),
+				BufferedImage.TYPE_INT_ARGB);
+		g2d = novaImg.createGraphics();
+		AffineTransform sat = AffineTransform.getTranslateInstance(0, 0);
+		sat.shear(.5, 0);
+		g2d.transform(sat);
+		g2d.drawImage(imgSombraProcessada, -10, 0, null);
+		g2d.dispose();
+		return novaImg;
 	}
 
 	public static BufferedImage gerarSubImagem(BufferedImage azul,
@@ -216,8 +269,8 @@ public class ImageUtil {
 		BufferedImage srcBufferedImage = new BufferedImage(img.getIconWidth(),
 				img.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
 		srcBufferedImage.getGraphics().drawImage(img.getImage(), 0, 0, null);
-		BufferedImage bufferedImageRetorno = new BufferedImage(
-				img.getIconWidth(), img.getIconHeight(),
+		BufferedImage bufferedImageRetorno = new BufferedImage(img
+				.getIconWidth(), img.getIconHeight(),
 				BufferedImage.TYPE_INT_ARGB);
 		Raster srcRaster = srcBufferedImage.getData();
 		WritableRaster destRaster = bufferedImageRetorno.getRaster();
