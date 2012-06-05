@@ -29,6 +29,7 @@ import javax.swing.event.ChangeListener;
 import br.nnpe.GeoUtil;
 import br.nnpe.ImageUtil;
 import br.nnpe.Logger;
+import br.nnpe.OcilaCor;
 import br.nnpe.Util;
 import br.topwar.ConstantesTopWar;
 import br.topwar.recursos.CarregadorRecursos;
@@ -46,15 +47,14 @@ public class PainelTopWar {
 	private MapaTopWar mapaTopWar;
 	private boolean desenhaObjetos = false;
 	private boolean desenhaImagens = true;
-	private int ocilaAlphaRecarregando = 255;
-	private boolean ocilaAlphaRecarregandoSobe = false;
-	private int ocilaAlphaMorte = 255;
-	private boolean ocilaAlphaMorteSobe = false;
 
 	private int tabCont = 0;
 
 	public final BufferedImage crosshair = CarregadorRecursos
 			.carregaBufferedImageTransparecia("crosshair.png", null);
+
+	public final BufferedImage vaiAqui = CarregadorRecursos
+			.carregaBufferedImageTransparecia("vaiaqui.png", null);
 
 	public final BufferedImage blueFlag = CarregadorRecursos
 			.carregaBufferedImageTransparecia("blue-flag.png", null);
@@ -238,18 +238,29 @@ public class PainelTopWar {
 				desenhaInfoJogo(graphics2d);
 				desenhaMira(graphics2d);
 				desenhaObjetosDebug(graphics2d);
+				desenhaClicou(graphics2d);
+				desenhaVaiPara(graphics2d);
+
+			}
+
+			private void desenhaClicou(Graphics2D graphics2d) {
 				if (System.currentTimeMillis() - jogoCliente.getClickTime() < 200) {
-					Point pc = jogoCliente.getPontoMouseClicado();
-					graphics2d.setColor(Color.WHITE);
-					graphics2d.drawOval(pc.x - 15, pc.y - 15, 30, 30);
+					Point p = jogoCliente.getPontoMouseClicado();
+					graphics2d.drawImage(ImageUtil.geraResize(OcilaCor
+							.geraOcila("vaiaqui", vaiAqui), 1.5), p.x - 12,
+							p.y - 12, null);
 				}
-				graphics2d.setColor(Color.WHITE);
+
+			}
+
+			private void desenhaVaiPara(Graphics2D graphics2d) {
 				if (jogoCliente.getPontoMouseMovendo() != null
 						&& jogoCliente.isSeguirMouse()) {
 					Point p = jogoCliente.getPontoMouseMovendo();
-					graphics2d.drawOval(p.x - 10, p.y - 10, 20, 20);
+					graphics2d.drawImage(ImageUtil.geraResize(OcilaCor
+							.geraOcila("vaiaqui", vaiAqui), 1.5), p.x - 12,
+							p.y - 12, null);
 				}
-
 			}
 
 		};
@@ -679,23 +690,12 @@ public class PainelTopWar {
 		y -= 5;
 
 		if (jogoCliente.verificaRecarregando()) {
-			g2d.setColor(new Color(255, 255, 255, ocilaAlphaRecarregando));
+			g2d.setColor(OcilaCor.geraOcila("RECARREGANDO", Color.WHITE));
 			g2d.fillRoundRect(x - 10, y - 30, Util.calculaLarguraText(Lang
 					.msg("RECARREGANDO"), g2d) + 20, 35, 10, 10);
 			g2d.setColor(Color.BLACK);
 			g2d.drawString(Lang.msg("RECARREGANDO"), x, y);
 
-			if (ocilaAlphaRecarregandoSobe) {
-				ocilaAlphaRecarregando += 10;
-			} else {
-				ocilaAlphaRecarregando -= 10;
-			}
-			if (ocilaAlphaRecarregando < 50) {
-				ocilaAlphaRecarregandoSobe = true;
-			}
-			if (ocilaAlphaRecarregando > 200) {
-				ocilaAlphaRecarregandoSobe = false;
-			}
 		} else {
 			g2d.setColor(ConstantesTopWar.lightWhite);
 			g2d.fillRoundRect(x - 10, y - 30, Util.calculaLarguraText("888",
@@ -1077,21 +1077,12 @@ public class PainelTopWar {
 		if (avatarCliente.isInvencivel()) {
 			Rectangle ar = avatarCliente.obeterAreaAvatarSuave().getBounds();
 			if (ConstantesTopWar.TIME_AZUL.equals(avatarCliente.getTime())) {
-				graphics2d.setColor(new Color(150, 150, 255, ocilaAlphaMorte));
+				graphics2d.setColor(OcilaCor.geraOcila("INVENC_AZUL",
+						new Color(150, 150, 255)));
 			}
 			if (ConstantesTopWar.TIME_VERMELHO.equals(avatarCliente.getTime())) {
-				graphics2d.setColor(new Color(255, 150, 150, ocilaAlphaMorte));
-			}
-			if (ocilaAlphaMorteSobe) {
-				ocilaAlphaMorte += 10;
-			} else {
-				ocilaAlphaMorte -= 10;
-			}
-			if (ocilaAlphaMorte < 50) {
-				ocilaAlphaMorteSobe = true;
-			}
-			if (ocilaAlphaMorte > 200) {
-				ocilaAlphaMorteSobe = false;
+				graphics2d.setColor(OcilaCor.geraOcila("INVENC_VERMELHO",
+						new Color(255, 150, 150)));
 			}
 			graphics2d.fillOval(ar.x, ar.y, ar.width, ar.height);
 		}
