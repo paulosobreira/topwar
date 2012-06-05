@@ -1,5 +1,7 @@
 package br.topwar;
 
+import org.hibernate.Session;
+
 import br.nnpe.servidor.NnpeProxyComandos;
 import br.nnpe.tos.NnpeTO;
 import br.nnpe.tos.SessaoCliente;
@@ -109,6 +111,11 @@ public class ProxyComandos extends NnpeProxyComandos {
 	public void ganchoMonitorAtividade() {
 		controleJogosServidor.removerJogosVaziosFinalizados();
 
+	}
+
+	@Override
+	public Session getSession() {
+		return controlePersistencia.getSession();
 	}
 
 }
