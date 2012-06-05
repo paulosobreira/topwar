@@ -31,11 +31,11 @@ public class NnpePersistencia {
 
 	private String webDir;
 
-	public static Session getSession() {
+	public Session getSession() {
 		Session session = HibernateUtil.currentSession();
 		try {
-			List jogador = session.createCriteria(NnpeUsuario.class)
-					.add(Restrictions.eq("id", new Long(0))).list();
+			List jogador = session.createCriteria(NnpeUsuario.class).add(
+					Restrictions.eq("id", new Long(0))).list();
 		} catch (Exception e) {
 			Logger.logarExept(e);
 			HibernateUtil.closeSession();
@@ -68,7 +68,7 @@ public class NnpePersistencia {
 			if (file != null) {
 				file.delete();
 			}
-			Connection connection = NnpePersistencia.getSession().connection();
+			Connection connection = getSession().connection();
 			String sql = "BACKUP DATABASE TO '" + webInfDir
 					+ "hipersonic.tar.gz' BLOCKING";
 
@@ -155,7 +155,7 @@ public class NnpePersistencia {
 	}
 
 	public void gravarDados(NnpeDados... nnpeDados) throws Exception {
-		Session session = NnpePersistencia.getSession();
+		Session session = getSession();
 		Transaction transaction = session.beginTransaction();
 		try {
 			for (int i = 0; i < nnpeDados.length; i++) {
@@ -170,14 +170,14 @@ public class NnpePersistencia {
 	}
 
 	public List obterNnpeUsuarios() {
-		Session session = NnpePersistencia.getSession();
+		Session session = getSession();
 		return session.createCriteria(NnpeUsuario.class).list();
 	}
 
 	public NnpeTO obterTodosNnpeUsuarios() {
 		Dia dia = new Dia();
 		dia.advance(-240);
-		Session session = NnpePersistencia.getSession();
+		Session session = getSession();
 		String hql = "select obj.login from Usuario obj where obj.ultimoLogon > "
 				+ dia.toTimestamp().getTime() + " order by obj.login ";
 		Query qry = session.createQuery(hql);
@@ -195,9 +195,10 @@ public class NnpePersistencia {
 	}
 
 	public NnpeUsuario obterNnpeUsuarioPorLogin(String login) {
-		Session session = NnpePersistencia.getSession();
-		NnpeUsuario usuario = (NnpeUsuario) session.createCriteria(NnpeUsuario.class)
-				.add(Restrictions.eq("login", login)).uniqueResult();
+		Session session = getSession();
+		NnpeUsuario usuario = (NnpeUsuario) session.createCriteria(
+				NnpeUsuario.class).add(Restrictions.eq("login", login))
+				.uniqueResult();
 		return usuario;
 	}
 

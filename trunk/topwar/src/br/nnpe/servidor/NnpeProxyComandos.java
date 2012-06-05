@@ -36,6 +36,10 @@ public abstract class NnpeProxyComandos {
 	private NnpeMonitorAtividadeChat nnpeMonitorAtividadeChat;
 	protected DefaultManageableImageCaptchaService capcha = new DefaultManageableImageCaptchaService();
 
+	public abstract Session getSession();
+
+	public abstract void ganchoMonitorAtividade();
+
 	public NnpeProxyComandos(String webDir, String webInfDir) {
 		nnpeDados = new NnpeDados();
 		nnpeChatServidor = new NnpeChatServidor(nnpeDados);
@@ -106,15 +110,13 @@ public abstract class NnpeProxyComandos {
 			return new MsgSrv(Lang.msg("capchaInvalido"));
 		}
 		NnpeUsuario usuario = new NnpeUsuario();
-		Session session = NnpePersistencia.getSession();
-		List usuarios = session.createCriteria(NnpeUsuario.class)
-				.add(Restrictions.eq("login", nnpeCliente.getNomeJogador()))
-				.list();
+		Session session = getSession();
+		List usuarios = session.createCriteria(NnpeUsuario.class).add(
+				Restrictions.eq("login", nnpeCliente.getNomeJogador())).list();
 		usuario = (NnpeUsuario) (usuarios.isEmpty() ? null : usuarios.get(0));
 		if (usuario == null) {
-			usuarios = session
-					.createCriteria(NnpeUsuario.class)
-					.add(Restrictions.eq("email", nnpeCliente.getEmailJogador()))
+			usuarios = session.createCriteria(NnpeUsuario.class).add(
+					Restrictions.eq("email", nnpeCliente.getEmailJogador()))
 					.list();
 			usuario = (NnpeUsuario) (usuarios.isEmpty() ? null : usuarios
 					.get(0));
@@ -168,17 +170,15 @@ public abstract class NnpeProxyComandos {
 			return new MsgSrv(Lang.msg("capchaInvalido"));
 		}
 
-		Session session = NnpePersistencia.getSession();
-		List usuarios = session.createCriteria(NnpeUsuario.class)
-				.add(Restrictions.eq("login", nnpeCliente.getNomeJogador()))
-				.list();
+		Session session = getSession();
+		List usuarios = session.createCriteria(NnpeUsuario.class).add(
+				Restrictions.eq("login", nnpeCliente.getNomeJogador())).list();
 		usuario = (NnpeUsuario) (usuarios.isEmpty() ? null : usuarios.get(0));
 		if (usuario != null) {
 			return new MsgSrv(Lang.msg("loginNaoDisponivel"));
 		}
-		usuarios = session.createCriteria(NnpeUsuario.class)
-				.add(Restrictions.eq("email", nnpeCliente.getEmailJogador()))
-				.list();
+		usuarios = session.createCriteria(NnpeUsuario.class).add(
+				Restrictions.eq("email", nnpeCliente.getEmailJogador())).list();
 		usuario = (NnpeUsuario) (usuarios.isEmpty() ? null : usuarios.get(0));
 		if (usuario != null) {
 			return new MsgSrv(Lang.msg("emailJaCadastrado"));
@@ -242,11 +242,10 @@ public abstract class NnpeProxyComandos {
 
 	public Object logar(NnpeCliente nnpeCliente) {
 		NnpeUsuario usuario = new NnpeUsuario();
-		Session session = NnpePersistencia.getSession();
+		Session session = getSession();
 		try {
-			List usuarios = session
-					.createCriteria(NnpeUsuario.class)
-					.add(Restrictions.eq("login", nnpeCliente.getNomeJogador()))
+			List usuarios = session.createCriteria(NnpeUsuario.class).add(
+					Restrictions.eq("login", nnpeCliente.getNomeJogador()))
 					.list();
 			usuario = (NnpeUsuario) (usuarios.isEmpty() ? null : usuarios
 					.get(0));
@@ -329,8 +328,6 @@ public abstract class NnpeProxyComandos {
 		return true;
 
 	}
-
-	public abstract void ganchoMonitorAtividade();
 
 	public void pararMonitor() {
 		if (nnpeMonitorAtividadeChat != null) {
