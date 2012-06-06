@@ -8,7 +8,7 @@ import br.nnpe.Logger;
 import br.nnpe.NameGenerator;
 import br.nnpe.Util;
 import br.topwar.ConstantesTopWar;
-import br.topwar.tos.AvatarTopWar;
+import br.topwar.tos.ObjTopWar;
 import br.topwar.tos.BotInfo;
 import br.topwar.tos.DadosJogoTopWar;
 
@@ -53,7 +53,7 @@ public class ControleBots {
 				DadosJogoTopWar dadosJogoTopWar = new DadosJogoTopWar();
 				dadosJogoTopWar.setClasse(ConstantesTopWar.ASSAULT);
 				dadosJogoTopWar.setNomeJogador(nome);
-				AvatarTopWar bot = jogoServidor.entrarNoJogo(dadosJogoTopWar,
+				ObjTopWar bot = jogoServidor.entrarNoJogo(dadosJogoTopWar,
 						ConstantesTopWar.TIME_VERMELHO);
 				bot.setBotInfo(new BotInfo(bot, jogoServidor));
 				bot.getBotInfo();

@@ -26,7 +26,7 @@ import br.topwar.cliente.AvatarCliente;
 import br.topwar.recursos.CarregadorRecursos;
 import br.topwar.serial.MapaTopWar;
 import br.topwar.serial.ObjetoMapa;
-import br.topwar.tos.AvatarTopWar;
+import br.topwar.tos.ObjTopWar;
 import br.topwar.tos.DadosAcaoClienteTopWar;
 import br.topwar.tos.DadosAvatar;
 import br.topwar.tos.DadosJogoTopWar;
@@ -37,7 +37,7 @@ public class JogoServidor {
 	private DadosJogoTopWar dadosJogoTopWar;
 	private MapaTopWar mapaTopWar;
 	private ProxyComandos proxyComandos;
-	private List<AvatarTopWar> avatarTopWars = new ArrayList<AvatarTopWar>();
+	private List<ObjTopWar> avatarTopWars = new ArrayList<ObjTopWar>();
 	private Thread monitorJogo;
 	private int ptsVermelho;
 	private int ptsAzul;
@@ -95,7 +95,7 @@ public class JogoServidor {
 	}
 
 	private void incluirAvatarCriadorJogo(DadosJogoTopWar dadosJogoTopWar) {
-		AvatarTopWar avatarTopWar = new AvatarTopWar();
+		ObjTopWar avatarTopWar = new ObjTopWar();
 		avatarTopWar.setClasse(dadosJogoTopWar.getClasse());
 		setupCalsseJogador(avatarTopWar);
 		// if (Math.random() > .5) {
@@ -141,7 +141,7 @@ public class JogoServidor {
 		synchronized (avatarTopWars) {
 			for (Iterator iterator = avatarTopWars.iterator(); iterator
 					.hasNext();) {
-				AvatarTopWar avatarTopWar = (AvatarTopWar) iterator.next();
+				ObjTopWar avatarTopWar = (ObjTopWar) iterator.next();
 				long tempDesdeUltMorte = System.currentTimeMillis()
 						- avatarTopWar.getUltimaMorte();
 				if (avatarTopWar.getVida() <= 0 && tempDesdeUltMorte > 5000) {
@@ -168,12 +168,12 @@ public class JogoServidor {
 		}
 	}
 
-	public List<AvatarTopWar> getAvatarTopWars() {
+	public List<ObjTopWar> getAvatarTopWars() {
 		return avatarTopWars;
 	}
 
-	public List<AvatarTopWar> getAvatarTopWarsCopia() {
-		List<AvatarTopWar> avataresCopy = new ArrayList<AvatarTopWar>();
+	public List<ObjTopWar> getAvatarTopWarsCopia() {
+		List<ObjTopWar> avataresCopy = new ArrayList<ObjTopWar>();
 		while (avataresCopy.isEmpty()) {
 			try {
 				avataresCopy.addAll(avatarTopWars);
@@ -190,15 +190,15 @@ public class JogoServidor {
 	}
 
 	public Object atualizaListaAvatares(NnpeTO nnpeTO) {
-		AvatarTopWar avatarTopWarJog = obterAvatarTopWar(nnpeTO
+		ObjTopWar avatarTopWarJog = obterAvatarTopWar(nnpeTO
 				.getSessaoCliente().getNomeJogador());
 		if (avatarTopWarJog == null)
 			return null;
-		Set<AvatarTopWar> ret = new HashSet<AvatarTopWar>();
+		Set<ObjTopWar> ret = new HashSet<ObjTopWar>();
 		synchronized (avatarTopWars) {
 			for (Iterator iterator = avatarTopWars.iterator(); iterator
 					.hasNext();) {
-				AvatarTopWar avatarTopWar = (AvatarTopWar) iterator.next();
+				ObjTopWar avatarTopWar = (ObjTopWar) iterator.next();
 				if (avatarTopWar.equals(avatarTopWarJog)) {
 					avatarTopWar
 							.setUltimaRequisicao(System.currentTimeMillis());
@@ -270,7 +270,7 @@ public class JogoServidor {
 		return ptsAzul;
 	}
 
-	public boolean campoVisao(List<Point> line, AvatarTopWar avatarTopWar,
+	public boolean campoVisao(List<Point> line, ObjTopWar avatarTopWar,
 			boolean campoVisaoTiro) {
 		if (line == null) {
 			return false;
@@ -334,7 +334,7 @@ public class JogoServidor {
 		return dadosJogoTopWar.getNomeJogo();
 	}
 
-	public String moverAvatar(AvatarTopWar avatarTopWar,
+	public String moverAvatar(ObjTopWar avatarTopWar,
 			DadosAcaoClienteTopWar acaoClienteTopWar) {
 		if (avatarTopWar.getVida() <= 0) {
 			return null;
@@ -385,13 +385,13 @@ public class JogoServidor {
 		return false;
 	}
 
-	public AvatarTopWar entrarNoJogo(DadosJogoTopWar dadosJogoTopWar) {
+	public ObjTopWar entrarNoJogo(DadosJogoTopWar dadosJogoTopWar) {
 		return entrarNoJogo(dadosJogoTopWar, null);
 	}
 
-	public AvatarTopWar entrarNoJogo(DadosJogoTopWar dadosJogoTopWar,
+	public ObjTopWar entrarNoJogo(DadosJogoTopWar dadosJogoTopWar,
 			String time) {
-		AvatarTopWar avatarTopWar = new AvatarTopWar();
+		ObjTopWar avatarTopWar = new ObjTopWar();
 		avatarTopWar.setClasse(dadosJogoTopWar.getClasse());
 		setupCalsseJogador(avatarTopWar);
 		if (Util.isNullOrEmpty(time)) {
@@ -428,7 +428,7 @@ public class JogoServidor {
 		return avatarTopWar;
 	}
 
-	private void setupCalsseJogador(AvatarTopWar avatarTopWar) {
+	private void setupCalsseJogador(ObjTopWar avatarTopWar) {
 		avatarTopWar.setVida(ConstantesTopWar.VIDA_COMPLETA);
 		if (ConstantesTopWar.ASSAULT.equals(avatarTopWar.getClasse())) {
 			avatarTopWar.setArma(ConstantesTopWar.ARMA_ASSAULT);
@@ -467,11 +467,11 @@ public class JogoServidor {
 		return cont;
 	}
 
-	public AvatarTopWar removerJogador(String nomeJogador) {
+	public ObjTopWar removerJogador(String nomeJogador) {
 		synchronized (avatarTopWars) {
 			for (Iterator iterator = avatarTopWars.iterator(); iterator
 					.hasNext();) {
-				AvatarTopWar avatarTopWar = (AvatarTopWar) iterator.next();
+				ObjTopWar avatarTopWar = (ObjTopWar) iterator.next();
 				if (avatarTopWar.getNomeJogador().equals(nomeJogador)) {
 					iterator.remove();
 					return avatarTopWar;
@@ -481,12 +481,12 @@ public class JogoServidor {
 		return null;
 	}
 
-	public AvatarTopWar obterAvatarTopWar(String nomeCliente) {
-		List<AvatarTopWar> avatarTopWars = getAvatarTopWars();
+	public ObjTopWar obterAvatarTopWar(String nomeCliente) {
+		List<ObjTopWar> avatarTopWars = getAvatarTopWars();
 		synchronized (avatarTopWars) {
 			for (Iterator iterator2 = avatarTopWars.iterator(); iterator2
 					.hasNext();) {
-				AvatarTopWar avatarTopWar = (AvatarTopWar) iterator2.next();
+				ObjTopWar avatarTopWar = (ObjTopWar) iterator2.next();
 				if (nomeCliente.equals(avatarTopWar.getNomeJogador())) {
 					return avatarTopWar;
 				}
@@ -504,7 +504,7 @@ public class JogoServidor {
 		synchronized (avatarTopWars) {
 			for (Iterator iterator = avatarTopWars.iterator(); iterator
 					.hasNext();) {
-				AvatarTopWar avatarTopWar = (AvatarTopWar) iterator.next();
+				ObjTopWar avatarTopWar = (ObjTopWar) iterator.next();
 				if (avatarTopWar.getBotInfo() != null) {
 					continue;
 				}
@@ -517,7 +517,7 @@ public class JogoServidor {
 		}
 	}
 
-	public Object atacar(AvatarTopWar avatarAtacando, double angulo, int range) {
+	public Object atacar(ObjTopWar avatarAtacando, double angulo, int range) {
 		if (avatarAtacando.getVida() <= 0) {
 			return null;
 		}
@@ -545,7 +545,7 @@ public class JogoServidor {
 		return null;
 	}
 
-	private boolean atirarShotGun(AvatarTopWar avatarAtirador, double angulo,
+	private boolean atirarShotGun(ObjTopWar avatarAtirador, double angulo,
 			int range) {
 		Point pontoAvatar = avatarAtirador.getPontoAvatar();
 		Point front = GeoUtil.calculaPonto(angulo, 20, pontoAvatar);
@@ -563,7 +563,7 @@ public class JogoServidor {
 		synchronized (avatarTopWars) {
 			for (Iterator iteratorAvatar = avatarTopWars.iterator(); iteratorAvatar
 					.hasNext();) {
-				AvatarTopWar avatarAlvo = (AvatarTopWar) iteratorAvatar.next();
+				ObjTopWar avatarAlvo = (ObjTopWar) iteratorAvatar.next();
 				if (avatarAlvo.equals(avatarAtirador)) {
 					continue;
 				}
@@ -618,11 +618,11 @@ public class JogoServidor {
 		return false;
 	}
 
-	private boolean combateCoprpoACorpo(AvatarTopWar avatarAtacando) {
+	private boolean combateCoprpoACorpo(ObjTopWar avatarAtacando) {
 		synchronized (avatarTopWars) {
 			for (Iterator iteratorAvatar = avatarTopWars.iterator(); iteratorAvatar
 					.hasNext();) {
-				AvatarTopWar avatarAlvo = (AvatarTopWar) iteratorAvatar.next();
+				ObjTopWar avatarAlvo = (ObjTopWar) iteratorAvatar.next();
 				if (avatarAlvo.equals(avatarAtacando)) {
 					continue;
 				}
@@ -645,7 +645,7 @@ public class JogoServidor {
 		return false;
 	}
 
-	private boolean atirar(AvatarTopWar avatarAtacando, double angulo, int range) {
+	private boolean atirar(ObjTopWar avatarAtacando, double angulo, int range) {
 
 		if (ConstantesTopWar.ARMA_ASSAULT == avatarAtacando.getArma()
 				&& range > ConstantesTopWar.ASSALT_MAX_RANGE) {
@@ -701,7 +701,7 @@ public class JogoServidor {
 			synchronized (avatarTopWars) {
 				for (Iterator iteratorAvatar = avatarTopWars.iterator(); iteratorAvatar
 						.hasNext();) {
-					AvatarTopWar avatarAlvo = (AvatarTopWar) iteratorAvatar
+					ObjTopWar avatarAlvo = (ObjTopWar) iteratorAvatar
 							.next();
 					if (avatarAlvo.equals(avatarAtacando)) {
 						continue;
@@ -728,8 +728,8 @@ public class JogoServidor {
 		return false;
 	}
 
-	private boolean processaDanoCombateCorpoCorpo(AvatarTopWar avatarAtacando,
-			AvatarTopWar avatarAlvo) {
+	private boolean processaDanoCombateCorpoCorpo(ObjTopWar avatarAtacando,
+			ObjTopWar avatarAlvo) {
 		if (avatarAtacando.getTime().equals(avatarAlvo.getTime())) {
 			return false;
 		}
@@ -775,8 +775,8 @@ public class JogoServidor {
 		return false;
 	}
 
-	private boolean processaAcertoDanoTiro(AvatarTopWar avatarAtirador,
-			Point point, AvatarTopWar avatarAlvo, int indice, List linha) {
+	private boolean processaAcertoDanoTiro(ObjTopWar avatarAtirador,
+			Point point, ObjTopWar avatarAlvo, int indice, List linha) {
 		AvatarCliente avatarCliente = new AvatarCliente(avatarAlvo);
 		Shape gerarCorpo = avatarCliente.gerarCorpo();
 		Shape gerarCabeca = avatarCliente.gerarCabeca();
@@ -858,7 +858,7 @@ public class JogoServidor {
 		return false;
 	}
 
-	private int consomeBalasArma(AvatarTopWar avatarAtirador) {
+	private int consomeBalasArma(ObjTopWar avatarAtirador) {
 		if (avatarAtirador.getBalas() <= 0) {
 			return 0;
 		}
@@ -870,11 +870,11 @@ public class JogoServidor {
 		return balas;
 	}
 
-	private boolean verificaRecarregando(AvatarTopWar avatarAtirador) {
+	private boolean verificaRecarregando(ObjTopWar avatarAtirador) {
 		return (System.currentTimeMillis() - avatarAtirador.getRecarregar()) < ConstantesTopWar.TEMPO_RECARGA;
 	}
 
-	public Object atualizaAngulo(AvatarTopWar avatarTopWar, double angulo) {
+	public Object atualizaAngulo(ObjTopWar avatarTopWar, double angulo) {
 		if (avatarTopWar.getVida() <= 0) {
 			return null;
 		}
@@ -882,7 +882,7 @@ public class JogoServidor {
 		return ConstantesTopWar.OK;
 	}
 
-	public Object recarregar(AvatarTopWar avatarTopWar) {
+	public Object recarregar(ObjTopWar avatarTopWar) {
 		if (avatarTopWar.getVida() <= 0) {
 			return null;
 		}
@@ -906,7 +906,7 @@ public class JogoServidor {
 		return ConstantesTopWar.OK;
 	}
 
-	public Object moverPontoAvatar(AvatarTopWar avatarTopWar,
+	public Object moverPontoAvatar(ObjTopWar avatarTopWar,
 			DadosAcaoClienteTopWar acaoClienteTopWar) {
 		if (avatarTopWar.getVida() <= 0) {
 			return null;
@@ -927,7 +927,7 @@ public class JogoServidor {
 		return ConstantesTopWar.OK;
 	}
 
-	public Object alternarFaca(AvatarTopWar avatarTopWar) {
+	public Object alternarFaca(ObjTopWar avatarTopWar) {
 		if (avatarTopWar.getVida() <= 0) {
 			return null;
 		}
@@ -958,7 +958,7 @@ public class JogoServidor {
 		synchronized (avatarTopWars) {
 			for (Iterator iterator = avatarTopWars.iterator(); iterator
 					.hasNext();) {
-				AvatarTopWar avatarTopWar = (AvatarTopWar) iterator.next();
+				ObjTopWar avatarTopWar = (ObjTopWar) iterator.next();
 				PlacarTopWar placarTopWar = new PlacarTopWar();
 				placarTopWar.setJogador(avatarTopWar.getNomeJogador());
 				placarTopWar.setTime(avatarTopWar.getTime());

@@ -7,7 +7,7 @@ import javax.persistence.Transient;
 
 import br.topwar.ConstantesTopWar;
 
-public class AvatarTopWar {
+public class ObjTopWar {
 	private String time;
 	private String nomeJogador;
 	private Point pontoAvatar;
@@ -20,7 +20,7 @@ public class AvatarTopWar {
 	private boolean invencivel;
 	private transient String classe;
 	private transient Point pontoUtlDisparo;
-	private transient AvatarTopWar mortoPor;
+	private transient ObjTopWar mortoPor;
 	private transient int balas = 0;
 	private transient int cartuchos = 0;
 	private transient int kills = 0;
@@ -64,11 +64,11 @@ public class AvatarTopWar {
 	}
 
 	@Transient
-	public AvatarTopWar getMortoPor() {
+	public ObjTopWar getMortoPor() {
 		return mortoPor;
 	}
 
-	public void setMortoPor(AvatarTopWar mortoPor) {
+	public void setMortoPor(ObjTopWar mortoPor) {
 		this.mortoPor = mortoPor;
 	}
 
@@ -250,7 +250,7 @@ public class AvatarTopWar {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		AvatarTopWar other = (AvatarTopWar) obj;
+		ObjTopWar other = (ObjTopWar) obj;
 		if (nomeJogador == null) {
 			if (other.nomeJogador != null)
 				return false;

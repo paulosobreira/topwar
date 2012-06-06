@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import br.topwar.ConstantesTopWar;
-import br.topwar.tos.AvatarTopWar;
+import br.topwar.tos.ObjTopWar;
 import br.topwar.tos.BotInfo;
 
 public class ThreadBot implements Runnable {
@@ -45,7 +45,7 @@ public class ThreadBot implements Runnable {
 
 	}
 
-	public void addBot(AvatarTopWar bot) {
+	public void addBot(ObjTopWar bot) {
 		synchronized (myBots) {
 			myBots.add(bot.getBotInfo());
 		}
