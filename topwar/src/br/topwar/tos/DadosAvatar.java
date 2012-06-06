@@ -62,10 +62,10 @@ public class DadosAvatar {
 		return 0;
 	}
 
-	public static String empacotaLista(Set<AvatarTopWar> ret) {
+	public static String empacotaLista(Set<ObjTopWar> ret) {
 		StringBuffer buffer = new StringBuffer();
 		for (Iterator iterator = ret.iterator(); iterator.hasNext();) {
-			AvatarTopWar avatarTopWar = (AvatarTopWar) iterator.next();
+			ObjTopWar avatarTopWar = (ObjTopWar) iterator.next();
 			DadosAvatar dadosAvatar = new DadosAvatar();
 			dadosAvatar.time = avatarTopWar.getTime();
 			dadosAvatar.nomeJogador = avatarTopWar.getNomeJogador();
@@ -84,14 +84,14 @@ public class DadosAvatar {
 		return buffer.toString();
 	}
 
-	public static HashSet<AvatarTopWar> desEmpacotarLista(Object object) {
-		HashSet<AvatarTopWar> avatarTopWars = new HashSet<AvatarTopWar>();
+	public static HashSet<ObjTopWar> desEmpacotarLista(Object object) {
+		HashSet<ObjTopWar> avatarTopWars = new HashSet<ObjTopWar>();
 		String[] listStrs = object.toString().split("@");
 		for (int i = 0; i < listStrs.length; i++) {
 			DadosAvatar dadosAvatar = new DadosAvatar();
 			dadosAvatar.decode(listStrs[i]);
 
-			AvatarTopWar avatarTopWar = new AvatarTopWar();
+			ObjTopWar avatarTopWar = new ObjTopWar();
 			avatarTopWar.setTime(dadosAvatar.time);
 			avatarTopWar.setNomeJogador(dadosAvatar.nomeJogador);
 			avatarTopWar

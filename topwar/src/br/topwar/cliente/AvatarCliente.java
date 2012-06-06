@@ -10,7 +10,7 @@ import java.awt.geom.Rectangle2D;
 
 import br.nnpe.GeoUtil;
 import br.topwar.ConstantesTopWar;
-import br.topwar.tos.AvatarTopWar;
+import br.topwar.tos.ObjTopWar;
 
 public class AvatarCliente {
 	private boolean local;
@@ -20,7 +20,7 @@ public class AvatarCliente {
 	private long lastAnimMorte;
 	private Point pontoAvatarSuave;
 	private Point pontoAvatarOld;
-	private AvatarTopWar avatarTopWar;
+	private ObjTopWar avatarTopWar;
 
 	public int getRangeUtlDisparo() {
 		return avatarTopWar.getRangeUtlDisparo();
@@ -34,7 +34,7 @@ public class AvatarCliente {
 		return avatarTopWar.isInvencivel();
 	}
 
-	public AvatarTopWar getAvatarTopWar() {
+	public ObjTopWar getAvatarTopWar() {
 		return avatarTopWar;
 	}
 
@@ -54,7 +54,7 @@ public class AvatarCliente {
 		return quadroAnimacao;
 	}
 
-	public void setAvatarTopWar(AvatarTopWar avatarTopWar) {
+	public void setAvatarTopWar(ObjTopWar avatarTopWar) {
 		this.avatarTopWar = avatarTopWar;
 	}
 
@@ -154,7 +154,7 @@ public class AvatarCliente {
 		lastAnimMorte = System.currentTimeMillis();
 	}
 
-	public AvatarCliente(AvatarTopWar avatarTopWar) {
+	public AvatarCliente(ObjTopWar avatarTopWar) {
 		this.avatarTopWar = avatarTopWar;
 	}
 

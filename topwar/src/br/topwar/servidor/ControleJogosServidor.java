@@ -15,7 +15,7 @@ import br.nnpe.tos.SessaoCliente;
 import br.topwar.ConstantesTopWar;
 import br.topwar.ProxyComandos;
 import br.topwar.recursos.idiomas.Lang;
-import br.topwar.tos.AvatarTopWar;
+import br.topwar.tos.ObjTopWar;
 import br.topwar.tos.DadosAcaoClienteTopWar;
 import br.topwar.tos.DadosJogoTopWar;
 
@@ -84,7 +84,7 @@ public class ControleJogosServidor {
 		if (jogoServidor == null) {
 			return null;
 		}
-		AvatarTopWar avatarTopWar = obterAvatarTopWarCliente(acaoClienteTopWar
+		ObjTopWar avatarTopWar = obterAvatarTopWarCliente(acaoClienteTopWar
 				.getNomeCliente());
 		if (avatarTopWar == null) {
 			return null;
@@ -107,7 +107,7 @@ public class ControleJogosServidor {
 		return mapaJogos.get(nomeJogo);
 	}
 
-	private AvatarTopWar obterAvatarTopWarCliente(String nomeCliente) {
+	private ObjTopWar obterAvatarTopWarCliente(String nomeCliente) {
 		Collection jogosAndamento = nnpeDados.getJogosAndamento();
 		for (Iterator iterator = jogosAndamento.iterator(); iterator.hasNext();) {
 			String nmJogog = (String) iterator.next();
@@ -125,11 +125,11 @@ public class ControleJogosServidor {
 			String nmJogog = (String) iterator.next();
 			JogoServidor jogoServidor = mapaJogos.get(nmJogog);
 			if (jogoServidor != null) {
-				List<AvatarTopWar> avatarTopWars = jogoServidor
+				List<ObjTopWar> avatarTopWars = jogoServidor
 						.getAvatarTopWars();
 				for (Iterator iterator2 = avatarTopWars.iterator(); iterator2
 						.hasNext();) {
-					AvatarTopWar avatarTopWar = (AvatarTopWar) iterator2.next();
+					ObjTopWar avatarTopWar = (ObjTopWar) iterator2.next();
 					if (nomeCliente.equals(avatarTopWar.getNomeJogador())) {
 						return jogoServidor;
 					}
@@ -181,7 +181,7 @@ public class ControleJogosServidor {
 		if (jogoServidor == null) {
 			return null;
 		}
-		AvatarTopWar avatarTopWar = obterAvatarTopWarCliente(acaoClienteTopWar
+		ObjTopWar avatarTopWar = obterAvatarTopWarCliente(acaoClienteTopWar
 				.getNomeCliente());
 		if (avatarTopWar == null) {
 			return null;
@@ -198,7 +198,7 @@ public class ControleJogosServidor {
 		if (jogoServidor == null) {
 			return null;
 		}
-		AvatarTopWar avatarTopWar = obterAvatarTopWarCliente(acaoClienteTopWar
+		ObjTopWar avatarTopWar = obterAvatarTopWarCliente(acaoClienteTopWar
 				.getNomeCliente());
 		if (avatarTopWar == null) {
 			return null;
@@ -215,7 +215,7 @@ public class ControleJogosServidor {
 		if (jogoServidor == null) {
 			return null;
 		}
-		AvatarTopWar avatarTopWar = obterAvatarTopWarCliente(acaoClienteTopWar
+		ObjTopWar avatarTopWar = obterAvatarTopWarCliente(acaoClienteTopWar
 				.getNomeCliente());
 		if (avatarTopWar == null) {
 			return null;
@@ -231,7 +231,7 @@ public class ControleJogosServidor {
 		if (jogoServidor == null) {
 			return null;
 		}
-		AvatarTopWar avatarTopWar = obterAvatarTopWarCliente(acaoClienteTopWar
+		ObjTopWar avatarTopWar = obterAvatarTopWarCliente(acaoClienteTopWar
 				.getNomeCliente());
 		if (avatarTopWar == null) {
 			return null;
@@ -247,7 +247,7 @@ public class ControleJogosServidor {
 		if (jogoServidor == null) {
 			return null;
 		}
-		AvatarTopWar avatarTopWar = obterAvatarTopWarCliente(acaoClienteTopWar
+		ObjTopWar avatarTopWar = obterAvatarTopWarCliente(acaoClienteTopWar
 				.getNomeCliente());
 		if (avatarTopWar == null) {
 			return null;

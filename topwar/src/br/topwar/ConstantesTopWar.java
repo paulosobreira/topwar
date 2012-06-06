@@ -22,6 +22,7 @@ public class ConstantesTopWar {
 	public static final int ARMA_MACHINEGUN = 5;
 	public static final int ARMA_ROCKET = 6;
 	public static final int ARMA_SHIELD = 7;
+	public static final int OBJ_ROCKET = 8;
 	public static final String ATACAR = "A";
 	public static final String KILL_CAM = "K_C";
 	public static final String OBTER_PLCAR = "O_P";

@@ -28,7 +28,7 @@ import br.nnpe.tos.NnpeTO;
 import br.topwar.ConstantesTopWar;
 import br.topwar.recursos.CarregadorRecursos;
 import br.topwar.serial.MapaTopWar;
-import br.topwar.tos.AvatarTopWar;
+import br.topwar.tos.ObjTopWar;
 import br.topwar.tos.DadosAvatar;
 import br.topwar.tos.DadosJogoTopWar;
 import br.topwar.tos.EventoJogo;
@@ -578,10 +578,10 @@ public class JogoCliente {
 			eventos.add(eventoJogo);
 		}
 
-		Set<AvatarTopWar> avatarTopWars = (HashSet<AvatarTopWar>) DadosAvatar
+		Set<ObjTopWar> avatarTopWars = (HashSet<ObjTopWar>) DadosAvatar
 				.desEmpacotarLista(retorno.get(ConstantesTopWar.LISTA_AVATARES));
 		for (Iterator iterator = avatarTopWars.iterator(); iterator.hasNext();) {
-			AvatarTopWar avatarTopWar = (AvatarTopWar) iterator.next();
+			ObjTopWar avatarTopWar = (ObjTopWar) iterator.next();
 			for (Iterator iterator2 = avatarClientes.iterator(); iterator2
 					.hasNext();) {
 				AvatarCliente avatarCliente = (AvatarCliente) iterator2.next();

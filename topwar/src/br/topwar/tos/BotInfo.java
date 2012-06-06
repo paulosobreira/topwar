@@ -21,11 +21,11 @@ public class BotInfo {
 	private Point ultimaGuia;
 	private Point ptAtual;
 	private int contPtAtual;
-	private AvatarTopWar avatarTopWar;
+	private ObjTopWar avatarTopWar;
 	private JogoServidor jogoServidor;
 	private int vidaUltAlvo;
 
-	public BotInfo(AvatarTopWar bot, JogoServidor jogoServidor) {
+	public BotInfo(ObjTopWar bot, JogoServidor jogoServidor) {
 		this.avatarTopWar = bot;
 		this.jogoServidor = jogoServidor;
 	}
@@ -38,7 +38,7 @@ public class BotInfo {
 			contPtAtual = 0;
 		}
 		ptAtual = pontoAvatar;
-		List<AvatarTopWar> avatarTopWarsCopia = jogoServidor
+		List<ObjTopWar> avatarTopWarsCopia = jogoServidor
 				.getAvatarTopWarsCopia();
 		boolean executouAcaoAtaque = false;
 		if (contPtAtual < 50) {
@@ -124,11 +124,11 @@ public class BotInfo {
 	/**
 	 * Seguir/Atacar avatar inimigo
 	 */
-	private boolean seguirAtacarInimigo(List<AvatarTopWar> avatarTopWarsCopia,
+	private boolean seguirAtacarInimigo(List<ObjTopWar> avatarTopWarsCopia,
 			boolean executouAcaoAtaque) {
 		for (Iterator iterator2 = avatarTopWarsCopia.iterator(); iterator2
 				.hasNext();) {
-			AvatarTopWar avatarTopWarCopia = (AvatarTopWar) iterator2.next();
+			ObjTopWar avatarTopWarCopia = (ObjTopWar) iterator2.next();
 			if (avatarTopWar.getTime().equals(avatarTopWarCopia.getTime())
 					|| avatarTopWarCopia.getVida() <= 0) {
 				continue;
