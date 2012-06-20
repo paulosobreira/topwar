@@ -122,8 +122,8 @@ public class Conceito {
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		Cursor crossHair = new Cursor(Cursor.CROSSHAIR_CURSOR);
 		frame.setCursor(crossHair);
-		ObjectInputStream ois = new ObjectInputStream(CarregadorRecursos
-				.recursoComoStream(mapa));
+		ObjectInputStream ois = new ObjectInputStream(
+				CarregadorRecursos.recursoComoStream(mapa));
 
 		mapaTopWar = (MapaTopWar) ois.readObject();
 		frame.setTitle(mapaTopWar.getNome());
@@ -309,8 +309,8 @@ public class Conceito {
 				super.paintComponent(g);
 				Graphics2D graphics2d = (Graphics2D) g;
 				graphics2d.setColor(Color.lightGray);
-				graphics2d.fillRect(0, 0, mapaTopWar.getLargura(), mapaTopWar
-						.getAltura());
+				graphics2d.fillRect(0, 0, mapaTopWar.getLargura(),
+						mapaTopWar.getAltura());
 				// graphics2d.drawImage(img, null, 0, 0);
 				double angulo = GeoUtil.calculaAngulo(pontoAvatar, pontoMouse,
 						90);
@@ -350,17 +350,19 @@ public class Conceito {
 						Point desenha = new Point(
 								p.x - (imgJog.getWidth() / 2), p.y
 										- (imgJog.getHeight() / 3));
-						areaAvatar = new Rectangle(desenha.x, desenha.y, imgJog
-								.getWidth(), imgJog.getHeight());
+						areaAvatar = new Rectangle(desenha.x, desenha.y,
+								imgJog.getWidth(), imgJog.getHeight());
 						imgJog = processaTransparencia(imgJog, desenha,
 								areaAvatar, mapaTopWar);
 
 						imgJog = processaGrade(imgJog, desenha, areaAvatar,
 								mapaTopWar);
 
-						graphics2d.drawImage(processaSombra(imgJog, desenha,
-								areaAvatar, mapaTopWar), desenha.x, desenha.y,
-								null);
+						graphics2d
+								.drawImage(
+										processaSombra(imgJog, desenha,
+												areaAvatar, mapaTopWar),
+										desenha.x, desenha.y, null);
 
 						graphics2d
 								.drawImage(imgJog, desenha.x, desenha.y, null);
@@ -512,8 +514,8 @@ public class Conceito {
 
 		String formatarTempo = Util.formatarTempo(System.currentTimeMillis());
 
-		g2d.fillRoundRect(x - 10, y - 30, Util.calculaLarguraText(
-				formatarTempo, g2d) + 20, 35, 10, 10);
+		g2d.fillRoundRect(x - 10, y - 30,
+				Util.calculaLarguraText(formatarTempo, g2d) + 20, 35, 10, 10);
 		g2d.setColor(Color.BLACK);
 		g2d.drawString(formatarTempo, x, y);
 
@@ -528,8 +530,8 @@ public class Conceito {
 		x += Util.calculaLarguraText("00", g2d) + 30;
 
 		g2d.setColor(ConstantesTopWar.lightRed);
-		g2d.fillRoundRect(x - 10, y - 30, Util.calculaLarguraText("VERMELHO",
-				g2d) + 20, 35, 10, 10);
+		g2d.fillRoundRect(x - 10, y - 30,
+				Util.calculaLarguraText("VERMELHO", g2d) + 20, 35, 10, 10);
 		g2d.setColor(Color.BLACK);
 		g2d.drawString("VERMELHO", x, y);
 	}
@@ -543,8 +545,8 @@ public class Conceito {
 		Font fontOri = g2d.getFont();
 		g2d.setFont(new Font(fontOri.getName(), fontOri.getStyle(), 32));
 		g2d.setColor(ConstantesTopWar.lightWhite);
-		g2d.fillRoundRect(x - 10, y - 30, Util.calculaLarguraText("ASSAULT",
-				g2d) + 20, 35, 10, 10);
+		g2d.fillRoundRect(x - 10, y - 30,
+				Util.calculaLarguraText("ASSAULT", g2d) + 20, 35, 10, 10);
 		g2d.setColor(Color.BLACK);
 		g2d.drawString("ASSAULT", x, y);
 
@@ -552,8 +554,8 @@ public class Conceito {
 
 		if (false) {
 			g2d.setColor(ConstantesTopWar.lightWhite);
-			g2d.fillRoundRect(x - 10, y - 30, Util
-					.calculaLarguraText("50", g2d) + 20, 35, 10, 10);
+			g2d.fillRoundRect(x - 10, y - 30,
+					Util.calculaLarguraText("50", g2d) + 20, 35, 10, 10);
 			g2d.setColor(Color.BLACK);
 			g2d.drawString("50", x, y);
 			x += 80;
@@ -564,8 +566,9 @@ public class Conceito {
 			g2d.drawString("3 ", x, y);
 		} else {
 			g2d.setColor(new Color(255, 255, 255, ocilaAlphaRecarregando));
-			g2d.fillRoundRect(x - 10, y - 30, Util.calculaLarguraText(
-					"RECARREGANDO", g2d) + 20, 35, 10, 10);
+			g2d.fillRoundRect(x - 10, y - 30,
+					Util.calculaLarguraText("RECARREGANDO", g2d) + 20, 35, 10,
+					10);
 			g2d.setColor(Color.BLACK);
 			g2d.drawString("RECARREGANDO", x, y);
 
@@ -642,8 +645,8 @@ public class Conceito {
 	protected static BufferedImage processaSombra(BufferedImage imgJog,
 			Point desenha, Rectangle areaAvatar, MapaTopWar mapaTopWar) {
 
-		BufferedImage novaImg = new BufferedImage(imgJog.getWidth(), imgJog
-				.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		BufferedImage novaImg = new BufferedImage(imgJog.getWidth(),
+				imgJog.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2d = novaImg.createGraphics();
 		AlphaComposite composite = AlphaComposite.getInstance(
 				AlphaComposite.SRC_OUT, 1);
@@ -653,8 +656,9 @@ public class Conceito {
 
 		g2d.dispose();
 
-		BufferedImage imgSombraProcessada = new BufferedImage(novaImg
-				.getWidth(), novaImg.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		BufferedImage imgSombraProcessada = new BufferedImage(
+				novaImg.getWidth(), novaImg.getHeight(),
+				BufferedImage.TYPE_INT_ARGB);
 		Raster srcRaster = novaImg.getData();
 		WritableRaster destRaster = imgSombraProcessada.getRaster();
 		int[] argbArray = new int[4];
@@ -758,15 +762,17 @@ public class Conceito {
 		BufferedImage bf = new BufferedImage(src.getWidth(), src.getHeight(),
 				BufferedImage.TYPE_INT_ARGB);
 		Graphics2D graphics = (Graphics2D) bf.getGraphics();
-		graphics.drawImage(src, 0, 0, null);
 		graphics.setColor(Color.MAGENTA);
+		graphics.fill(new Rectangle(0, 0, src.getWidth(), src.getHeight()));
+		graphics.drawImage(src, 0, 0, null);
+		graphics.setColor(Color.white);
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 8; j++) {
 				Rectangle rect = new Rectangle(i * largura, j * altura,
 						largura, altura);
 				graphics.draw(rect);
-				graphics.drawString("i=" + i + " j=" + j, rect.x, rect.y
-						+ altura - 10);
+				// graphics.drawString("i=" + i + " j=" + j, rect.x, rect.y
+				// + altura - 10);
 				BufferedImage bufferedImage = ImageUtil.gerarSubImagem(src,
 						rect);
 				String key = time + "-" + i + "-" + j;
@@ -777,9 +783,9 @@ public class Conceito {
 			}
 		}
 
-		// JOptionPane.showMessageDialog(null, new JLabel(new
-		// ImageIcon(ImageUtil
-		// .gerarFade(bf, 150))), "bf", JOptionPane.INFORMATION_MESSAGE);
+//		JOptionPane.showMessageDialog(null,
+//				new JLabel(new ImageIcon(ImageUtil.gerarFade(bf, 255))), "bf",
+//				JOptionPane.INFORMATION_MESSAGE);
 
 		bf = new BufferedImage(azulMortes.getWidth(), azulMortes.getHeight(),
 				BufferedImage.TYPE_INT_ARGB);
@@ -858,12 +864,11 @@ public class Conceito {
 		BufferedImage knife = knifeAtttacks[knifeTransp];
 		AffineTransform afRotate = new AffineTransform();
 		double rad = Math.toRadians((double) angulo - 60);
-		afRotate
-				.setToRotation(rad, knife.getWidth() / 2, knife.getHeight() / 2);
+		afRotate.setToRotation(rad, knife.getWidth() / 2, knife.getHeight() / 2);
 		AffineTransformOp opRotate = new AffineTransformOp(afRotate,
 				AffineTransformOp.TYPE_BILINEAR);
-		BufferedImage rotBuffer = new BufferedImage(knife.getWidth(), knife
-				.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		BufferedImage rotBuffer = new BufferedImage(knife.getWidth(),
+				knife.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		opRotate.filter(knife, rotBuffer);
 		if (knifeTransp > 200) {
 			knifeTranspMaisTransp = false;
