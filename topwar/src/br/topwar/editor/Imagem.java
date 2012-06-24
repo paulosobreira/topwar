@@ -17,7 +17,7 @@ import br.topwar.recursos.CarregadorRecursos;
 public class Imagem {
 	public static void main(String[] args) throws IOException {
 		BufferedImage src = CarregadorRecursos
-				.carregaBufferedImageTransparecia("vermelho_faca.png",
+				.carregaBufferedImageTransparecia("vermelho.png",
 						Color.MAGENTA);
 		int altura = src.getHeight() / 8;
 		int largura = src.getWidth() / 4;

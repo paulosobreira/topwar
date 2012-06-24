@@ -81,6 +81,8 @@ public class PainelTopWar {
 			.carregaBufferedImageTransparecia("azul.png", Color.MAGENTA);
 	public final BufferedImage azul_shotgun = CarregadorRecursos
 			.carregaBufferedImageTransparecia("azul_shotgun.png", Color.MAGENTA);
+	public final BufferedImage azul_machine = CarregadorRecursos
+	.carregaBufferedImageTransparecia("azul_machine.png", Color.MAGENTA);
 	public final BufferedImage azul_faca = CarregadorRecursos
 			.carregaBufferedImageTransparecia("azul_faca.png", Color.MAGENTA);
 	public final BufferedImage vermelho = CarregadorRecursos
@@ -113,6 +115,7 @@ public class PainelTopWar {
 		gerarMapaImagens(vermelho, "vermelho");
 		gerarMapaImagens(azul_faca, "azul_faca");
 		gerarMapaImagens(azul_shotgun, "azul_shotgun");
+		gerarMapaImagens(azul_machine, "azul_machine");
 		gerarMapaImagens(vermelho_faca, "vermelho_faca");
 		gerarMapaImagensMortes(azulMortes, "azul");
 		gerarMapaImagensMortes(vermelhoMortes, "vermelho");
@@ -947,6 +950,9 @@ public class PainelTopWar {
 			}
 			if (ConstantesTopWar.ARMA_SHOTGUN == avatarCliente.getArma()) {
 				timeClasse += "_shotgun";
+			}
+			if (ConstantesTopWar.ARMA_MACHINEGUN == avatarCliente.getArma()) {
+				timeClasse += "_machine";
 			}
 			if (angulo >= 0 && angulo <= 22.5 || angulo > 337.5) {
 				imgJog = mapImgs.get(timeClasse + "-" + anim + "-0");
