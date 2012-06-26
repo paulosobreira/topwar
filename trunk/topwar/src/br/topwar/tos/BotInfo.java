@@ -141,7 +141,7 @@ public class BotInfo {
 					setPontoDestino(avatarTopWarCopia.getPontoAvatar());
 				} else if ((avatarTopWar.getBalas() != 0 || avatarTopWar
 						.getCartuchos() != 0)
-						&& avatarTopWar.getArma() != ConstantesTopWar.ARMA_ASSAULT) {
+						&& avatarTopWar.getArma() == ConstantesTopWar.ARMA_FACA) {
 					jogoServidor.alternarFaca(avatarTopWar);
 					executouAcaoAtaque = true;
 				} else if (line.size() < 10
@@ -155,7 +155,7 @@ public class BotInfo {
 						setPontoDestino(avatarTopWarCopia.getPontoAvatar());
 					}
 				} else if (line.size() < ConstantesTopWar.MEIO_LIMITE_VISAO
-						&& avatarTopWar.getArma() == ConstantesTopWar.ARMA_ASSAULT) {
+						&& avatarTopWar.getArma() != ConstantesTopWar.ARMA_FACA) {
 					if (avatarTopWar.getBalas() == 0) {
 						if (avatarTopWar.getCartuchos() == 0) {
 							jogoServidor.alternarFaca(avatarTopWar);
