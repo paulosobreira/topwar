@@ -17,7 +17,7 @@ import br.topwar.recursos.CarregadorRecursos;
 public class Imagem {
 	public static void main(String[] args) throws IOException {
 		BufferedImage src = CarregadorRecursos
-				.carregaBufferedImageTransparecia("vermelho.png",
+				.carregaBufferedImageTransparecia("azul_faca.png",
 						Color.MAGENTA);
 		int altura = src.getHeight() / 8;
 		int largura = src.getWidth() / 4;
@@ -35,7 +35,7 @@ public class Imagem {
 				// + altura - 10);
 			}
 		}
-		File file = new File("c:\\temp\\vermelho_novo.png");
+		File file = new File("c:\\temp\\azul_novo.png");
 		ImageIO.write(bf, "png", file);
 		JOptionPane.showMessageDialog(null, new JLabel(new ImageIcon(bf)),
 				"bf", JOptionPane.INFORMATION_MESSAGE);
