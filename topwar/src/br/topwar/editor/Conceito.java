@@ -93,6 +93,10 @@ public class Conceito {
 
 	public final BufferedImage knifeAtttack = CarregadorRecursos
 			.carregaBufferedImageTransparecia("knifeAtttack.png", null);
+
+	public final BufferedImage shield = CarregadorRecursos
+			.carregaBufferedImageTransparecia("shield.png", null);
+
 	public BufferedImage[] knifeAtttacks = new BufferedImage[255];
 
 	public static void main(String[] args) throws Exception {
@@ -311,7 +315,7 @@ public class Conceito {
 				graphics2d.setColor(Color.lightGray);
 				graphics2d.fillRect(0, 0, mapaTopWar.getLargura(),
 						mapaTopWar.getAltura());
-				// graphics2d.drawImage(img, null, 0, 0);
+			    graphics2d.drawImage(img, null, 0, 0);
 				double angulo = GeoUtil.calculaAngulo(pontoAvatar, pontoMouse,
 						90);
 				if (angulo < 0) {
@@ -366,6 +370,7 @@ public class Conceito {
 
 						graphics2d
 								.drawImage(imgJog, desenha.x, desenha.y, null);
+						desenhaEscudo(graphics2d, angulo, imgJog, desenha);
 						/**
 						 * Desenha Faca
 						 */
@@ -783,9 +788,9 @@ public class Conceito {
 			}
 		}
 
-//		JOptionPane.showMessageDialog(null,
-//				new JLabel(new ImageIcon(ImageUtil.gerarFade(bf, 255))), "bf",
-//				JOptionPane.INFORMATION_MESSAGE);
+		// JOptionPane.showMessageDialog(null,
+		// new JLabel(new ImageIcon(ImageUtil.gerarFade(bf, 255))), "bf",
+		// JOptionPane.INFORMATION_MESSAGE);
 
 		bf = new BufferedImage(azulMortes.getWidth(), azulMortes.getHeight(),
 				BufferedImage.TYPE_INT_ARGB);
@@ -855,6 +860,22 @@ public class Conceito {
 		rectangle.x = scrollPane.getViewport().getViewPosition().x;
 		rectangle.y = scrollPane.getViewport().getViewPosition().y;
 		return rectangle;
+	}
+
+	private void desenhaEscudo(Graphics2D graphics2d, double angulo,
+			BufferedImage imgJog, Point desenha) {
+		Point p = GeoUtil.calculaPonto(angulo, 5, desenha);
+
+		AffineTransform afRotate = new AffineTransform();
+		double rad = Math.toRadians((double) angulo);
+		afRotate.setToRotation(rad, shield.getWidth() / 2,
+				shield.getWidth() / 2);
+		AffineTransformOp opRotate = new AffineTransformOp(afRotate,
+				AffineTransformOp.TYPE_BILINEAR);
+		BufferedImage rotBuffer = new BufferedImage(shield.getWidth(),
+				shield.getWidth(), BufferedImage.TYPE_INT_ARGB);
+		opRotate.filter(shield, rotBuffer);
+		graphics2d.drawImage(rotBuffer, p.x, p.y, null);
 	}
 
 	private void desenhaFacada(Graphics2D graphics2d, double angulo,
