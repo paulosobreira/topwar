@@ -82,7 +82,7 @@ public class PainelTopWar {
 	public final BufferedImage azul_shotgun = CarregadorRecursos
 			.carregaBufferedImageTransparecia("azul_shotgun.png", Color.MAGENTA);
 	public final BufferedImage azul_machine = CarregadorRecursos
-	.carregaBufferedImageTransparecia("azul_machine.png", Color.MAGENTA);
+			.carregaBufferedImageTransparecia("azul_machine.png", Color.MAGENTA);
 	public final BufferedImage azul_faca = CarregadorRecursos
 			.carregaBufferedImageTransparecia("azul_faca.png", Color.MAGENTA);
 	public final BufferedImage vermelho = CarregadorRecursos
@@ -377,7 +377,7 @@ public class PainelTopWar {
 			long tempoUtlDisparo = avatarCliente.getTempoUtlAtaque();
 			if ((ConstantesTopWar.ARMA_ASSAULT == avatarCliente.getArma() || ConstantesTopWar.ARMA_MACHINEGUN == avatarCliente
 					.getArma()) && (millisSrv - tempoUtlDisparo) < 300) {
-				desenhaDisparoAvatarAssault(graphics2d, avatarCliente,
+				desenhaDisparoAvatarBala(graphics2d, avatarCliente,
 						avatarClientes);
 			}
 			if (ConstantesTopWar.ARMA_SHOTGUN == avatarCliente.getArma()
@@ -775,14 +775,18 @@ public class PainelTopWar {
 		g2d.setFont(fontOri);
 	}
 
-	protected void desenhaDisparoAvatarAssault(Graphics2D graphics2d,
+	protected void desenhaDisparoAvatarBala(Graphics2D graphics2d,
 			AvatarCliente avatarCliente,
 			Collection<AvatarCliente> avatarClientes) {
 		Point pontoAvatar = avatarCliente.getPontoAvatar();
 		Point pontoTiro = GeoUtil.calculaPonto(avatarCliente.getAngulo(),
 				avatarCliente.getRangeUtlDisparo(), pontoAvatar);
+
+		List<Point> linhaDisparo = GeoUtil.drawBresenhamLine(pontoAvatar,
+				pontoTiro);
+		Point nOri = linhaDisparo.get(Util.inte(linhaDisparo.size() * .05));
+
 		for (int i = 0; i < 5; i++) {
-			Point nOri = new Point(pontoAvatar.x, pontoAvatar.y);
 			Point nDst = new Point(pontoTiro.x + Util.intervalo(-15, 15),
 					pontoTiro.y + Util.intervalo(-15, 15));
 			graphics2d.setColor(Color.YELLOW);
@@ -794,14 +798,16 @@ public class PainelTopWar {
 				graphics2d.drawLine(pIni.x, pIni.y, pFim.x, pFim.y);
 			}
 		}
-		List<Point> linhaDisparo = GeoUtil.drawBresenhamLine(pontoAvatar,
-				pontoTiro);
+
 		List<ObjetoMapa> objetoMapaList = mapaTopWar.getObjetoMapaList();
 		AvatarCliente avatarClienteBateu = null;
 		boolean bateu = false;
 		for (int i = 0; i < linhaDisparo.size(); i += 2) {
 			if (i > linhaDisparo.size() - 1) {
 				break;
+			}
+			if (i < Util.inte(linhaDisparo.size() * .05)) {
+				continue;
 			}
 			Point tiro = linhaDisparo.get(i);
 			int indexPtFaiscaFim = (i + Util.intervalo(5, 25));
@@ -848,7 +854,7 @@ public class PainelTopWar {
 					noAnt--;
 				}
 				Point ptAcertoAnt = linhaDisparo.get(noAnt);
-				Point nOri = tiro;
+				nOri = tiro;
 				for (int j = 0; j < 5; j++) {
 					Point nDst = new Point(ptAcertoAnt.x
 							+ Util.intervalo(-10, 10), ptAcertoAnt.y
@@ -877,8 +883,8 @@ public class PainelTopWar {
 				}
 				Point nDst = linhaDisparo.get(noPost);
 				for (int j = 0; j < 5; j++) {
-					Point nOri = new Point(tiro.x + Util.intervalo(-10, 10),
-							tiro.y + Util.intervalo(-10, 10));
+					nOri = new Point(tiro.x + Util.intervalo(-10, 10), tiro.y
+							+ Util.intervalo(-10, 10));
 					graphics2d.setColor(Color.RED);
 					List<Point> linha = GeoUtil.drawBresenhamLine(nOri, nDst);
 					if (linha.size() > 40) {
@@ -888,7 +894,6 @@ public class PainelTopWar {
 						graphics2d.drawLine(pIni.x, pIni.y, pFim.x, pFim.y);
 					}
 				}
-
 			}
 			if (bateu) {
 				break;
@@ -904,7 +909,7 @@ public class PainelTopWar {
 				noAnt--;
 			}
 			Point ptAcertoAnt = linhaDisparo.get(noAnt);
-			Point nOri = linhaDisparo.get(linhaDisparo.size() - 1);
+			nOri = linhaDisparo.get(linhaDisparo.size() - 1);
 			for (int j = 0; j < 5; j++) {
 				Point nDst = new Point(ptAcertoAnt.x + Util.intervalo(-10, 10),
 						ptAcertoAnt.y + Util.intervalo(-10, 10));
