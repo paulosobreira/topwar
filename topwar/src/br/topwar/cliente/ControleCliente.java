@@ -63,7 +63,7 @@ public class ControleCliente extends NnpeChatCliente {
 		// classesCombo.addItem(Lang.msg(ConstantesTopWar.SNIPER));
 		classesCombo.addItem(Lang.msg(ConstantesTopWar.MACHINEGUN));
 		// classesCombo.addItem(Lang.msg(ConstantesTopWar.ROCKET));
-		// classesCombo.addItem(Lang.msg(ConstantesTopWar.SHIELD));
+		classesCombo.addItem(Lang.msg(ConstantesTopWar.SHIELD));
 		classesPanel.add(new JLabel() {
 			@Override
 			public String getText() {

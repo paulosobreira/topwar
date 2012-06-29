@@ -116,6 +116,23 @@ public class AvatarCliente {
 		return gpCorpo.createTransformedShape(afRotate);
 	}
 
+	public Shape gerarEscudo() {
+		double angulo = getAngulo();
+		int distEscudo = 3;
+		Point centroCorpo = new Point((int) gerarCorpo().getBounds()
+				.getCenterX(), (int) gerarCorpo().getBounds().getCenterY());
+		Point front = GeoUtil.calculaPonto(angulo, distEscudo, centroCorpo);
+		Ellipse2D ellipse2d = new Ellipse2D.Double(front.x - 20, front.y - 20,
+				40, 10);
+		AffineTransform affineTransform = AffineTransform
+				.getScaleInstance(1, 1);
+		GeneralPath generalPath = new GeneralPath(ellipse2d);
+		generalPath.transform(affineTransform);
+		double rad = Math.toRadians((double) angulo);
+		affineTransform.setToRotation(rad, front.x, front.y);
+		return generalPath.createTransformedShape(affineTransform);
+	}
+
 	public static Shape desenhaCabeca(Point p) {
 		return new Rectangle2D.Double(p.x - 2, p.y - 8, 3, 3);
 	}

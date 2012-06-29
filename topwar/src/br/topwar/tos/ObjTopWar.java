@@ -91,7 +91,7 @@ public class ObjTopWar {
 			setVelocidade(5);
 			break;
 		case ConstantesTopWar.ARMA_SHIELD:
-			setVelocidade(10);
+			setVelocidade(7);
 			break;
 		case ConstantesTopWar.ARMA_SHOTGUN:
 			setVelocidade(10);
