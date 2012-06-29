@@ -47,7 +47,8 @@ public class PainelTopWar {
 	private MapaTopWar mapaTopWar;
 	private boolean desenhaObjetos = false;
 	private boolean desenhaImagens = true;
-
+	public final BufferedImage shield = CarregadorRecursos
+			.carregaBufferedImageTransparecia("shield.png", null);
 	private int tabCont = 0;
 
 	public final BufferedImage crosshair = CarregadorRecursos
@@ -114,9 +115,11 @@ public class PainelTopWar {
 		gerarMapaImagens(azul, "azul");
 		gerarMapaImagens(vermelho, "vermelho");
 		gerarMapaImagens(azul_faca, "azul_faca");
+		gerarMapaImagens(azul_faca, "azul_shield");
 		gerarMapaImagens(azul_shotgun, "azul_shotgun");
 		gerarMapaImagens(azul_machine, "azul_machine");
 		gerarMapaImagens(vermelho_faca, "vermelho_faca");
+		gerarMapaImagens(vermelho_faca, "vermelho_shield");
 		gerarMapaImagensMortes(azulMortes, "azul");
 		gerarMapaImagensMortes(vermelhoMortes, "vermelho");
 		gerouImagens = true;
@@ -821,6 +824,17 @@ public class PainelTopWar {
 					.hasNext();) {
 				AvatarCliente avatarClienteAnalizar = (AvatarCliente) iterator
 						.next();
+
+				if (ConstantesTopWar.ARMA_SHIELD == avatarClienteAnalizar
+						.getArma()
+						&& !avatarCliente.getTime().equals(
+								avatarClienteAnalizar.getTime())) {
+					if (avatarClienteAnalizar.gerarEscudo().contains(tiro)) {
+						bateu = true;
+						avatarClienteBateu = null;
+						break;
+					}
+				}
 				if (!avatarCliente.equals(avatarClienteAnalizar)
 						&& !avatarCliente.getTime().equals(
 								avatarClienteAnalizar.getTime())
@@ -930,6 +944,21 @@ public class PainelTopWar {
 
 	}
 
+	private void desenhaEscudo(Graphics2D graphics2d, double angulo,
+			BufferedImage imgJog, Point desenha) {
+		Point p = GeoUtil.calculaPonto(angulo, 5, desenha);
+		AffineTransform afRotate = new AffineTransform();
+		double rad = Math.toRadians((double) angulo);
+		afRotate.setToRotation(rad, shield.getWidth() / 2,
+				shield.getWidth() / 2);
+		AffineTransformOp opRotate = new AffineTransformOp(afRotate,
+				AffineTransformOp.TYPE_BILINEAR);
+		BufferedImage rotBuffer = new BufferedImage(shield.getWidth(),
+				shield.getWidth(), BufferedImage.TYPE_INT_ARGB);
+		opRotate.filter(shield, rotBuffer);
+		graphics2d.drawImage(rotBuffer, p.x, p.y, null);
+	}
+
 	protected void desenhaAvatares(Graphics2D graphics2d,
 			AvatarCliente avatarCliente) {
 		if (!gerouImagens) {
@@ -1031,6 +1060,9 @@ public class PainelTopWar {
 							desenha.x - 10, desenha.y, null);
 				}
 				graphics2d.drawImage(imgJog, desenha.x, desenha.y, null);
+				if (ConstantesTopWar.ARMA_SHIELD == avatarCliente.getArma()) {
+					desenhaEscudo(graphics2d, angulo, imgJog, desenha);
+				}
 			}
 
 			if (desenhaObjetos) {
