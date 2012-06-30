@@ -646,7 +646,7 @@ public class JogoServidor {
 	}
 
 	private boolean atirar(ObjTopWar avatarAtacando, double angulo, int range) {
-
+		int balas = consomeBalasArma(avatarAtacando);
 		if (ConstantesTopWar.ARMA_ASSAULT == avatarAtacando.getArma()
 				&& range > ConstantesTopWar.ASSALT_MAX_RANGE) {
 			range = ConstantesTopWar.ASSALT_MAX_RANGE;
@@ -672,7 +672,6 @@ public class JogoServidor {
 		} else if (ConstantesTopWar.ARMA_MACHINEGUN == avatarAtacando.getArma()) {
 			desvio = ConstantesTopWar.DESVIO_MACHINEGUN;
 		}
-
 		Point pontoTiro = GeoUtil.calculaPonto(
 				angulo + Util.intervalo(-desvio, desvio), range,
 				avatarAtacando.getPontoAvatar());
@@ -687,7 +686,6 @@ public class JogoServidor {
 				if (objetoMapa.getTransparencia() > 11
 						&& objetoMapa.getForma().contains(point)) {
 					if (pointAnt != null) {
-						int balas = consomeBalasArma(avatarAtacando);
 						if (balas > 0) {
 							avatarAtacando.setPontoUtlDisparo(point);
 							return true;
@@ -715,14 +713,15 @@ public class JogoServidor {
 						continue;
 					}
 					AvatarCliente avatarCliente = new AvatarCliente(avatarAlvo);
-					if (avatarCliente.gerarEscudo().contains(point)) {
+					if (ConstantesTopWar.ARMA_SHIELD == avatarCliente.getArma()
+							&& avatarCliente.gerarEscudo().contains(point)) {
 						avatarAtacando.setPontoUtlDisparo(point);
 						consomeBalasArma(avatarAtacando);
 						return false;
 					}
 
 					if (processaAcertoDanoTiro(avatarAtacando, point,
-							avatarAlvo, i, linhaTiro)) {
+							avatarAlvo, i, linhaTiro, balas)) {
 						return true;
 					}
 				}
@@ -781,12 +780,11 @@ public class JogoServidor {
 	}
 
 	private boolean processaAcertoDanoTiro(ObjTopWar avatarAtirador,
-			Point point, ObjTopWar avatarAlvo, int indice, List linha) {
+			Point point, ObjTopWar avatarAlvo, int indice, List linha, int balas) {
 		AvatarCliente avatarCliente = new AvatarCliente(avatarAlvo);
 		Shape gerarCorpo = avatarCliente.gerarCorpo();
 		Shape gerarCabeca = avatarCliente.gerarCabeca();
 		if (gerarCorpo.contains(point) || gerarCabeca.contains(point)) {
-			int balas = consomeBalasArma(avatarAtirador);
 			if (balas > 0) {
 				avatarAtirador.setPontoUtlDisparo(point);
 			} else {
@@ -815,8 +813,7 @@ public class JogoServidor {
 				if (!headShot) {
 					if (ConstantesTopWar.ARMA_SNIPER == avatarAtirador
 							.getArma()) {
-						avatarAlvo.setVida(avatarAlvo.getVida()
-								- (Util.intervalo(70, 99)));
+						avatarAlvo.setVida(0);
 					} else {
 						avatarAlvo.setVida(avatarAlvo.getVida()
 								- (balas * Util.intervalo(1, 2)));
@@ -876,7 +873,17 @@ public class JogoServidor {
 	}
 
 	private boolean verificaRecarregando(ObjTopWar avatarAtirador) {
-		return (System.currentTimeMillis() - avatarAtirador.getRecarregar()) < ConstantesTopWar.TEMPO_RECARGA;
+		long tempoRecarga = ConstantesTopWar.TEMPO_RECARGA;
+		if (ConstantesTopWar.ARMA_ASSAULT == avatarAtirador.getArma()) {
+			tempoRecarga = ConstantesTopWar.TEMPO_RECARGA_ASSAUT;
+		}
+		if (ConstantesTopWar.ARMA_MACHINEGUN == avatarAtirador.getArma()) {
+			tempoRecarga = ConstantesTopWar.TEMPO_RECARGA_MACHINEGUN;
+		}
+		if (ConstantesTopWar.ARMA_SNIPER == avatarAtirador.getArma()) {
+			tempoRecarga = ConstantesTopWar.TEMPO_RECARGA_SNIPER;
+		}
+		return (System.currentTimeMillis() - avatarAtirador.getRecarregar()) < tempoRecarga;
 	}
 
 	public Object atualizaAngulo(ObjTopWar avatarTopWar, double angulo) {

@@ -58,12 +58,12 @@ public class ControleCliente extends NnpeChatCliente {
 	public void criarJogoDepoisDeLogar() {
 		JPanel classesPanel = new JPanel();
 		JComboBox classesCombo = new JComboBox();
+		classesCombo.addItem(Lang.msg(ConstantesTopWar.SNIPER));
+		classesCombo.addItem(Lang.msg(ConstantesTopWar.SHIELD));
 		classesCombo.addItem(Lang.msg(ConstantesTopWar.ASSAULT));
 		classesCombo.addItem(Lang.msg(ConstantesTopWar.SHOTGUN));
-		// classesCombo.addItem(Lang.msg(ConstantesTopWar.SNIPER));
 		classesCombo.addItem(Lang.msg(ConstantesTopWar.MACHINEGUN));
 		// classesCombo.addItem(Lang.msg(ConstantesTopWar.ROCKET));
-		classesCombo.addItem(Lang.msg(ConstantesTopWar.SHIELD));
 		classesPanel.add(new JLabel() {
 			@Override
 			public String getText() {
