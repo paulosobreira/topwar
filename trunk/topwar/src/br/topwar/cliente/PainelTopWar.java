@@ -13,7 +13,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -51,56 +50,64 @@ public class PainelTopWar {
 			.carregaBufferedImageTransparecia("shield.png", null);
 	private int tabCont = 0;
 
-	public final BufferedImage crosshair = CarregadorRecursos
+	public BufferedImage crosshair = CarregadorRecursos
 			.carregaBufferedImageTransparecia("crosshair.png", null);
 
-	public final BufferedImage vaiAqui = CarregadorRecursos
+	public BufferedImage vaiAqui = CarregadorRecursos
 			.carregaBufferedImageTransparecia("vaiaqui.png", null);
 
-	public final BufferedImage blueFlag = CarregadorRecursos
+	public BufferedImage blueFlag = CarregadorRecursos
 			.carregaBufferedImageTransparecia("blue-flag.png", null);
 
-	public final BufferedImage redFlag = CarregadorRecursos
+	public BufferedImage redFlag = CarregadorRecursos
 			.carregaBufferedImageTransparecia("red-flag.png", null);
 
-	public final BufferedImage assault = CarregadorRecursos
+	public BufferedImage assault = CarregadorRecursos
 			.carregaBufferedImageTransparecia("assault.png", null);
 
-	public final BufferedImage shotgun = CarregadorRecursos
+	public BufferedImage shotgun = CarregadorRecursos
 			.carregaBufferedImageTransparecia("shotgun.png", null);
 
-	public final BufferedImage machinegun = CarregadorRecursos
+	public BufferedImage machinegun = CarregadorRecursos
 			.carregaBufferedImageTransparecia("machinegun.png", null);
 
-	public final BufferedImage headShot = CarregadorRecursos
+	public BufferedImage sniper = CarregadorRecursos
+			.carregaBufferedImageTransparecia("sniper.png", null);
+
+	public BufferedImage headShot = CarregadorRecursos
 			.carregaBufferedImageTransparecia("headshot.png", null);
 
-	public final BufferedImage knife = CarregadorRecursos
+	public BufferedImage knife = CarregadorRecursos
 			.carregaBufferedImageTransparecia("knife.png", null);
 	public Map<String, BufferedImage> mapImgs = new HashMap<String, BufferedImage>();
-	public final BufferedImage azul = CarregadorRecursos
+	public BufferedImage azul = CarregadorRecursos
 			.carregaBufferedImageTransparecia("azul.png", Color.MAGENTA);
-	public final BufferedImage azul_shotgun = CarregadorRecursos
+
+	public BufferedImage azul_sniper = CarregadorRecursos
+			.carregaBufferedImageTransparecia("azul_sniper.png", Color.MAGENTA);
+
+	public BufferedImage azul_shotgun = CarregadorRecursos
 			.carregaBufferedImageTransparecia("azul_shotgun.png", Color.MAGENTA);
-	public final BufferedImage azul_machine = CarregadorRecursos
+	public BufferedImage azul_machine = CarregadorRecursos
 			.carregaBufferedImageTransparecia("azul_machine.png", Color.MAGENTA);
-	public final BufferedImage azul_faca = CarregadorRecursos
+	public BufferedImage azul_faca = CarregadorRecursos
 			.carregaBufferedImageTransparecia("azul_faca.png", Color.MAGENTA);
-	public final BufferedImage vermelho = CarregadorRecursos
+	public BufferedImage vermelho = CarregadorRecursos
 			.carregaBufferedImageTransparecia("vermelho.png", Color.MAGENTA);
-	public final BufferedImage vermelho_faca = CarregadorRecursos
+	public BufferedImage vermelho_faca = CarregadorRecursos
 			.carregaBufferedImageTransparecia("vermelho_faca.png",
 					Color.MAGENTA);
-	public final BufferedImage knifeAtttack = CarregadorRecursos
+	public BufferedImage knifeAtttack = CarregadorRecursos
 			.carregaBufferedImageTransparecia("knifeAtttack.png", null);
-	public final BufferedImage azulMortes = CarregadorRecursos
+	public BufferedImage azulMortes = CarregadorRecursos
 			.carregaBufferedImageTransparecia("blue-dead.png", null);
-	public final BufferedImage vermelhoMortes = CarregadorRecursos
+	public BufferedImage vermelhoMortes = CarregadorRecursos
 			.carregaBufferedImageTransparecia("red-dead.png", null);
 	private BufferedImage miniAssalt;
 	private BufferedImage miniKnife;
 	private BufferedImage miniHeadShot;
 	private BufferedImage miniMachineGun;
+	private BufferedImage miniSniper;
 	private BufferedImage miniShotgun;
 	private boolean gerouImagens;
 	private AvatarCliente avatarLocal;
@@ -108,6 +115,7 @@ public class PainelTopWar {
 	private BufferedImage lifeBarMachineGun;
 	private BufferedImage lifeBarKnife;
 	private BufferedImage lifeBarShotgun;
+	private BufferedImage lifeBarSniper;
 
 	public PainelTopWar(JogoCliente jogoCliente) {
 		this.jogoCliente = jogoCliente;
@@ -116,6 +124,7 @@ public class PainelTopWar {
 		gerarMapaImagens(vermelho, "vermelho");
 		gerarMapaImagens(azul_faca, "azul_faca");
 		gerarMapaImagens(azul_faca, "azul_shield");
+		gerarMapaImagens(azul_sniper, "azul_sniper");
 		gerarMapaImagens(azul_shotgun, "azul_shotgun");
 		gerarMapaImagens(azul_machine, "azul_machine");
 		gerarMapaImagens(vermelho_faca, "vermelho_faca");
@@ -144,6 +153,10 @@ public class PainelTopWar {
 		miniShotgun = ImageUtil.geraResize(shotgun, 0.5);
 		lifeBarShotgun = ImageUtil.gerarFade(
 				ImageUtil.geraResize(shotgun, 0.6, 0.5), FADE_MINIS);
+
+		miniSniper = ImageUtil.geraResize(sniper, 0.5);
+		lifeBarSniper = ImageUtil.gerarFade(
+				ImageUtil.geraResize(sniper, 0.55, 0.4), FADE_MINIS);
 	}
 
 	private void gerarMapaImagensMortes(BufferedImage src, String time) {
@@ -378,7 +391,9 @@ public class PainelTopWar {
 
 			long millisSrv = jogoCliente.getMillisSrv();
 			long tempoUtlDisparo = avatarCliente.getTempoUtlAtaque();
-			if ((ConstantesTopWar.ARMA_ASSAULT == avatarCliente.getArma() || ConstantesTopWar.ARMA_MACHINEGUN == avatarCliente
+			if ((ConstantesTopWar.ARMA_ASSAULT == avatarCliente.getArma()
+					|| ConstantesTopWar.ARMA_MACHINEGUN == avatarCliente
+							.getArma() || ConstantesTopWar.ARMA_SNIPER == avatarCliente
 					.getArma()) && (millisSrv - tempoUtlDisparo) < 300) {
 				desenhaDisparoAvatarBala(graphics2d, avatarCliente,
 						avatarClientes);
@@ -501,6 +516,9 @@ public class PainelTopWar {
 			}
 			if (eventoJogo.getArma() == ConstantesTopWar.ARMA_SHOTGUN) {
 				arma = miniShotgun;
+			}
+			if (eventoJogo.getArma() == ConstantesTopWar.ARMA_SNIPER) {
+				arma = miniSniper;
 			}
 			if (eventoJogo.getArma() == ConstantesTopWar.HEADSHOT) {
 				arma = miniHeadShot;
@@ -688,8 +706,11 @@ public class PainelTopWar {
 			arma = shotgun;
 		} else if (jogoCliente.getArma() == ConstantesTopWar.ARMA_MACHINEGUN) {
 			arma = machinegun;
+		} else if (jogoCliente.getArma() == ConstantesTopWar.ARMA_SNIPER) {
+			arma = sniper;
 		}
 		if (arma == null) {
+			g2d.setFont(fontOri);
 			return;
 		}
 
@@ -946,16 +967,20 @@ public class PainelTopWar {
 
 	private void desenhaEscudo(Graphics2D graphics2d, double angulo,
 			BufferedImage imgJog, Point desenha) {
-		Point p = GeoUtil.calculaPonto(angulo, 5, desenha);
+		Point p = GeoUtil.calculaPonto(angulo, 10, desenha);
 		AffineTransform afRotate = new AffineTransform();
 		double rad = Math.toRadians((double) angulo);
-		afRotate.setToRotation(rad, shield.getWidth() / 2,
-				shield.getWidth() / 2);
+		int larg = shield.getWidth();
+		int midLarg = larg / 2;
+		afRotate.setToRotation(rad, midLarg, midLarg);
 		AffineTransformOp opRotate = new AffineTransformOp(afRotate,
 				AffineTransformOp.TYPE_BILINEAR);
-		BufferedImage rotBuffer = new BufferedImage(shield.getWidth(),
-				shield.getWidth(), BufferedImage.TYPE_INT_ARGB);
+		BufferedImage rotBuffer = new BufferedImage(larg, larg,
+				BufferedImage.TYPE_INT_ARGB);
 		opRotate.filter(shield, rotBuffer);
+		Rectangle area = new Rectangle(p.x, p.y, larg, larg);
+		rotBuffer = processaSobreposicoesAvatar(rotBuffer, p, area, mapaTopWar);
+		rotBuffer = processaGrade(rotBuffer, desenha, area, mapaTopWar);
 		graphics2d.drawImage(rotBuffer, p.x, p.y, null);
 	}
 
@@ -975,7 +1000,6 @@ public class PainelTopWar {
 		if (angulo < 0) {
 			angulo = 360 + angulo;
 		}
-
 		BufferedImage imgJog = null;
 		if (avatarCliente.getVida() > 0) {
 			String timeClasse = time;
@@ -987,6 +1011,12 @@ public class PainelTopWar {
 			}
 			if (ConstantesTopWar.ARMA_MACHINEGUN == avatarCliente.getArma()) {
 				timeClasse += "_machine";
+			}
+			if (ConstantesTopWar.ARMA_SHIELD == avatarCliente.getArma()) {
+				timeClasse += "_shield";
+			}
+			if (ConstantesTopWar.ARMA_SNIPER == avatarCliente.getArma()) {
+				timeClasse += "_sniper";
 			}
 			if (angulo >= 0 && angulo <= 22.5 || angulo > 337.5) {
 				imgJog = mapImgs.get(timeClasse + "-" + anim + "-0");
@@ -1113,6 +1143,10 @@ public class PainelTopWar {
 				} else if (ConstantesTopWar.ARMA_SHOTGUN == avatarCliente
 						.getArma()) {
 					graphics2d.drawImage(lifeBarShotgun, desenha.x - 20,
+							desenha.y - 20, null);
+				} else if (ConstantesTopWar.ARMA_SNIPER == avatarCliente
+						.getArma()) {
+					graphics2d.drawImage(lifeBarSniper, desenha.x - 20,
 							desenha.y - 20, null);
 				}
 				if (ConstantesTopWar.TIME_AZUL.equals(avatarCliente.getTime())) {
