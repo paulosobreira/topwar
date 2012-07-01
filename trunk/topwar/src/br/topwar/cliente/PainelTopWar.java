@@ -10,6 +10,7 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
@@ -49,43 +50,37 @@ public class PainelTopWar {
 	public final BufferedImage shield = CarregadorRecursos
 			.carregaBufferedImageTransparecia("shield.png", null);
 	private int tabCont = 0;
-
 	public BufferedImage crosshair = CarregadorRecursos
 			.carregaBufferedImageTransparecia("crosshair.png", null);
-
 	public BufferedImage vaiAqui = CarregadorRecursos
 			.carregaBufferedImageTransparecia("vaiaqui.png", null);
-
 	public BufferedImage blueFlag = CarregadorRecursos
 			.carregaBufferedImageTransparecia("blue-flag.png", null);
-
 	public BufferedImage redFlag = CarregadorRecursos
 			.carregaBufferedImageTransparecia("red-flag.png", null);
-
 	public BufferedImage assault = CarregadorRecursos
 			.carregaBufferedImageTransparecia("assault.png", null);
-
 	public BufferedImage shotgun = CarregadorRecursos
 			.carregaBufferedImageTransparecia("shotgun.png", null);
-
 	public BufferedImage machinegun = CarregadorRecursos
 			.carregaBufferedImageTransparecia("machinegun.png", null);
-
 	public BufferedImage sniper = CarregadorRecursos
 			.carregaBufferedImageTransparecia("sniper.png", null);
-
 	public BufferedImage headShot = CarregadorRecursos
 			.carregaBufferedImageTransparecia("headshot.png", null);
+	public BufferedImage rocket = CarregadorRecursos
+			.carregaBufferedImageTransparecia("rocket.png", null);
+
+	public BufferedImage rocket_launcher = CarregadorRecursos
+			.carregaBufferedImageTransparecia("rocket_launcher.png", null);
 
 	public BufferedImage knife = CarregadorRecursos
 			.carregaBufferedImageTransparecia("knife.png", null);
 	public Map<String, BufferedImage> mapImgs = new HashMap<String, BufferedImage>();
 	public BufferedImage azul = CarregadorRecursos
 			.carregaBufferedImageTransparecia("azul.png", Color.MAGENTA);
-
 	public BufferedImage azul_sniper = CarregadorRecursos
 			.carregaBufferedImageTransparecia("azul_sniper.png", Color.MAGENTA);
-
 	public BufferedImage azul_shotgun = CarregadorRecursos
 			.carregaBufferedImageTransparecia("azul_shotgun.png", Color.MAGENTA);
 	public BufferedImage azul_machine = CarregadorRecursos
@@ -109,6 +104,8 @@ public class PainelTopWar {
 	private BufferedImage miniMachineGun;
 	private BufferedImage miniSniper;
 	private BufferedImage miniShotgun;
+	private BufferedImage miniRocket;
+
 	private boolean gerouImagens;
 	private AvatarCliente avatarLocal;
 	private BufferedImage lifeBarAssalt;
@@ -116,6 +113,7 @@ public class PainelTopWar {
 	private BufferedImage lifeBarKnife;
 	private BufferedImage lifeBarShotgun;
 	private BufferedImage lifeBarSniper;
+	private BufferedImage lifeBarRocket;
 
 	public PainelTopWar(JogoCliente jogoCliente) {
 		this.jogoCliente = jogoCliente;
@@ -156,7 +154,12 @@ public class PainelTopWar {
 
 		miniSniper = ImageUtil.geraResize(sniper, 0.5);
 		lifeBarSniper = ImageUtil.gerarFade(
-				ImageUtil.geraResize(sniper, 0.55, 0.4), FADE_MINIS);
+				ImageUtil.geraResize(sniper, 0.50, 0.4), FADE_MINIS);
+
+		miniRocket = ImageUtil.geraResize(rocket_launcher, 0.5);
+		lifeBarRocket = ImageUtil.gerarFade(
+				ImageUtil.geraResize(rocket_launcher, 0.42, 0.30), FADE_MINIS);
+
 	}
 
 	private void gerarMapaImagensMortes(BufferedImage src, String time) {
@@ -374,6 +377,10 @@ public class PainelTopWar {
 		}
 		for (Iterator iterator = avatarClientes.iterator(); iterator.hasNext();) {
 			AvatarCliente avatarCliente = (AvatarCliente) iterator.next();
+			if (ConstantesTopWar.OBJ_ROCKET == avatarCliente.getArma()) {
+				desenhaRocket(graphics2d, avatarCliente);
+				continue;
+			}
 			double angulo = avatarCliente.getAngulo();
 			/**
 			 * angulo > 90 && angulo < 300 - cima resto baixo
@@ -406,6 +413,35 @@ public class PainelTopWar {
 
 		}
 
+	}
+
+	private void desenhaRocket(Graphics2D graphics2d,
+			AvatarCliente avatarCliente) {
+		Point p = null;
+		if (avatarCliente.getPontoAvatarSuave() != null) {
+			p = avatarCliente.getPontoAvatarSuave();
+		}
+		if (p == null) {
+			p = avatarCliente.getPontoAvatar();
+		}
+		AffineTransform afRotate = new AffineTransform();
+		double rad = Math.toRadians((double) avatarCliente.getAngulo());
+		int larg = rocket.getWidth();
+		int midLarg = larg / 2;
+		afRotate.setToRotation(rad, midLarg, midLarg);
+		AffineTransformOp opRotate = new AffineTransformOp(afRotate,
+				AffineTransformOp.TYPE_BILINEAR);
+		BufferedImage rotBuffer = new BufferedImage(larg, larg,
+				BufferedImage.TYPE_INT_ARGB);
+		opRotate.filter(rocket, rotBuffer);
+		Rectangle area = new Rectangle(p.x, p.y, larg, larg);
+		rotBuffer = processaSobreposicoesAvatar(rotBuffer, p, area, mapaTopWar);
+		rotBuffer = processaGrade(rotBuffer, p, area, mapaTopWar);
+		graphics2d.drawImage(rotBuffer, p.x - midLarg, p.y - midLarg, null);
+		Ellipse2D circ = new Ellipse2D.Double((double) p.x - 50.0,
+				(double) p.y - 50.0, 100.0, 100.0);
+		graphics2d.setColor(Color.YELLOW);
+		graphics2d.draw(circ);
 	}
 
 	private void desenhaDisparoAvatarShotgun(Graphics2D graphics2d,
@@ -517,6 +553,11 @@ public class PainelTopWar {
 			if (eventoJogo.getArma() == ConstantesTopWar.ARMA_SHOTGUN) {
 				arma = miniShotgun;
 			}
+
+			if (eventoJogo.getArma() == ConstantesTopWar.ARMA_ROCKET) {
+				arma = miniRocket;
+			}
+
 			if (eventoJogo.getArma() == ConstantesTopWar.ARMA_SNIPER) {
 				arma = miniSniper;
 			}
@@ -708,6 +749,8 @@ public class PainelTopWar {
 			arma = machinegun;
 		} else if (jogoCliente.getArma() == ConstantesTopWar.ARMA_SNIPER) {
 			arma = sniper;
+		} else if (jogoCliente.getArma() == ConstantesTopWar.ARMA_ROCKET) {
+			arma = rocket_launcher;
 		}
 		if (arma == null) {
 			g2d.setFont(fontOri);
@@ -1147,6 +1190,10 @@ public class PainelTopWar {
 				} else if (ConstantesTopWar.ARMA_SNIPER == avatarCliente
 						.getArma()) {
 					graphics2d.drawImage(lifeBarSniper, desenha.x - 20,
+							desenha.y - 20, null);
+				} else if (ConstantesTopWar.ARMA_ROCKET == avatarCliente
+						.getArma()) {
+					graphics2d.drawImage(lifeBarRocket, desenha.x - 20,
 							desenha.y - 20, null);
 				}
 				if (ConstantesTopWar.TIME_AZUL.equals(avatarCliente.getTime())) {

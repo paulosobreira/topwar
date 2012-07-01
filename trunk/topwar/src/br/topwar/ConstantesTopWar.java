@@ -87,6 +87,7 @@ public class ConstantesTopWar {
 	public static final int DESVIO_ASSAULT = 2;
 	public static final int DESVIO_SNIPER = 0;
 	public static final int DESVIO_MACHINEGUN = 5;
+	public static final int DESVIO_ROCKET = 1;
 	public static final int TEMPO_RECARGA_ASSAUT = 1000;
 	public static final int TEMPO_RECARGA_MACHINEGUN = 3000;
 	public static final int TEMPO_RECARGA_SNIPER = 5000;
