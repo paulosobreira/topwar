@@ -16,6 +16,7 @@ import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +48,7 @@ public class PainelTopWar {
 	private MapaTopWar mapaTopWar;
 	private boolean desenhaObjetos = false;
 	private boolean desenhaImagens = true;
+	private Hashtable<Point, Integer> mapaExplosoes = new Hashtable<Point, Integer>();
 	public final BufferedImage shield = CarregadorRecursos
 			.carregaBufferedImageTransparecia("shield.png", null);
 	private int tabCont = 0;
@@ -98,6 +100,10 @@ public class PainelTopWar {
 			.carregaBufferedImageTransparecia("blue-dead.png", null);
 	public BufferedImage vermelhoMortes = CarregadorRecursos
 			.carregaBufferedImageTransparecia("red-dead.png", null);
+
+	public BufferedImage explosao = CarregadorRecursos
+			.carregaBufferedImageTransparecia("explosao.png", null);
+
 	private BufferedImage miniAssalt;
 	private BufferedImage miniKnife;
 	private BufferedImage miniHeadShot;
@@ -105,7 +111,6 @@ public class PainelTopWar {
 	private BufferedImage miniSniper;
 	private BufferedImage miniShotgun;
 	private BufferedImage miniRocket;
-
 	private boolean gerouImagens;
 	private AvatarCliente avatarLocal;
 	private BufferedImage lifeBarAssalt;
@@ -118,6 +123,7 @@ public class PainelTopWar {
 	public PainelTopWar(JogoCliente jogoCliente) {
 		this.jogoCliente = jogoCliente;
 		mapaTopWar = jogoCliente.getMapaTopWar();
+		gerarMapaImagensExplosao();
 		gerarMapaImagens(azul, "azul");
 		gerarMapaImagens(vermelho, "vermelho");
 		gerarMapaImagens(azul_faca, "azul_faca");
@@ -132,6 +138,23 @@ public class PainelTopWar {
 		gerouImagens = true;
 		geraPainel();
 		gerarMinis();
+	}
+
+	private void gerarMapaImagensExplosao() {
+		int altura = explosao.getHeight() / 4;
+		int largura = explosao.getWidth() / 4;
+		int contExplo = 16;
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				Rectangle rect = new Rectangle(i * largura, j * altura,
+						largura, altura);
+				BufferedImage bufferedImage = ImageUtil.gerarSubImagem(
+						explosao, rect);
+				String key = "explo-" + contExplo--;
+				mapImgs.put(key, ImageUtil.geraResize(bufferedImage, 2));
+			}
+		}
+
 	}
 
 	private void gerarMinis() {
@@ -259,6 +282,7 @@ public class PainelTopWar {
 				loopDesenhaAvatares(graphics2d);
 				desenhaInfoJogo(graphics2d);
 				desenhaMira(graphics2d);
+				desenhaExplosao(graphics2d);
 				desenhaObjetosDebug(graphics2d);
 				desenhaClicou(graphics2d);
 				desenhaVaiPara(graphics2d);
@@ -295,6 +319,23 @@ public class PainelTopWar {
 			}
 		});
 
+	}
+
+	protected void desenhaExplosao(Graphics2D graphics2d) {
+		if (mapaExplosoes.isEmpty()) {
+			return;
+		}
+		for (Iterator iterator = mapaExplosoes.keySet().iterator(); iterator
+				.hasNext();) {
+			Point p = (Point) iterator.next();
+			int cont = mapaExplosoes.get(p);
+			if (cont > 0) {
+				BufferedImage bufferedImage = mapImgs.get("explo-" + cont);
+				graphics2d.drawImage(bufferedImage, p.x - 60, p.y - 60, null);
+				cont--;
+				mapaExplosoes.put(p, cont);
+			}
+		}
 	}
 
 	private void desenhaObjetosDebug(Graphics2D graphics2d) {
@@ -1391,4 +1432,7 @@ public class PainelTopWar {
 		return imgJog;
 	}
 
+	public void explosao(Point pontoAvatar) {
+		mapaExplosoes.put(pontoAvatar, 16);
+	}
 }

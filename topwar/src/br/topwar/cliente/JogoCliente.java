@@ -620,6 +620,9 @@ public class JogoCliente {
 		for (Iterator iterator = avatarClientes.iterator(); iterator.hasNext();) {
 			AvatarCliente avatarCliente = (AvatarCliente) iterator.next();
 			if (!avatarTopWars.contains(avatarCliente.getAvatarTopWar())) {
+				if(ConstantesTopWar.OBJ_ROCKET ==  avatarCliente.getArma()){
+					painelTopWar.explosao(avatarCliente.getPontoAvatar());
+				}
 				iterator.remove();
 			}
 		}
