@@ -439,11 +439,14 @@ public class PainelTopWar {
 
 			long millisSrv = jogoCliente.getMillisSrv();
 			long tempoUtlDisparo = avatarCliente.getTempoUtlAtaque();
-			if ((ConstantesTopWar.ARMA_ASSAULT == avatarCliente.getArma()
-					|| ConstantesTopWar.ARMA_MACHINEGUN == avatarCliente
-							.getArma() || ConstantesTopWar.ARMA_SNIPER == avatarCliente
+			if ((ConstantesTopWar.ARMA_ASSAULT == avatarCliente.getArma() || ConstantesTopWar.ARMA_MACHINEGUN == avatarCliente
 					.getArma()) && (millisSrv - tempoUtlDisparo) < 300) {
-				desenhaDisparoAvatarBala(graphics2d, avatarCliente,
+				desenhaDisparoAvatarAssautMachine(graphics2d, avatarCliente,
+						avatarClientes);
+			}
+			if ((ConstantesTopWar.ARMA_SNIPER == avatarCliente.getArma())
+					&& (millisSrv - tempoUtlDisparo) < 300) {
+				desenhaDisparoAvatarSniper(graphics2d, avatarCliente,
 						avatarClientes);
 			}
 			if (ConstantesTopWar.ARMA_SHOTGUN == avatarCliente.getArma()
@@ -452,6 +455,171 @@ public class PainelTopWar {
 						avatarClientes);
 			}
 
+		}
+
+	}
+
+	private void desenhaDisparoAvatarSniper(Graphics2D graphics2d,
+			AvatarCliente avatarCliente,
+			Collection<AvatarCliente> avatarClientes) {
+		Point pontoAvatar = avatarCliente.getPontoAvatar();
+		Point pontoTiro = GeoUtil.calculaPonto(avatarCliente.getAngulo(),
+				avatarCliente.getRangeUtlDisparo(), pontoAvatar);
+
+		graphics2d.setColor(OcilaCor.geraOcila("Sniper", Color.WHITE));
+		graphics2d.drawLine(pontoAvatar.x, pontoAvatar.y, pontoTiro.x,
+				pontoTiro.y);
+
+		List<Point> linhaDisparo = GeoUtil.drawBresenhamLine(pontoAvatar,
+				pontoTiro);
+		Point nOri = linhaDisparo.get(Util.inte(linhaDisparo.size() * .05));
+
+		for (int i = 0; i < 2; i++) {
+			Point nDst = new Point(pontoTiro.x + Util.intervalo(-15, 15),
+					pontoTiro.y + Util.intervalo(-15, 15));
+			graphics2d.setColor(Color.YELLOW);
+			List<Point> linha = GeoUtil.drawBresenhamLine(nOri, nDst);
+			if (linha.size() > 40) {
+				int intIni = Util.intervalo(10, 20);
+				Point pIni = linha.get(intIni);
+				Point pFim = linha.get(intIni + Util.intervalo(1, 20));
+				graphics2d.drawLine(pIni.x, pIni.y, pFim.x, pFim.y);
+			}
+		}
+
+		List<ObjetoMapa> objetoMapaList = mapaTopWar.getObjetoMapaList();
+		AvatarCliente avatarClienteBateu = null;
+		boolean bateu = false;
+		for (int i = 0; i < linhaDisparo.size(); i++) {
+			if (i > linhaDisparo.size() - 1) {
+				break;
+			}
+			if (i < Util.inte(linhaDisparo.size() * .05)) {
+				continue;
+			}
+			Point tiro = linhaDisparo.get(i);
+			int indexPtFaiscaFim = (i + Util.intervalo(5, 25));
+			for (Iterator iterator = avatarClientes.iterator(); iterator
+					.hasNext();) {
+				AvatarCliente avatarClienteAnalizar = (AvatarCliente) iterator
+						.next();
+
+				if (ConstantesTopWar.ARMA_SHIELD == avatarClienteAnalizar
+						.getArma()
+						&& !avatarCliente.getTime().equals(
+								avatarClienteAnalizar.getTime())) {
+					if (avatarClienteAnalizar.gerarEscudo().contains(tiro)) {
+						bateu = true;
+						avatarClienteBateu = null;
+						break;
+					}
+				}
+				if (!avatarCliente.equals(avatarClienteAnalizar)
+						&& !avatarCliente.getTime().equals(
+								avatarClienteAnalizar.getTime())
+						&& tiro != null
+						&& avatarClienteAnalizar.gerarCorpo().contains(tiro)) {
+					bateu = true;
+					avatarClienteBateu = avatarClienteAnalizar;
+					break;
+				}
+			}
+			if (!bateu) {
+				for (Iterator iterator = objetoMapaList.iterator(); iterator
+						.hasNext();) {
+					ObjetoMapa objetoMapa = (ObjetoMapa) iterator.next();
+					if (objetoMapa.getTransparencia() > 50 && tiro != null
+							&& objetoMapa.getForma().contains(tiro)) {
+						bateu = true;
+						break;
+					}
+				}
+			}
+			/**
+			 * Bala Acerta
+			 */
+			if (bateu) {
+				int noAnt = i - 41;
+				while (noAnt < 0) {
+					noAnt++;
+				}
+				while (noAnt > (linhaDisparo.size() - 1)) {
+					noAnt--;
+				}
+				Point ptAcertoAnt = linhaDisparo.get(noAnt);
+				nOri = tiro;
+				for (int j = 0; j < 2; j++) {
+					Point nDst = new Point(ptAcertoAnt.x
+							+ Util.intervalo(-10, 10), ptAcertoAnt.y
+							+ Util.intervalo(-10, 10));
+					if (Math.random() > 0.5) {
+						graphics2d.setColor(Color.YELLOW);
+					} else {
+						graphics2d.setColor(Color.WHITE);
+					}
+					List<Point> linha = GeoUtil.drawBresenhamLine(nOri, nDst);
+					if (linha.size() > 40) {
+						int intIni = Util.intervalo(5, 14);
+						Point pIni = linha.get(intIni);
+						Point pFim = linha.get(intIni + Util.intervalo(1, 24));
+						graphics2d.drawLine(pIni.x, pIni.y, pFim.x, pFim.y);
+					}
+				}
+			}
+			/**
+			 * Sangue Jogador
+			 */
+			if (avatarClienteBateu != null) {
+				int noPost = i + 50;
+				while (noPost > (linhaDisparo.size() - 1)) {
+					noPost--;
+				}
+				Point nDst = linhaDisparo.get(noPost);
+				for (int j = 0; j < 10; j++) {
+					nOri = new Point(tiro.x, tiro.y);
+					nDst = new Point(nDst.x + Util.intervalo(-10, 10), nDst.y
+							+ Util.intervalo(-10, 10));
+					graphics2d.setColor(Color.RED);
+					List<Point> linha = GeoUtil.drawBresenhamLine(nOri, nDst);
+					if (linha.size() > 40) {
+						int intIni = Util.intervalo(10, 19);
+						Point pIni = linha.get(intIni + Util.intervalo(1, 19));
+						Point pFim = linha.get(intIni);
+						graphics2d.drawLine(pIni.x, pIni.y, pFim.x, pFim.y);
+					}
+				}
+			}
+			if (bateu) {
+				break;
+			}
+		}
+
+		if (!bateu) {
+			int noAnt = linhaDisparo.size() - 41;
+			while (noAnt < 0) {
+				noAnt++;
+			}
+			while (noAnt > (linhaDisparo.size() - 1)) {
+				noAnt--;
+			}
+			Point ptAcertoAnt = linhaDisparo.get(noAnt);
+			nOri = linhaDisparo.get(linhaDisparo.size() - 1);
+			for (int j = 0; j < 2; j++) {
+				Point nDst = new Point(ptAcertoAnt.x + Util.intervalo(-10, 10),
+						ptAcertoAnt.y + Util.intervalo(-10, 10));
+				if (Math.random() > 0.5) {
+					graphics2d.setColor(Color.YELLOW);
+				} else {
+					graphics2d.setColor(Color.WHITE);
+				}
+				List<Point> linha = GeoUtil.drawBresenhamLine(nOri, nDst);
+				if (linha.size() > 40) {
+					int intIni = Util.intervalo(5, 14);
+					Point pIni = linha.get(intIni);
+					Point pFim = linha.get(intIni + Util.intervalo(1, 24));
+					graphics2d.drawLine(pIni.x, pIni.y, pFim.x, pFim.y);
+				}
+			}
 		}
 
 	}
@@ -883,7 +1051,7 @@ public class PainelTopWar {
 		g2d.setFont(fontOri);
 	}
 
-	protected void desenhaDisparoAvatarBala(Graphics2D graphics2d,
+	protected void desenhaDisparoAvatarAssautMachine(Graphics2D graphics2d,
 			AvatarCliente avatarCliente,
 			Collection<AvatarCliente> avatarClientes) {
 		Point pontoAvatar = avatarCliente.getPontoAvatar();
