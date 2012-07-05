@@ -154,7 +154,7 @@ public class PainelTopWar {
 				BufferedImage bufferedImage = ImageUtil.gerarSubImagem(
 						explosao, rect);
 				String key = "explo-" + contExplo--;
-				mapImgs.put(key, ImageUtil.geraResize(bufferedImage, 2));
+				mapImgs.put(key, ImageUtil.geraResize(bufferedImage,3));
 			}
 		}
 
@@ -334,7 +334,7 @@ public class PainelTopWar {
 			int cont = mapaExplosoes.get(p);
 			if (cont > 0) {
 				BufferedImage bufferedImage = mapImgs.get("explo-" + cont);
-				graphics2d.drawImage(bufferedImage, p.x - 60, p.y - 60, null);
+				graphics2d.drawImage(bufferedImage, p.x - 90, p.y - 90, null);
 				cont--;
 				mapaExplosoes.put(p, cont);
 			}
