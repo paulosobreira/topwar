@@ -93,7 +93,10 @@ public class ControleJogosServidor {
 	}
 
 	public Object atualizarListaAvatares(NnpeTO nnpeTO) {
-		String nomeJogo = (String) nnpeTO.getData();
+
+		String data = (String) nnpeTO.getData();
+		String[] split = data.split("&");
+		String nomeJogo = split[0];
 		JogoServidor jogoServidor = obterJogo(nomeJogo);
 		if (jogoServidor != null) {
 			nnpeTO.setData(jogoServidor.atualizaListaAvatares(nnpeTO));
@@ -125,8 +128,7 @@ public class ControleJogosServidor {
 			String nmJogog = (String) iterator.next();
 			JogoServidor jogoServidor = mapaJogos.get(nmJogog);
 			if (jogoServidor != null) {
-				List<ObjTopWar> avatarTopWars = jogoServidor
-						.getAvatarTopWars();
+				List<ObjTopWar> avatarTopWars = jogoServidor.getAvatarTopWars();
 				for (Iterator iterator2 = avatarTopWars.iterator(); iterator2
 						.hasNext();) {
 					ObjTopWar avatarTopWar = (ObjTopWar) iterator2.next();
