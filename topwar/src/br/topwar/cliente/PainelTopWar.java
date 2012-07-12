@@ -96,6 +96,13 @@ public class PainelTopWar {
 	public BufferedImage vermelho_faca = CarregadorRecursos
 			.carregaBufferedImageTransparecia("vermelho_faca.png",
 					Color.MAGENTA);
+	public BufferedImage vermelho_shotgun = CarregadorRecursos
+			.carregaBufferedImageTransparecia("vermelho_shotgun.png",
+					Color.MAGENTA);
+	public BufferedImage vermelho_machine = CarregadorRecursos
+			.carregaBufferedImageTransparecia("vermelho_machine.png",
+					Color.MAGENTA);
+
 	public BufferedImage knifeAtttack = CarregadorRecursos
 			.carregaBufferedImageTransparecia("knifeAtttack.png", null);
 	public BufferedImage azulMortes = CarregadorRecursos
@@ -136,6 +143,8 @@ public class PainelTopWar {
 		gerarMapaImagens(azul_rocket, "azul_rocket");
 		gerarMapaImagens(vermelho_faca, "vermelho_faca");
 		gerarMapaImagens(vermelho_faca, "vermelho_shield");
+		gerarMapaImagens(vermelho_machine, "vermelho_machine");
+		gerarMapaImagens(vermelho_shotgun, "vermelho_shotgun");
 		gerarMapaImagensMortes(azulMortes, "azul");
 		gerarMapaImagensMortes(vermelhoMortes, "vermelho");
 		gerouImagens = true;

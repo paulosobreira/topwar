@@ -58,18 +58,18 @@ public class ControleBots {
 					break;
 
 				case 1:
-					dadosJogoTopWar.setClasse(ConstantesTopWar.SNIPER);
+					dadosJogoTopWar.setClasse(ConstantesTopWar.MACHINEGUN);
 					break;
 
 				case 2:
-					dadosJogoTopWar.setClasse(ConstantesTopWar.ROCKET);
+					dadosJogoTopWar.setClasse(ConstantesTopWar.ASSAULT);
 					break;
 				case 3:
 					dadosJogoTopWar.setClasse(ConstantesTopWar.MACHINEGUN);
 					break;
 
 				default:
-					dadosJogoTopWar.setClasse(ConstantesTopWar.ASSAULT);
+					dadosJogoTopWar.setClasse(ConstantesTopWar.SHOTGUN);
 					break;
 				}
 
