@@ -98,15 +98,15 @@ public class JogoServidor {
 		ObjTopWar avatarTopWar = new ObjTopWar();
 		avatarTopWar.setClasse(dadosJogoTopWar.getClasse());
 		setupCalsseJogador(avatarTopWar);
-		// if (Math.random() > .5) {
-		// avatarTopWar.setTime(ConstantesTopWar.TIME_VERMELHO);
-		// avatarTopWar.setPontoAvatar(mapaTopWar.getPontoTimeVermelho());
-		// } else {
-		// avatarTopWar.setTime(ConstantesTopWar.TIME_AZUL);
-		// avatarTopWar.setPontoAvatar(mapaTopWar.getPontoTimeAzul());
-		// }
+		boolean botsVsHumans = getDadosJogoTopWar().isBotsVsHumans();
+		int numBots = getDadosJogoTopWar().getNumBots();
+		String time = ConstantesTopWar.TIME_AZUL;
+		if (botsVsHumans || numBots == 0) {
+			time = Math.random() < .5 ? ConstantesTopWar.TIME_VERMELHO
+					: ConstantesTopWar.TIME_AZUL;
+		}
 
-		avatarTopWar.setTime(ConstantesTopWar.TIME_AZUL);
+		avatarTopWar.setTime(time);
 		avatarTopWar.setPontoAvatar(mapaTopWar.getPontoTimeAzul());
 
 		avatarTopWar.setNomeJogador(dadosJogoTopWar.getNomeJogador());
