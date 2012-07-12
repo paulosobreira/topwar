@@ -47,8 +47,12 @@ public class ControleBots {
 			thread2.start();
 		}
 		try {
+			Integer numBots = jogoServidor.getDadosJogoTopWar().getNumBots();
+			boolean botsVsHumans = jogoServidor.getDadosJogoTopWar()
+					.isBotsVsHumans();
+
 			NameGenerator nameGenerator = new NameGenerator("silabas");
-			for (int i = 0; i < 5; i++) {
+			for (int i = 0; i < numBots; i++) {
 				String nome = nameGenerator.compose(Util.intervalo(2, 3));
 				DadosJogoTopWar dadosJogoTopWar = new DadosJogoTopWar();
 
@@ -74,8 +78,13 @@ public class ControleBots {
 				}
 
 				dadosJogoTopWar.setNomeJogador(nome);
-				ObjTopWar bot = jogoServidor.entrarNoJogo(dadosJogoTopWar,
-						ConstantesTopWar.TIME_VERMELHO);
+				String time = ConstantesTopWar.TIME_VERMELHO;
+				if (botsVsHumans) {
+					time = Math.random() < .5 ? ConstantesTopWar.TIME_VERMELHO
+							: ConstantesTopWar.TIME_AZUL;
+				}
+				ObjTopWar bot = jogoServidor
+						.entrarNoJogo(dadosJogoTopWar, time);
 				bot.setBotInfo(new BotInfo(bot, jogoServidor));
 				bot.getBotInfo();
 				if (i % 2 == 0) {

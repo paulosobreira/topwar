@@ -11,8 +11,26 @@ public class DadosJogoTopWar implements Serializable {
 	private String nomeMapa;
 
 	private String classe;
-	
-	
+
+	private Integer numBots;
+
+	private boolean botsVsHumans;
+
+	public Integer getNumBots() {
+		return numBots;
+	}
+
+	public void setNumBots(Integer numBots) {
+		this.numBots = numBots;
+	}
+
+	public boolean isBotsVsHumans() {
+		return botsVsHumans;
+	}
+
+	public void setBotsVsHumans(boolean botsVsHumans) {
+		this.botsVsHumans = botsVsHumans;
+	}
 
 	public String getClasse() {
 		return classe;
