@@ -24,6 +24,7 @@ import javax.swing.WindowConstants;
 
 import br.nnpe.GeoUtil;
 import br.nnpe.Logger;
+import br.nnpe.Util;
 import br.nnpe.tos.NnpeTO;
 import br.topwar.ConstantesTopWar;
 import br.topwar.recursos.CarregadorRecursos;
@@ -69,13 +70,13 @@ public class JogoCliente {
 	private Thread threadRecarregar;
 	private Thread threadAlternaFaca;
 	private Thread threadMouseCliqueUnico;
-
+	private String utlEvento = "0";
 	private Long tempoRestanteJogo;
 	private boolean seguirMouse;
 	private Thread threadSeguirMouse;
 	private String killCam;
 	private List<PlacarTopWar> placar;
-	private List<EventoJogo> eventos = new ArrayList<EventoJogo>();
+	private Set<EventoJogo> eventos = new HashSet<EventoJogo>();
 	protected long clickTime;
 
 	public boolean isJogoEmAndamento() {
@@ -100,9 +101,9 @@ public class JogoCliente {
 		this.controleCliente = controleCliente;
 		ObjectInputStream ois;
 		try {
-			ois = new ObjectInputStream(
-					CarregadorRecursos.recursoComoStream(dadosJogoTopWar
-							.getNomeMapa() + ".topwar"));
+			ois = new ObjectInputStream(CarregadorRecursos
+					.recursoComoStream(dadosJogoTopWar.getNomeMapa()
+							+ ".topwar"));
 			mapaTopWar = (MapaTopWar) ois.readObject();
 		} catch (Exception e1) {
 			Logger.logarExept(e1);
@@ -117,10 +118,6 @@ public class JogoCliente {
 		iniciaThreadAtualizaDadosServidor();
 		iniciaListenerTeclado();
 		iniciaThreadAtualizaPosAvatar();
-	}
-
-	public List<EventoJogo> getEventos() {
-		return eventos;
 	}
 
 	private void iniciaThreadAtualizaPosAvatar() {
@@ -389,7 +386,8 @@ public class JogoCliente {
 							ret = controleCliente.moverPonto(p);
 						}
 						try {
-							Thread.sleep(ConstantesTopWar.MEIO_ATRASO_REDE_PADRAO);
+							Thread
+									.sleep(ConstantesTopWar.MEIO_ATRASO_REDE_PADRAO);
 						} catch (InterruptedException e) {
 							return;
 						}
@@ -552,7 +550,8 @@ public class JogoCliente {
 		NnpeTO nnpeTO = new NnpeTO();
 		nnpeTO.setComando(ConstantesTopWar.ATUALIZAR_LISTA_AVS);
 		nnpeTO.setSessaoCliente(controleCliente.getSessaoCliente());
-		nnpeTO.setData(dadosJogoTopWar.getNomeJogo());
+		nnpeTO.setData(dadosJogoTopWar.getNomeJogo() + "&"
+				+ obterUltimoEvento());
 		nnpeTO.setMillisSrv(millisSrv);
 		Object ret = controleCliente.enviarObjeto(nnpeTO);
 		if (!(ret instanceof NnpeTO)) {
@@ -576,6 +575,7 @@ public class JogoCliente {
 				.get(ConstantesTopWar.EVENTO_JOGO);
 		if (eventoJogo != null) {
 			eventos.add(eventoJogo);
+			utlEvento = new Long(eventoJogo.getTempo()).toString();
 		}
 
 		Set<ObjTopWar> avatarTopWars = (HashSet<ObjTopWar>) DadosAvatar
@@ -620,12 +620,19 @@ public class JogoCliente {
 		for (Iterator iterator = avatarClientes.iterator(); iterator.hasNext();) {
 			AvatarCliente avatarCliente = (AvatarCliente) iterator.next();
 			if (!avatarTopWars.contains(avatarCliente.getAvatarTopWar())) {
-				if(ConstantesTopWar.OBJ_ROCKET ==  avatarCliente.getArma()){
+				if (ConstantesTopWar.OBJ_ROCKET == avatarCliente.getArma()) {
 					painelTopWar.explosao(avatarCliente.getPontoAvatar());
 				}
 				iterator.remove();
 			}
 		}
+	}
+
+	private String obterUltimoEvento() {
+		if (Util.isNullOrEmpty(utlEvento)) {
+			return "0";
+		}
+		return utlEvento;
 	}
 
 	public Long getTempoRestanteJogo() {
