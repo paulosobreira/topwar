@@ -46,8 +46,8 @@ public class PainelTopWar {
 	private JPanel panel;
 	private JScrollPane scrollPane;
 	private MapaTopWar mapaTopWar;
-	private boolean desenhaObjetos = true;
-	private boolean desenhaImagens = false;
+	private boolean desenhaObjetos = false;
+	private boolean desenhaImagens = true;
 	private Hashtable<Point, Integer> mapaExplosoes = new Hashtable<Point, Integer>();
 	public final BufferedImage shield = CarregadorRecursos
 			.carregaBufferedImageTransparecia("shield.png", null);
