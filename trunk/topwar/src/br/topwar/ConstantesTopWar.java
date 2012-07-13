@@ -61,7 +61,7 @@ public class ConstantesTopWar {
 	public static final String RECARREGAR = "R";
 	public static final long ATRASO_REDE_PADRAO = 120;
 	public static final long MEIO_ATRASO_REDE_PADRAO = ATRASO_REDE_PADRAO / 2;
-	public static final long TEMPO_RECARGA = 2000;
+
 	public static final String ANGULO = "ANGULO";
 
 	public static final int HEADSHOT = 0;
@@ -81,8 +81,8 @@ public class ConstantesTopWar {
 	public static final int BALAS_MACHINEGUN = 200;
 	public static final int CARTUCHOS_MACHINEGUN = 5;
 	public static final String ROCKET = "rocket";
-	public static final int BALAS_ROCKET = 1;
-	public static final int CARTUCHOS_ROCKET = 8;
+	public static final int BALAS_ROCKET = 100;
+	public static final int CARTUCHOS_ROCKET = 100;
 	public static final String SHIELD = "shield";
 	public static final int DESVIO_ASSAULT = 2;
 	public static final int DESVIO_SNIPER = 0;
@@ -91,5 +91,7 @@ public class ConstantesTopWar {
 	public static final int TEMPO_RECARGA_ASSAUT = 1000;
 	public static final int TEMPO_RECARGA_MACHINEGUN = 3000;
 	public static final int TEMPO_RECARGA_SNIPER = 5000;
+	public static final long TEMPO_RECARGA = 2000;
+	public static final long TEMPO_RECARGA_ROCKET = 10;
 
 }

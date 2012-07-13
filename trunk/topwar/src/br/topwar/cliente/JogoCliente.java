@@ -256,7 +256,7 @@ public class JogoCliente {
 			private void umClique() {
 				if ((threadMouseCliqueUnico != null && threadMouseCliqueUnico
 						.isAlive())) {
-					System.out.println("Retorno Clique");
+					Logger.logar("Retorno Clique");
 					return;
 				}
 				threadMouseCliqueUnico = new Thread(new Runnable() {
@@ -574,8 +574,12 @@ public class JogoCliente {
 		EventoJogo eventoJogo = (EventoJogo) retorno
 				.get(ConstantesTopWar.EVENTO_JOGO);
 		if (eventoJogo != null) {
+			if (!eventos.contains(eventoJogo)) {
+				Logger.logar("Evento Recebido Cliente " + eventoJogo);
+			}
 			eventos.add(eventoJogo);
 			utlEvento = new Long(eventoJogo.getTempo()).toString();
+
 		}
 
 		Set<ObjTopWar> avatarTopWars = (HashSet<ObjTopWar>) DadosAvatar
@@ -693,7 +697,7 @@ public class JogoCliente {
 			try {
 				avataresCopy.addAll(avatarClientes);
 			} catch (Exception e) {
-				System.out.println(e.getMessage());
+				// Logger.logarExept(e);
 				try {
 					Thread.sleep(10);
 				} catch (InterruptedException e1) {
@@ -709,7 +713,7 @@ public class JogoCliente {
 		try {
 			eventosCopy.addAll(eventos);
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			Logger.logarExept(e);
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException e1) {

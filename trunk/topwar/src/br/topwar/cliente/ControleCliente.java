@@ -83,6 +83,7 @@ public class ControleCliente extends NnpeChatCliente {
 		botCombo.addItem(20);
 		botCombo.addItem(30);
 		botCombo.addItem(40);
+		botCombo.addItem(50);
 		botPanel.setBorder(new TitledBorder("") {
 			@Override
 			public String getTitle() {

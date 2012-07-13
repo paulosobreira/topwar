@@ -57,7 +57,7 @@ public class JogoServidor {
 		incluirAvatarCriadorJogo(dadosJogoTopWar);
 		iniciarContadorTempoJogo();
 		iniciaMonitorDeJogo();
-		controleBots.adicionarBot();
+		controleBots.adicionarBots();
 	}
 
 	public MapaTopWar getMapaTopWar() {
@@ -116,9 +116,9 @@ public class JogoServidor {
 	private void carregarMapa(DadosJogoTopWar dadosJogoTopWar) {
 		ObjectInputStream ois;
 		try {
-			ois = new ObjectInputStream(
-					CarregadorRecursos.recursoComoStream(dadosJogoTopWar
-							.getNomeMapa() + ".topwar"));
+			ois = new ObjectInputStream(CarregadorRecursos
+					.recursoComoStream(dadosJogoTopWar.getNomeMapa()
+							+ ".topwar"));
 			mapaTopWar = (MapaTopWar) ois.readObject();
 		} catch (Exception e) {
 			Logger.logarExept(e);
@@ -172,15 +172,46 @@ public class JogoServidor {
 		return avatarTopWars;
 	}
 
+	public List<EventoJogo> getEventosCopia() {
+		List<EventoJogo> eventosCopy = new ArrayList<EventoJogo>();
+		boolean concur = false;
+		try {
+			eventosCopy.addAll(eventos);
+		} catch (Exception e) {
+			concur = true;
+			Logger.logarExept(e);
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
+		}
+		if (concur) {
+			while (eventosCopy.isEmpty()) {
+				try {
+					eventosCopy.addAll(eventos);
+				} catch (Exception e) {
+					Logger.logarExept(e);
+					try {
+						Thread.sleep(5);
+					} catch (InterruptedException e1) {
+						e1.printStackTrace();
+					}
+				}
+			}
+		}
+		return eventosCopy;
+	}
+
 	public List<ObjTopWar> getAvatarTopWarsCopia() {
 		List<ObjTopWar> avataresCopy = new ArrayList<ObjTopWar>();
 		while (avataresCopy.isEmpty()) {
 			try {
 				avataresCopy.addAll(avatarTopWars);
 			} catch (Exception e) {
-				System.out.println(e.getMessage());
+				Logger.logarExept(e);
 				try {
-					Thread.sleep(10);
+					Thread.sleep(5);
 				} catch (InterruptedException e1) {
 					e1.printStackTrace();
 				}
@@ -206,16 +237,14 @@ public class JogoServidor {
 					continue;
 				}
 
-				double distacia = GeoUtil.distaciaEntrePontos(
-						avatarTopWarJog.getPontoAvatar(),
-						avatarTopWar.getPontoAvatar());
+				double distacia = GeoUtil.distaciaEntrePontos(avatarTopWarJog
+						.getPontoAvatar(), avatarTopWar.getPontoAvatar());
 				if (distacia > ConstantesTopWar.LIMITE_VISAO) {
 					continue;
 				}
 
-				List<Point> line = GeoUtil.drawBresenhamLine(
-						avatarTopWarJog.getPontoAvatar(),
-						avatarTopWar.getPontoAvatar());
+				List<Point> line = GeoUtil.drawBresenhamLine(avatarTopWarJog
+						.getPontoAvatar(), avatarTopWar.getPontoAvatar());
 				if (campoVisao(line, avatarTopWarJog, false)) {
 					ret.add(avatarTopWar);
 				}
@@ -226,8 +255,8 @@ public class JogoServidor {
 				if (pontoTiro != null
 						&& (System.currentTimeMillis() - avatarTopWar
 								.getTempoUtlAtaque()) < 300) {
-					line = GeoUtil.drawBresenhamLine(
-							avatarTopWarJog.getPontoAvatar(), pontoTiro);
+					line = GeoUtil.drawBresenhamLine(avatarTopWarJog
+							.getPontoAvatar(), pontoTiro);
 					if (campoVisao(line, null, true)) {
 						ret.add(avatarTopWar);
 					}
@@ -241,8 +270,8 @@ public class JogoServidor {
 			}
 		}
 		Map retorno = new HashMap();
-		retorno.put(ConstantesTopWar.LISTA_AVATARES,
-				DadosAvatar.empacotaLista(ret));
+		retorno.put(ConstantesTopWar.LISTA_AVATARES, DadosAvatar
+				.empacotaLista(ret));
 		retorno.put(ConstantesTopWar.BALAS, avatarTopWarJog.getBalas());
 		retorno.put(ConstantesTopWar.CARTUCHO, avatarTopWarJog.getCartuchos());
 		retorno.put(ConstantesTopWar.RECARREGAR,
@@ -260,9 +289,10 @@ public class JogoServidor {
 		if (!Util.isNullOrEmpty(split[1])) {
 			utlEvento = new Long(split[1]);
 		}
-		for (Iterator iterator = eventos.iterator(); iterator.hasNext();) {
+		List<EventoJogo> eventosCopia = getEventosCopia();
+		for (Iterator iterator = eventosCopia.iterator(); iterator.hasNext();) {
 			EventoJogo eventoJogo = (EventoJogo) iterator.next();
-			if ((System.currentTimeMillis() - eventoJogo.getTempo() > 5000)) {
+			if ((System.currentTimeMillis() - eventoJogo.getTempo()) > 5000) {
 				continue;
 			}
 			if (eventoJogo.getTempo() > utlEvento) {
@@ -542,7 +572,8 @@ public class JogoServidor {
 
 		if ((ConstantesTopWar.ARMA_ASSAULT == avatarAtacando.getArma()
 				|| ConstantesTopWar.ARMA_MACHINEGUN == avatarAtacando.getArma() || ConstantesTopWar.ARMA_SNIPER == avatarAtacando
-				.getArma()) && (atirar(avatarAtacando, angulo, range))) {
+				.getArma())
+				&& (atirar(avatarAtacando, angulo, range))) {
 			return ConstantesTopWar.OK;
 		}
 
@@ -566,10 +597,11 @@ public class JogoServidor {
 			Thread rocket = new Thread(new Runnable() {
 				@Override
 				public void run() {
-					avatarAtacando.setTempoUtlAtaque(System.currentTimeMillis());
+					avatarAtacando
+							.setTempoUtlAtaque(System.currentTimeMillis());
 					int desvio = ConstantesTopWar.DESVIO_ROCKET;
-					Point pontoTiro = GeoUtil.calculaPonto(
-							angulo + Util.intervalo(-desvio, desvio), range,
+					Point pontoTiro = GeoUtil.calculaPonto(angulo
+							+ Util.intervalo(-desvio, desvio), range,
 							avatarAtacando.getPontoAvatar());
 					List<Point> linhaTiro = GeoUtil.drawBresenhamLine(
 							avatarAtacando.getPontoAvatar(), pontoTiro);
@@ -597,6 +629,7 @@ public class JogoServidor {
 					Ellipse2D circ = new Ellipse2D.Double(
 							(double) explo.x - 50.0, (double) explo.y - 50.0,
 							100.0, 100.0);
+					List<EventoJogo> eventosTemp = new ArrayList<EventoJogo>();
 					synchronized (avatarTopWars) {
 						for (Iterator iteratorAvatar = avatarTopWars.iterator(); iteratorAvatar
 								.hasNext();) {
@@ -627,7 +660,8 @@ public class JogoServidor {
 									ptsAzul++;
 								}
 								avatarAlvo.setMortoPor(avatarAtacando);
-								avatarAlvo.setDeaths(avatarAlvo.getDeaths() + 1);
+								avatarAlvo
+										.setDeaths(avatarAlvo.getDeaths() + 1);
 								avatarAtacando.setKills(avatarAtacando
 										.getKills() + 1);
 								EventoJogo eventoJogo = new EventoJogo();
@@ -644,7 +678,8 @@ public class JogoServidor {
 									eventoJogo
 											.setTimeAtacante(ConstantesTopWar.PTS_VERMELHO);
 								}
-								eventoJogo.setMorto(avatarAlvo.getNomeJogador());
+								eventoJogo
+										.setMorto(avatarAlvo.getNomeJogador());
 								if (ConstantesTopWar.TIME_AZUL
 										.equals(avatarAlvo.getTime())) {
 									eventoJogo
@@ -655,9 +690,21 @@ public class JogoServidor {
 									eventoJogo
 											.setTimeMorto(ConstantesTopWar.PTS_VERMELHO);
 								}
-								eventoJogo.setTempo(System.currentTimeMillis());
-								eventos.add(eventoJogo);
+								eventosTemp.add(eventoJogo);
 							}
+						}
+					}
+					for (Iterator iterator = eventosTemp.iterator(); iterator
+							.hasNext();) {
+						EventoJogo eventoJogoTemp = (EventoJogo) iterator
+								.next();
+						eventoJogoTemp.setTempo(System.currentTimeMillis());
+						eventos.add(eventoJogoTemp);
+						Logger.logar("Evento Rocket Serv " + eventoJogoTemp);
+						try {
+							Thread.sleep(10);
+						} catch (InterruptedException e) {
+							Logger.logarExept(e);
 						}
 					}
 
@@ -796,11 +843,11 @@ public class JogoServidor {
 		} else if (ConstantesTopWar.ARMA_MACHINEGUN == avatarAtacando.getArma()) {
 			desvio = ConstantesTopWar.DESVIO_MACHINEGUN;
 		}
-		Point pontoTiro = GeoUtil.calculaPonto(
-				angulo + Util.intervalo(-desvio, desvio), range,
-				avatarAtacando.getPontoAvatar());
-		List<Point> linhaTiro = GeoUtil.drawBresenhamLine(
-				avatarAtacando.getPontoAvatar(), pontoTiro);
+		Point pontoTiro = GeoUtil.calculaPonto(angulo
+				+ Util.intervalo(-desvio, desvio), range, avatarAtacando
+				.getPontoAvatar());
+		List<Point> linhaTiro = GeoUtil.drawBresenhamLine(avatarAtacando
+				.getPontoAvatar(), pontoTiro);
 		Point pointAnt = null;
 		for (int i = 0; i < linhaTiro.size(); i++) {
 			Point point = (Point) linhaTiro.get(i);
@@ -861,8 +908,8 @@ public class JogoServidor {
 		if (avatarAtacando.getTime().equals(avatarAlvo.getTime())) {
 			return false;
 		}
-		Shape desenhaAreaFaca = AvatarCliente.desenhaAreaFaca(
-				avatarAtacando.getPontoAvatar(), avatarAtacando.getAngulo());
+		Shape desenhaAreaFaca = AvatarCliente.desenhaAreaFaca(avatarAtacando
+				.getPontoAvatar(), avatarAtacando.getAngulo());
 		Shape desenhaCorpoAlvo = AvatarCliente.desenhaCorpo(avatarAlvo
 				.getPontoAvatar());
 		Shape desenhaCabecaAlvo = AvatarCliente.desenhaCabeca(avatarAlvo
@@ -1007,6 +1054,9 @@ public class JogoServidor {
 		if (ConstantesTopWar.ARMA_SNIPER == avatarAtirador.getArma()) {
 			tempoRecarga = ConstantesTopWar.TEMPO_RECARGA_SNIPER;
 		}
+		if (ConstantesTopWar.ARMA_ROCKET == avatarAtirador.getArma()) {
+			tempoRecarga = ConstantesTopWar.TEMPO_RECARGA_ROCKET;
+		}
 		return (System.currentTimeMillis() - avatarAtirador.getRecarregar()) < tempoRecarga;
 	}
 
@@ -1047,8 +1097,8 @@ public class JogoServidor {
 		if (avatarTopWar.getVida() <= 0) {
 			return null;
 		}
-		double distaciaEntrePontos = GeoUtil.distaciaEntrePontos(
-				avatarTopWar.getPontoAvatar(), acaoClienteTopWar.getPonto());
+		double distaciaEntrePontos = GeoUtil.distaciaEntrePontos(avatarTopWar
+				.getPontoAvatar(), acaoClienteTopWar.getPonto());
 		// Logger.logar("distaciaEntrePontos " + distaciaEntrePontos);
 		// Logger.logar("avatarTopWar.getVelocidade() * 1.3 "
 		// + avatarTopWar.getVelocidade() * 1.3);
@@ -1141,5 +1191,18 @@ public class JogoServidor {
 
 	public void sairJogo(String nomeJogador) {
 		removerJogador(nomeJogador);
+	}
+
+	public static void main(String[] args) {
+		Set set = new HashSet();
+		set.add(1);
+		set.add(2);
+		set.add(3);
+		set.add(4);
+		set.add(5);
+		for (Iterator iterator = set.iterator(); iterator.hasNext();) {
+			System.out.println(iterator.next());
+		}
+
 	}
 }
