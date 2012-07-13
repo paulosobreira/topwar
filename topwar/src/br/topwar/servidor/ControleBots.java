@@ -38,11 +38,13 @@ public class ControleBots {
 		thread2 = new Thread(thBot2);
 	}
 
-	public void adicionarBot() {
+	public void adicionarBots() {
 		try {
 			Integer numBots = jogoServidor.getDadosJogoTopWar().getNumBots();
 			boolean botsVsHumans = jogoServidor.getDadosJogoTopWar()
 					.isBotsVsHumans();
+
+			botsVsHumans = false;
 
 			NameGenerator nameGenerator = new NameGenerator("silabas");
 			for (int i = 0; i < numBots; i++) {
@@ -51,24 +53,18 @@ public class ControleBots {
 				// nome = nameGenerator.compose(Util.intervalo(2, 3));
 				DadosJogoTopWar dadosJogoTopWar = new DadosJogoTopWar();
 
+				if (i < 5) {
+					dadosJogoTopWar.setClasse(ConstantesTopWar.ROCKET);
+				} else {
+					dadosJogoTopWar.setClasse(ConstantesTopWar.SHIELD);
+				}
+
 				switch (i) {
 				case 0:
-					dadosJogoTopWar.setClasse(ConstantesTopWar.SHIELD);
-					break;
-
-				case 1:
-					dadosJogoTopWar.setClasse(ConstantesTopWar.MACHINEGUN);
-					break;
-
-				case 2:
-					dadosJogoTopWar.setClasse(ConstantesTopWar.SHOTGUN);
-					break;
-				case 3:
-					dadosJogoTopWar.setClasse(ConstantesTopWar.SHIELD);
 					break;
 
 				default:
-					dadosJogoTopWar.setClasse(ConstantesTopWar.ASSAULT);
+
 					break;
 				}
 
