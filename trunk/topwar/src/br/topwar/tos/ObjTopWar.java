@@ -1,7 +1,6 @@
 package br.topwar.tos;
 
 import java.awt.Point;
-import java.io.Serializable;
 
 import javax.persistence.Transient;
 
@@ -28,7 +27,16 @@ public class ObjTopWar {
 	private transient long ultimaRequisicao = System.currentTimeMillis();
 	private transient long ultimaMorte;
 	private transient long recarregar;
-	private transient BotInfo botInfo;
+	private transient double distanciaDeUmAvatar;
+	private transient BotInfoAbstract botInfo;
+
+	public double getDistanciaDeUmAvatar() {
+		return distanciaDeUmAvatar;
+	}
+
+	public void setDistanciaDeUmAvatar(double distanciaDeUmAvatar) {
+		this.distanciaDeUmAvatar = distanciaDeUmAvatar;
+	}
 
 	public String getClasse() {
 		return classe;
@@ -47,11 +55,11 @@ public class ObjTopWar {
 	}
 
 	@Transient
-	public BotInfo getBotInfo() {
+	public BotInfoAbstract getBotInfo() {
 		return botInfo;
 	}
 
-	public void setBotInfo(BotInfo botInfo) {
+	public void setBotInfo(BotInfoAbstract botInfo) {
 		this.botInfo = botInfo;
 	}
 

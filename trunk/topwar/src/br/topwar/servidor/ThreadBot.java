@@ -5,12 +5,13 @@ import java.util.Iterator;
 import java.util.List;
 
 import br.topwar.ConstantesTopWar;
+import br.topwar.tos.BotInfoAbstract;
 import br.topwar.tos.ObjTopWar;
-import br.topwar.tos.BotInfo;
+import br.topwar.tos.BotInfoAssault;
 
 public class ThreadBot implements Runnable {
 	private JogoServidor jogoServidor;
-	private List<BotInfo> myBots = new ArrayList<BotInfo>();
+	private List<BotInfoAbstract> myBots = new ArrayList<BotInfoAbstract>();
 	boolean interrupt = false;
 
 	public ThreadBot(JogoServidor jogoServidor) {
@@ -18,7 +19,7 @@ public class ThreadBot implements Runnable {
 		this.jogoServidor = jogoServidor;
 	}
 
-	public List<BotInfo> getMyBots() {
+	public List<BotInfoAbstract> getMyBots() {
 		return myBots;
 	}
 
@@ -27,7 +28,7 @@ public class ThreadBot implements Runnable {
 		while (!jogoServidor.verificaFinalizado() && !interrupt) {
 			synchronized (myBots) {
 				for (Iterator iterator = myBots.iterator(); iterator.hasNext();) {
-					BotInfo botInfo = (BotInfo) iterator.next();
+					BotInfoAbstract botInfo = (BotInfoAbstract) iterator.next();
 					botInfo.processaAcaoBot();
 				}
 			}

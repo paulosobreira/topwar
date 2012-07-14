@@ -9,7 +9,7 @@ import br.nnpe.NameGenerator;
 import br.nnpe.Util;
 import br.topwar.ConstantesTopWar;
 import br.topwar.tos.ObjTopWar;
-import br.topwar.tos.BotInfo;
+import br.topwar.tos.BotInfoAssault;
 import br.topwar.tos.DadosJogoTopWar;
 
 public class ControleBots {
@@ -44,19 +44,18 @@ public class ControleBots {
 			boolean botsVsHumans = jogoServidor.getDadosJogoTopWar()
 					.isBotsVsHumans();
 
-			botsVsHumans = false;
-
 			NameGenerator nameGenerator = new NameGenerator("silabas");
 			for (int i = 0; i < numBots; i++) {
 				String nome = "bot" + i;
 				// while (nome == null)
 				// nome = nameGenerator.compose(Util.intervalo(2, 3));
 				DadosJogoTopWar dadosJogoTopWar = new DadosJogoTopWar();
-
-				if (i < 5) {
-					dadosJogoTopWar.setClasse(ConstantesTopWar.ROCKET);
-				} else {
+				if (i < 15) {
 					dadosJogoTopWar.setClasse(ConstantesTopWar.SHIELD);
+				} else if (i > 15 && i < 30) {
+					dadosJogoTopWar.setClasse(ConstantesTopWar.SHOTGUN);
+				} else {
+					dadosJogoTopWar.setClasse(ConstantesTopWar.ASSAULT);
 				}
 
 				switch (i) {
@@ -88,7 +87,7 @@ public class ControleBots {
 				}
 				ObjTopWar bot = jogoServidor
 						.entrarNoJogo(dadosJogoTopWar, time);
-				bot.setBotInfo(new BotInfo(bot, jogoServidor));
+				bot.setBotInfo(BotFactory.criaBotInfo(bot, jogoServidor));
 				if (i % 2 == 0) {
 					thBot1.addBot(bot);
 				} else {
