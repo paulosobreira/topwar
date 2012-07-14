@@ -37,6 +37,9 @@ public class BotInfoAssault extends BotInfoAbstract {
 	 */
 	@Override
 	public void processaAcaoBot() {
+		if (avatarTopWar.getVida() <= 0) {
+			return;
+		}
 		Point pontoAvatar = avatarTopWar.getPontoAvatar();
 		if (pontoAvatar.equals(ptAtual)) {
 			contPtAtual++;
@@ -139,7 +142,9 @@ public class BotInfoAssault extends BotInfoAbstract {
 					|| avatarTopWarCopia.getVida() <= 0) {
 				continue;
 			}
-
+			if (ConstantesTopWar.OBJ_ROCKET == avatarTopWarCopia.getArma()) {
+				continue;
+			}
 			List<Point> line = GeoUtil.drawBresenhamLine(
 					avatarTopWar.getPontoAvatar(),
 					avatarTopWarCopia.getPontoAvatar());
@@ -175,10 +180,14 @@ public class BotInfoAssault extends BotInfoAbstract {
 						avatarTopWar.setAngulo(GeoUtil.calculaAngulo(
 								avatarTopWar.getPontoAvatar(),
 								avatarTopWarCopia.getPontoAvatar(), 90));
+
 						vidaUltAlvo = avatarTopWar.getVida();
-						jogoServidor.atacar(avatarTopWar,
-								avatarTopWar.getAngulo(),
-								line.size() + Util.intervalo(20, 40));
+						if (jogoServidor.verificaAndavel(
+								avatarTopWar.getPontoAvatar(),
+								avatarTopWarCopia.getPontoAvatar()))
+							jogoServidor.atacar(avatarTopWar,
+									avatarTopWar.getAngulo(),
+									Util.inte(line.size() * 1.5));
 						if (vidaUltAlvo != avatarTopWar.getVida()) {
 							executouAcaoAtaque = true;
 						} else {

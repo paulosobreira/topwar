@@ -12,7 +12,7 @@ import br.topwar.ConstantesTopWar;
 import br.topwar.serial.ObjetoMapa;
 import br.topwar.servidor.JogoServidor;
 
-public class BotInfoShield extends BotInfoAbstract {
+public class BotInfoMachine extends BotInfoAbstract {
 
 	public static String PATRULHANDO = "PATRULHANDO";
 	public static String ATACANDO = "ATACANDO";
@@ -25,7 +25,7 @@ public class BotInfoShield extends BotInfoAbstract {
 	private JogoServidor jogoServidor;
 	private int vidaUltAlvo;
 
-	public BotInfoShield(ObjTopWar bot, JogoServidor jogoServidor) {
+	public BotInfoMachine(ObjTopWar bot, JogoServidor jogoServidor) {
 		this.avatarTopWar = bot;
 		this.jogoServidor = jogoServidor;
 	}
@@ -127,7 +127,7 @@ public class BotInfoShield extends BotInfoAbstract {
 		} else {
 			botVaiPontoAleatorio();
 		}
-		setEstado(BotInfoShield.PATRULHANDO);
+		setEstado(BotInfoMachine.PATRULHANDO);
 	}
 
 	/**
@@ -135,6 +135,7 @@ public class BotInfoShield extends BotInfoAbstract {
 	 */
 	private boolean seguirAtacarInimigo(List<ObjTopWar> avatarTopWarsCopia,
 			boolean executouAcaoAtaque) {
+
 		List<ObjTopWar> avataresOrdenadosDistancia = ordenaDistanciaAvatar(
 				avatarTopWarsCopia, avatarTopWar, jogoServidor);
 		for (Iterator iterator2 = avataresOrdenadosDistancia.iterator(); iterator2
@@ -143,30 +144,56 @@ public class BotInfoShield extends BotInfoAbstract {
 			List<Point> line = GeoUtil.drawBresenhamLine(
 					avatarTopWar.getPontoAvatar(),
 					avatarTopWarCopia.getPontoAvatar());
-			if (!BotInfoShield.ATACANDO.equals(getEstado())) {
+			if (!BotInfoMachine.ATACANDO.equals(getEstado())) {
 				setPontoDestino(avatarTopWarCopia.getPontoAvatar());
-			} else if (line.size() < 10
-					&& avatarTopWar.getArma() != ConstantesTopWar.ARMA_FACA) {
+			} else if ((avatarTopWar.getBalas() != 0 || avatarTopWar
+					.getCartuchos() != 0)
+					&& avatarTopWar.getArma() == ConstantesTopWar.ARMA_FACA) {
 				jogoServidor.alternarFaca(avatarTopWar);
-				avatarTopWar.setAngulo(GeoUtil.calculaAngulo(
-						avatarTopWar.getPontoAvatar(),
-						avatarTopWarCopia.getPontoAvatar(), 90));
-				jogoServidor.atacar(avatarTopWar, avatarTopWar.getAngulo(), 0);
 				executouAcaoAtaque = true;
-				jogoServidor.alternarFaca(avatarTopWar);
-			} else if (line.size() < ConstantesTopWar.MEIO_LIMITE_VISAO) {
-				if (avatarTopWar.getArma() == ConstantesTopWar.ARMA_FACA)
-					jogoServidor.alternarFaca(avatarTopWar);
-				avatarTopWar.setAngulo(GeoUtil.calculaAngulo(
-						avatarTopWar.getPontoAvatar(),
-						avatarTopWarCopia.getPontoAvatar(), 90));
-				setPontoDestino(avatarTopWarCopia.getPontoAvatar());
+			} else if (line.size() < 10
+					&& avatarTopWar.getArma() == ConstantesTopWar.ARMA_FACA) {
+				int vida = avatarTopWar.getVida();
+				jogoServidor.atacar(avatarTopWar, avatarTopWar.getAngulo(), 0);
+				if (vida != avatarTopWar.getVida()) {
+					executouAcaoAtaque = true;
+				} else {
+					setPontoDestino(avatarTopWarCopia.getPontoAvatar());
+				}
+			} else if (line.size() < ConstantesTopWar.MEIO_LIMITE_VISAO
+					&& avatarTopWar.getArma() != ConstantesTopWar.ARMA_FACA) {
+				if (avatarTopWar.getBalas() == 0) {
+					if (avatarTopWar.getCartuchos() == 0) {
+						jogoServidor.alternarFaca(avatarTopWar);
+						executouAcaoAtaque = true;
+					} else {
+						jogoServidor.recarregar(avatarTopWar);
+						executouAcaoAtaque = true;
+					}
+				} else {
+					avatarTopWar.setAngulo(GeoUtil.calculaAngulo(
+							avatarTopWar.getPontoAvatar(),
+							avatarTopWarCopia.getPontoAvatar(), 90));
+					vidaUltAlvo = avatarTopWar.getVida();
+					if (jogoServidor.verificaAndavel(
+							avatarTopWar.getPontoAvatar(),
+							avatarTopWarCopia.getPontoAvatar()))
+						jogoServidor.atacar(avatarTopWar,
+								avatarTopWar.getAngulo(),
+								Util.inte(line.size() * 1.5));
+					if (vidaUltAlvo != avatarTopWar.getVida()) {
+						executouAcaoAtaque = true;
+					} else {
+						setPontoDestino(avatarTopWarCopia.getPontoAvatar());
+					}
+				}
 			} else {
 				setPontoDestino(avatarTopWarCopia.getPontoAvatar());
 			}
-			setEstado(BotInfoShield.ATACANDO);
+			setEstado(BotInfoMachine.ATACANDO);
 			break;
 		}
+
 		return executouAcaoAtaque;
 	}
 
