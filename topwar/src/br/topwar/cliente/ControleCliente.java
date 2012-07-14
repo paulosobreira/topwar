@@ -78,6 +78,7 @@ public class ControleCliente extends NnpeChatCliente {
 		JPanel botPanel = new JPanel();
 		JComboBox botCombo = new JComboBox();
 		botCombo.addItem(0);
+		botCombo.addItem(1);
 		botCombo.addItem(5);
 		botCombo.addItem(10);
 		botCombo.addItem(20);

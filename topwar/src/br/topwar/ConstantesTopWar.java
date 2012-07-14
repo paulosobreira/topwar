@@ -70,19 +70,19 @@ public class ConstantesTopWar {
 	public static final long ATRASO_REDE_PADRAO_BOTS = (long) (ATRASO_REDE_PADRAO * 1.5);
 	public static final String ASSAULT = "assault";
 	public static final int BALAS_ASSALT = 50;
-	public static final int CARTUCHOS_ASSALT = 7;
+	public static final int CARTUCHOS_ASSALT = 15;
 	public static final String SHOTGUN = "shotgun";
 	public static final int BALAS_SHOTGUN = 6;
-	public static final int CARTUCHOS_SHOTGUN = 2;
+	public static final int CARTUCHOS_SHOTGUN = 3;
 	public static final String SNIPER = "sniper";
 	public static final int BALAS_SNIPER = 1;
-	public static final int CARTUCHOS_SNIPER = 10;
+	public static final int CARTUCHOS_SNIPER = 16;
 	public static final String MACHINEGUN = "machinegun";
-	public static final int BALAS_MACHINEGUN = 200;
-	public static final int CARTUCHOS_MACHINEGUN = 5;
+	public static final int BALAS_MACHINEGUN = 300;
+	public static final int CARTUCHOS_MACHINEGUN = 6;
 	public static final String ROCKET = "rocket";
-	public static final int BALAS_ROCKET = 100;
-	public static final int CARTUCHOS_ROCKET = 100;
+	public static final int BALAS_ROCKET = 1;
+	public static final int CARTUCHOS_ROCKET = 10;
 	public static final String SHIELD = "shield";
 	public static final int DESVIO_ASSAULT = 2;
 	public static final int DESVIO_SNIPER = 0;
@@ -92,6 +92,6 @@ public class ConstantesTopWar {
 	public static final int TEMPO_RECARGA_MACHINEGUN = 3000;
 	public static final int TEMPO_RECARGA_SNIPER = 5000;
 	public static final long TEMPO_RECARGA = 2000;
-	public static final long TEMPO_RECARGA_ROCKET = 10;
+	public static final long TEMPO_RECARGA_ROCKET = 3000;
 
 }

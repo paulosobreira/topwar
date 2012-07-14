@@ -12,7 +12,7 @@ import br.topwar.ConstantesTopWar;
 import br.topwar.serial.ObjetoMapa;
 import br.topwar.servidor.JogoServidor;
 
-public class BotInfo {
+public class BotInfoAssault extends BotInfoAbstract {
 
 	public static String PATRULHANDO = "PATRULHANDO";
 	public static String ATACANDO = "ATACANDO";
@@ -25,11 +25,17 @@ public class BotInfo {
 	private JogoServidor jogoServidor;
 	private int vidaUltAlvo;
 
-	public BotInfo(ObjTopWar bot, JogoServidor jogoServidor) {
+	public BotInfoAssault(ObjTopWar bot, JogoServidor jogoServidor) {
 		this.avatarTopWar = bot;
 		this.jogoServidor = jogoServidor;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.topwar.tos.BotInfoIface#processaAcaoBot()
+	 */
+	@Override
 	public void processaAcaoBot() {
 		Point pontoAvatar = avatarTopWar.getPontoAvatar();
 		if (pontoAvatar.equals(ptAtual)) {
@@ -47,16 +53,16 @@ public class BotInfo {
 		}
 		if (!executouAcaoAtaque) {
 			patrulhar();
-			List<Point> lineMove = GeoUtil.drawBresenhamLine(avatarTopWar
-					.getPontoAvatar(), getPontoDestino());
+			List<Point> lineMove = GeoUtil.drawBresenhamLine(
+					avatarTopWar.getPontoAvatar(), getPontoDestino());
 			if (lineMove.size() < avatarTopWar.getVelocidade()) {
 				setPontoDestino(null);
 			} else {
 				Point dstMover = lineMove.get(avatarTopWar.getVelocidade() - 1);
 				DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
 				acaoClienteTopWar.setPonto(dstMover);
-				acaoClienteTopWar.setAngulo(GeoUtil.calculaAngulo(avatarTopWar
-						.getPontoAvatar(), dstMover, 90));
+				acaoClienteTopWar.setAngulo(GeoUtil.calculaAngulo(
+						avatarTopWar.getPontoAvatar(), dstMover, 90));
 				String mover = (String) jogoServidor.moverPontoAvatar(
 						avatarTopWar, acaoClienteTopWar);
 				if (!ConstantesTopWar.OK.equals(mover)) {
@@ -118,7 +124,7 @@ public class BotInfo {
 		} else {
 			botVaiPontoAleatorio();
 		}
-		setEstado(BotInfo.PATRULHANDO);
+		setEstado(BotInfoAssault.PATRULHANDO);
 	}
 
 	/**
@@ -134,10 +140,11 @@ public class BotInfo {
 				continue;
 			}
 
-			List<Point> line = GeoUtil.drawBresenhamLine(avatarTopWar
-					.getPontoAvatar(), avatarTopWarCopia.getPontoAvatar());
+			List<Point> line = GeoUtil.drawBresenhamLine(
+					avatarTopWar.getPontoAvatar(),
+					avatarTopWarCopia.getPontoAvatar());
 			if (jogoServidor.campoVisao(line, avatarTopWar, true)) {
-				if (!BotInfo.ATACANDO.equals(getEstado())) {
+				if (!BotInfoAssault.ATACANDO.equals(getEstado())) {
 					setPontoDestino(avatarTopWarCopia.getPontoAvatar());
 				} else if ((avatarTopWar.getBalas() != 0 || avatarTopWar
 						.getCartuchos() != 0)
@@ -169,9 +176,9 @@ public class BotInfo {
 								avatarTopWar.getPontoAvatar(),
 								avatarTopWarCopia.getPontoAvatar(), 90));
 						vidaUltAlvo = avatarTopWar.getVida();
-						jogoServidor.atacar(avatarTopWar, avatarTopWar
-								.getAngulo(), line.size()
-								+ Util.intervalo(20, 40));
+						jogoServidor.atacar(avatarTopWar,
+								avatarTopWar.getAngulo(),
+								line.size() + Util.intervalo(20, 40));
 						if (vidaUltAlvo != avatarTopWar.getVida()) {
 							executouAcaoAtaque = true;
 						} else {
@@ -181,7 +188,7 @@ public class BotInfo {
 				} else {
 					setPontoDestino(avatarTopWarCopia.getPontoAvatar());
 				}
-				setEstado(BotInfo.ATACANDO);
+				setEstado(BotInfoAssault.ATACANDO);
 				break;
 			}
 
@@ -190,8 +197,8 @@ public class BotInfo {
 	}
 
 	private void botVaiPontoAleatorio() {
-		Point calculaPonto = GeoUtil.calculaPonto(Util.intervalo(0, 360), Util
-				.intervalo(100, 200), avatarTopWar.getPontoAvatar());
+		Point calculaPonto = GeoUtil.calculaPonto(Util.intervalo(0, 360),
+				Util.intervalo(100, 200), avatarTopWar.getPontoAvatar());
 		while (!jogoServidor.verificaAndavel(avatarTopWar.getPontoAvatar(),
 				calculaPonto)) {
 			calculaPonto = GeoUtil.calculaPonto(Util.intervalo(0, 360), 100,
