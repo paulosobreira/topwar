@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import br.nnpe.GeoUtil;
+import br.topwar.ConstantesTopWar;
 import br.topwar.servidor.JogoServidor;
 
 public abstract class BotInfoAbstract {
@@ -25,7 +26,9 @@ public abstract class BotInfoAbstract {
 					|| avatarTopWarCopia.getVida() <= 0) {
 				continue;
 			}
-
+			if (ConstantesTopWar.OBJ_ROCKET == avatarTopWarCopia.getArma()) {
+				continue;
+			}
 			List<Point> line = GeoUtil.drawBresenhamLine(
 					avatarTopWar.getPontoAvatar(),
 					avatarTopWarCopia.getPontoAvatar());

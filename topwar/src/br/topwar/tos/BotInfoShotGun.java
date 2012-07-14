@@ -38,6 +38,9 @@ public class BotInfoShotGun extends BotInfoAbstract {
 	 */
 	@Override
 	public void processaAcaoBot() {
+		if (avatarTopWar.getVida() <= 0) {
+			return;
+		}
 		Point pontoAvatar = avatarTopWar.getPontoAvatar();
 		if (pontoAvatar.equals(ptAtual)) {
 			contPtAtual++;
