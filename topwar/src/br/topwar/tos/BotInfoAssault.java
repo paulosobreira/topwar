@@ -14,17 +14,6 @@ import br.topwar.servidor.JogoServidor;
 
 public class BotInfoAssault extends BotInfoAbstract {
 
-	public static String PATRULHANDO = "PATRULHANDO";
-	public static String ATACANDO = "ATACANDO";
-	private int contPatrulha;
-	private int contGuia;
-	private Point ultimaGuia;
-	private Point ptAtual;
-	private int contPtAtual;
-	private ObjTopWar avatarTopWar;
-	private JogoServidor jogoServidor;
-	private int vidaUltAlvo;
-
 	public BotInfoAssault(ObjTopWar bot, JogoServidor jogoServidor) {
 		this.avatarTopWar = bot;
 		this.jogoServidor = jogoServidor;
@@ -56,16 +45,16 @@ public class BotInfoAssault extends BotInfoAbstract {
 		}
 		if (!executouAcaoAtaque) {
 			patrulhar();
-			List<Point> lineMove = GeoUtil.drawBresenhamLine(
-					avatarTopWar.getPontoAvatar(), getPontoDestino());
+			List<Point> lineMove = GeoUtil.drawBresenhamLine(avatarTopWar
+					.getPontoAvatar(), getPontoDestino());
 			if (lineMove.size() < avatarTopWar.getVelocidade()) {
 				setPontoDestino(null);
 			} else {
 				Point dstMover = lineMove.get(avatarTopWar.getVelocidade() - 1);
 				DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
 				acaoClienteTopWar.setPonto(dstMover);
-				acaoClienteTopWar.setAngulo(GeoUtil.calculaAngulo(
-						avatarTopWar.getPontoAvatar(), dstMover, 90));
+				acaoClienteTopWar.setAngulo(GeoUtil.calculaAngulo(avatarTopWar
+						.getPontoAvatar(), dstMover, 90));
 				String mover = (String) jogoServidor.moverPontoAvatar(
 						avatarTopWar, acaoClienteTopWar);
 				if (!ConstantesTopWar.OK.equals(mover)) {
@@ -145,9 +134,8 @@ public class BotInfoAssault extends BotInfoAbstract {
 			if (ConstantesTopWar.OBJ_ROCKET == avatarTopWarCopia.getArma()) {
 				continue;
 			}
-			List<Point> line = GeoUtil.drawBresenhamLine(
-					avatarTopWar.getPontoAvatar(),
-					avatarTopWarCopia.getPontoAvatar());
+			List<Point> line = GeoUtil.drawBresenhamLine(avatarTopWar
+					.getPontoAvatar(), avatarTopWarCopia.getPontoAvatar());
 			if (jogoServidor.campoVisao(line, avatarTopWar, true)) {
 				if (!BotInfoAssault.ATACANDO.equals(getEstado())) {
 					setPontoDestino(avatarTopWarCopia.getPontoAvatar());
@@ -182,12 +170,11 @@ public class BotInfoAssault extends BotInfoAbstract {
 								avatarTopWarCopia.getPontoAvatar(), 90));
 
 						vidaUltAlvo = avatarTopWar.getVida();
-						if (jogoServidor.verificaAndavel(
-								avatarTopWar.getPontoAvatar(),
-								avatarTopWarCopia.getPontoAvatar()))
-							jogoServidor.atacar(avatarTopWar,
-									avatarTopWar.getAngulo(),
-									Util.inte(line.size() * 1.5));
+						if (jogoServidor.verificaAndavel(avatarTopWar
+								.getPontoAvatar(), avatarTopWarCopia
+								.getPontoAvatar()))
+							jogoServidor.atacar(avatarTopWar, avatarTopWar
+									.getAngulo(), Util.inte(line.size() * 1.5));
 						if (vidaUltAlvo != avatarTopWar.getVida()) {
 							executouAcaoAtaque = true;
 						} else {
@@ -203,66 +190,6 @@ public class BotInfoAssault extends BotInfoAbstract {
 
 		}
 		return executouAcaoAtaque;
-	}
-
-	private void botVaiPontoAleatorio() {
-		Point calculaPonto = GeoUtil.calculaPonto(Util.intervalo(0, 360),
-				Util.intervalo(100, 200), avatarTopWar.getPontoAvatar());
-		while (!jogoServidor.verificaAndavel(avatarTopWar.getPontoAvatar(),
-				calculaPonto)) {
-			calculaPonto = GeoUtil.calculaPonto(Util.intervalo(0, 360), 100,
-					avatarTopWar.getPontoAvatar());
-		}
-		setPontoDestino(calculaPonto);
-	}
-
-	public Point getUltimaGuia() {
-		return ultimaGuia;
-	}
-
-	public void setUltimaGuia(Point ultimaGuia) {
-		this.ultimaGuia = ultimaGuia;
-	}
-
-	private String estado;
-
-	public String getEstado() {
-		return estado;
-	}
-
-	public void setEstado(String estado) {
-		this.estado = estado;
-	}
-
-	private Point pontoDestino;
-
-	public Point getPontoDestino() {
-		return pontoDestino;
-	}
-
-	public void setPontoDestino(Point pontoDestino) {
-		this.pontoDestino = pontoDestino;
-	}
-
-	public boolean vaiGuia() {
-		if (ultimaGuia == null) {
-			return true;
-		}
-		if (contGuia < 1) {
-			contGuia++;
-			return false;
-		}
-		contGuia = 0;
-		return true;
-	}
-
-	public boolean vaiBaseInimiga() {
-		if (contPatrulha < 5) {
-			contPatrulha++;
-			return false;
-		}
-		contPatrulha = 0;
-		return true;
 	}
 
 }
