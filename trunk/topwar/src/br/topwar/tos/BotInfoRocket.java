@@ -12,9 +12,9 @@ import br.topwar.ConstantesTopWar;
 import br.topwar.serial.ObjetoMapa;
 import br.topwar.servidor.JogoServidor;
 
-public class BotInfoMachine extends BotInfoAbstract {
+public class BotInfoRocket extends BotInfoAbstract {
 
-	public BotInfoMachine(ObjTopWar bot, JogoServidor jogoServidor) {
+	public BotInfoRocket(ObjTopWar bot, JogoServidor jogoServidor) {
 		this.avatarTopWar = bot;
 		this.jogoServidor = jogoServidor;
 	}
@@ -119,7 +119,7 @@ public class BotInfoMachine extends BotInfoAbstract {
 		} else {
 			botVaiPontoAleatorio();
 		}
-		setEstado(BotInfoMachine.PATRULHANDO);
+		setEstado(BotInfoRocket.PATRULHANDO);
 	}
 
 	/**
@@ -135,7 +135,7 @@ public class BotInfoMachine extends BotInfoAbstract {
 			ObjTopWar avatarTopWarCopia = (ObjTopWar) iterator2.next();
 			List<Point> line = GeoUtil.drawBresenhamLine(avatarTopWar
 					.getPontoAvatar(), avatarTopWarCopia.getPontoAvatar());
-			if (!BotInfoMachine.ATACANDO.equals(getEstado())) {
+			if (!BotInfoRocket.ATACANDO.equals(getEstado())) {
 				setPontoDestino(avatarTopWarCopia.getPontoAvatar());
 			} else if ((avatarTopWar.getBalas() != 0 || avatarTopWar
 					.getCartuchos() != 0)
@@ -170,7 +170,7 @@ public class BotInfoMachine extends BotInfoAbstract {
 							.getPontoAvatar(), avatarTopWarCopia
 							.getPontoAvatar()))
 						jogoServidor.atacar(avatarTopWar, avatarTopWar
-								.getAngulo(), Util.inte(line.size() * 1.5));
+								.getAngulo(), Util.inte(line.size() * 0.9));
 					if (vidaUltAlvo != avatarTopWar.getVida()) {
 						executouAcaoAtaque = true;
 					} else {
@@ -180,13 +180,11 @@ public class BotInfoMachine extends BotInfoAbstract {
 			} else {
 				setPontoDestino(avatarTopWarCopia.getPontoAvatar());
 			}
-			setEstado(BotInfoMachine.ATACANDO);
+			setEstado(BotInfoRocket.ATACANDO);
 			break;
 		}
 
 		return executouAcaoAtaque;
 	}
-
-
 
 }
