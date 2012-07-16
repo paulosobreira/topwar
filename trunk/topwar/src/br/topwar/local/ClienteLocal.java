@@ -24,7 +24,7 @@ public class ClienteLocal extends ControleCliente {
 		super(null);
 		this.comandos = comandos;
 		this.sessaoCliente = new SessaoCliente();
-		sessaoCliente.setNomeJogador("Jogador");
+		sessaoCliente.setNomeJogador("TopWar");
 		sessaoCliente.setUlimaAtividade(System.currentTimeMillis());
 		definirImplementacaoChatWindow();
 	}

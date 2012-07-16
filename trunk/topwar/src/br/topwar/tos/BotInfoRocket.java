@@ -44,11 +44,13 @@ public class BotInfoRocket extends BotInfoAbstract {
 					executouAcaoAtaque);
 		}
 		if (!executouAcaoAtaque) {
+			segueAvatarInfiltrante();
 			patrulhar();
 			List<Point> lineMove = GeoUtil.drawBresenhamLine(avatarTopWar
 					.getPontoAvatar(), getPontoDestino());
 			if (lineMove.size() < avatarTopWar.getVelocidade()) {
 				setPontoDestino(null);
+				setEstado(null);
 			} else {
 				Point dstMover = lineMove.get(avatarTopWar.getVelocidade() - 1);
 				DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
@@ -69,9 +71,6 @@ public class BotInfoRocket extends BotInfoAbstract {
 	 * Patrulhando
 	 */
 	private void patrulhar() {
-
-		segueAvatarInfiltrante();
-
 		if (getPontoDestino() != null) {
 			return;
 		}
@@ -125,7 +124,7 @@ public class BotInfoRocket extends BotInfoAbstract {
 	/**
 	 * Seguir/Atacar avatar inimigo
 	 */
-	private boolean seguirAtacarInimigo(List<ObjTopWar> avatarTopWarsCopia,
+	protected boolean seguirAtacarInimigo(List<ObjTopWar> avatarTopWarsCopia,
 			boolean executouAcaoAtaque) {
 
 		List<ObjTopWar> avataresOrdenadosDistancia = ordenaDistanciaAvatar(

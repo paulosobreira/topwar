@@ -49,6 +49,7 @@ public class BotInfoMachine extends BotInfoAbstract {
 					.getPontoAvatar(), getPontoDestino());
 			if (lineMove.size() < avatarTopWar.getVelocidade()) {
 				setPontoDestino(null);
+				setEstado(null);
 			} else {
 				Point dstMover = lineMove.get(avatarTopWar.getVelocidade() - 1);
 				DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
@@ -125,7 +126,7 @@ public class BotInfoMachine extends BotInfoAbstract {
 	/**
 	 * Seguir/Atacar avatar inimigo
 	 */
-	private boolean seguirAtacarInimigo(List<ObjTopWar> avatarTopWarsCopia,
+	protected boolean seguirAtacarInimigo(List<ObjTopWar> avatarTopWarsCopia,
 			boolean executouAcaoAtaque) {
 
 		List<ObjTopWar> avataresOrdenadosDistancia = ordenaDistanciaAvatar(
@@ -186,7 +187,5 @@ public class BotInfoMachine extends BotInfoAbstract {
 
 		return executouAcaoAtaque;
 	}
-
-
 
 }

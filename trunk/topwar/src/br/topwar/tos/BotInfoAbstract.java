@@ -16,6 +16,7 @@ public abstract class BotInfoAbstract {
 
 	public static String PATRULHANDO = "PATRULHANDO";
 	public static String ATACANDO = "ATACANDO";
+	public static String SEGUINDO = "SEGUINDO";
 	protected ObjTopWar avatarTopWar;
 	protected JogoServidor jogoServidor;
 	protected Point pontoDestino;
@@ -28,6 +29,9 @@ public abstract class BotInfoAbstract {
 	protected String estado;
 
 	public abstract void processaAcaoBot();
+
+	protected abstract boolean seguirAtacarInimigo(
+			List<ObjTopWar> avatarTopWarsCopia, boolean executouAcaoAtaque);
 
 	public Point getPontoDestino() {
 		return pontoDestino;
@@ -200,12 +204,18 @@ public abstract class BotInfoAbstract {
 	public void segueAvatarInfiltrante() {
 		List<ObjTopWar> avatarTopWarsCopia = jogoServidor
 				.getAvatarTopWarsCopia();
+		if (SEGUINDO.equals(getEstado())) {
+			if (seguirAtacarInimigo(avatarTopWarsCopia, false)) {
+				setEstado(null);
+			}
+			return;
+		}
+
 		Point avatarInfiltranteProximo = avatarInfiltranteProximo(
 				avatarTopWarsCopia, avatarTopWar, jogoServidor);
 		if (avatarInfiltranteProximo != null) {
-			if (avatarTopWar.getArma() != ConstantesTopWar.ARMA_FACA)
-				jogoServidor.alternarFaca(avatarTopWar);
 			setPontoDestino(avatarInfiltranteProximo);
+			setEstado(SEGUINDO);
 		}
 	}
 
