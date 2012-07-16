@@ -699,10 +699,10 @@ public class PainelTopWar {
 		rotBuffer = processaSobreposicoesAvatar(rotBuffer, p, area, mapaTopWar);
 		rotBuffer = processaGrade(rotBuffer, p, area, mapaTopWar);
 		graphics2d.drawImage(rotBuffer, p.x - midLarg, p.y - midLarg, null);
-		Ellipse2D circ = new Ellipse2D.Double((double) p.x - 50.0,
-				(double) p.y - 50.0, 100.0, 100.0);
-		graphics2d.setColor(Color.YELLOW);
-		graphics2d.draw(circ);
+//		Ellipse2D circ = new Ellipse2D.Double((double) p.x - 50.0,
+//				(double) p.y - 50.0, 100.0, 100.0);
+//		graphics2d.setColor(Color.YELLOW);
+//		graphics2d.draw(circ);
 	}
 
 	private void desenhaDisparoAvatarShotgun(Graphics2D graphics2d,

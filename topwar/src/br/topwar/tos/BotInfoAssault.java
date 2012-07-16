@@ -122,7 +122,7 @@ public class BotInfoAssault extends BotInfoAbstract {
 	/**
 	 * Seguir/Atacar avatar inimigo
 	 */
-	private boolean seguirAtacarInimigo(List<ObjTopWar> avatarTopWarsCopia,
+	protected boolean seguirAtacarInimigo(List<ObjTopWar> avatarTopWarsCopia,
 			boolean executouAcaoAtaque) {
 		for (Iterator iterator2 = avatarTopWarsCopia.iterator(); iterator2
 				.hasNext();) {

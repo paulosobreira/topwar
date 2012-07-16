@@ -122,7 +122,7 @@ public class BotInfoShield extends BotInfoAbstract {
 	/**
 	 * Seguir/Atacar avatar inimigo
 	 */
-	private boolean seguirAtacarInimigo(List<ObjTopWar> avatarTopWarsCopia,
+	protected boolean seguirAtacarInimigo(List<ObjTopWar> avatarTopWarsCopia,
 			boolean executouAcaoAtaque) {
 		List<ObjTopWar> avataresOrdenadosDistancia = ordenaDistanciaAvatar(
 				avatarTopWarsCopia, avatarTopWar, jogoServidor);
