@@ -44,10 +44,12 @@ public class BotInfoRocket extends BotInfoAbstract {
 					executouAcaoAtaque);
 		}
 		if (!executouAcaoAtaque) {
-			segueAvatarInfiltrante();
+			if (segueAvatarInfiltrante()) {
+				return;
+			}
 			patrulhar();
-			List<Point> lineMove = GeoUtil.drawBresenhamLine(avatarTopWar
-					.getPontoAvatar(), getPontoDestino());
+			List<Point> lineMove = GeoUtil.drawBresenhamLine(
+					avatarTopWar.getPontoAvatar(), getPontoDestino());
 			if (lineMove.size() < avatarTopWar.getVelocidade()) {
 				setPontoDestino(null);
 				setEstado(null);
@@ -55,8 +57,8 @@ public class BotInfoRocket extends BotInfoAbstract {
 				Point dstMover = lineMove.get(avatarTopWar.getVelocidade() - 1);
 				DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
 				acaoClienteTopWar.setPonto(dstMover);
-				acaoClienteTopWar.setAngulo(GeoUtil.calculaAngulo(avatarTopWar
-						.getPontoAvatar(), dstMover, 90));
+				acaoClienteTopWar.setAngulo(GeoUtil.calculaAngulo(
+						avatarTopWar.getPontoAvatar(), dstMover, 90));
 				String mover = (String) jogoServidor.moverPontoAvatar(
 						avatarTopWar, acaoClienteTopWar);
 				if (!ConstantesTopWar.OK.equals(mover)) {
@@ -132,8 +134,9 @@ public class BotInfoRocket extends BotInfoAbstract {
 		for (Iterator iterator2 = avataresOrdenadosDistancia.iterator(); iterator2
 				.hasNext();) {
 			ObjTopWar avatarTopWarCopia = (ObjTopWar) iterator2.next();
-			List<Point> line = GeoUtil.drawBresenhamLine(avatarTopWar
-					.getPontoAvatar(), avatarTopWarCopia.getPontoAvatar());
+			List<Point> line = GeoUtil.drawBresenhamLine(
+					avatarTopWar.getPontoAvatar(),
+					avatarTopWarCopia.getPontoAvatar());
 			if (!BotInfoRocket.ATACANDO.equals(getEstado())) {
 				setPontoDestino(avatarTopWarCopia.getPontoAvatar());
 			} else if ((avatarTopWar.getBalas() != 0 || avatarTopWar
@@ -150,7 +153,7 @@ public class BotInfoRocket extends BotInfoAbstract {
 				} else {
 					setPontoDestino(avatarTopWarCopia.getPontoAvatar());
 				}
-			} else if (line.size() < ConstantesTopWar.MEIO_LIMITE_VISAO
+			} else if (line.size() < ConstantesTopWar.LIMITE_VISAO
 					&& avatarTopWar.getArma() != ConstantesTopWar.ARMA_FACA) {
 				if (avatarTopWar.getBalas() == 0) {
 					if (avatarTopWar.getCartuchos() == 0) {
@@ -161,15 +164,16 @@ public class BotInfoRocket extends BotInfoAbstract {
 						executouAcaoAtaque = true;
 					}
 				} else {
-					avatarTopWar.setAngulo(GeoUtil.calculaAngulo(avatarTopWar
-							.getPontoAvatar(), avatarTopWarCopia
-							.getPontoAvatar(), 90));
+					avatarTopWar.setAngulo(GeoUtil.calculaAngulo(
+							avatarTopWar.getPontoAvatar(),
+							avatarTopWarCopia.getPontoAvatar(), 90));
 					vidaUltAlvo = avatarTopWar.getVida();
-					if (jogoServidor.verificaAndavel(avatarTopWar
-							.getPontoAvatar(), avatarTopWarCopia
-							.getPontoAvatar()))
-						jogoServidor.atacar(avatarTopWar, avatarTopWar
-								.getAngulo(), Util.inte(line.size() * 0.9));
+					if (jogoServidor.verificaAndavel(
+							avatarTopWar.getPontoAvatar(),
+							avatarTopWarCopia.getPontoAvatar()))
+						jogoServidor.atacar(avatarTopWar,
+								avatarTopWar.getAngulo(),
+								Util.inte(line.size() * 0.9));
 					if (vidaUltAlvo != avatarTopWar.getVida()) {
 						executouAcaoAtaque = true;
 					} else {

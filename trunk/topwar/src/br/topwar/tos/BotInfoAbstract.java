@@ -127,8 +127,9 @@ public abstract class BotInfoAbstract {
 			if (ConstantesTopWar.OBJ_ROCKET == avatarTopWarCopia.getArma()) {
 				continue;
 			}
-			List<Point> line = GeoUtil.drawBresenhamLine(avatarTopWar
-					.getPontoAvatar(), avatarTopWarCopia.getPontoAvatar());
+			List<Point> line = GeoUtil.drawBresenhamLine(
+					avatarTopWar.getPontoAvatar(),
+					avatarTopWarCopia.getPontoAvatar());
 			if (jogoServidor.campoVisao(line, avatarTopWar, true)) {
 				avatarTopWarCopia.setDistanciaDeUmAvatar(GeoUtil
 						.distaciaEntrePontos(
@@ -163,8 +164,9 @@ public abstract class BotInfoAbstract {
 			if (ConstantesTopWar.OBJ_ROCKET == avatarTopWarCopia.getArma()) {
 				continue;
 			}
-			List<Point> line = GeoUtil.drawBresenhamLine(avatarTopWar
-					.getPontoAvatar(), avatarTopWarCopia.getPontoAvatar());
+			List<Point> line = GeoUtil.drawBresenhamLine(
+					avatarTopWar.getPontoAvatar(),
+					avatarTopWarCopia.getPontoAvatar());
 			if (jogoServidor.campoVisao(line, avatarTopWar, true)) {
 				avatarTopWarCopia.setDistanciaDeUmAvatar(GeoUtil
 						.distaciaEntrePontos(
@@ -189,6 +191,9 @@ public abstract class BotInfoAbstract {
 			ObjTopWar avatarTopWar, JogoServidor jogoServidor) {
 		List<ObjTopWar> avataresOrdenadosDistancia = ordenaDistanciaAvatarMesmoTime(
 				avatarTopWarsCopia, avatarTopWar, jogoServidor);
+		if (avataresOrdenadosDistancia.size() > 1) {
+			return null;
+		}
 		for (Iterator iterator = avataresOrdenadosDistancia.iterator(); iterator
 				.hasNext();) {
 			ObjTopWar objTopWar = (ObjTopWar) iterator.next();
@@ -201,27 +206,29 @@ public abstract class BotInfoAbstract {
 		return null;
 	}
 
-	public void segueAvatarInfiltrante() {
+	public boolean segueAvatarInfiltrante() {
+		if (SEGUINDO.equals(getEstado())) {
+			return false;
+		}
 		List<ObjTopWar> avatarTopWarsCopia = jogoServidor
 				.getAvatarTopWarsCopia();
-		if (SEGUINDO.equals(getEstado())) {
-			if (seguirAtacarInimigo(avatarTopWarsCopia, false)) {
-				setEstado(null);
-			}
-			return;
+		List<ObjTopWar> ordenaDistanciaAvatar = ordenaDistanciaAvatar(
+				avatarTopWarsCopia, avatarTopWar, jogoServidor);
+		if (!ordenaDistanciaAvatar.isEmpty()) {
+			return false;
 		}
-
 		Point avatarInfiltranteProximo = avatarInfiltranteProximo(
 				avatarTopWarsCopia, avatarTopWar, jogoServidor);
 		if (avatarInfiltranteProximo != null) {
 			setPontoDestino(avatarInfiltranteProximo);
 			setEstado(SEGUINDO);
 		}
+		return false;
 	}
 
 	public void botVaiPontoAleatorio() {
-		Point calculaPonto = GeoUtil.calculaPonto(Util.intervalo(0, 360), Util
-				.intervalo(100, 200), avatarTopWar.getPontoAvatar());
+		Point calculaPonto = GeoUtil.calculaPonto(Util.intervalo(0, 360),
+				Util.intervalo(100, 200), avatarTopWar.getPontoAvatar());
 		while (!jogoServidor.verificaAndavel(avatarTopWar.getPontoAvatar(),
 				calculaPonto)) {
 			calculaPonto = GeoUtil.calculaPonto(Util.intervalo(0, 360), 100,
