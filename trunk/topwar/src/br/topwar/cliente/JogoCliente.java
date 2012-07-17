@@ -68,6 +68,7 @@ public class JogoCliente {
 
 	private Thread threadAtacar;
 	private Thread threadRecarregar;
+	private Thread threadMudarClasse;
 	private Thread threadAlternaFaca;
 	private Thread threadMouseCliqueUnico;
 	private String utlEvento = "0";
@@ -78,6 +79,7 @@ public class JogoCliente {
 	private List<PlacarTopWar> placar;
 	private Set<EventoJogo> eventos = new HashSet<EventoJogo>();
 	protected long clickTime;
+	private String proxClasse;
 
 	public boolean isJogoEmAndamento() {
 		return jogoEmAndamento;
@@ -238,6 +240,9 @@ public class JogoCliente {
 		painelTopWar.getPanel().addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				if (painelTopWar.verificaComandoMudarClasse(e.getPoint())) {
+					return;
+				}
 				setarPontoMouseClicado(e);
 				seguirMouse = false;
 				if (ConstantesTopWar.ARMA_FACA != arma
@@ -566,6 +571,7 @@ public class JogoCliente {
 		balas = (Integer) retorno.get(ConstantesTopWar.BALAS);
 		cartuchos = (Integer) retorno.get(ConstantesTopWar.CARTUCHO);
 		recarregando = (Boolean) retorno.get(ConstantesTopWar.RECARREGAR);
+		proxClasse = (String) retorno.get(ConstantesTopWar.MUDAR_CLASSE);
 		ptsAzul = (Integer) retorno.get(ConstantesTopWar.PTS_AZUL);
 		ptsVermelho = (Integer) retorno.get(ConstantesTopWar.PTS_VERMELHO);
 		tempoRestanteJogo = (Long) retorno
@@ -808,5 +814,26 @@ public class JogoCliente {
 			}
 		});
 		threadRecarregar.start();
+	}
+
+	public void mudarClasse(final String classe) {
+		if (threadMudarClasse != null && threadMudarClasse.isAlive()) {
+			return;
+		}
+		threadMudarClasse = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while (controleCliente.verificaDelay()) {
+					try {
+						Thread.sleep(5);
+					} catch (InterruptedException e) {
+						Logger.logarExept(e);
+					}
+				}
+				controleCliente.mudarClasse(classe);
+			}
+		});
+		threadMudarClasse.start();
+
 	}
 }

@@ -277,4 +277,15 @@ public class ControleJogosServidor {
 		return ConstantesTopWar.OK;
 	}
 
+	public Object mudarClasse(NnpeTO nnpeTO) {
+		DadosJogoTopWar dadosJogoTopWar = (DadosJogoTopWar) nnpeTO.getData();
+		ObjTopWar avatarTopWar = obterAvatarTopWarCliente(dadosJogoTopWar
+				.getNomeJogador());
+		if (avatarTopWar == null) {
+			return null;
+		}
+		avatarTopWar.setProxClasse(dadosJogoTopWar.getClasse());
+		return ConstantesTopWar.OK;
+	}
+
 }

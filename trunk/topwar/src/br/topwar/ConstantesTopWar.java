@@ -27,6 +27,7 @@ public class ConstantesTopWar {
 	public static final String KILL_CAM = "K_C";
 	public static final String OBTER_PLCAR = "O_P";
 	public static final String EVENTO_JOGO = "E_J";
+	public static final String MUDAR_CLASSE = "M_C";
 
 	/**
 	 * Gerais
@@ -91,6 +92,6 @@ public class ConstantesTopWar {
 	public static final int TEMPO_RECARGA_MACHINEGUN = 3000;
 	public static final int TEMPO_RECARGA_SNIPER = 5000;
 	public static final long TEMPO_RECARGA = 2000;
-	public static final long TEMPO_RECARGA_ROCKET = 3000;
+	public static final long TEMPO_RECARGA_ROCKET = 3000;;
 
 }

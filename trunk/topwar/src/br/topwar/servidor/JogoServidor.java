@@ -282,6 +282,8 @@ public class JogoServidor {
 		retorno.put(ConstantesTopWar.PTS_VERMELHO, getPtsVermelho());
 		retorno.put(ConstantesTopWar.PTS_AZUL, getPtsAzul());
 		retorno.put(ConstantesTopWar.TEMPO_JOGO_RESTANTE, tempoRestanteJogo());
+		retorno.put(ConstantesTopWar.MUDAR_CLASSE, avatarTopWarJog
+				.getProxClasse());
 		if (avatarTopWarJog.getMortoPor() != null)
 			retorno.put(ConstantesTopWar.KILL_CAM, avatarTopWarJog
 					.getMortoPor().getNomeJogador());

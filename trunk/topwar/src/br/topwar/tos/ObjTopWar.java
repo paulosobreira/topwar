@@ -29,9 +29,18 @@ public class ObjTopWar {
 	private transient long recarregar;
 	private transient double distanciaDeUmAvatar;
 	private transient BotInfoAbstract botInfo;
+	private transient String proxClasse;
 
 	public double getDistanciaDeUmAvatar() {
 		return distanciaDeUmAvatar;
+	}
+
+	public String getProxClasse() {
+		return proxClasse;
+	}
+
+	public void setProxClasse(String proxClasse) {
+		this.proxClasse = proxClasse;
 	}
 
 	public void setDistanciaDeUmAvatar(double distanciaDeUmAvatar) {
