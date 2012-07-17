@@ -12,6 +12,7 @@ import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
+import java.awt.geom.RoundRectangle2D;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.util.Collection;
@@ -101,6 +102,13 @@ public class PainelTopWar {
 	public BufferedImage vermelhoMortes;
 	public BufferedImage explosao;
 
+	private RoundRectangle2D assautRect;
+	private RoundRectangle2D shotgunRect;
+	private RoundRectangle2D machineRect;
+	private RoundRectangle2D shieldRect;
+	private RoundRectangle2D rocketRect;
+	private RoundRectangle2D sniperRect;
+
 	public PainelTopWar(JogoCliente jogoCliente) {
 		this.jogoCliente = jogoCliente;
 		mapaTopWar = jogoCliente.getMapaTopWar();
@@ -125,6 +133,107 @@ public class PainelTopWar {
 		gerouImagens = true;
 		geraPainel();
 		gerarMinis();
+		gerarMudaClasseBtns();
+	}
+
+	private void gerarMudaClasseBtns() {
+		assautRect = new RoundRectangle2D.Double(0, 0,
+				lifeBarAssalt.getWidth(), lifeBarAssalt.getHeight(), 10, 10);
+		shotgunRect = new RoundRectangle2D.Double(0, 0, lifeBarShotgun
+				.getWidth(), lifeBarShotgun.getHeight(), 10, 10);
+		machineRect = new RoundRectangle2D.Double(0, 0, lifeBarMachineGun
+				.getWidth(), lifeBarMachineGun.getHeight(), 10, 10);
+		shieldRect = new RoundRectangle2D.Double(0, 0, lifeBarMachineGun
+				.getWidth(), lifeBarMachineGun.getHeight(), 10, 10);
+		rocketRect = new RoundRectangle2D.Double(0, 0,
+				lifeBarRocket.getWidth(), lifeBarRocket.getHeight(), 10, 10);
+		sniperRect = new RoundRectangle2D.Double(0, 0,
+				lifeBarSniper.getWidth(), lifeBarSniper.getHeight(), 10, 10);
+
+	}
+
+	public boolean verificaComandoMudarClasse(Point p) {
+		if (assautRect.contains(p)) {
+			jogoCliente.mudarClasse(ConstantesTopWar.ASSAULT);
+			return true;
+		}
+		if (rocketRect.contains(p)) {
+			jogoCliente.mudarClasse(ConstantesTopWar.ROCKET);
+			return true;
+		}
+		if (machineRect.contains(p)) {
+			jogoCliente.mudarClasse(ConstantesTopWar.MACHINEGUN);
+			return true;
+		}
+		return false;
+	}
+
+	private void desenhaControleMudarClasse(Graphics2D graphics2d) {
+		Rectangle limitesViewPort = (Rectangle) limitesViewPort();
+		Point o = new Point(limitesViewPort.x + 10, limitesViewPort.y
+				+ limitesViewPort.height - 60);
+		int x = o.x;
+		int y = o.y;
+		assautRect.setFrame(x, y, lifeBarAssalt.getWidth(), lifeBarAssalt
+				.getHeight());
+		graphics2d.draw(assautRect);
+		graphics2d.drawImage(lifeBarAssalt, null, x, y);
+
+		x += 110;
+
+		sniperRect.setFrame(x, y, lifeBarSniper.getWidth(), lifeBarSniper
+				.getHeight());
+		graphics2d.draw(sniperRect);
+		graphics2d.drawImage(lifeBarSniper, null, x, y);
+
+		x += 110;
+
+		machineRect.setFrame(x, y, lifeBarMachineGun.getWidth(),
+				lifeBarMachineGun.getHeight());
+		graphics2d.draw(machineRect);
+		graphics2d.drawImage(lifeBarMachineGun, null, x, y);
+
+		x = o.x;
+		y += 30;
+		shotgunRect.setFrame(x, y, lifeBarShotgun.getWidth(), lifeBarShotgun
+				.getHeight());
+		graphics2d.draw(shotgunRect);
+		graphics2d.drawImage(lifeBarShotgun, null, x, y);
+
+		x += 110;
+		rocketRect.setFrame(x, y, lifeBarRocket.getWidth(), lifeBarRocket
+				.getHeight());
+		graphics2d.draw(rocketRect);
+		graphics2d.drawImage(lifeBarRocket, null, x, y);
+
+	}
+
+	private void gerarMinis() {
+		miniAssalt = ImageUtil.geraResize(assault, 0.5);
+		lifeBarAssalt = ImageUtil.gerarFade(ImageUtil.geraResize(assault, 0.55,
+				0.4), FADE_MINIS);
+		miniKnife = ImageUtil.geraResize(knife, 0.5);
+
+		lifeBarKnife = ImageUtil.gerarFade(ImageUtil.geraResize(knife, 0.85,
+				0.75), FADE_MINIS);
+
+		miniHeadShot = ImageUtil.geraResize(headShot, 0.5);
+		miniMachineGun = ImageUtil.geraResize(machinegun, 0.5);
+		lifeBarMachineGun = ImageUtil.gerarFade(ImageUtil.geraResize(
+				machinegun, 0.45, 0.27), FADE_MINIS);
+
+		miniShotgun = ImageUtil.geraResize(shotgun, 0.5);
+		lifeBarShotgun = ImageUtil.gerarFade(ImageUtil.geraResize(shotgun, 0.6,
+				0.5), FADE_MINIS);
+
+		miniSniper = ImageUtil.geraResize(sniper, 0.5);
+		lifeBarSniper = ImageUtil.gerarFade(ImageUtil.geraResize(sniper, 0.50,
+				0.4), FADE_MINIS);
+
+		miniRocket = ImageUtil.geraResize(rocket_launcher, 0.5);
+		lifeBarRocket = ImageUtil.gerarFade(ImageUtil.geraResize(
+				rocket_launcher, 0.42, 0.30), FADE_MINIS);
+
 	}
 
 	private void carregaImagens() {
@@ -203,34 +312,6 @@ public class PainelTopWar {
 				mapImgs.put(key, ImageUtil.geraResize(bufferedImage, 3));
 			}
 		}
-
-	}
-
-	private void gerarMinis() {
-		miniAssalt = ImageUtil.geraResize(assault, 0.5);
-		lifeBarAssalt = ImageUtil.gerarFade(ImageUtil.geraResize(assault, 0.55,
-				0.4), FADE_MINIS);
-		miniKnife = ImageUtil.geraResize(knife, 0.5);
-
-		lifeBarKnife = ImageUtil.gerarFade(ImageUtil.geraResize(knife, 0.85,
-				0.75), FADE_MINIS);
-
-		miniHeadShot = ImageUtil.geraResize(headShot, 0.5);
-		miniMachineGun = ImageUtil.geraResize(machinegun, 0.5);
-		lifeBarMachineGun = ImageUtil.gerarFade(ImageUtil.geraResize(
-				machinegun, 0.45, 0.27), FADE_MINIS);
-
-		miniShotgun = ImageUtil.geraResize(shotgun, 0.5);
-		lifeBarShotgun = ImageUtil.gerarFade(ImageUtil.geraResize(shotgun, 0.6,
-				0.5), FADE_MINIS);
-
-		miniSniper = ImageUtil.geraResize(sniper, 0.5);
-		lifeBarSniper = ImageUtil.gerarFade(ImageUtil.geraResize(sniper, 0.50,
-				0.4), FADE_MINIS);
-
-		miniRocket = ImageUtil.geraResize(rocket_launcher, 0.5);
-		lifeBarRocket = ImageUtil.gerarFade(ImageUtil.geraResize(
-				rocket_launcher, 0.42, 0.30), FADE_MINIS);
 
 	}
 
@@ -335,6 +416,7 @@ public class PainelTopWar {
 				desenhaObjetosDebug(graphics2d);
 				desenhaClicou(graphics2d);
 				desenhaVaiPara(graphics2d);
+				desenhaControleMudarClasse(graphics2d);
 
 			}
 
@@ -699,10 +781,10 @@ public class PainelTopWar {
 		rotBuffer = processaSobreposicoesAvatar(rotBuffer, p, area, mapaTopWar);
 		rotBuffer = processaGrade(rotBuffer, p, area, mapaTopWar);
 		graphics2d.drawImage(rotBuffer, p.x - midLarg, p.y - midLarg, null);
-//		Ellipse2D circ = new Ellipse2D.Double((double) p.x - 50.0,
-//				(double) p.y - 50.0, 100.0, 100.0);
-//		graphics2d.setColor(Color.YELLOW);
-//		graphics2d.draw(circ);
+		// Ellipse2D circ = new Ellipse2D.Double((double) p.x - 50.0,
+		// (double) p.y - 50.0, 100.0, 100.0);
+		// graphics2d.setColor(Color.YELLOW);
+		// graphics2d.draw(circ);
 	}
 
 	private void desenhaDisparoAvatarShotgun(Graphics2D graphics2d,
@@ -993,7 +1075,7 @@ public class PainelTopWar {
 	private void desenhaInfoBaixo(Graphics2D g2d) {
 		Shape limitesViewPort = limitesViewPort();
 		int x = limitesViewPort.getBounds().x
-				+ (limitesViewPort.getBounds().width - 300);
+				+ (limitesViewPort.getBounds().width - 140);
 		int y = limitesViewPort.getBounds().y
 				+ +(limitesViewPort.getBounds().height - 10);
 		Font fontOri = g2d.getFont();
@@ -1663,4 +1745,5 @@ public class PainelTopWar {
 	public void explosao(Point pontoAvatar) {
 		mapaExplosoes.put(pontoAvatar, 16);
 	}
+
 }
