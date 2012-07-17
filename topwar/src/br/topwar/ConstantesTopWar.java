@@ -65,8 +65,7 @@ public class ConstantesTopWar {
 	public static final String ANGULO = "ANGULO";
 
 	public static final int HEADSHOT = 0;
-	public static final int LIMITE_VISAO = 600;
-	public static final int MEIO_LIMITE_VISAO = LIMITE_VISAO / 2;
+	public static final int LIMITE_VISAO = 450;
 	public static final long ATRASO_REDE_PADRAO_BOTS = (long) (ATRASO_REDE_PADRAO * 1.5);
 	public static final String ASSAULT = "assault";
 	public static final int BALAS_ASSALT = 50;
