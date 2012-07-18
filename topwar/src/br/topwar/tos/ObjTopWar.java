@@ -206,8 +206,43 @@ public class ObjTopWar {
 	public void setVida(int vida) {
 		if (vida <= 0) {
 			ultimaMorte = System.currentTimeMillis();
+			if (proxClasse != null) {
+				setClasse(proxClasse);
+				setProxClasse(null);
+				setupCalsseJogador();
+			}
 		}
 		this.vida = vida;
+	}
+
+	@Transient
+	public void setupCalsseJogador() {
+		setVida(ConstantesTopWar.VIDA_COMPLETA);
+		if (ConstantesTopWar.ASSAULT.equals(getClasse())) {
+			setArma(ConstantesTopWar.ARMA_ASSAULT);
+			setBalas(ConstantesTopWar.BALAS_ASSALT);
+			setCartuchos(ConstantesTopWar.CARTUCHOS_ASSALT);
+		} else if (ConstantesTopWar.SHOTGUN.equals(getClasse())) {
+			setArma(ConstantesTopWar.ARMA_SHOTGUN);
+			setBalas(ConstantesTopWar.BALAS_SHOTGUN);
+			setCartuchos(ConstantesTopWar.CARTUCHOS_SHOTGUN);
+		} else if (ConstantesTopWar.SNIPER.equals(getClasse())) {
+			setArma(ConstantesTopWar.ARMA_SNIPER);
+			setBalas(ConstantesTopWar.BALAS_SNIPER);
+			setCartuchos(ConstantesTopWar.CARTUCHOS_SNIPER);
+		} else if (ConstantesTopWar.MACHINEGUN.equals(getClasse())) {
+			setArma(ConstantesTopWar.ARMA_MACHINEGUN);
+			setBalas(ConstantesTopWar.BALAS_MACHINEGUN);
+			setCartuchos(ConstantesTopWar.CARTUCHOS_MACHINEGUN);
+		} else if (ConstantesTopWar.ROCKET.equals(getClasse())) {
+			setArma(ConstantesTopWar.ARMA_ROCKET);
+			setBalas(ConstantesTopWar.BALAS_ROCKET);
+			setCartuchos(ConstantesTopWar.CARTUCHOS_ROCKET);
+		} else if (ConstantesTopWar.SHIELD.equals(getClasse())) {
+			setArma(ConstantesTopWar.ARMA_SHIELD);
+			setBalas(0);
+			setCartuchos(0);
+		}
 	}
 
 	public String getNomeJogador() {
