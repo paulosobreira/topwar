@@ -243,8 +243,8 @@ public class JogoServidor {
 				double distacia = GeoUtil.distaciaEntrePontos(
 						avatarTopWarJog.getPontoAvatar(),
 						avatarTopWar.getPontoAvatar());
-				if (avatarTopWar.getArma() != ConstantesTopWar.OBJ_ROCKET
-						&& distacia > ConstantesTopWar.LIMITE_VISAO) {
+				if (distacia > ConstantesTopWar.LIMITE_VISAO
+						&& !avatarTopWar.verificaObj()) {
 					continue;
 				}
 
@@ -321,12 +321,16 @@ public class JogoServidor {
 
 	public boolean campoVisao(List<Point> line, ObjTopWar avatarTopWar,
 			boolean campoVisaoTiro) {
+		if (avatarTopWar == null) {
+			return false;
+		}
+
 		if (line == null) {
 			return false;
 		}
 
-		if (avatarTopWar.getArma() != ConstantesTopWar.OBJ_ROCKET
-				&& line.size() > ConstantesTopWar.LIMITE_VISAO) {
+		if (line.size() > ConstantesTopWar.LIMITE_VISAO
+				&& !avatarTopWar.verificaObj()) {
 			return false;
 		}
 		/**
@@ -496,6 +500,9 @@ public class JogoServidor {
 			for (Iterator iterator = avatarTopWars.iterator(); iterator
 					.hasNext();) {
 				ObjTopWar avatarTopWar = (ObjTopWar) iterator.next();
+				if (avatarTopWar.verificaObj()) {
+					continue;
+				}
 				if (avatarTopWar.getNomeJogador().equals(nomeJogador)) {
 					iterator.remove();
 					return avatarTopWar;
@@ -589,6 +596,8 @@ public class JogoServidor {
 							avatarAtacando.getPontoAvatar(), pontoTiro);
 					ObjTopWar objTopWar = new ObjTopWar();
 					objTopWar.setArma(ConstantesTopWar.OBJ_ROCKET);
+					objTopWar.setNomeJogador(avatarAtacando.getNomeJogador()
+							+ "-" + ConstantesTopWar.OBJ_ROCKET);
 					objTopWar.setTime(avatarAtacando.getTime());
 					objTopWar.setAngulo(angulo);
 					synchronized (avatarTopWars) {

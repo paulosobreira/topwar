@@ -311,4 +311,9 @@ public class ObjTopWar {
 		return true;
 	}
 
+	@Transient
+	public boolean verificaObj() {
+		return ConstantesTopWar.OBJ_ROCKET == getArma();
+	}
+
 }
