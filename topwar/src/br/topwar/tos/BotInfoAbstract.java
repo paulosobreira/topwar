@@ -10,6 +10,7 @@ import java.util.List;
 import br.nnpe.GeoUtil;
 import br.nnpe.Util;
 import br.topwar.ConstantesTopWar;
+import br.topwar.serial.ObjetoMapa;
 import br.topwar.servidor.JogoServidor;
 
 public abstract class BotInfoAbstract {
@@ -130,7 +131,8 @@ public abstract class BotInfoAbstract {
 			List<Point> line = GeoUtil.drawBresenhamLine(
 					avatarTopWar.getPontoAvatar(),
 					avatarTopWarCopia.getPontoAvatar());
-			if (jogoServidor.campoVisao(line, avatarTopWar, true)) {
+			if (line.size() < ConstantesTopWar.LIMITE_VISAO
+					&& jogoServidor.campoVisao(line, avatarTopWar, true)) {
 				avatarTopWarCopia.setDistanciaDeUmAvatar(GeoUtil
 						.distaciaEntrePontos(
 								avatarTopWarCopia.getPontoAvatar(),
@@ -167,7 +169,8 @@ public abstract class BotInfoAbstract {
 			List<Point> line = GeoUtil.drawBresenhamLine(
 					avatarTopWar.getPontoAvatar(),
 					avatarTopWarCopia.getPontoAvatar());
-			if (jogoServidor.campoVisao(line, avatarTopWar, true)) {
+			if (line.size() < ConstantesTopWar.LIMITE_VISAO
+					&& jogoServidor.campoVisao(line, avatarTopWar, true)) {
 				avatarTopWarCopia.setDistanciaDeUmAvatar(GeoUtil
 						.distaciaEntrePontos(
 								avatarTopWarCopia.getPontoAvatar(),
@@ -257,4 +260,60 @@ public abstract class BotInfoAbstract {
 		contPatrulha = 0;
 		return true;
 	}
+
+	/**
+	 * Patrulhando
+	 */
+	protected void patrulhar() {
+		if (getPontoDestino() != null) {
+			return;
+		}
+
+		if (vaiGuia()) {
+			List<ObjetoMapa> objetoMapaList = jogoServidor.getMapaTopWar()
+					.getObjetoMapaList();
+			ArrayList<Point> canidatos = new ArrayList<Point>();
+			for (Iterator iterator2 = objetoMapaList.iterator(); iterator2
+					.hasNext();) {
+				ObjetoMapa objetoMapa = (ObjetoMapa) iterator2.next();
+				if (!ConstantesTopWar.BOT_GUIA.equals(objetoMapa.getEfeito())) {
+					continue;
+				}
+				Point analizar = objetoMapa.getForma().getBounds()
+						.getLocation();
+				if (analizar.equals(getUltimaGuia())) {
+					continue;
+				}
+				List<Point> drawBresenhamLine = GeoUtil.drawBresenhamLine(
+						avatarTopWar.getPontoAvatar(), analizar);
+				if (drawBresenhamLine.size() < ConstantesTopWar.LIMITE_VISAO
+						&& jogoServidor.campoVisao(drawBresenhamLine,
+								avatarTopWar, true)
+						&& drawBresenhamLine.size() > avatarTopWar
+								.getVelocidade()) {
+					canidatos.add(analizar);
+				}
+			}
+			if (!canidatos.isEmpty()) {
+				Collections.shuffle(canidatos);
+				Point point = canidatos.get(0);
+				setPontoDestino(point);
+				setUltimaGuia(point);
+			} else {
+				botVaiPontoAleatorio();
+			}
+
+		} else if (vaiBaseInimiga()) {
+			if (avatarTopWar.getTime() == ConstantesTopWar.TIME_VERMELHO) {
+				setPontoDestino(jogoServidor.getMapaTopWar().getPontoTimeAzul());
+			} else {
+				setPontoDestino(jogoServidor.getMapaTopWar()
+						.getPontoTimeVermelho());
+			}
+		} else {
+			botVaiPontoAleatorio();
+		}
+		setEstado(BotInfoAssault.PATRULHANDO);
+	}
+
 }

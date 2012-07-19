@@ -128,7 +128,8 @@ public class ControleJogosServidor {
 			String nmJogog = (String) iterator.next();
 			JogoServidor jogoServidor = mapaJogos.get(nmJogog);
 			if (jogoServidor != null) {
-				List<ObjTopWar> avatarTopWars = jogoServidor.getAvatarTopWars();
+				List<ObjTopWar> avatarTopWars = jogoServidor
+						.getAvatarTopWarsCopia();
 				for (Iterator iterator2 = avatarTopWars.iterator(); iterator2
 						.hasNext();) {
 					ObjTopWar avatarTopWar = (ObjTopWar) iterator2.next();
@@ -205,8 +206,8 @@ public class ControleJogosServidor {
 		if (avatarTopWar == null) {
 			return null;
 		}
-		return jogoServidor.atualizaAngulo(avatarTopWar, acaoClienteTopWar
-				.getAngulo());
+		return jogoServidor.atualizaAngulo(avatarTopWar,
+				acaoClienteTopWar.getAngulo());
 	}
 
 	public Object recarregar(NnpeTO nnpeTO) {
