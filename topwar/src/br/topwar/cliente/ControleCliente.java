@@ -85,23 +85,23 @@ public class ControleCliente extends NnpeChatCliente {
 		botCombo.addItem(30);
 		botCombo.addItem(40);
 		botCombo.addItem(50);
-		botPanel.setBorder(new TitledBorder("") {
+		botPanel.setBorder(new TitledBorder(""));
+		botPanel.add(new JLabel() {
 			@Override
-			public String getTitle() {
+			public String getText() {
 				return Lang.msg("bots");
 			}
-
 		});
 		botPanel.add(botCombo);
 
 		JPanel botsVsHumansPanel = new JPanel();
 		JCheckBox botsVsHumansCheckBox = new JCheckBox();
-		botsVsHumansPanel.setBorder(new TitledBorder("") {
+		botsVsHumansPanel.setBorder(new TitledBorder(""));
+		botsVsHumansPanel.add(new JLabel() {
 			@Override
-			public String getTitle() {
+			public String getText() {
 				return Lang.msg("botsVsHumanos");
 			}
-
 		});
 		botsVsHumansPanel.add(botsVsHumansCheckBox);
 
@@ -110,9 +110,9 @@ public class ControleCliente extends NnpeChatCliente {
 		painelentrada.add(botPanel);
 		painelentrada.add(botsVsHumansPanel);
 
-		int result = JOptionPane.showConfirmDialog(
-				this.nnpeChatWindow.getMainPanel(), painelentrada,
-				Lang.msg("criarJogo"), JOptionPane.YES_NO_OPTION);
+		int result = JOptionPane.showConfirmDialog(this.nnpeChatWindow
+				.getMainPanel(), painelentrada, Lang.msg("criarJogo"),
+				JOptionPane.YES_NO_OPTION);
 		if (result == JOptionPane.YES_OPTION) {
 			NnpeTO nnpeTO = new NnpeTO();
 			nnpeTO.setComando(ConstantesTopWar.CRIAR_JOGO);
@@ -159,9 +159,9 @@ public class ControleCliente extends NnpeChatCliente {
 			}
 		});
 		classesPanel.add(classesCombo);
-		int result = JOptionPane.showConfirmDialog(
-				this.nnpeChatWindow.getMainPanel(), classesPanel,
-				Lang.msg("entarJogo"), JOptionPane.YES_NO_OPTION);
+		int result = JOptionPane.showConfirmDialog(this.nnpeChatWindow
+				.getMainPanel(), classesPanel, Lang.msg("entarJogo"),
+				JOptionPane.YES_NO_OPTION);
 
 		NnpeTO nnpeTO = new NnpeTO();
 		nnpeTO.setComando(ConstantesTopWar.ENTRAR_JOGO);
@@ -244,9 +244,8 @@ public class ControleCliente extends NnpeChatCliente {
 		DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
 		acaoClienteTopWar.setNomeCliente(sessaoCliente.getNomeJogador());
 		acaoClienteTopWar.setAngulo(jogoCliente.getAngulo());
-		double distaciaEntrePontos = GeoUtil.distaciaEntrePontos(
-				jogoCliente.getPontoAvatar(),
-				jogoCliente.getPontoMouseMovendo());
+		double distaciaEntrePontos = GeoUtil.distaciaEntrePontos(jogoCliente
+				.getPontoAvatar(), jogoCliente.getPontoMouseMovendo());
 		if (jogoCliente.getArma() != ConstantesTopWar.ARMA_ROCKET)
 			distaciaEntrePontos *= 1.2;
 		acaoClienteTopWar.setRange((int) distaciaEntrePontos);

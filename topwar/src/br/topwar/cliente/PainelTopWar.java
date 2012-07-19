@@ -49,7 +49,7 @@ public class PainelTopWar {
 	private JPanel panel;
 	private JScrollPane scrollPane;
 	private MapaTopWar mapaTopWar;
-	private boolean desenhaObjetos = false;
+	private boolean desenhaObjetos = true;
 	private boolean desenhaImagens = true;
 	private Hashtable<Point, Integer> mapaExplosoes = new Hashtable<Point, Integer>();
 	private int tabCont = 0;
@@ -139,14 +139,12 @@ public class PainelTopWar {
 	private void gerarMudaClasseBtns() {
 		assautRect = new RoundRectangle2D.Double(0, 0,
 				lifeBarAssalt.getWidth(), lifeBarAssalt.getHeight(), 10, 10);
-		shotgunRect = new RoundRectangle2D.Double(0, 0,
-				lifeBarShotgun.getWidth(), lifeBarShotgun.getHeight(), 10, 10);
-		machineRect = new RoundRectangle2D.Double(0, 0,
-				lifeBarMachineGun.getWidth(), lifeBarMachineGun.getHeight(),
-				10, 10);
-		shieldRect = new RoundRectangle2D.Double(0, 0,
-				lifeBarMachineGun.getWidth(), lifeBarMachineGun.getHeight(),
-				10, 10);
+		shotgunRect = new RoundRectangle2D.Double(0, 0, lifeBarShotgun
+				.getWidth(), lifeBarShotgun.getHeight(), 10, 10);
+		machineRect = new RoundRectangle2D.Double(0, 0, lifeBarMachineGun
+				.getWidth(), lifeBarMachineGun.getHeight(), 10, 10);
+		shieldRect = new RoundRectangle2D.Double(0, 0, lifeBarMachineGun
+				.getWidth(), lifeBarMachineGun.getHeight(), 10, 10);
 		rocketRect = new RoundRectangle2D.Double(0, 0,
 				lifeBarRocket.getWidth(), lifeBarRocket.getHeight(), 10, 10);
 		sniperRect = new RoundRectangle2D.Double(0, 0,
@@ -184,8 +182,9 @@ public class PainelTopWar {
 				+ limitesViewPort.height - 60);
 		int x = o.x;
 		int y = o.y;
-		assautRect.setFrame(x, y, lifeBarAssalt.getWidth(),
-				lifeBarAssalt.getHeight());
+
+		assautRect.setFrame(x, y, lifeBarAssalt.getWidth(), lifeBarAssalt
+				.getHeight());
 		if (ConstantesTopWar.ASSAULT.equals(jogoCliente.getProxClasse())) {
 			graphics2d.setColor(Color.YELLOW);
 		} else {
@@ -196,8 +195,8 @@ public class PainelTopWar {
 
 		x += 110;
 
-		sniperRect.setFrame(x, y, lifeBarSniper.getWidth(),
-				lifeBarSniper.getHeight());
+		sniperRect.setFrame(x, y, lifeBarSniper.getWidth(), lifeBarSniper
+				.getHeight());
 		if (ConstantesTopWar.SNIPER.equals(jogoCliente.getProxClasse())) {
 			graphics2d.setColor(Color.YELLOW);
 		} else {
@@ -220,8 +219,8 @@ public class PainelTopWar {
 
 		x = o.x;
 		y += 30;
-		shotgunRect.setFrame(x, y, lifeBarShotgun.getWidth(),
-				lifeBarShotgun.getHeight());
+		shotgunRect.setFrame(x, y, lifeBarShotgun.getWidth(), lifeBarShotgun
+				.getHeight());
 		if (ConstantesTopWar.SHOTGUN.equals(jogoCliente.getProxClasse())) {
 			graphics2d.setColor(Color.YELLOW);
 		} else {
@@ -231,8 +230,8 @@ public class PainelTopWar {
 		graphics2d.drawImage(lifeBarShotgun, null, x, y);
 
 		x += 110;
-		rocketRect.setFrame(x, y, lifeBarRocket.getWidth(),
-				lifeBarRocket.getHeight());
+		rocketRect.setFrame(x, y, lifeBarRocket.getWidth(), lifeBarRocket
+				.getHeight());
 		if (ConstantesTopWar.ROCKET.equals(jogoCliente.getProxClasse())) {
 			graphics2d.setColor(Color.YELLOW);
 		} else {
@@ -241,33 +240,52 @@ public class PainelTopWar {
 		graphics2d.draw(rocketRect);
 		graphics2d.drawImage(lifeBarRocket, null, x, y);
 
+		int centerXAssaut = (int) assautRect.getCenterX();
+
+		int centerXMachine = (int) machineRect.getCenterX();
+
+		y = o.y;
+
+		graphics2d.setColor(Color.BLACK);
+		graphics2d.drawLine(centerXAssaut, y, centerXAssaut, y - 20);
+		graphics2d.drawLine(centerXMachine, y, centerXMachine, y - 20);
+
+		graphics2d.drawLine(centerXAssaut, y - 20, centerXAssaut + 20, y - 20);
+		graphics2d
+				.drawLine(centerXMachine, y - 20, centerXMachine - 20, y - 20);
+		graphics2d.setColor(ConstantesTopWar.lightWhite);
+
+		graphics2d.fillRoundRect(centerXAssaut + 20, y - 27, 180, 15, 10, 10);
+		graphics2d.setColor(Color.BLACK);
+		graphics2d.drawString(Lang.msg("escolherProxClasse"),
+				centerXAssaut + 30, y - 15);
 	}
 
 	private void gerarMinis() {
 		miniAssalt = ImageUtil.geraResize(assault, 0.5);
-		lifeBarAssalt = ImageUtil.gerarFade(
-				ImageUtil.geraResize(assault, 0.55, 0.4), FADE_MINIS);
+		lifeBarAssalt = ImageUtil.gerarFade(ImageUtil.geraResize(assault, 0.55,
+				0.4), FADE_MINIS);
 		miniKnife = ImageUtil.geraResize(knife, 0.5);
 
-		lifeBarKnife = ImageUtil.gerarFade(
-				ImageUtil.geraResize(knife, 0.85, 0.75), FADE_MINIS);
+		lifeBarKnife = ImageUtil.gerarFade(ImageUtil.geraResize(knife, 0.85,
+				0.75), FADE_MINIS);
 
 		miniHeadShot = ImageUtil.geraResize(headShot, 0.5);
 		miniMachineGun = ImageUtil.geraResize(machinegun, 0.5);
-		lifeBarMachineGun = ImageUtil.gerarFade(
-				ImageUtil.geraResize(machinegun, 0.45, 0.27), FADE_MINIS);
+		lifeBarMachineGun = ImageUtil.gerarFade(ImageUtil.geraResize(
+				machinegun, 0.45, 0.27), FADE_MINIS);
 
 		miniShotgun = ImageUtil.geraResize(shotgun, 0.5);
-		lifeBarShotgun = ImageUtil.gerarFade(
-				ImageUtil.geraResize(shotgun, 0.6, 0.5), FADE_MINIS);
+		lifeBarShotgun = ImageUtil.gerarFade(ImageUtil.geraResize(shotgun, 0.6,
+				0.5), FADE_MINIS);
 
 		miniSniper = ImageUtil.geraResize(sniper, 0.5);
-		lifeBarSniper = ImageUtil.gerarFade(
-				ImageUtil.geraResize(sniper, 0.50, 0.4), FADE_MINIS);
+		lifeBarSniper = ImageUtil.gerarFade(ImageUtil.geraResize(sniper, 0.50,
+				0.4), FADE_MINIS);
 
 		miniRocket = ImageUtil.geraResize(rocket_launcher, 0.5);
-		lifeBarRocket = ImageUtil.gerarFade(
-				ImageUtil.geraResize(rocket_launcher, 0.42, 0.30), FADE_MINIS);
+		lifeBarRocket = ImageUtil.gerarFade(ImageUtil.geraResize(
+				rocket_launcher, 0.42, 0.30), FADE_MINIS);
 
 	}
 
@@ -458,9 +476,9 @@ public class PainelTopWar {
 			private void desenhaClicou(Graphics2D graphics2d) {
 				if (System.currentTimeMillis() - jogoCliente.getClickTime() < 200) {
 					Point p = jogoCliente.getPontoMouseClicado();
-					graphics2d.drawImage(ImageUtil.geraResize(
-							OcilaCor.geraOcila("vaiaqui", vaiAqui), 1.5),
-							p.x - 12, p.y - 12, null);
+					graphics2d.drawImage(ImageUtil.geraResize(OcilaCor
+							.geraOcila("vaiaqui", vaiAqui), 1.5), p.x - 12,
+							p.y - 12, null);
 				}
 
 			}
@@ -469,9 +487,9 @@ public class PainelTopWar {
 				if (jogoCliente.getPontoMouseMovendo() != null
 						&& jogoCliente.isSeguirMouse()) {
 					Point p = jogoCliente.getPontoMouseMovendo();
-					graphics2d.drawImage(ImageUtil.geraResize(
-							OcilaCor.geraOcila("vaiaqui", vaiAqui), 1.5),
-							p.x - 12, p.y - 12, null);
+					graphics2d.drawImage(ImageUtil.geraResize(OcilaCor
+							.geraOcila("vaiaqui", vaiAqui), 1.5), p.x - 12,
+							p.y - 12, null);
 				}
 			}
 
@@ -604,7 +622,8 @@ public class PainelTopWar {
 			long millisSrv = jogoCliente.getMillisSrv();
 			long tempoUtlDisparo = avatarCliente.getTempoUtlAtaque();
 			if ((ConstantesTopWar.ARMA_ASSAULT == avatarCliente.getArma() || ConstantesTopWar.ARMA_MACHINEGUN == avatarCliente
-					.getArma()) && (millisSrv - tempoUtlDisparo) < 300) {
+					.getArma())
+					&& (millisSrv - tempoUtlDisparo) < 300) {
 				desenhaDisparoAvatarAssautMachine(graphics2d, avatarCliente,
 						avatarClientes);
 			}
@@ -892,8 +911,8 @@ public class PainelTopWar {
 		Point pFaca = GeoUtil.calculaPonto(angulo, 10, desenha);
 		AffineTransform afRotate = new AffineTransform();
 		double rad = Math.toRadians((double) angulo - 60);
-		afRotate.setToRotation(rad, knifeAtttack.getWidth() / 2,
-				knifeAtttack.getHeight() / 2);
+		afRotate.setToRotation(rad, knifeAtttack.getWidth() / 2, knifeAtttack
+				.getHeight() / 2);
 		AffineTransformOp opRotate = new AffineTransformOp(afRotate,
 				AffineTransformOp.TYPE_BILINEAR);
 		BufferedImage rotBuffer = new BufferedImage(knifeAtttack.getWidth(),
@@ -905,6 +924,7 @@ public class PainelTopWar {
 
 	protected void desenhaInfoJogo(Graphics2D g2d) {
 		desenhaInfoCima(g2d);
+		desenhaInfoControles(g2d);
 		desenhaInfoBaixo(g2d);
 		desenhaPlacar(g2d);
 		desenhaEventos(g2d);
@@ -955,8 +975,8 @@ public class PainelTopWar {
 			yTemp += arma.getHeight() + 20;
 			xJogador = x;
 
-			int larguraNmJogador = Util.calculaLarguraText(
-					eventoJogo.getAtacante(), g2d) + 10;
+			int larguraNmJogador = Util.calculaLarguraText(eventoJogo
+					.getAtacante(), g2d) + 10;
 
 			if (ConstantesTopWar.PTS_VERMELHO.equals(eventoJogo
 					.getTimeAtacante())) {
@@ -973,8 +993,8 @@ public class PainelTopWar {
 			int xArma = xJogador + larguraNmJogador + 10;
 
 			g2d.setColor(ConstantesTopWar.lightWhite);
-			g2d.fillRoundRect(xArma - 10, yTemp - (arma.getHeight() + 5),
-					arma.getWidth() + 20, arma.getHeight() + 5, 10, 10);
+			g2d.fillRoundRect(xArma - 10, yTemp - (arma.getHeight() + 5), arma
+					.getWidth() + 20, arma.getHeight() + 5, 10, 10);
 			g2d.drawImage(arma, xArma - 10, yTemp - (arma.getHeight()), null);
 
 			xJogador = xArma + arma.getWidth() + 20;
@@ -1032,16 +1052,14 @@ public class PainelTopWar {
 		g2d.drawString(Lang.msg("jogador"), xJogador, yTemp);
 
 		g2d.setColor(ConstantesTopWar.lightBlu);
-		g2d.fillRoundRect(xKills - 5, yTemp - 15,
-				Util.calculaLarguraText(Lang.msg("kills"), g2d) + 10, 20, 10,
-				10);
+		g2d.fillRoundRect(xKills - 5, yTemp - 15, Util.calculaLarguraText(Lang
+				.msg("kills"), g2d) + 10, 20, 10, 10);
 		g2d.setColor(Color.BLACK);
 		g2d.drawString(Lang.msg("kills"), xKills, yTemp);
 
 		g2d.setColor(ConstantesTopWar.lightBlu);
-		g2d.fillRoundRect(xDeaths - 5, yTemp - 15,
-				Util.calculaLarguraText(Lang.msg("deaths"), g2d) + 10, 20, 10,
-				10);
+		g2d.fillRoundRect(xDeaths - 5, yTemp - 15, Util.calculaLarguraText(Lang
+				.msg("deaths"), g2d) + 10, 20, 10, 10);
 		g2d.setColor(Color.BLACK);
 		g2d.drawString(Lang.msg("deaths"), xDeaths, yTemp);
 
@@ -1053,19 +1071,19 @@ public class PainelTopWar {
 			g2d.setColor(Color.BLACK);
 			g2d.drawString("" + placarTopWar.getJogador(), xJogador, yTemp);
 
-			g2d.drawString("" + placarTopWar.getClasse(), xJogador + 110, yTemp);
+			g2d
+					.drawString("" + placarTopWar.getClasse(), xJogador + 110,
+							yTemp);
 
 			g2d.setColor(ConstantesTopWar.lightBlu);
-			g2d.fillRoundRect(xKills - 5, yTemp - 15,
-					Util.calculaLarguraText(Lang.msg("00"), g2d) + 10, 20, 10,
-					10);
+			g2d.fillRoundRect(xKills - 5, yTemp - 15, Util.calculaLarguraText(
+					Lang.msg("00"), g2d) + 10, 20, 10, 10);
 			g2d.setColor(Color.BLACK);
 			g2d.drawString("" + placarTopWar.getKills(), xKills, yTemp);
 
 			g2d.setColor(ConstantesTopWar.lightBlu);
-			g2d.fillRoundRect(xDeaths - 5, yTemp - 15,
-					Util.calculaLarguraText(Lang.msg("00"), g2d) + 10, 20, 10,
-					10);
+			g2d.fillRoundRect(xDeaths - 5, yTemp - 15, Util.calculaLarguraText(
+					Lang.msg("00"), g2d) + 10, 20, 10, 10);
 			g2d.setColor(Color.BLACK);
 			g2d.drawString("" + placarTopWar.getDeaths(), xDeaths, yTemp);
 
@@ -1087,16 +1105,14 @@ public class PainelTopWar {
 		g2d.drawString(Lang.msg("jogador"), xJogador, yTemp);
 
 		g2d.setColor(ConstantesTopWar.lightRed);
-		g2d.fillRoundRect(xKills - 5, yTemp - 15,
-				Util.calculaLarguraText(Lang.msg("kills"), g2d) + 10, 20, 10,
-				10);
+		g2d.fillRoundRect(xKills - 5, yTemp - 15, Util.calculaLarguraText(Lang
+				.msg("kills"), g2d) + 10, 20, 10, 10);
 		g2d.setColor(Color.BLACK);
 		g2d.drawString(Lang.msg("kills"), xKills, yTemp);
 
 		g2d.setColor(ConstantesTopWar.lightRed);
-		g2d.fillRoundRect(xDeaths - 5, yTemp - 15,
-				Util.calculaLarguraText(Lang.msg("deaths"), g2d) + 10, 20, 10,
-				10);
+		g2d.fillRoundRect(xDeaths - 5, yTemp - 15, Util.calculaLarguraText(Lang
+				.msg("deaths"), g2d) + 10, 20, 10, 10);
 		g2d.setColor(Color.BLACK);
 		g2d.drawString(Lang.msg("deaths"), xDeaths, yTemp);
 
@@ -1108,19 +1124,19 @@ public class PainelTopWar {
 			g2d.setColor(Color.BLACK);
 			g2d.drawString("" + placarTopWar.getJogador(), xJogador, yTemp);
 
-			g2d.drawString("" + placarTopWar.getClasse(), xJogador + 110, yTemp);
+			g2d
+					.drawString("" + placarTopWar.getClasse(), xJogador + 110,
+							yTemp);
 
 			g2d.setColor(ConstantesTopWar.lightRed);
-			g2d.fillRoundRect(xKills - 5, yTemp - 15,
-					Util.calculaLarguraText(Lang.msg("00"), g2d) + 10, 20, 10,
-					10);
+			g2d.fillRoundRect(xKills - 5, yTemp - 15, Util.calculaLarguraText(
+					Lang.msg("00"), g2d) + 10, 20, 10, 10);
 			g2d.setColor(Color.BLACK);
 			g2d.drawString("" + placarTopWar.getKills(), xKills, yTemp);
 
 			g2d.setColor(ConstantesTopWar.lightRed);
-			g2d.fillRoundRect(xDeaths - 5, yTemp - 15,
-					Util.calculaLarguraText(Lang.msg("00"), g2d) + 10, 20, 10,
-					10);
+			g2d.fillRoundRect(xDeaths - 5, yTemp - 15, Util.calculaLarguraText(
+					Lang.msg("00"), g2d) + 10, 20, 10, 10);
 			g2d.setColor(Color.BLACK);
 			g2d.drawString("" + placarTopWar.getDeaths(), xDeaths, yTemp);
 
@@ -1128,12 +1144,81 @@ public class PainelTopWar {
 
 	}
 
+	private void desenhaInfoControles(Graphics2D g2d) {
+		Shape limitesViewPort = limitesViewPort();
+		int x = limitesViewPort.getBounds().x
+				+ (limitesViewPort.getBounds().width - 10);
+		int y = limitesViewPort.getBounds().y + 30;
+		Font fontOri = g2d.getFont();
+		g2d.setFont(new Font(fontOri.getName(), fontOri.getStyle(), 14));
+		g2d.setColor(ConstantesTopWar.lightWhite);
+
+		int largura = Util.calculaLarguraText(Lang.msg("mouseBtnEsq"), g2d) + 20;
+		g2d.fillRoundRect(x - largura, y - 20, largura, 35, 10, 10);
+		g2d.setColor(Color.BLACK);
+		g2d.drawString(Lang.msg("mouseBtnEsq"), x - largura + 10, y);
+
+		y += 40;
+
+		g2d.setColor(ConstantesTopWar.lightWhite);
+
+		largura = Util.calculaLarguraText(Lang.msg("mouseBtnDir"), g2d) + 20;
+		g2d.fillRoundRect(x - largura, y - 20, largura, 35, 10, 10);
+		g2d.setColor(Color.BLACK);
+		g2d.drawString(Lang.msg("mouseBtnDir"), x - largura + 10, y);
+
+		y += 40;
+
+		g2d.setColor(ConstantesTopWar.lightWhite);
+
+		largura = Util.calculaLarguraText(Lang.msg("asdOuSetas"), g2d) + 20;
+		g2d.fillRoundRect(x - largura, y - 20, largura, 35, 10, 10);
+		g2d.setColor(Color.BLACK);
+		g2d.drawString(Lang.msg("asdOuSetas"), x - largura + 10, y);
+
+		y += 40;
+
+		g2d.setColor(ConstantesTopWar.lightWhite);
+		largura = Util.calculaLarguraText(Lang.msg("teclaControl"), g2d) + 20;
+		g2d.fillRoundRect(x - largura, y - 20, largura, 35, 10, 10);
+		g2d.setColor(Color.BLACK);
+		g2d.drawString(Lang.msg("teclaControl"), x - largura + 10, y);
+
+		y += 40;
+
+		g2d.setColor(ConstantesTopWar.lightWhite);
+		largura = Util.calculaLarguraText(Lang.msg("espaco"), g2d) + 20;
+		g2d.fillRoundRect(x - largura, y - 20, largura, 35, 10, 10);
+		g2d.setColor(Color.BLACK);
+		g2d.drawString(Lang.msg("espaco"), x - largura + 10, y);
+
+		y += 40;
+
+		g2d.setColor(ConstantesTopWar.lightWhite);
+
+		largura = Util.calculaLarguraText(Lang.msg("r"), g2d) + 20;
+
+		g2d.fillRoundRect(x - largura, y - 20, largura, 35, 10, 10);
+		g2d.setColor(Color.BLACK);
+		g2d.drawString(Lang.msg("r"), x - largura + 10, y);
+
+		y += 40;
+
+		g2d.setColor(ConstantesTopWar.lightWhite);
+		largura = Util.calculaLarguraText(Lang.msg("p"), g2d) + 20;
+		g2d.fillRoundRect(x - largura, y - 20, largura, 35, 10, 10);
+		g2d.setColor(Color.BLACK);
+		g2d.drawString(Lang.msg("p"), x - largura + 10, y);
+
+		g2d.setFont(fontOri);
+	}
+
 	private void desenhaInfoBaixo(Graphics2D g2d) {
 		Shape limitesViewPort = limitesViewPort();
 		int x = limitesViewPort.getBounds().x
 				+ (limitesViewPort.getBounds().width - 140);
 		int y = limitesViewPort.getBounds().y
-				+ +(limitesViewPort.getBounds().height - 10);
+				+ (limitesViewPort.getBounds().height - 10);
 		Font fontOri = g2d.getFont();
 		g2d.setFont(new Font(fontOri.getName(), fontOri.getStyle(), 32));
 
@@ -1160,24 +1245,21 @@ public class PainelTopWar {
 
 		if (jogoCliente.verificaRecarregando()) {
 			g2d.setColor(OcilaCor.geraOcila("RECARREGANDO", Color.WHITE));
-			g2d.fillRoundRect(
-					x - 160,
-					y - 30,
-					Util.calculaLarguraText(Lang.msg("RECARREGANDO"), g2d) + 20,
-					35, 10, 10);
+			g2d.fillRoundRect(x - 160, y - 30, Util.calculaLarguraText(Lang
+					.msg("RECARREGANDO"), g2d) + 20, 35, 10, 10);
 			g2d.setColor(Color.BLACK);
 			g2d.drawString(Lang.msg("RECARREGANDO"), x - 150, y);
 		} else {
 			g2d.setColor(ConstantesTopWar.lightWhite);
-			g2d.fillRoundRect(xArma - 10, y - (arma.getHeight() + 5),
-					arma.getWidth() + 20, arma.getHeight() + 5, 10, 10);
+			g2d.fillRoundRect(xArma - 10, y - (arma.getHeight() + 5), arma
+					.getWidth() + 20, arma.getHeight() + 5, 10, 10);
 			if (desenhaImagens)
 				g2d.drawImage(arma, xArma - 10, y - (arma.getHeight()), null);
 
 			y -= 5;
 			g2d.setColor(ConstantesTopWar.lightWhite);
-			g2d.fillRoundRect(x - 10, y - 30,
-					Util.calculaLarguraText("888", g2d) + 20, 35, 10, 10);
+			g2d.fillRoundRect(x - 10, y - 30, Util.calculaLarguraText("888",
+					g2d) + 20, 35, 10, 10);
 			g2d.setColor(Color.BLACK);
 			g2d.drawString("" + jogoCliente.getBalas(), x, y);
 			x += 80;
@@ -1233,8 +1315,8 @@ public class PainelTopWar {
 		x += Util.calculaLarguraText("00", g2d) + 30;
 
 		g2d.setColor(ConstantesTopWar.lightRed);
-		g2d.fillRoundRect(x - 10, y - 30, redFlag.getWidth() + 20,
-				redFlag.getHeight() + 5, 10, 10);
+		g2d.fillRoundRect(x - 10, y - 30, redFlag.getWidth() + 20, redFlag
+				.getHeight() + 5, 10, 10);
 		g2d.drawImage(redFlag, x - 5, y - 25, null);
 		g2d.setFont(fontOri);
 	}
@@ -1502,8 +1584,8 @@ public class PainelTopWar {
 			if (desenha == null) {
 				return;
 			}
-			Rectangle areaAvatar = new Rectangle(desenha.x, desenha.y,
-					imgJog.getWidth(), imgJog.getHeight());
+			Rectangle areaAvatar = new Rectangle(desenha.x, desenha.y, imgJog
+					.getWidth(), imgJog.getHeight());
 			imgJog = processaSobreposicoesAvatar(imgJog, desenha, areaAvatar,
 					mapaTopWar);
 			imgJog = processaGrade(imgJog, desenha, areaAvatar, mapaTopWar);
@@ -1513,8 +1595,8 @@ public class PainelTopWar {
 			int transp = 255;
 			if (jogoCliente.getPontoAvatar() != null
 					&& !avatarCliente.isLocal()) {
-				int distacia = (int) GeoUtil.distaciaEntrePontos(
-						jogoCliente.getPontoAvatar(), pontoAvatar);
+				int distacia = (int) GeoUtil.distaciaEntrePontos(jogoCliente
+						.getPontoAvatar(), pontoAvatar);
 				if (distacia > 200) {
 					transp = (510 - (distacia - 200)) / 2;
 					if (transp > 255) {
