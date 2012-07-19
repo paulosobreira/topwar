@@ -111,9 +111,9 @@ public class JogoCliente {
 		this.controleCliente = controleCliente;
 		ObjectInputStream ois;
 		try {
-			ois = new ObjectInputStream(CarregadorRecursos
-					.recursoComoStream(dadosJogoTopWar.getNomeMapa()
-							+ ".topwar"));
+			ois = new ObjectInputStream(
+					CarregadorRecursos.recursoComoStream(dadosJogoTopWar
+							.getNomeMapa() + ".topwar"));
 			mapaTopWar = (MapaTopWar) ois.readObject();
 		} catch (Exception e1) {
 			Logger.logarExept(e1);
@@ -399,8 +399,7 @@ public class JogoCliente {
 							ret = controleCliente.moverPonto(p);
 						}
 						try {
-							Thread
-									.sleep(ConstantesTopWar.MEIO_ATRASO_REDE_PADRAO);
+							Thread.sleep(ConstantesTopWar.MEIO_ATRASO_REDE_PADRAO);
 						} catch (InterruptedException e) {
 							return;
 						}
@@ -491,7 +490,7 @@ public class JogoCliente {
 			frameTopWar.setTitle(mapaTopWar.getNome());
 			frameTopWar.getContentPane().add(painelTopWar.getScrollPane());
 		}
-		frameTopWar.setSize(800, 600);
+		frameTopWar.setSize(1024, 768);
 		frameTopWar.setVisible(true);
 		frameTopWar.addWindowListener(new WindowAdapter() {
 			@Override
@@ -593,9 +592,7 @@ public class JogoCliente {
 			}
 			eventos.add(eventoJogo);
 			utlEvento = new Long(eventoJogo.getTempo()).toString();
-
 		}
-
 		Set<ObjTopWar> avatarTopWars = (HashSet<ObjTopWar>) DadosAvatar
 				.desEmpacotarLista(retorno.get(ConstantesTopWar.LISTA_AVATARES));
 		for (Iterator iterator = avatarTopWars.iterator(); iterator.hasNext();) {

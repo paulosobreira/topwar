@@ -6,8 +6,17 @@ public class PlacarTopWar implements Serializable {
 
 	private String jogador;
 	private String time;
+	private String classe;
 	private int kills;
 	private int deaths;
+
+	public String getClasse() {
+		return classe;
+	}
+
+	public void setClasse(String classe) {
+		this.classe = classe;
+	}
 
 	public Integer ordenacao() {
 		return kills - deaths;

@@ -66,60 +66,6 @@ public class BotInfoShield extends BotInfoAbstract {
 	}
 
 	/**
-	 * Patrulhando
-	 */
-	private void patrulhar() {
-		if (getPontoDestino() != null) {
-			return;
-		}
-
-		if (vaiGuia()) {
-			List<ObjetoMapa> objetoMapaList = jogoServidor.getMapaTopWar()
-					.getObjetoMapaList();
-			ArrayList<Point> canidatos = new ArrayList<Point>();
-			for (Iterator iterator2 = objetoMapaList.iterator(); iterator2
-					.hasNext();) {
-				ObjetoMapa objetoMapa = (ObjetoMapa) iterator2.next();
-				if (!ConstantesTopWar.BOT_GUIA.equals(objetoMapa.getEfeito())) {
-					continue;
-				}
-				Point analizar = objetoMapa.getForma().getBounds()
-						.getLocation();
-				if (analizar.equals(getUltimaGuia())) {
-					continue;
-				}
-				List<Point> drawBresenhamLine = GeoUtil.drawBresenhamLine(
-						avatarTopWar.getPontoAvatar(), analizar);
-				if (jogoServidor.campoVisao(drawBresenhamLine, avatarTopWar,
-						true)
-						&& drawBresenhamLine.size() > avatarTopWar
-								.getVelocidade()) {
-					canidatos.add(analizar);
-				}
-			}
-			if (!canidatos.isEmpty()) {
-				Collections.shuffle(canidatos);
-				Point point = canidatos.get(0);
-				setPontoDestino(point);
-				setUltimaGuia(point);
-			} else {
-				botVaiPontoAleatorio();
-			}
-
-		} else if (vaiBaseInimiga()) {
-			if (avatarTopWar.getTime() == ConstantesTopWar.TIME_VERMELHO) {
-				setPontoDestino(jogoServidor.getMapaTopWar().getPontoTimeAzul());
-			} else {
-				setPontoDestino(jogoServidor.getMapaTopWar()
-						.getPontoTimeVermelho());
-			}
-		} else {
-			botVaiPontoAleatorio();
-		}
-		setEstado(BotInfoShield.PATRULHANDO);
-	}
-
-	/**
 	 * Seguir/Atacar avatar inimigo
 	 */
 	protected boolean seguirAtacarInimigo(List<ObjTopWar> avatarTopWarsCopia,
