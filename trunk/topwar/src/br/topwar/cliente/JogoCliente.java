@@ -334,7 +334,7 @@ public class JogoCliente {
 			}
 			double distaciaEntrePontos = GeoUtil.distaciaEntrePontos(p,
 					avatarCliente.getPontoAvatar());
-			if (distaciaEntrePontos < 20) {
+			if (distaciaEntrePontos < 50) {
 				return true;
 			}
 		}
