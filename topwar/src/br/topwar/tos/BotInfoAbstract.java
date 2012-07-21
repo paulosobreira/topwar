@@ -114,7 +114,7 @@ public abstract class BotInfoAbstract {
 		this.vidaUltAlvo = vidaUltAlvo;
 	}
 
-	public List<ObjTopWar> ordenaDistanciaAvatar(
+	public List<ObjTopWar> ordenaDistanciaAvatarCampoVisaoTiro(
 			List<ObjTopWar> avatarTopWarsCopia, ObjTopWar avatarTopWar,
 			JogoServidor jogoServidor) {
 		List<ObjTopWar> avataresOrdenadosDistancia = new ArrayList<ObjTopWar>();
@@ -132,7 +132,7 @@ public abstract class BotInfoAbstract {
 					avatarTopWar.getPontoAvatar(),
 					avatarTopWarCopia.getPontoAvatar());
 			if (line.size() < ConstantesTopWar.LIMITE_VISAO
-					&& jogoServidor.campoVisao(line, avatarTopWar, true)) {
+					&& jogoServidor.campoVisaoTiro(line, avatarTopWar)) {
 				avatarTopWarCopia.setDistanciaDeUmAvatar(GeoUtil
 						.distaciaEntrePontos(
 								avatarTopWarCopia.getPontoAvatar(),
@@ -215,7 +215,7 @@ public abstract class BotInfoAbstract {
 		}
 		List<ObjTopWar> avatarTopWarsCopia = jogoServidor
 				.getAvatarTopWarsCopia();
-		List<ObjTopWar> ordenaDistanciaAvatar = ordenaDistanciaAvatar(
+		List<ObjTopWar> ordenaDistanciaAvatar = ordenaDistanciaAvatarCampoVisaoTiro(
 				avatarTopWarsCopia, avatarTopWar, jogoServidor);
 		if (!ordenaDistanciaAvatar.isEmpty()) {
 			return false;

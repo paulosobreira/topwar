@@ -39,7 +39,7 @@ public class BotInfoShotGun extends BotInfoAbstract {
 		List<ObjTopWar> avatarTopWarsCopia = jogoServidor
 				.getAvatarTopWarsCopia();
 		boolean executouAcaoAtaque = false;
-		if (contPtAtual < 50) {
+		if (contPtAtual < 25) {
 			executouAcaoAtaque = seguirAtacarInimigo(avatarTopWarsCopia,
 					executouAcaoAtaque);
 		}
@@ -71,7 +71,7 @@ public class BotInfoShotGun extends BotInfoAbstract {
 	protected boolean seguirAtacarInimigo(List<ObjTopWar> avatarTopWarsCopia,
 			boolean executouAcaoAtaque) {
 
-		List<ObjTopWar> avataresOrdenadosDistancia = ordenaDistanciaAvatar(
+		List<ObjTopWar> avataresOrdenadosDistancia = ordenaDistanciaAvatarCampoVisaoTiro(
 				avatarTopWarsCopia, avatarTopWar, jogoServidor);
 		for (Iterator iterator2 = avataresOrdenadosDistancia.iterator(); iterator2
 				.hasNext();) {
@@ -96,10 +96,7 @@ public class BotInfoShotGun extends BotInfoAbstract {
 					setPontoDestino(avatarTopWarCopia.getPontoAvatar());
 				}
 			} else if (line.size() < 70
-					&& avatarTopWar.getArma() != ConstantesTopWar.ARMA_FACA
-					&& jogoServidor.verificaAndavel(
-							avatarTopWar.getPontoAvatar(),
-							avatarTopWarCopia.getPontoAvatar())) {
+					&& avatarTopWar.getArma() != ConstantesTopWar.ARMA_FACA) {
 				if (avatarTopWar.getBalas() == 0) {
 					if (avatarTopWar.getCartuchos() == 0) {
 						jogoServidor.alternarFaca(avatarTopWar);

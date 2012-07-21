@@ -70,7 +70,7 @@ public class BotInfoShield extends BotInfoAbstract {
 	 */
 	protected boolean seguirAtacarInimigo(List<ObjTopWar> avatarTopWarsCopia,
 			boolean executouAcaoAtaque) {
-		List<ObjTopWar> avataresOrdenadosDistancia = ordenaDistanciaAvatar(
+		List<ObjTopWar> avataresOrdenadosDistancia = ordenaDistanciaAvatarCampoVisaoTiro(
 				avatarTopWarsCopia, avatarTopWar, jogoServidor);
 		for (Iterator iterator2 = avataresOrdenadosDistancia.iterator(); iterator2
 				.hasNext();) {
