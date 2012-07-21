@@ -111,9 +111,9 @@ public class JogoCliente {
 		this.controleCliente = controleCliente;
 		ObjectInputStream ois;
 		try {
-			ois = new ObjectInputStream(CarregadorRecursos
-					.recursoComoStream(dadosJogoTopWar.getNomeMapa()
-							+ ".topwar"));
+			ois = new ObjectInputStream(
+					CarregadorRecursos.recursoComoStream(dadosJogoTopWar
+							.getNomeMapa() + ".topwar"));
 			mapaTopWar = (MapaTopWar) ois.readObject();
 		} catch (Exception e1) {
 			Logger.logarExept(e1);
@@ -281,13 +281,13 @@ public class JogoCliente {
 				threadMouseCliqueUnico = new Thread(new Runnable() {
 					@Override
 					public void run() {
-						while (controleCliente.verificaDelay()) {
-							try {
-								Thread.sleep(5);
-							} catch (InterruptedException e) {
-								Logger.logarExept(e);
-							}
-						}
+						// while (controleCliente.verificaDelay()) {
+						// try {
+						// Thread.sleep(5);
+						// } catch (InterruptedException e) {
+						// Logger.logarExept(e);
+						// }
+						// }
 						moverAvatarPeloMouse(pontoMouseClicado);
 					}
 				});
@@ -406,8 +406,7 @@ public class JogoCliente {
 							ret = controleCliente.moverPonto(p);
 						}
 						try {
-							Thread
-									.sleep(ConstantesTopWar.MEIO_ATRASO_REDE_PADRAO);
+							Thread.sleep(ConstantesTopWar.MEIO_ATRASO_REDE_PADRAO);
 						} catch (InterruptedException e) {
 							return;
 						}
@@ -475,6 +474,10 @@ public class JogoCliente {
 
 	public Collection<AvatarCliente> getAvatarClientes() {
 		return avatarClientes;
+	}
+
+	public JFrame getFrameTopWar() {
+		return frameTopWar;
 	}
 
 	public void iniciaJFrame() {

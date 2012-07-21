@@ -236,8 +236,12 @@ public class JogoServidor {
 				double distacia = GeoUtil.distaciaEntrePontos(
 						avatarTopWarJog.getPontoAvatar(),
 						avatarTopWar.getPontoAvatar());
-				if (distacia > ConstantesTopWar.LIMITE_VISAO
-						&& !avatarTopWar.verificaObj()) {
+				double limite = ConstantesTopWar.LIMITE_VISAO;
+				if (ConstantesTopWar.SNIPER.equals(avatarTopWar.getClasse())) {
+					limite *= 1.2;
+				}
+
+				if (distacia > limite && !avatarTopWar.verificaObj()) {
 					continue;
 				}
 				List<Point> line = GeoUtil.drawBresenhamLine(
