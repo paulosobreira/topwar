@@ -84,7 +84,7 @@ public class BotInfoAssault extends BotInfoAbstract {
 					avatarTopWar.getPontoAvatar(),
 					avatarTopWarCopia.getPontoAvatar());
 			if (line.size() < ConstantesTopWar.LIMITE_VISAO
-					&& jogoServidor.campoVisao(line, avatarTopWar, true)) {
+					&& jogoServidor.campoVisaoTiro(line, avatarTopWar)) {
 				if (!BotInfoAssault.ATACANDO.equals(getEstado())) {
 					setPontoDestino(avatarTopWarCopia.getPontoAvatar());
 				} else if ((avatarTopWar.getBalas() != 0 || avatarTopWar
@@ -116,14 +116,10 @@ public class BotInfoAssault extends BotInfoAbstract {
 						avatarTopWar.setAngulo(GeoUtil.calculaAngulo(
 								avatarTopWar.getPontoAvatar(),
 								avatarTopWarCopia.getPontoAvatar(), 90));
-
 						vidaUltAlvo = avatarTopWar.getVida();
-						if (jogoServidor.verificaAndavel(
-								avatarTopWar.getPontoAvatar(),
-								avatarTopWarCopia.getPontoAvatar()))
-							jogoServidor.atacar(avatarTopWar,
-									avatarTopWar.getAngulo(),
-									Util.inte(line.size() * 1.5));
+						jogoServidor.atacar(avatarTopWar,
+								avatarTopWar.getAngulo(),
+								Util.inte(line.size() * 1.5));
 						if (vidaUltAlvo != avatarTopWar.getVida()) {
 							executouAcaoAtaque = true;
 						} else {

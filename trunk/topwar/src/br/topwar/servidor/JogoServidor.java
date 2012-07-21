@@ -315,9 +315,14 @@ public class JogoServidor {
 		return ptsAzul;
 	}
 
-	public boolean campoVisao(List<Point> line, ObjTopWar avatarTopWar,
-			boolean campoVisaoTiro) {
-		if (avatarTopWar == null) {
+	public boolean campoVisaoTiro(List<Point> line,
+			ObjTopWar avatarTopWarObservador) {
+		return campoVisao(line, avatarTopWarObservador, true);
+	}
+
+	public boolean campoVisao(List<Point> line,
+			ObjTopWar avatarTopWarObservador, boolean campoVisaoTiro) {
+		if (avatarTopWarObservador == null) {
 			return false;
 		}
 		if (line == null) {
@@ -327,9 +332,10 @@ public class JogoServidor {
 		 * Campo Visao Jogador Meia Lua
 		 */
 		Ellipse2D ellipse2dCostas = null;
-		if (avatarTopWar != null) {
-			Point back = GeoUtil.calculaPonto(avatarTopWar.getAngulo() + 180,
-					30, avatarTopWar.getPontoAvatar());
+		if (avatarTopWarObservador != null) {
+			Point back = GeoUtil.calculaPonto(
+					avatarTopWarObservador.getAngulo() + 180, 30,
+					avatarTopWarObservador.getPontoAvatar());
 			ellipse2dCostas = new Ellipse2D.Double(back.x - 25, back.y - 25,
 					50, 50);
 		}
@@ -349,7 +355,7 @@ public class JogoServidor {
 				 * Checa objeto nao visivel para tiro
 				 */
 
-				if (campoVisaoTiro && (objetoMapa.getTransparencia() > 50)
+				if (campoVisaoTiro && (objetoMapa.getTransparencia() > 70)
 						&& objetoMapa.getForma().contains(point)) {
 					return false;
 				}
@@ -357,7 +363,7 @@ public class JogoServidor {
 				 * Checa objeto nao visivel
 				 */
 				if (!ConstantesTopWar.GRADE.equals(objetoMapa.getEfeito())
-						&& objetoMapa.getTransparencia() > 50
+						&& objetoMapa.getTransparencia() > 70
 						&& objetoMapa.getForma().contains(point)) {
 					return false;
 				}
@@ -756,8 +762,11 @@ public class JogoServidor {
 					|| ellipse2d2.contains(avatarAlvo.getPontoAvatar())
 					|| ellipse2d3.contains(avatarAlvo.getPontoAvatar())) {
 
-				if (!verificaAndavel(avatarAtirador.getPontoAvatar(),
-						avatarAlvo.getPontoAvatar())) {
+				if (!campoVisao(
+						GeoUtil.drawBresenhamLine(
+								avatarAtirador.getPontoAvatar(),
+								avatarAlvo.getPontoAvatar()), avatarAtirador,
+						true)) {
 					continue;
 				}
 				EventoJogo eventoJogo = new EventoJogo();
@@ -891,7 +900,7 @@ public class JogoServidor {
 			for (Iterator iterator = objetoMapaList.iterator(); iterator
 					.hasNext();) {
 				ObjetoMapa objetoMapa = (ObjetoMapa) iterator.next();
-				if (objetoMapa.getTransparencia() > 11
+				if (objetoMapa.getTransparencia() > 70
 						&& objetoMapa.getForma().contains(point)) {
 					if (pointAnt != null) {
 						if (balas > 0) {

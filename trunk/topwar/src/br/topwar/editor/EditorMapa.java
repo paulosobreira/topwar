@@ -448,11 +448,11 @@ public class EditorMapa {
 		g2d.setColor(Color.WHITE);
 		g2d.drawString("Transparencia = 0", limitesViewPort.x + 10,
 				limitesViewPort.y + 10);
-		g2d.drawString("Terreno Dificil % = 1 -> 10", limitesViewPort.x + 10,
+		g2d.drawString("Terreno Dificil(Ver, Anada e Atira) % = 1 -> 10", limitesViewPort.x + 10,
 				limitesViewPort.y + 25);
-		g2d.drawString("Estrutura Resistente (Ver Atraves) % = 11 -> 50",
+		g2d.drawString("Estrutura (Ver e Atira) % = 11 -> 70",
 				limitesViewPort.x + 10, limitesViewPort.y + 40);
-		g2d.drawString("Estrutura Resistente (Não Ver Atraves) % = 51 -> 100",
+		g2d.drawString("Estrutura Resistente (Ver Atraves) % = 71 -> 100",
 				limitesViewPort.x + 10, limitesViewPort.y + 55);
 		g2d.drawString("Estrutura Solida = maior que 100",
 				limitesViewPort.x + 10, limitesViewPort.y + 70);

@@ -120,12 +120,9 @@ public class BotInfoSniper extends BotInfoAbstract {
 								avatarTopWarCopia.getPontoAvatar(), 90));
 
 						vidaUltAlvo = avatarTopWar.getVida();
-						if (jogoServidor.verificaAndavel(
-								avatarTopWar.getPontoAvatar(),
-								avatarTopWarCopia.getPontoAvatar()))
-							jogoServidor.atacar(avatarTopWar,
-									avatarTopWar.getAngulo(),
-									Util.inte(line.size() * 1.5));
+						jogoServidor.atacar(avatarTopWar,
+								avatarTopWar.getAngulo(),
+								Util.inte(line.size() * 1.5));
 						if (vidaUltAlvo != avatarTopWar.getVida()) {
 							executouAcaoAtaque = true;
 						} else {

@@ -75,7 +75,7 @@ public class BotInfoRocket extends BotInfoAbstract {
 	protected boolean seguirAtacarInimigo(List<ObjTopWar> avatarTopWarsCopia,
 			boolean executouAcaoAtaque) {
 
-		List<ObjTopWar> avataresOrdenadosDistancia = ordenaDistanciaAvatar(
+		List<ObjTopWar> avataresOrdenadosDistancia = ordenaDistanciaAvatarCampoVisaoTiro(
 				avatarTopWarsCopia, avatarTopWar, jogoServidor);
 		for (Iterator iterator2 = avataresOrdenadosDistancia.iterator(); iterator2
 				.hasNext();) {
@@ -114,12 +114,8 @@ public class BotInfoRocket extends BotInfoAbstract {
 							avatarTopWar.getPontoAvatar(),
 							avatarTopWarCopia.getPontoAvatar(), 90));
 					vidaUltAlvo = avatarTopWar.getVida();
-					if (jogoServidor.verificaAndavel(
-							avatarTopWar.getPontoAvatar(),
-							avatarTopWarCopia.getPontoAvatar()))
-						jogoServidor.atacar(avatarTopWar,
-								avatarTopWar.getAngulo(),
-								Util.inte(line.size()));
+					jogoServidor.atacar(avatarTopWar, avatarTopWar.getAngulo(),
+							Util.inte(line.size()));
 					if (vidaUltAlvo != avatarTopWar.getVida()) {
 						executouAcaoAtaque = true;
 					} else {
