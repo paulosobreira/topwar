@@ -1,5 +1,7 @@
 package br.topwar.local;
 
+import javax.swing.WindowConstants;
+
 import br.topwar.ProxyComandos;
 
 public class MainFrame {
@@ -13,7 +15,11 @@ public class MainFrame {
 		proxyComandos = new ProxyComandos();
 		servidorLocal = new ServidorLocal(proxyComandos);
 		clienteLocal = new ClienteLocal(proxyComandos);
-		clienteLocal.criarJogoDepoisDeLogar();
+		if (!clienteLocal.criarJogoDepoisDeLogar()) {
+			System.exit(0);
+		}
+		clienteLocal.getJogoCliente().getFrameTopWar()
+				.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	}
 
 	public static void main(String[] args) {
