@@ -15,6 +15,7 @@ import java.awt.geom.GeneralPath;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -45,7 +46,7 @@ import br.topwar.tos.PlacarTopWar;
 
 public class PainelTopWar {
 	private static final int FADE_MINIS = 100;
-	public final static Color transp = new Color(255, 255, 255, 100);
+	public final static Color transp = new Color(255, 255, 255, 20);
 	private JogoCliente jogoCliente;
 	private JPanel panel;
 	private JScrollPane scrollPane;
@@ -1653,18 +1654,12 @@ public class PainelTopWar {
 					desenhaEscudo(graphics2d, angulo, imgJog, desenha);
 				}
 			}
-			Ellipse2D ellipse2d = new Ellipse2D.Double(desenha.x - 200,
-					desenha.y - 200, 400, 400);
 
-			BufferedImage processaSobreposicoesCampoVisao = processaSobreposicoesCampoVisao(
-					new Point(desenha.x - 200, desenha.y - 200), mapaTopWar);
-			if (processaSobreposicoesCampoVisao != null) {
-				graphics2d.drawImage(processaSobreposicoesCampoVisao,
-						desenha.x - 200, desenha.y - 200, null);
-			} else {
-				// graphics2d.setColor(PainelTopWar.transp);
-				// graphics2d.fill(ellipse2d);
-			}
+			graphics2d.setColor(PainelTopWar.transp);
+			graphics2d.fill(processaSobreposicoesCampoVisao(new Point(desenha.x
+					+ ConstantesTopWar.LARGURA_AREA_AVATAR, desenha.y
+					+ ConstantesTopWar.ALTURA_AREA_AVATAR), graphics2d,
+					mapaTopWar));
 
 			if (desenhaObjetos) {
 				graphics2d.setColor(Color.WHITE);
@@ -1874,40 +1869,84 @@ public class PainelTopWar {
 		return imgJog;
 	}
 
-	protected BufferedImage processaSobreposicoesCampoVisao(Point desenha,
-			MapaTopWar mapaTopWar) {
-		Ellipse2D ellipse2d = new Ellipse2D.Double(desenha.x, desenha.y, 400,
-				400);
-		Rectangle boundsElipse = ellipse2d.getBounds();
-		Ellipse2D ellipse2dZero = new Ellipse2D.Double(0, 0, 400, 400);
+	protected Shape processaSobreposicoesCampoVisao(Point desenha,
+			Graphics2D graphics2d, MapaTopWar mapaTopWar) {
+		List drawCircle = new ArrayList();
+		for (double i = 0; i < 360; i += 15) {
+			drawCircle.add(GeoUtil.calculaPonto(i,
+					ConstantesTopWar.LIMITE_VISAO, desenha));
+		}
+
 		List<ObjetoMapa> objetoMapaList = mapaTopWar.getObjetoMapaList();
-		BufferedImage novaImg = new BufferedImage(
-				(int) boundsElipse.getWidth(), (int) boundsElipse.getHeight(),
-				BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g2d = novaImg.createGraphics();
-		g2d.setColor(transp);
-		g2d.fill(ellipse2dZero);
-		AlphaComposite composite = AlphaComposite.getInstance(
-				AlphaComposite.CLEAR, 1);
-		g2d.setComposite(composite);
-		for (Iterator iterator = objetoMapaList.iterator(); iterator.hasNext();) {
-			ObjetoMapa objetoMapa = (ObjetoMapa) iterator.next();
-			if ((objetoMapa.getTransparencia() != 0)
-					&& objetoMapa.getForma().intersects(boundsElipse)) {
-				Rectangle bounds = objetoMapa.getForma().getBounds();
-				GeneralPath generalPath = new GeneralPath(objetoMapa.getForma());
-				AffineTransform affineTransform = AffineTransform
-						.getScaleInstance(1, 1);
-				affineTransform.setToTranslation(
-						-(bounds.x - (bounds.x - desenha.x)),
-						-(bounds.y - (bounds.y - desenha.y)));
-				Shape createTransformedShape = generalPath
-						.createTransformedShape(affineTransform);
-				g2d.fill(createTransformedShape);
+		GeneralPath generalPath = new GeneralPath();
+		boolean iniciado = false;
+		for (int i = 0; i < drawCircle.size(); i++) {
+			Point p = (Point) drawCircle.get(i);
+
+			List<Point> drawBresenhamLine = GeoUtil.drawBresenhamLine(desenha,
+					p);
+			boolean acertouCircle = false;
+			for (int j = 0; j < drawBresenhamLine.size(); j += 5) {
+				if (acertouCircle) {
+					break;
+				}
+				Point point = (Point) drawBresenhamLine.get(j);
+				boolean acertou = false;
+				for (Iterator iterator = objetoMapaList.iterator(); iterator
+						.hasNext();) {
+					ObjetoMapa objetoMapa = (ObjetoMapa) iterator.next();
+					if (ConstantesTopWar.BOT_GUIA
+							.equals(objetoMapa.getEfeito())
+							|| ConstantesTopWar.GRADE.equals(objetoMapa
+									.getEfeito())
+							|| objetoMapa.getTransparencia() == 0) {
+						continue;
+					}
+					if (objetoMapa.getForma().contains(point)) {
+						if (!iniciado) {
+							generalPath.moveTo(point.x, point.y);
+							iniciado = true;
+						} else {
+							generalPath.lineTo(point.x, point.y);
+						}
+						if (desenhaObjetos) {
+							graphics2d.setColor(Color.CYAN);
+							graphics2d.fillOval(point.x, point.y, 3, 3);
+						}
+						acertou = true;
+						acertouCircle = true;
+						break;
+					}
+				}
+				if (acertou) {
+					break;
+				}
+			}
+			if (!acertouCircle) {
+				if (!iniciado) {
+					generalPath.moveTo(p.x, p.y);
+					iniciado = true;
+				} else {
+					generalPath.lineTo(p.x, p.y);
+				}
+				if (desenhaObjetos) {
+					graphics2d.setColor(Color.MAGENTA);
+					graphics2d.fillOval(p.x, p.y, 3, 3);
+				}
 			}
 		}
-		g2d.dispose();
-		return novaImg;
+		if (!iniciado) {
+			System.out.println("!iniciado");
+			Ellipse2D ellipse2d = new Ellipse2D.Double(desenha.x - 200,
+					desenha.y - 200, 400, 400);
+			return ellipse2d;
+		} else {
+			graphics2d.setColor(transp);
+			generalPath.closePath();
+			AffineTransform affineTransform = AffineTransform.getScaleInstance(
+					1, 1);
+			return generalPath.createTransformedShape(affineTransform);
+		}
 	}
 
 	protected BufferedImage processaGrade(BufferedImage imgJog, Point desenha,

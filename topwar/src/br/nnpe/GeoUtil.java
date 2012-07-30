@@ -338,18 +338,26 @@ public class GeoUtil {
 		// + drawBresenhamLine(x1, y1, x2, y2).size());
 		// System.out.println("distaciaEntrePontos "
 		// + distaciaEntrePontos(x1, y1, x2, y2));
-		int media = 0;
-		for (int i = 0; i < 100; i++) {
-			int x1 = Util.intervalo(10, 20000);
-			int x2 = Util.intervalo(10, 20000);
-			int y1 = Util.intervalo(10, 20000);
-			int y2 = Util.intervalo(10, 20000);
-			int drawBresenhamLine = drawBresenhamLine(x1, y1, x2, y2).size();
-			int distaciaEntrePontos = (int) distaciaEntrePontos(x1, y1, x2, y2);
-			Logger.logar("distaciaEntrePontos " + distaciaEntrePontos);
-			media += (distaciaEntrePontos - drawBresenhamLine);
+		// int media = 0;
+		// for (int i = 0; i < 100; i++) {
+		// int x1 = Util.intervalo(10, 20000);
+		// int x2 = Util.intervalo(10, 20000);
+		// int y1 = Util.intervalo(10, 20000);
+		// int y2 = Util.intervalo(10, 20000);
+		// int drawBresenhamLine = drawBresenhamLine(x1, y1, x2, y2).size();
+		// int distaciaEntrePontos = (int) distaciaEntrePontos(x1, y1, x2, y2);
+		// Logger.logar("distaciaEntrePontos " + distaciaEntrePontos);
+		// media += (distaciaEntrePontos - drawBresenhamLine);
+		// }
+		// Logger.logar("media " + (media / 100));
+		int count = 0;
+		for (double i = 0; i < 360; i++) {
+			if (i % 2 == 0) {
+				continue;
+			}
+			count++;
 		}
-		Logger.logar("media " + (media / 100));
+		System.out.println(count);
 	}
 
 }
