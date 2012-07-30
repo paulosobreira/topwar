@@ -119,7 +119,7 @@ public class ControleCliente extends NnpeChatCliente {
 			nnpeTO.setSessaoCliente(sessaoCliente);
 			DadosJogoTopWar dadosJogoTopWar = new DadosJogoTopWar();
 			dadosJogoTopWar.setNomeJogador(getNomeJogador());
-			dadosJogoTopWar.setNomeMapa("mapa9");
+			dadosJogoTopWar.setNomeMapa("mapa16");
 			String classe = (String) classesCombo.getSelectedItem();
 			dadosJogoTopWar.setClasse(Lang.key(classe));
 
