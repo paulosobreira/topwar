@@ -46,12 +46,12 @@ import br.topwar.tos.PlacarTopWar;
 
 public class PainelTopWar {
 	private static final int FADE_MINIS = 100;
-	public final static Color transp = new Color(255, 255, 255, 20);
+	public final static Color transp = new Color(0, 0, 0, 50);
 	private JogoCliente jogoCliente;
 	private JPanel panel;
 	private JScrollPane scrollPane;
 	private MapaTopWar mapaTopWar;
-	private boolean desenhaObjetos = true;
+	private boolean desenhaObjetos = false;
 	private boolean desenhaImagens = true;
 	private Hashtable<Point, Integer> mapaExplosoes = new Hashtable<Point, Integer>();
 	private int tabCont = 0;
@@ -1663,45 +1663,7 @@ public class PainelTopWar {
 				}
 			}
 			if (avatarCliente.isLocal()) {
-				Ellipse2D ellipse2dCostas = null;
-				Point back = GeoUtil.calculaPonto(
-						avatarCliente.getAngulo() + 180, 30,
-						avatarCliente.getPontoAvatarSuave());
-				ellipse2dCostas = new Ellipse2D.Double(back.x - 25,
-						back.y - 25, 50, 50);
-				Shape limitesViewPort = limitesViewPort();
-				Shape visao = processaAreaCampoVisao(new Point(desenha.x
-						+ ConstantesTopWar.LARGURA_AREA_AVATAR, desenha.y
-						+ ConstantesTopWar.ALTURA_AREA_AVATAR), graphics2d,
-						mapaTopWar, ellipse2dCostas);
-				BufferedImage bufferedImage = new BufferedImage(
-						limitesViewPort.getBounds().width,
-						limitesViewPort.getBounds().height,
-						BufferedImage.TYPE_INT_ARGB);
-				Graphics2D cg = bufferedImage.createGraphics();
-				AffineTransform affineTransform = AffineTransform
-						.getScaleInstance(1, 1);
-				cg.setColor(PainelTopWar.transp);
-				cg.fill(new Rectangle(0, 0, limitesViewPort.getBounds().width,
-						limitesViewPort.getBounds().height));
-				AlphaComposite composite = AlphaComposite.getInstance(
-						AlphaComposite.CLEAR, 1);
-				cg.setComposite(composite);
-				Rectangle bounds = visao.getBounds();
-				GeneralPath generalPath = new GeneralPath(visao);
-				affineTransform
-						.setToTranslation(
-								-(bounds.x - (bounds.x - (limitesViewPort
-										.getBounds().x))),
-								-(bounds.y - (bounds.y - (limitesViewPort
-										.getBounds().y))));
-				Shape createTransformedShape = generalPath
-						.createTransformedShape(affineTransform);
-				cg.fill(createTransformedShape);
-				cg.dispose();
-				graphics2d.drawImage(bufferedImage,
-						limitesViewPort.getBounds().x,
-						limitesViewPort.getBounds().y, null);
+				desenhaCampoVisao(graphics2d, avatarCliente, desenha);
 			}
 			if (desenhaObjetos) {
 				graphics2d.setColor(Color.WHITE);
@@ -1793,6 +1755,49 @@ public class PainelTopWar {
 			graphics2d.fillOval(ar.x, ar.y, ar.width, ar.height);
 		}
 
+	}
+
+	private void desenhaCampoVisao(Graphics2D graphics2d,
+			AvatarCliente avatarCliente, Point desenha) {
+		Ellipse2D ellipse2dCostas = null;
+		Point back = GeoUtil.calculaPonto(
+				avatarCliente.getAngulo() + 180, 30,
+				avatarCliente.getPontoAvatarSuave());
+		ellipse2dCostas = new Ellipse2D.Double(back.x - 25,
+				back.y - 25, 50, 50);
+		Shape limitesViewPort = limitesViewPort();
+		Shape visao = processaAreaCampoVisao(new Point(desenha.x
+				+ ConstantesTopWar.LARGURA_AREA_AVATAR, desenha.y
+				+ ConstantesTopWar.ALTURA_AREA_AVATAR), graphics2d,
+				mapaTopWar, ellipse2dCostas);
+		BufferedImage bufferedImage = new BufferedImage(
+				limitesViewPort.getBounds().width,
+				limitesViewPort.getBounds().height,
+				BufferedImage.TYPE_INT_ARGB);
+		Graphics2D cg = bufferedImage.createGraphics();
+		AffineTransform affineTransform = AffineTransform
+				.getScaleInstance(1, 1);
+		cg.setColor(PainelTopWar.transp);
+		cg.fill(new Rectangle(0, 0, limitesViewPort.getBounds().width,
+				limitesViewPort.getBounds().height));
+		AlphaComposite composite = AlphaComposite.getInstance(
+				AlphaComposite.CLEAR, 1);
+		cg.setComposite(composite);
+		Rectangle bounds = visao.getBounds();
+		GeneralPath generalPath = new GeneralPath(visao);
+		affineTransform
+				.setToTranslation(
+						-(bounds.x - (bounds.x - (limitesViewPort
+								.getBounds().x))),
+						-(bounds.y - (bounds.y - (limitesViewPort
+								.getBounds().y))));
+		Shape createTransformedShape = generalPath
+				.createTransformedShape(affineTransform);
+		cg.fill(createTransformedShape);
+		cg.dispose();
+		graphics2d.drawImage(bufferedImage,
+				limitesViewPort.getBounds().x,
+				limitesViewPort.getBounds().y, null);
 	}
 
 	public void atualiza() {
