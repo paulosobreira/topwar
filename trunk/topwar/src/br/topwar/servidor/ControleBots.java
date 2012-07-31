@@ -50,18 +50,30 @@ public class ControleBots {
 				// while (nome == null)
 				// nome = nameGenerator.compose(Util.intervalo(2, 3));
 				DadosJogoTopWar dadosJogoTopWar = new DadosJogoTopWar();
-				if (i < 5) {
+				int botNumClass = Util.intervalo(0, 5);
+
+				switch (botNumClass) {
+				case 0:
 					dadosJogoTopWar.setClasse(ConstantesTopWar.MACHINEGUN);
-				} else if (i >= 5 && i < 15) {
+					break;
+				case 1:
 					dadosJogoTopWar.setClasse(ConstantesTopWar.SHOTGUN);
-				} else if (i >= 15 && i < 20) {
+					break;
+				case 2:
 					dadosJogoTopWar.setClasse(ConstantesTopWar.SHIELD);
-				} else if (i >= 20 && i < 25) {
+					break;
+				case 3:
 					dadosJogoTopWar.setClasse(ConstantesTopWar.SNIPER);
-				} else if (i >= 25 && i < 30) {
+					break;
+				case 4:
 					dadosJogoTopWar.setClasse(ConstantesTopWar.ROCKET);
-				} else {
+					break;
+				case 5:
 					dadosJogoTopWar.setClasse(ConstantesTopWar.ASSAULT);
+					break;
+
+				default:
+					break;
 				}
 
 				dadosJogoTopWar.setNomeJogador(nome);
