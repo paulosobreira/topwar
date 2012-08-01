@@ -304,7 +304,8 @@ public class EditorMapa {
 			public void run() {
 				Point p = scrollPane.getViewport().getViewPosition();
 				p.y += 40;
-				if (p.y + frame.getHeight() > (backGround.getHeight())) {
+				if (p.y + scrollPane.getViewport().getHeight() > (backGround
+						.getHeight())) {
 					return;
 				}
 				painelEditor.repaint();
@@ -337,7 +338,8 @@ public class EditorMapa {
 			public void run() {
 				Point p = scrollPane.getViewport().getViewPosition();
 				p.x += 40;
-				if (p.x + frame.getWidth() > (backGround.getWidth())) {
+				if (p.x + scrollPane.getViewport().getWidth() > (backGround
+						.getWidth())) {
 					return;
 				}
 				painelEditor.repaint();
@@ -448,8 +450,8 @@ public class EditorMapa {
 		g2d.setColor(Color.WHITE);
 		g2d.drawString("Transparencia = 0", limitesViewPort.x + 10,
 				limitesViewPort.y + 10);
-		g2d.drawString("Terreno Dificil(Ver, Anada e Atira) % = 1 -> 10", limitesViewPort.x + 10,
-				limitesViewPort.y + 25);
+		g2d.drawString("Terreno Dificil(Ver, Anada e Atira) % = 1 -> 10",
+				limitesViewPort.x + 10, limitesViewPort.y + 25);
 		g2d.drawString("Estrutura (Ver e Atira) % = 11 -> 70",
 				limitesViewPort.x + 10, limitesViewPort.y + 40);
 		g2d.drawString("Estrutura Resistente (Ver Atraves) % = 71 -> 100",
