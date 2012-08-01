@@ -92,6 +92,13 @@ public class ConstantesTopWar {
 	public static final int TEMPO_RECARGA_MACHINEGUN = 3000;
 	public static final int TEMPO_RECARGA_SNIPER = 5000;
 	public static final long TEMPO_RECARGA = 2000;
-	public static final long TEMPO_RECARGA_ROCKET = 3000;;
+	public static final long TEMPO_RECARGA_ROCKET = 3000;
+	public static final int VELOCIDADE_ASSAUT = 7;
+	public static final int VELOCIDADE_FACA = 8;
+	public static final int VELOCIDADE_MACHINEGUN = 5;
+	public static final int VELOCIDADE_ROCKET = 4;
+	public static final int VELOCIDADE_SHIELD = 8;
+	public static final int VELOCIDADE_SHOTGUN = 8;
+	public static final int VELOCIDADE_SNIPER = 6;
 
 }

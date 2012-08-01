@@ -259,9 +259,6 @@ public class ControleCliente extends NnpeChatCliente {
 		if (!Util.isNullOrEmpty(jogoCliente.getKillCam())) {
 			return null;
 		}
-		if (verificaDelay()) {
-			return null;
-		}
 		DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
 		acaoClienteTopWar.setNomeCliente(sessaoCliente.getNomeJogador());
 		acaoClienteTopWar.setAngulo(jogoCliente.getAngulo());
@@ -337,9 +334,6 @@ public class ControleCliente extends NnpeChatCliente {
 
 	public Object alternaFaca() {
 		if (!Util.isNullOrEmpty(jogoCliente.getKillCam())) {
-			return null;
-		}
-		if (verificaDelay()) {
 			return null;
 		}
 		DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();

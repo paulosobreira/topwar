@@ -111,9 +111,9 @@ public class JogoCliente {
 		this.controleCliente = controleCliente;
 		ObjectInputStream ois;
 		try {
-			ois = new ObjectInputStream(
-					CarregadorRecursos.recursoComoStream(dadosJogoTopWar
-							.getNomeMapa() + ".topwar"));
+			ois = new ObjectInputStream(CarregadorRecursos
+					.recursoComoStream(dadosJogoTopWar.getNomeMapa()
+							+ ".topwar"));
 			mapaTopWar = (MapaTopWar) ois.readObject();
 		} catch (Exception e1) {
 			Logger.logarExept(e1);
@@ -345,7 +345,8 @@ public class JogoCliente {
 		if (avatarClientes == null) {
 			return;
 		}
-		if (ConstantesTopWar.ARMA_FACA != arma && balas <= 0) {
+		if (ConstantesTopWar.ARMA_FACA != arma && balas <= 0
+				&& arma != ConstantesTopWar.ARMA_SHIELD) {
 			recarregar();
 			return;
 		}
@@ -355,14 +356,41 @@ public class JogoCliente {
 		threadAtacar = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				while (controleCliente.verificaDelay()) {
-					try {
-						Thread.sleep(5);
-					} catch (InterruptedException e) {
-						Logger.logarExept(e);
+				if (arma == ConstantesTopWar.ARMA_SHIELD) {
+					while (controleCliente.verificaDelay()) {
+						try {
+							Thread.sleep(5);
+						} catch (InterruptedException e) {
+							Logger.logarExept(e);
+						}
 					}
+					controleCliente.alternaFaca();
+					while (controleCliente.verificaDelay()) {
+						try {
+							Thread.sleep(5);
+						} catch (InterruptedException e) {
+							Logger.logarExept(e);
+						}
+					}
+					controleCliente.atacar();
+					while (controleCliente.verificaDelay()) {
+						try {
+							Thread.sleep(5);
+						} catch (InterruptedException e) {
+							Logger.logarExept(e);
+						}
+					}
+					controleCliente.alternaFaca();
+				} else {
+					while (controleCliente.verificaDelay()) {
+						try {
+							Thread.sleep(5);
+						} catch (InterruptedException e) {
+							Logger.logarExept(e);
+						}
+					}
+					controleCliente.atacar();
 				}
-				controleCliente.atacar();
 			}
 		});
 		threadAtacar.start();
@@ -406,7 +434,8 @@ public class JogoCliente {
 							ret = controleCliente.moverPonto(p);
 						}
 						try {
-							Thread.sleep(ConstantesTopWar.MEIO_ATRASO_REDE_PADRAO);
+							Thread
+									.sleep(ConstantesTopWar.MEIO_ATRASO_REDE_PADRAO);
 						} catch (InterruptedException e) {
 							return;
 						}
@@ -745,7 +774,7 @@ public class JogoCliente {
 
 	private void processaComandosTeclado(int keyCode) {
 		seguirMouse = false;
-		pararMovimentoMouse();
+
 		if (keyCode == KeyEvent.VK_A || keyCode == KeyEvent.VK_LEFT) {
 			if (avatarLocal != null) {
 				Point p = avatarLocal.getPontoAvatarSuave();
@@ -753,6 +782,7 @@ public class JogoCliente {
 				avatarLocal.setPontoAvatarSuave(p);
 			}
 			controleCliente.moverEsquerda();
+			pararMovimentoMouse();
 		}
 		if (keyCode == KeyEvent.VK_S || keyCode == KeyEvent.VK_DOWN) {
 			if (avatarLocal != null) {
@@ -761,6 +791,7 @@ public class JogoCliente {
 				avatarLocal.setPontoAvatarSuave(p);
 			}
 			controleCliente.moverBaixo();
+			pararMovimentoMouse();
 		}
 		if (keyCode == KeyEvent.VK_D || keyCode == KeyEvent.VK_RIGHT) {
 			if (avatarLocal != null) {
@@ -769,6 +800,7 @@ public class JogoCliente {
 				avatarLocal.setPontoAvatarSuave(p);
 			}
 			controleCliente.moverDireita();
+			pararMovimentoMouse();
 		}
 		if (keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_UP) {
 			if (avatarLocal != null) {
@@ -777,9 +809,11 @@ public class JogoCliente {
 				avatarLocal.setPontoAvatarSuave(p);
 			}
 			controleCliente.moverCima();
+			pararMovimentoMouse();
 		}
 		if (keyCode == KeyEvent.VK_SPACE) {
 			atacar();
+			pararMovimentoMouse();
 		}
 		if (keyCode == KeyEvent.VK_R) {
 			recarregar();
@@ -796,13 +830,6 @@ public class JogoCliente {
 		threadAlternaFaca = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				while (controleCliente.verificaDelay()) {
-					try {
-						Thread.sleep(5);
-					} catch (InterruptedException e) {
-						Logger.logarExept(e);
-					}
-				}
 				controleCliente.alternaFaca();
 			}
 		});

@@ -96,25 +96,25 @@ public class ObjTopWar {
 	public void setArma(int arma) {
 		switch (arma) {
 		case ConstantesTopWar.ARMA_ASSAULT:
-			setVelocidade(7);
+			setVelocidade(ConstantesTopWar.VELOCIDADE_ASSAUT);
 			break;
 		case ConstantesTopWar.ARMA_FACA:
-			setVelocidade(10);
+			setVelocidade(ConstantesTopWar.VELOCIDADE_FACA);
 			break;
 		case ConstantesTopWar.ARMA_MACHINEGUN:
-			setVelocidade(5);
+			setVelocidade(ConstantesTopWar.VELOCIDADE_MACHINEGUN);
 			break;
 		case ConstantesTopWar.ARMA_ROCKET:
-			setVelocidade(5);
+			setVelocidade(ConstantesTopWar.VELOCIDADE_ROCKET);
 			break;
 		case ConstantesTopWar.ARMA_SHIELD:
-			setVelocidade(7);
+			setVelocidade(ConstantesTopWar.VELOCIDADE_SHIELD);
 			break;
 		case ConstantesTopWar.ARMA_SHOTGUN:
-			setVelocidade(10);
+			setVelocidade(ConstantesTopWar.VELOCIDADE_SHOTGUN);
 			break;
 		case ConstantesTopWar.ARMA_SNIPER:
-			setVelocidade(5);
+			setVelocidade(ConstantesTopWar.VELOCIDADE_SNIPER);
 			break;
 		default:
 			setVelocidade(1);
@@ -206,11 +206,6 @@ public class ObjTopWar {
 	public void setVida(int vida) {
 		if (vida <= 0) {
 			ultimaMorte = System.currentTimeMillis();
-			if (proxClasse != null) {
-				setClasse(proxClasse);
-				setProxClasse(null);
-				setupCalsseJogador();
-			}
 		}
 		this.vida = vida;
 	}
@@ -218,6 +213,10 @@ public class ObjTopWar {
 	@Transient
 	public void setupCalsseJogador() {
 		setVida(ConstantesTopWar.VIDA_COMPLETA);
+		if (proxClasse != null) {
+			setClasse(proxClasse);
+			setProxClasse(null);
+		}
 		if (ConstantesTopWar.ASSAULT.equals(getClasse())) {
 			setArma(ConstantesTopWar.ARMA_ASSAULT);
 			setBalas(ConstantesTopWar.BALAS_ASSALT);
