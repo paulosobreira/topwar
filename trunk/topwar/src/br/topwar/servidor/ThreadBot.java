@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import br.nnpe.Logger;
 import br.topwar.ConstantesTopWar;
 import br.topwar.tos.BotInfoAbstract;
 import br.topwar.tos.ObjTopWar;
@@ -26,17 +27,19 @@ public class ThreadBot implements Runnable {
 	@Override
 	public void run() {
 		while (!jogoServidor.verificaFinalizado() && !interrupt) {
+			long ini = System.currentTimeMillis();
 			synchronized (myBots) {
 				for (Iterator iterator = myBots.iterator(); iterator.hasNext();) {
 					BotInfoAbstract botInfo = (BotInfoAbstract) iterator.next();
 					botInfo.processaAcaoBot();
 				}
 			}
+			long fim = (System.currentTimeMillis() - ini);
+//			Logger.logar("Processa Acao Bot Tempo " + (fim));
 			try {
-				long sleep = (ConstantesTopWar.ATRASO_REDE_PADRAO_BOTS)
-						- myBots.size();
-				if (sleep < 10) {
-					sleep = 10;
+				long sleep = (ConstantesTopWar.ATRASO_REDE_PADRAO_BOTS) - fim;
+				if (sleep < 50) {
+					sleep = 50;
 				}
 				Thread.sleep(sleep);
 			} catch (InterruptedException e) {

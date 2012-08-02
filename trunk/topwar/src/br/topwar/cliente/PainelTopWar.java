@@ -52,8 +52,8 @@ public class PainelTopWar {
 	private JPanel panel;
 	private JScrollPane scrollPane;
 	private MapaTopWar mapaTopWar;
-	private boolean desenhaObjetos = false;
-	private boolean desenhaImagens = true;
+	private boolean desenhaObjetos = true;
+	private boolean desenhaImagens = false;
 	private Hashtable<Point, Integer> mapaExplosoes = new Hashtable<Point, Integer>();
 	private int tabCont = 0;
 	private boolean gerouImagens;
@@ -510,7 +510,6 @@ public class PainelTopWar {
 				desenhaClicou(graphics2d);
 				desenhaVaiPara(graphics2d);
 				desenhaControleMudarClasse(graphics2d);
-
 			}
 
 			private void desenhaClicou(Graphics2D graphics2d) {
@@ -1057,15 +1056,15 @@ public class PainelTopWar {
 			g2d.setColor(Color.DARK_GRAY);
 			g2d.drawString("" + eventoJogo.getMorto(), xJogador, yTemp - 5);
 
-			if (eventoJogo.getArma() == 6
-					&& !desenhaImprime.contains(eventoJogo.toString())) {
-				Logger.logar("Evento Desenhado " + eventoJogo);
-				desenhaImprime.add(eventoJogo.toString());
-			}
+//			if (eventoJogo.getArma() == 6
+//					&& !desenhaImprime.contains(eventoJogo.toString())) {
+//				Logger.logar("Evento Desenhado " + eventoJogo);
+//				desenhaImprime.add(eventoJogo.toString());
+//			}
 		}
 	}
 
-	Set desenhaImprime = new HashSet();
+//	Set desenhaImprime = new HashSet();
 
 	private void desenhaPlacar(Graphics2D g2d) {
 		if (tabCont <= 0) {

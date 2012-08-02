@@ -1213,8 +1213,6 @@ public class JogoServidor {
 	}
 
 	public boolean verificaAndavel(Point pontoAvatar, Point calculaPonto) {
-		List<Point> linha = GeoUtil
-				.drawBresenhamLine(pontoAvatar, calculaPonto);
 		if (calculaPonto.x <= 0) {
 			return false;
 		}
@@ -1227,6 +1225,8 @@ public class JogoServidor {
 		if (calculaPonto.y >= mapaTopWar.getAltura()) {
 			return false;
 		}
+		List<Point> linha = GeoUtil
+				.drawBresenhamLine(pontoAvatar, calculaPonto);
 		List<ObjetoMapa> objetoMapaList = mapaTopWar.getObjetoMapaList();
 		for (int i = 0; i < linha.size(); i++) {
 			Point point = (Point) linha.get(i);

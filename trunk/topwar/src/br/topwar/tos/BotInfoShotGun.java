@@ -45,16 +45,16 @@ public class BotInfoShotGun extends BotInfoAbstract {
 		}
 		if (!executouAcaoAtaque) {
 			patrulhar();
-			List<Point> lineMove = GeoUtil.drawBresenhamLine(
-					avatarTopWar.getPontoAvatar(), getPontoDestino());
+			List<Point> lineMove = GeoUtil.drawBresenhamLine(avatarTopWar
+					.getPontoAvatar(), getPontoDestino());
 			if (lineMove.size() < avatarTopWar.getVelocidade()) {
 				setPontoDestino(null);
 			} else {
 				Point dstMover = lineMove.get(avatarTopWar.getVelocidade() - 1);
 				DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
 				acaoClienteTopWar.setPonto(dstMover);
-				acaoClienteTopWar.setAngulo(GeoUtil.calculaAngulo(
-						avatarTopWar.getPontoAvatar(), dstMover, 90));
+				acaoClienteTopWar.setAngulo(GeoUtil.calculaAngulo(avatarTopWar
+						.getPontoAvatar(), dstMover, 90));
 				String mover = (String) jogoServidor.moverPontoAvatar(
 						avatarTopWar, acaoClienteTopWar);
 				if (!ConstantesTopWar.OK.equals(mover)) {
@@ -76,9 +76,19 @@ public class BotInfoShotGun extends BotInfoAbstract {
 		for (Iterator iterator2 = avataresOrdenadosDistancia.iterator(); iterator2
 				.hasNext();) {
 			ObjTopWar avatarTopWarCopia = (ObjTopWar) iterator2.next();
-			List<Point> line = GeoUtil.drawBresenhamLine(
-					avatarTopWar.getPontoAvatar(),
-					avatarTopWarCopia.getPontoAvatar());
+			if (avatarTopWar.getTime().equals(avatarTopWarCopia.getTime())
+					|| avatarTopWarCopia.getVida() <= 0) {
+				continue;
+			}
+			if (ConstantesTopWar.OBJ_ROCKET == avatarTopWarCopia.getArma()) {
+				continue;
+			}
+			if (GeoUtil.distaciaEntrePontos(avatarTopWar.getPontoAvatar(),
+					avatarTopWarCopia.getPontoAvatar()) > ConstantesTopWar.LIMITE_VISAO) {
+				continue;
+			}
+			List<Point> line = GeoUtil.drawBresenhamLine(avatarTopWar
+					.getPontoAvatar(), avatarTopWarCopia.getPontoAvatar());
 			if (!BotInfoShotGun.ATACANDO.equals(getEstado())) {
 				setPontoDestino(avatarTopWarCopia.getPontoAvatar());
 			} else if ((avatarTopWar.getBalas() != 0 || avatarTopWar
@@ -106,9 +116,9 @@ public class BotInfoShotGun extends BotInfoAbstract {
 						executouAcaoAtaque = true;
 					}
 				} else {
-					avatarTopWar.setAngulo(GeoUtil.calculaAngulo(
-							avatarTopWar.getPontoAvatar(),
-							avatarTopWarCopia.getPontoAvatar(), 90));
+					avatarTopWar.setAngulo(GeoUtil.calculaAngulo(avatarTopWar
+							.getPontoAvatar(), avatarTopWarCopia
+							.getPontoAvatar(), 90));
 					vidaUltAlvo = avatarTopWar.getVida();
 					jogoServidor.atacar(avatarTopWar, avatarTopWar.getAngulo(),
 							line.size() + Util.intervalo(20, 40));
@@ -127,4 +137,7 @@ public class BotInfoShotGun extends BotInfoAbstract {
 		return executouAcaoAtaque;
 	}
 
+	protected boolean vaiSeguirInfiltrar() {
+		return false;
+	}
 }

@@ -44,10 +44,9 @@ public class BotInfoSniper extends BotInfoAbstract {
 					executouAcaoAtaque);
 		}
 		if (!executouAcaoAtaque) {
-			segueAvatarInfiltrante();
 			patrulhar();
-			List<Point> lineMove = GeoUtil.drawBresenhamLine(
-					avatarTopWar.getPontoAvatar(), getPontoDestino());
+			List<Point> lineMove = GeoUtil.drawBresenhamLine(avatarTopWar
+					.getPontoAvatar(), getPontoDestino());
 			if (lineMove.size() < avatarTopWar.getVelocidade()) {
 				setPontoDestino(null);
 				setEstado(null);
@@ -55,8 +54,8 @@ public class BotInfoSniper extends BotInfoAbstract {
 				Point dstMover = lineMove.get(avatarTopWar.getVelocidade() - 1);
 				DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
 				acaoClienteTopWar.setPonto(dstMover);
-				acaoClienteTopWar.setAngulo(GeoUtil.calculaAngulo(
-						avatarTopWar.getPontoAvatar(), dstMover, 90));
+				acaoClienteTopWar.setAngulo(GeoUtil.calculaAngulo(avatarTopWar
+						.getPontoAvatar(), dstMover, 90));
 				String mover = (String) jogoServidor.moverPontoAvatar(
 						avatarTopWar, acaoClienteTopWar);
 				if (!ConstantesTopWar.OK.equals(mover)) {
@@ -82,9 +81,12 @@ public class BotInfoSniper extends BotInfoAbstract {
 			if (ConstantesTopWar.OBJ_ROCKET == avatarTopWarCopia.getArma()) {
 				continue;
 			}
-			List<Point> line = GeoUtil.drawBresenhamLine(
-					avatarTopWar.getPontoAvatar(),
-					avatarTopWarCopia.getPontoAvatar());
+			if (GeoUtil.distaciaEntrePontos(avatarTopWar.getPontoAvatar(),
+					avatarTopWarCopia.getPontoAvatar()) > ConstantesTopWar.LIMITE_VISAO) {
+				continue;
+			}
+			List<Point> line = GeoUtil.drawBresenhamLine(avatarTopWar
+					.getPontoAvatar(), avatarTopWarCopia.getPontoAvatar());
 			if (line.size() < ConstantesTopWar.LIMITE_VISAO
 					&& jogoServidor.campoVisao(line, avatarTopWar, true)) {
 				if (!BotInfoSniper.ATACANDO.equals(getEstado())) {
@@ -120,9 +122,8 @@ public class BotInfoSniper extends BotInfoAbstract {
 								avatarTopWarCopia.getPontoAvatar(), 90));
 
 						vidaUltAlvo = avatarTopWar.getVida();
-						jogoServidor.atacar(avatarTopWar,
-								avatarTopWar.getAngulo(),
-								Util.inte(line.size() * 1.5));
+						jogoServidor.atacar(avatarTopWar, avatarTopWar
+								.getAngulo(), Util.inte(line.size() * 1.5));
 						if (vidaUltAlvo != avatarTopWar.getVida()) {
 							executouAcaoAtaque = true;
 						} else {

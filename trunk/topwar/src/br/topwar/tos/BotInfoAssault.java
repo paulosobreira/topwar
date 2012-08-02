@@ -45,16 +45,16 @@ public class BotInfoAssault extends BotInfoAbstract {
 		}
 		if (!executouAcaoAtaque) {
 			patrulhar();
-			List<Point> lineMove = GeoUtil.drawBresenhamLine(
-					avatarTopWar.getPontoAvatar(), getPontoDestino());
+			List<Point> lineMove = GeoUtil.drawBresenhamLine(avatarTopWar
+					.getPontoAvatar(), getPontoDestino());
 			if (lineMove.size() < avatarTopWar.getVelocidade()) {
 				setPontoDestino(null);
 			} else {
 				Point dstMover = lineMove.get(avatarTopWar.getVelocidade() - 1);
 				DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
 				acaoClienteTopWar.setPonto(dstMover);
-				acaoClienteTopWar.setAngulo(GeoUtil.calculaAngulo(
-						avatarTopWar.getPontoAvatar(), dstMover, 90));
+				acaoClienteTopWar.setAngulo(GeoUtil.calculaAngulo(avatarTopWar
+						.getPontoAvatar(), dstMover, 90));
 				String mover = (String) jogoServidor.moverPontoAvatar(
 						avatarTopWar, acaoClienteTopWar);
 				if (!ConstantesTopWar.OK.equals(mover)) {
@@ -80,11 +80,13 @@ public class BotInfoAssault extends BotInfoAbstract {
 			if (ConstantesTopWar.OBJ_ROCKET == avatarTopWarCopia.getArma()) {
 				continue;
 			}
-			List<Point> line = GeoUtil.drawBresenhamLine(
-					avatarTopWar.getPontoAvatar(),
-					avatarTopWarCopia.getPontoAvatar());
-			if (line.size() < ConstantesTopWar.LIMITE_VISAO
-					&& jogoServidor.campoVisaoTiro(line, avatarTopWar)) {
+			if (GeoUtil.distaciaEntrePontos(avatarTopWar.getPontoAvatar(),
+					avatarTopWarCopia.getPontoAvatar()) > ConstantesTopWar.LIMITE_VISAO) {
+				continue;
+			}
+			List<Point> line = GeoUtil.drawBresenhamLine(avatarTopWar
+					.getPontoAvatar(), avatarTopWarCopia.getPontoAvatar());
+			if (jogoServidor.campoVisaoTiro(line, avatarTopWar)) {
 				if (!BotInfoAssault.ATACANDO.equals(getEstado())) {
 					setPontoDestino(avatarTopWarCopia.getPontoAvatar());
 				} else if ((avatarTopWar.getBalas() != 0 || avatarTopWar
@@ -117,9 +119,8 @@ public class BotInfoAssault extends BotInfoAbstract {
 								avatarTopWar.getPontoAvatar(),
 								avatarTopWarCopia.getPontoAvatar(), 90));
 						vidaUltAlvo = avatarTopWar.getVida();
-						jogoServidor.atacar(avatarTopWar,
-								avatarTopWar.getAngulo(),
-								Util.inte(line.size() * 1.5));
+						jogoServidor.atacar(avatarTopWar, avatarTopWar
+								.getAngulo(), Util.inte(line.size() * 1.5));
 						if (vidaUltAlvo != avatarTopWar.getVida()) {
 							executouAcaoAtaque = true;
 						} else {
@@ -137,4 +138,7 @@ public class BotInfoAssault extends BotInfoAbstract {
 		return executouAcaoAtaque;
 	}
 
+	protected boolean vaiSeguirInfiltrar() {
+		return false;
+	}
 }
