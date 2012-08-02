@@ -478,7 +478,7 @@ public class JogoCliente {
 				while (jogoEmAndamento && !interrupt) {
 					try {
 						painelTopWar.atualiza();
-						Thread.sleep(40);
+						Thread.sleep(50);
 					} catch (InterruptedException e) {
 						interrupt = true;
 						Logger.logarExept(e);
@@ -627,9 +627,9 @@ public class JogoCliente {
 		EventoJogo eventoJogo = (EventoJogo) retorno
 				.get(ConstantesTopWar.EVENTO_JOGO);
 		if (eventoJogo != null) {
-			if (!eventos.contains(eventoJogo)) {
-				Logger.logar("Evento Recebido Cliente " + eventoJogo);
-			}
+//			if (!eventos.contains(eventoJogo)) {
+//				Logger.logar("Evento Recebido Cliente " + eventoJogo);
+//			}
 			eventos.add(eventoJogo);
 			utlEvento = new Long(eventoJogo.getTempo()).toString();
 		}

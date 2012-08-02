@@ -18,6 +18,7 @@ public class MainFrame {
 		if (!clienteLocal.criarJogoDepoisDeLogar()) {
 			System.exit(0);
 		}
+//		clienteLocal.getJogoCliente().getFrameTopWar().setVisible(false);
 		clienteLocal.getJogoCliente().getFrameTopWar()
 				.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	}
