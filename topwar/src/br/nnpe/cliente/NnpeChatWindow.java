@@ -70,7 +70,7 @@ public class NnpeChatWindow {
 		if (nnpeChatCliente != null) {
 			atualizaInfo();
 		}
-		
+
 	}
 
 	protected void gerarAcoes() {
@@ -111,9 +111,13 @@ public class NnpeChatWindow {
 				if (ret == JOptionPane.NO_OPTION) {
 					return;
 				}
-				nnpeChatCliente.sair();
+				acaoBotaoSair();
 			}
 		});
+	}
+
+	public void acaoBotaoSair() {
+		Logger.logar("Subscreva acaoBotaoSair()");
 	}
 
 	public JPanel getMainPanel() {

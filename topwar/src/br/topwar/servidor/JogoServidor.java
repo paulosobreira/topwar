@@ -521,7 +521,12 @@ public class JogoServidor {
 	}
 
 	public boolean verificaFinalizado() {
-		finalizado = avatarTopWars.isEmpty();
+		if (tempoRestanteJogo() <= 0) {
+			finalizado = true;
+		}
+		if (avatarTopWars.isEmpty()) {
+			finalizado = true;
+		}
 		return finalizado;
 	}
 

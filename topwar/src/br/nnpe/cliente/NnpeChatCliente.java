@@ -46,6 +46,7 @@ public abstract class NnpeChatCliente {
 						Thread.sleep(10000);
 					} catch (Exception e) {
 						Logger.logarExept(e);
+						sair();
 					}
 				}
 			}

@@ -34,6 +34,7 @@ public class ChatWindow extends NnpeChatWindow {
 	public ChatWindow(NnpeChatCliente nnpeChatCliente) {
 		super(nnpeChatCliente);
 		this.controleChatCliente = (ControleCliente) nnpeChatCliente;
+		
 	}
 
 	public void gerarLayout() {
