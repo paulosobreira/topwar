@@ -89,8 +89,8 @@ public abstract class NnpeApplet extends JApplet {
 
 			for (int i = 0; i < size; i++)
 				retorno.append(trace[i] + "\n");
-			JOptionPane.showMessageDialog(this, retorno.toString(),
-					Lang.msg("erroEnviando"), JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, retorno.toString(), Lang
+					.msg("erroEnviando"), JOptionPane.ERROR_MESSAGE);
 			Logger.logarExept(e);
 		}
 		init = true;
@@ -102,6 +102,8 @@ public abstract class NnpeApplet extends JApplet {
 
 	@Override
 	public void destroy() {
+		Logger.logar("Applet destroy()");
+		getNnpeChatCliente().sair();
 		comunicacaoServer = false;
 		super.destroy();
 	}
@@ -131,8 +133,8 @@ public abstract class NnpeApplet extends JApplet {
 					connection.setReadTimeout(latenciaReal);
 				stream.writeObject(enviar);
 				stream.flush();
-				connection.setRequestProperty("Content-Length",
-						String.valueOf(byteArrayOutputStream.size()));
+				connection.setRequestProperty("Content-Length", String
+						.valueOf(byteArrayOutputStream.size()));
 				connection.setRequestProperty("Content-Length",
 						"application/x-www-form-urlencoded");
 				connection.getOutputStream().write(
@@ -141,8 +143,8 @@ public abstract class NnpeApplet extends JApplet {
 					retorno = ZipUtil.descompactarObjeto(connection
 							.getInputStream());
 				} else {
-					ObjectInputStream ois = new ObjectInputStream(
-							connection.getInputStream());
+					ObjectInputStream ois = new ObjectInputStream(connection
+							.getInputStream());
 					retorno = ois.readObject();
 				}
 			} catch (Exception e) {
@@ -156,17 +158,16 @@ public abstract class NnpeApplet extends JApplet {
 			if (retorno instanceof ErroServ) {
 				ErroServ erroServ = (ErroServ) retorno;
 				Logger.logar(erroServ.obterErroFormatado());
-				JOptionPane.showMessageDialog(this,
-						Lang.decodeTexto(erroServ.obterErroFormatado()),
-						Lang.msg("erroRecebendo"), JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this, Lang.decodeTexto(erroServ
+						.obterErroFormatado()), Lang.msg("erroRecebendo"),
+						JOptionPane.ERROR_MESSAGE);
 				return null;
 			}
 			if (retorno instanceof MsgSrv) {
 				MsgSrv msgSrv = (MsgSrv) retorno;
-				JOptionPane.showMessageDialog(this,
-						Lang.msg(Lang.decodeTexto(msgSrv.getMessageString())),
-						Lang.msg("msgServidor"),
-						JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(this, Lang.msg(Lang
+						.decodeTexto(msgSrv.getMessageString())), Lang
+						.msg("msgServidor"), JOptionPane.INFORMATION_MESSAGE);
 				return null;
 			}
 			return retorno;
@@ -179,8 +180,8 @@ public abstract class NnpeApplet extends JApplet {
 			for (int i = 0; i < size; i++)
 				retorno.append(trace[i] + "\n");
 			Logger.logarExept(e);
-			JOptionPane.showMessageDialog(this, retorno.toString(),
-					Lang.msg("erroEnviando"), JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, retorno.toString(), Lang
+					.msg("erroEnviando"), JOptionPane.ERROR_MESSAGE);
 		}
 
 		return null;

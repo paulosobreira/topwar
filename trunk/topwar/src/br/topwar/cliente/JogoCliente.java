@@ -534,9 +534,10 @@ public class JogoCliente {
 		frameTopWar.setVisible(true);
 		frameTopWar.addWindowListener(new WindowAdapter() {
 			@Override
-			public void windowClosed(WindowEvent e) {
+			public void windowClosing(WindowEvent e) {
 				matarTodasThreads();
-				super.windowClosed(e);
+				controleCliente.sairJogo();
+				super.windowClosing(e);
 			}
 		});
 	}
@@ -556,7 +557,6 @@ public class JogoCliente {
 		} catch (Exception e) {
 			Logger.logarExept(e);
 		}
-		controleCliente.sairJogo();
 	}
 
 	private void iniciaListenerTeclado() {
@@ -627,9 +627,9 @@ public class JogoCliente {
 		EventoJogo eventoJogo = (EventoJogo) retorno
 				.get(ConstantesTopWar.EVENTO_JOGO);
 		if (eventoJogo != null) {
-//			if (!eventos.contains(eventoJogo)) {
-//				Logger.logar("Evento Recebido Cliente " + eventoJogo);
-//			}
+			// if (!eventos.contains(eventoJogo)) {
+			// Logger.logar("Evento Recebido Cliente " + eventoJogo);
+			// }
 			eventos.add(eventoJogo);
 			utlEvento = new Long(eventoJogo.getTempo()).toString();
 		}
