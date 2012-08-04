@@ -34,7 +34,7 @@ public class ChatWindow extends NnpeChatWindow {
 	public ChatWindow(NnpeChatCliente nnpeChatCliente) {
 		super(nnpeChatCliente);
 		this.controleChatCliente = (ControleCliente) nnpeChatCliente;
-		
+
 	}
 
 	public void gerarLayout() {
@@ -199,8 +199,11 @@ public class ChatWindow extends NnpeChatWindow {
 	}
 
 	public String obterJogoSelecionado() {
-		return mapaJogosAndamento.get(mapaJogosAndamento.keySet().iterator()
-				.next());
+		Object key = listaJogos.getSelectedValue();
+		if (key == null) {
+			return mapaJogosAndamento.get(mapaJogosAndamento.keySet()
+					.iterator().next());
+		}
+		return mapaJogosAndamento.get(key);
 	}
-
 }
