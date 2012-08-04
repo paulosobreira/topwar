@@ -116,7 +116,11 @@ public class ControleJogosServidor {
 			String nmJogog = (String) iterator.next();
 			JogoServidor jogoServidor = mapaJogos.get(nmJogog);
 			if (jogoServidor != null) {
-				return jogoServidor.obterAvatarTopWar(nomeCliente);
+				ObjTopWar obterAvatarTopWar = jogoServidor
+						.obterAvatarTopWar(nomeCliente);
+				if (obterAvatarTopWar != null) {
+					return obterAvatarTopWar;
+				}
 			}
 		}
 		return null;

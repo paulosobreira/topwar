@@ -31,7 +31,7 @@ public class NnpeMonitorAtividadeChat extends Thread {
 				SessaoCliente sessaoClienteRemover = null;
 				for (Iterator iter = clientes.iterator(); iter.hasNext();) {
 					SessaoCliente sessaoCliente = (SessaoCliente) iter.next();
-					if ((timeNow - sessaoCliente.getUlimaAtividade()) > 50000) {
+					if ((timeNow - sessaoCliente.getUlimaAtividade()) > 10000) {
 						sessaoClienteRemover = sessaoCliente;
 						break;
 					}

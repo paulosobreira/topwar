@@ -99,14 +99,14 @@ public class NnpeChatWindow {
 						+ "sowbreira@gmail.com \n"
 						+ "sowbreira.appspot.com/ \n" + "Janeiro de 2011 \n ";
 
-				JOptionPane.showMessageDialog(getMainPanel(), msg, Lang
-						.msg("autor"), JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(getMainPanel(), msg,
+						Lang.msg("autor"), JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 		sair.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int ret = JOptionPane.showConfirmDialog(getMainPanel(), Lang
-						.msg("confirmaSair"), Lang.msg("confirmaSair"),
+				int ret = JOptionPane.showConfirmDialog(getMainPanel(),
+						Lang.msg("confirmaSair"), Lang.msg("confirmaSair"),
 						JOptionPane.YES_NO_OPTION);
 				if (ret == JOptionPane.NO_OPTION) {
 					return;
@@ -143,7 +143,8 @@ public class NnpeChatWindow {
 			return;
 		}
 		if (!chatSet.contains(nnpeDadosChat.getDataTime())) {
-			textAreaChat.append(nnpeDadosChat.getLinhaChat() + "\n");
+			textAreaChat.append(Lang.decodeTexto(nnpeDadosChat.getLinhaChat())
+					+ "\n");
 			textAreaChat.setCaretPosition(textAreaChat.getText().length());
 			chatSet.add(nnpeDadosChat.getDataTime());
 		}
