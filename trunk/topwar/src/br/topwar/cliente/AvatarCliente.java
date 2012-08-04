@@ -22,6 +22,10 @@ public class AvatarCliente {
 	private Point pontoAvatarOld;
 	private ObjTopWar avatarTopWar;
 
+	public boolean verificaObj() {
+		return avatarTopWar.verificaObj();
+	}
+
 	public int getRangeUtlDisparo() {
 		return avatarTopWar.getRangeUtlDisparo();
 	}
