@@ -29,6 +29,8 @@ import br.nnpe.tos.NnpeTO;
 import br.topwar.ConstantesTopWar;
 import br.topwar.recursos.CarregadorRecursos;
 import br.topwar.serial.MapaTopWar;
+import br.topwar.serial.ObjetoMapa;
+import br.topwar.servidor.JogoServidor;
 import br.topwar.tos.ObjTopWar;
 import br.topwar.tos.DadosAvatar;
 import br.topwar.tos.DadosJogoTopWar;
@@ -253,7 +255,7 @@ public class JogoCliente {
 				}
 
 				if (MouseEvent.BUTTON3 == e.getButton()) {
-					alternaFaca();
+					doisCliques();
 					return;
 				}
 
@@ -281,13 +283,6 @@ public class JogoCliente {
 				threadMouseCliqueUnico = new Thread(new Runnable() {
 					@Override
 					public void run() {
-						// while (controleCliente.verificaDelay()) {
-						// try {
-						// Thread.sleep(5);
-						// } catch (InterruptedException e) {
-						// Logger.logarExept(e);
-						// }
-						// }
 						moverAvatarPeloMouse(pontoMouseClicado);
 					}
 				});
@@ -412,26 +407,35 @@ public class JogoCliente {
 
 	}
 
-	public void moverAvatarPeloMouse(final Point pontoMouseSegir) {
+	public void moverAvatarPeloMouse(final Point pontoMouseSeguir) {
 		pararMovimentoMouse();
-		if (pontoAvatar != null && pontoMouseSegir != null) {
+		if (pontoAvatar != null && pontoMouseSeguir != null) {
 			Runnable runnable = new Runnable() {
 				@Override
 				public void run() {
 					Object ret = ConstantesTopWar.OK;
+					Point seguir = pontoMouseSeguir;
 					while (vida > 0
 							&& (ConstantesTopWar.OK.equals(ret) || ConstantesTopWar.ESPERE
 									.equals(ret))
 							&& GeoUtil.distaciaEntrePontos(pontoAvatar,
-									pontoMouseSegir) > velocidade) {
+									pontoMouseSeguir) > velocidade) {
+						if (GeoUtil.distaciaEntrePontos(pontoAvatar, seguir) < velocidade) {
+							seguir = pontoMouseSeguir;
+						}
 						List<Point> line = GeoUtil.drawBresenhamLine(
-								pontoAvatar, pontoMouseSegir);
+								pontoAvatar, seguir);
 						if (line.size() > velocidade) {
 							Point p = line.get(velocidade);
 							if (GeoUtil.distaciaEntrePontos(pontoAvatar, p) > velocidade) {
 								p = line.get(velocidade - 1);
 							}
+							if (JogoServidor.verificaColisao(p, mapaTopWar)) {
+								seguir = obterPontoAleatorioAndavel(pontoAvatar);
+								continue;
+							}
 							ret = controleCliente.moverPonto(p);
+							System.out.println(ret);
 						}
 						try {
 							Thread.sleep(ConstantesTopWar.MEIO_ATRASO_REDE_PADRAO);
@@ -444,6 +448,16 @@ public class JogoCliente {
 			threadMoverMouse = new Thread(runnable);
 			threadMoverMouse.start();
 		}
+	}
+
+	public Point obterPontoAleatorioAndavel(Point pontoAvatar) {
+		Point calculaPonto = GeoUtil.calculaPonto(Util.intervalo(0, 360),
+				Util.intervalo(10, 30), pontoAvatar);
+		while (JogoServidor.verificaColisao(calculaPonto, mapaTopWar)) {
+			calculaPonto = GeoUtil.calculaPonto(Util.intervalo(0, 360),
+					Util.intervalo(10, 30), pontoAvatar);
+		}
+		return calculaPonto;
 	}
 
 	public Point getPontoAvatar() {
