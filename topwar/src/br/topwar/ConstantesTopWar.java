@@ -100,5 +100,6 @@ public class ConstantesTopWar {
 	public static final int VELOCIDADE_SHIELD = 8;
 	public static final int VELOCIDADE_SHOTGUN = 8;
 	public static final int VELOCIDADE_SNIPER = 6;
+	public static final double LIMITE_VISAO_SNIPER = LIMITE_VISAO * 1.2;
 
 }

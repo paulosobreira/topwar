@@ -237,10 +237,9 @@ public class JogoServidor {
 						avatarTopWarJog.getPontoAvatar(),
 						avatarTopWar.getPontoAvatar());
 				double limite = ConstantesTopWar.LIMITE_VISAO;
-				if (ConstantesTopWar.SNIPER.equals(avatarTopWar.getClasse())) {
-					limite *= 1.2;
+				if (ConstantesTopWar.ARMA_SNIPER == avatarTopWar.getArma()) {
+					limite = ConstantesTopWar.LIMITE_VISAO_SNIPER;
 				}
-
 				if (distacia > limite && !avatarTopWar.verificaObj()) {
 					continue;
 				}
@@ -504,7 +503,8 @@ public class JogoServidor {
 				}
 				if (avatarTopWar.getNomeJogador().equals(nomeJogador)) {
 					iterator.remove();
-					Logger.logar("Removido "+avatarTopWar.getNomeJogador()+" do jogo "+getNome());
+					Logger.logar("Removido " + avatarTopWar.getNomeJogador()
+							+ " do jogo " + getNome());
 					return avatarTopWar;
 				}
 			}

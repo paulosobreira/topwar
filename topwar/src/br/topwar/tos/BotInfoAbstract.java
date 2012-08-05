@@ -348,4 +348,17 @@ public abstract class BotInfoAbstract {
 		return false;
 	}
 
+	protected boolean atacaComFaca(ObjTopWar avatarTopWarCopia) {
+		if (avatarTopWar.getArma() != ConstantesTopWar.ARMA_FACA)
+			jogoServidor.alternarFaca(avatarTopWar);
+		boolean executouAcaoAtaque;
+		avatarTopWar.setAngulo(GeoUtil.calculaAngulo(
+				avatarTopWar.getPontoAvatar(),
+				avatarTopWarCopia.getPontoAvatar(), 90));
+		jogoServidor.atacar(avatarTopWar, avatarTopWar.getAngulo(), 0);
+		executouAcaoAtaque = true;
+		jogoServidor.alternarFaca(avatarTopWar);
+		return executouAcaoAtaque;
+	}
+
 }

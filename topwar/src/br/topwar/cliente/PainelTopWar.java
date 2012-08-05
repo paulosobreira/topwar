@@ -1141,14 +1141,14 @@ public class PainelTopWar {
 
 			g2d.setColor(ConstantesTopWar.lightBlu);
 			g2d.fillRoundRect(xKills - 5, yTemp - 15,
-					Util.calculaLarguraText(Lang.msg("00"), g2d) + 10, 20, 10,
+					Util.calculaLarguraText(Lang.msg("000"), g2d) + 10, 20, 10,
 					10);
 			g2d.setColor(Color.BLACK);
 			g2d.drawString("" + placarTopWar.getKills(), xKills, yTemp);
 
 			g2d.setColor(ConstantesTopWar.lightBlu);
 			g2d.fillRoundRect(xDeaths - 5, yTemp - 15,
-					Util.calculaLarguraText(Lang.msg("00"), g2d) + 10, 20, 10,
+					Util.calculaLarguraText(Lang.msg("000"), g2d) + 10, 20, 10,
 					10);
 			g2d.setColor(Color.BLACK);
 			g2d.drawString("" + placarTopWar.getDeaths(), xDeaths, yTemp);
@@ -1196,14 +1196,14 @@ public class PainelTopWar {
 
 			g2d.setColor(ConstantesTopWar.lightRed);
 			g2d.fillRoundRect(xKills - 5, yTemp - 15,
-					Util.calculaLarguraText(Lang.msg("00"), g2d) + 10, 20, 10,
+					Util.calculaLarguraText(Lang.msg("000"), g2d) + 10, 20, 10,
 					10);
 			g2d.setColor(Color.BLACK);
 			g2d.drawString("" + placarTopWar.getKills(), xKills, yTemp);
 
 			g2d.setColor(ConstantesTopWar.lightRed);
 			g2d.fillRoundRect(xDeaths - 5, yTemp - 15,
-					Util.calculaLarguraText(Lang.msg("00"), g2d) + 10, 20, 10,
+					Util.calculaLarguraText(Lang.msg("000"), g2d) + 10, 20, 10,
 					10);
 			g2d.setColor(Color.BLACK);
 			g2d.drawString("" + placarTopWar.getDeaths(), xDeaths, yTemp);
@@ -1356,7 +1356,7 @@ public class PainelTopWar {
 				+ limitesViewPort.getBounds().width / 2 - (larguraTimer / 2);
 		int y = limitesViewPort.getBounds().y + 40;
 
-		int larguraPlacarAzul = Util.calculaLarguraText("00", g2d) + 20;
+		int larguraPlacarAzul = Util.calculaLarguraText("000", g2d) + 20;
 		int xleft = x - (larguraPlacarAzul + 10);
 
 		g2d.setColor(ConstantesTopWar.lightBlu);
@@ -1381,11 +1381,11 @@ public class PainelTopWar {
 
 		g2d.setColor(ConstantesTopWar.lightRed);
 		g2d.fillRoundRect(x - 10, y - 30,
-				Util.calculaLarguraText("00", g2d) + 20, 35, 10, 10);
+				Util.calculaLarguraText("000", g2d) + 20, 35, 10, 10);
 		g2d.setColor(Color.DARK_GRAY);
 		g2d.drawString("" + jogoCliente.getPtsVermelho(), x, y);
 
-		x += Util.calculaLarguraText("00", g2d) + 30;
+		x += Util.calculaLarguraText("000", g2d) + 30;
 
 		g2d.setColor(ConstantesTopWar.lightRed);
 		g2d.fillRoundRect(x - 10, y - 30, redFlag.getWidth() + 20,
@@ -1807,7 +1807,7 @@ public class PainelTopWar {
 		Shape visao = processaAreaCampoVisao(new Point(desenha.x
 				+ ConstantesTopWar.LARGURA_AREA_AVATAR, desenha.y
 				+ ConstantesTopWar.ALTURA_AREA_AVATAR), graphics2d, mapaTopWar,
-				ellipse2dCostas);
+				ellipse2dCostas, avatarCliente);
 		BufferedImage bufferedImage = new BufferedImage(
 				limitesViewPort.getBounds().width,
 				limitesViewPort.getBounds().height, BufferedImage.TYPE_INT_ARGB);
@@ -1951,11 +1951,15 @@ public class PainelTopWar {
 
 	protected Shape processaAreaCampoVisao(Point desenha,
 			Graphics2D graphics2d, MapaTopWar mapaTopWar,
-			Ellipse2D ellipse2dCostas) {
+			Ellipse2D ellipse2dCostas, AvatarCliente avatarCliente) {
 		List drawCircle = new ArrayList();
+		double limiteVisao = ConstantesTopWar.LIMITE_VISAO;
+		if (ConstantesTopWar.ARMA_SNIPER == avatarCliente.getArma()) {
+			limiteVisao = ConstantesTopWar.LIMITE_VISAO_SNIPER;
+		}
+
 		for (double i = 0; i < 360; i += 10) {
-			drawCircle.add(GeoUtil.calculaPonto(i,
-					ConstantesTopWar.LIMITE_VISAO, desenha));
+			drawCircle.add(GeoUtil.calculaPonto(i, (int) limiteVisao, desenha));
 		}
 
 		List<ObjetoMapa> objetoMapaList = mapaTopWar.getObjetoMapaList();
@@ -1993,7 +1997,7 @@ public class PainelTopWar {
 							.equals(objetoMapa.getEfeito())
 							|| ConstantesTopWar.GRADE.equals(objetoMapa
 									.getEfeito())
-							|| objetoMapa.getTransparencia() < 70) {
+							|| objetoMapa.getTransparencia() < 100) {
 						continue;
 					}
 					if (objetoMapa.getForma().contains(point)) {
