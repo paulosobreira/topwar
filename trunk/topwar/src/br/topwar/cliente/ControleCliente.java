@@ -6,6 +6,7 @@ import java.awt.Point;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -56,10 +57,10 @@ public class ControleCliente extends NnpeChatCliente {
 			logar();
 			return;
 		}
-		criarJogoDepoisDeLogar();
+		criarJogoDepoisDeLogar(false);
 	}
 
-	public boolean criarJogoDepoisDeLogar() {
+	public boolean criarJogoDepoisDeLogar(boolean local) {
 
 		JPanel mapaPanel = new JPanel();
 
@@ -104,7 +105,7 @@ public class ControleCliente extends NnpeChatCliente {
 		botCombo.addItem(40);
 		botCombo.addItem(50);
 		botCombo.addItem(60);
-		botCombo.addItem(100);
+		// botCombo.addItem(200);
 		botPanel.setBorder(new TitledBorder("") {
 			@Override
 			public String getTitle() {
@@ -129,9 +130,9 @@ public class ControleCliente extends NnpeChatCliente {
 		painelentrada.add(botPanel);
 		painelentrada.add(botsVsHumansPanel);
 
-		int result = JOptionPane.showConfirmDialog(
-				this.nnpeChatWindow.getMainPanel(), painelentrada,
-				Lang.msg("criarJogo"), JOptionPane.YES_NO_OPTION);
+		int result = JOptionPane.showConfirmDialog(this.nnpeChatWindow
+				.getMainPanel(), painelentrada, Lang.msg("criarJogo"),
+				JOptionPane.YES_NO_OPTION);
 		if (result == JOptionPane.YES_OPTION) {
 			NnpeTO nnpeTO = new NnpeTO();
 			nnpeTO.setComando(ConstantesTopWar.CRIAR_JOGO);
@@ -152,8 +153,17 @@ public class ControleCliente extends NnpeChatCliente {
 			if (ret instanceof NnpeTO) {
 				nnpeTO = (NnpeTO) ret;
 				dadosJogoTopWar = (DadosJogoTopWar) nnpeTO.getData();
-				jogoCliente = new JogoCliente(dadosJogoTopWar, this);
+				if (local) {
+					jogoCliente.setDadosJogoTopWar(dadosJogoTopWar);
+				} else {
+					jogoCliente = new JogoCliente(dadosJogoTopWar, this);
+				}
 				jogoCliente.inciaJogo();
+				if (local) {
+					JFrame frameTopWar = jogoCliente.getFrameTopWar();
+					frameTopWar.setSize(1024, 768);
+					frameTopWar.setVisible(true);
+				}
 			}
 		} else {
 			return false;
@@ -184,11 +194,9 @@ public class ControleCliente extends NnpeChatCliente {
 		ChatWindow chatWindow = (ChatWindow) this.nnpeChatWindow;
 		String nomeJogoSelecionado = chatWindow.obterJogoSelecionado();
 
-		int result = JOptionPane.showConfirmDialog(
-				this.nnpeChatWindow.getMainPanel(),
-				classesPanel,
-				Lang.msg("entrarJogo") + " "
-						+ Lang.decodeTexto(nomeJogoSelecionado),
+		int result = JOptionPane.showConfirmDialog(this.nnpeChatWindow
+				.getMainPanel(), classesPanel, Lang.msg("entrarJogo") + " "
+				+ Lang.decodeTexto(nomeJogoSelecionado),
 				JOptionPane.YES_NO_OPTION);
 		if (result != JOptionPane.YES_OPTION) {
 			return;
@@ -271,9 +279,8 @@ public class ControleCliente extends NnpeChatCliente {
 		DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
 		acaoClienteTopWar.setNomeCliente(sessaoCliente.getNomeJogador());
 		acaoClienteTopWar.setAngulo(jogoCliente.getAngulo());
-		double distaciaEntrePontos = GeoUtil.distaciaEntrePontos(
-				jogoCliente.getPontoAvatar(),
-				jogoCliente.getPontoMouseMovendo());
+		double distaciaEntrePontos = GeoUtil.distaciaEntrePontos(jogoCliente
+				.getPontoAvatar(), jogoCliente.getPontoMouseMovendo());
 		if (jogoCliente.getArma() != ConstantesTopWar.ARMA_ROCKET)
 			distaciaEntrePontos *= 1.2;
 		acaoClienteTopWar.setRange((int) distaciaEntrePontos);

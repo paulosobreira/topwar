@@ -111,6 +111,12 @@ public class JogoCliente {
 			ControleCliente controleCliente) {
 		this.dadosJogoTopWar = dadosJogoTopWar;
 		this.controleCliente = controleCliente;
+	}
+
+	public void carregaMapa() {
+		if (dadosJogoTopWar == null) {
+			return;
+		}
 		ObjectInputStream ois;
 		try {
 			ois = new ObjectInputStream(CarregadorRecursos
@@ -120,16 +126,21 @@ public class JogoCliente {
 		} catch (Exception e1) {
 			Logger.logarExept(e1);
 		}
-		painelTopWar = new PainelTopWar(this);
 	}
 
 	public void inciaJogo() {
+		carregaMapa();
+		painelTopWar = new PainelTopWar(this);
 		iniciaJFrame();
 		iniciaMouseListener();
 		iniciaThreadAtualizaTela();
 		iniciaThreadAtualizaDadosServidor();
 		iniciaListenerTeclado();
 		iniciaThreadAtualizaPosAvatar();
+	}
+
+	public void setDadosJogoTopWar(DadosJogoTopWar dadosJogoTopWar) {
+		this.dadosJogoTopWar = dadosJogoTopWar;
 	}
 
 	private void iniciaThreadAtualizaPosAvatar() {
@@ -524,7 +535,8 @@ public class JogoCliente {
 
 	public void iniciaJFrame() {
 		if (frameTopWar != null && frameTopWar.isVisible()) {
-			frameTopWar.setTitle(mapaTopWar.getNome());
+			if (mapaTopWar != null)
+				frameTopWar.setTitle(mapaTopWar.getNome());
 			frameTopWar.getContentPane().add(painelTopWar.getScrollPane());
 			return;
 		}
@@ -540,8 +552,8 @@ public class JogoCliente {
 		});
 		frameTopWar.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		Cursor crossHair = new Cursor(Cursor.CROSSHAIR_CURSOR);
-		frameTopWar.setCursor(crossHair);
 		if (mapaTopWar != null) {
+			frameTopWar.setCursor(crossHair);
 			frameTopWar.setTitle(mapaTopWar.getNome());
 			frameTopWar.getContentPane().add(painelTopWar.getScrollPane());
 		}
@@ -634,9 +646,9 @@ public class JogoCliente {
 		EventoJogo eventoJogo = (EventoJogo) retorno
 				.get(ConstantesTopWar.EVENTO_JOGO);
 		if (eventoJogo != null) {
-			// if (!eventos.contains(eventoJogo)) {
-			// Logger.logar("Evento Recebido Cliente " + eventoJogo);
-			// }
+			if (!eventos.contains(eventoJogo)) {
+				Logger.logar("Evento Recebido Cliente " + eventoJogo);
+			}
 			eventos.add(eventoJogo);
 			utlEvento = new Long(eventoJogo.getTempo()).toString();
 		}
@@ -755,8 +767,9 @@ public class JogoCliente {
 			try {
 				avataresCopy.addAll(avatarClientes);
 			} catch (Exception e) {
+				avataresCopy.clear();
 				try {
-					Thread.sleep(10);
+					Thread.sleep(5);
 				} catch (InterruptedException e1) {
 				}
 			}
@@ -780,7 +793,7 @@ public class JogoCliente {
 	}
 
 	private void processaComandosTeclado(int keyCode) {
-		seguirMouse = false;
+		
 
 		if (keyCode == KeyEvent.VK_A || keyCode == KeyEvent.VK_LEFT) {
 			if (avatarLocal != null) {
@@ -790,6 +803,7 @@ public class JogoCliente {
 			}
 			controleCliente.moverEsquerda();
 			pararMovimentoMouse();
+			seguirMouse = false;
 		}
 		if (keyCode == KeyEvent.VK_S || keyCode == KeyEvent.VK_DOWN) {
 			if (avatarLocal != null) {
@@ -799,6 +813,7 @@ public class JogoCliente {
 			}
 			controleCliente.moverBaixo();
 			pararMovimentoMouse();
+			seguirMouse = false;
 		}
 		if (keyCode == KeyEvent.VK_D || keyCode == KeyEvent.VK_RIGHT) {
 			if (avatarLocal != null) {
@@ -808,6 +823,7 @@ public class JogoCliente {
 			}
 			controleCliente.moverDireita();
 			pararMovimentoMouse();
+			seguirMouse = false;
 		}
 		if (keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_UP) {
 			if (avatarLocal != null) {
@@ -817,10 +833,12 @@ public class JogoCliente {
 			}
 			controleCliente.moverCima();
 			pararMovimentoMouse();
+			seguirMouse = false;
 		}
 		if (keyCode == KeyEvent.VK_SPACE) {
 			atacar();
 			pararMovimentoMouse();
+			seguirMouse = false;
 		}
 		if (keyCode == KeyEvent.VK_R) {
 			recarregar();
