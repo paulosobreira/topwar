@@ -492,8 +492,9 @@ public class JogoServidor {
 
 	public int contarJogadores(String time) {
 		int cont = 0;
-		for (int i = 0; i < avatarTopWars.size(); i++) {
-			if (time.equals(avatarTopWars.get(i).getTime())) {
+		List<ObjTopWar> avatarTopWarsCopia = getAvatarTopWarsCopia();
+		for (int i = 0; i < avatarTopWarsCopia.size(); i++) {
+			if (time.equals(avatarTopWarsCopia.get(i).getTime())) {
 				cont++;
 			}
 		}
@@ -627,7 +628,7 @@ public class JogoServidor {
 						}
 					}
 					synchronized (avatarTopWars) {
-						avatarTopWars.remove(objTopWar);
+						avatarTopWars.remove(objTopWar.getNomeJogador());
 					}
 					Point explo = objTopWar.getPontoAvatar();
 					Ellipse2D circ = new Ellipse2D.Double(
