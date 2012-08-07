@@ -113,9 +113,9 @@ public class JogoCliente {
 		this.controleCliente = controleCliente;
 		ObjectInputStream ois;
 		try {
-			ois = new ObjectInputStream(
-					CarregadorRecursos.recursoComoStream(dadosJogoTopWar
-							.getNomeMapa() + ".topwar"));
+			ois = new ObjectInputStream(CarregadorRecursos
+					.recursoComoStream(dadosJogoTopWar.getNomeMapa()
+							+ ".topwar"));
 			mapaTopWar = (MapaTopWar) ois.readObject();
 		} catch (Exception e1) {
 			Logger.logarExept(e1);
@@ -435,10 +435,10 @@ public class JogoCliente {
 								continue;
 							}
 							ret = controleCliente.moverPonto(p);
-							System.out.println(ret);
 						}
 						try {
-							Thread.sleep(ConstantesTopWar.MEIO_ATRASO_REDE_PADRAO);
+							Thread
+									.sleep(ConstantesTopWar.MEIO_ATRASO_REDE_PADRAO);
 						} catch (InterruptedException e) {
 							return;
 						}
@@ -451,11 +451,11 @@ public class JogoCliente {
 	}
 
 	public Point obterPontoAleatorioAndavel(Point pontoAvatar) {
-		Point calculaPonto = GeoUtil.calculaPonto(Util.intervalo(0, 360),
-				Util.intervalo(10, 30), pontoAvatar);
+		Point calculaPonto = GeoUtil.calculaPonto(Util.intervalo(0, 360), Util
+				.intervalo(10, 30), pontoAvatar);
 		while (JogoServidor.verificaColisao(calculaPonto, mapaTopWar)) {
-			calculaPonto = GeoUtil.calculaPonto(Util.intervalo(0, 360),
-					Util.intervalo(10, 30), pontoAvatar);
+			calculaPonto = GeoUtil.calculaPonto(Util.intervalo(0, 360), Util
+					.intervalo(10, 30), pontoAvatar);
 		}
 		return calculaPonto;
 	}
