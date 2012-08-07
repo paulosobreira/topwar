@@ -117,7 +117,7 @@ public class ControleJogosServidor {
 			JogoServidor jogoServidor = mapaJogos.get(nmJogog);
 			if (jogoServidor != null) {
 				ObjTopWar obterAvatarTopWar = jogoServidor
-						.obterAvatarTopWar(nomeCliente);
+						.obterAvatarTopWarCopia(nomeCliente);
 				if (obterAvatarTopWar != null) {
 					return obterAvatarTopWar;
 				}
