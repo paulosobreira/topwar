@@ -18,12 +18,10 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -52,8 +50,8 @@ public class PainelTopWar {
 	private JPanel panel;
 	private JScrollPane scrollPane;
 	private MapaTopWar mapaTopWar;
-	private boolean desenhaObjetos = true;
-	private boolean desenhaImagens = false;
+	private boolean desenhaObjetos = false;
+	private boolean desenhaImagens = true;
 	private Hashtable<Point, Integer> mapaExplosoes = new Hashtable<Point, Integer>();
 	private int tabCont = 0;
 	private boolean gerouImagens;
