@@ -30,6 +30,7 @@ import br.topwar.tos.DadosJogoTopWar;
 import br.topwar.tos.EventoJogo;
 import br.topwar.tos.ObjTopWar;
 import br.topwar.tos.PlacarTopWar;
+import br.topwar.tos.RadioMsg;
 
 public class JogoServidor {
 	private DadosJogoTopWar dadosJogoTopWar;
@@ -44,6 +45,7 @@ public class JogoServidor {
 	private long inicioJogoMilis;
 	private long fimJogoMilis;
 	private Set<EventoJogo> eventos = new HashSet<EventoJogo>();
+	private List<RadioMsg> radio = new ArrayList<RadioMsg>();
 	private ControleBots controleBots;
 
 	public JogoServidor(DadosJogoTopWar dadosJogoTopWar,
@@ -172,33 +174,34 @@ public class JogoServidor {
 
 	public List<EventoJogo> getEventosCopia() {
 		List<EventoJogo> eventosCopy = new ArrayList<EventoJogo>();
-		boolean concur = false;
-		try {
-			eventosCopy.addAll(eventos);
-		} catch (Exception e) {
-			concur = true;
-			Logger.logarExept(e);
+		while (eventosCopy.isEmpty()) {
 			try {
-				Thread.sleep(10);
-			} catch (InterruptedException e1) {
-				e1.printStackTrace();
-			}
-		}
-		if (concur) {
-			while (eventosCopy.isEmpty()) {
-				try {
-					eventosCopy.addAll(eventos);
-				} catch (Exception e) {
-					Logger.logarExept(e);
-					try {
-						Thread.sleep(5);
-					} catch (InterruptedException e1) {
-						e1.printStackTrace();
-					}
+				if (eventos.isEmpty()) {
+					return eventosCopy;
 				}
+				eventosCopy.addAll(eventos);
+			} catch (Exception e) {
+				eventosCopy.clear();
+				Logger.logarExept(e);
 			}
 		}
 		return eventosCopy;
+	}
+
+	public List<RadioMsg> getRadioMsgCopia() {
+		List<RadioMsg> radiosCopy = new ArrayList<RadioMsg>();
+		while (radiosCopy.isEmpty()) {
+			try {
+				if (radio.isEmpty()) {
+					return radiosCopy;
+				}
+				radiosCopy.addAll(radio);
+			} catch (Exception e) {
+				radiosCopy.clear();
+				Logger.logarExept(e);
+			}
+		}
+		return radiosCopy;
 	}
 
 	public List<ObjTopWar> getAvatarTopWarsCopia() {
@@ -213,12 +216,12 @@ public class JogoServidor {
 				}
 			} catch (Exception e) {
 				avataresCopy.clear();
-				Logger.logarExept(e);
-				try {
-					Thread.sleep(5);
-				} catch (InterruptedException e1) {
-					e1.printStackTrace();
-				}
+				// Logger.logarExept(e);
+				// try {
+				// Thread.sleep(5);
+				// } catch (InterruptedException e1) {
+				// e1.printStackTrace();
+				// }
 			}
 		}
 		return avataresCopy;
@@ -296,8 +299,12 @@ public class JogoServidor {
 		String data = (String) nnpeTO.getData();
 		String[] split = data.split("&");
 		Long utlEvento = new Long(0);
+		Long utlRadio = new Long(0);
 		if (!Util.isNullOrEmpty(split[1])) {
 			utlEvento = new Long(split[1]);
+		}
+		if (!Util.isNullOrEmpty(split[2])) {
+			utlRadio = new Long(split[2]);
 		}
 		List<EventoJogo> eventosCopia = getEventosCopia();
 		for (Iterator iterator = eventosCopia.iterator(); iterator.hasNext();) {
@@ -307,6 +314,15 @@ public class JogoServidor {
 			}
 			if (eventoJogo.getTempo() > utlEvento) {
 				retorno.put(ConstantesTopWar.EVENTO_JOGO, eventoJogo);
+				break;
+			}
+		}
+
+		List<RadioMsg> radioMsgCopia = getRadioMsgCopia();
+		for (Iterator iterator = radioMsgCopia.iterator(); iterator.hasNext();) {
+			RadioMsg radioMsg = (RadioMsg) iterator.next();
+			if (radioMsg.getId() > utlRadio) {
+				retorno.put(ConstantesTopWar.RADIO_JOGO, radioMsg);
 				break;
 			}
 		}
@@ -1277,5 +1293,20 @@ public class JogoServidor {
 			System.out.println(iterator.next());
 		}
 
+	}
+
+	public Object radio(ObjTopWar avatarTopWar, String msg, boolean somenteTime) {
+		synchronized (radio) {
+			RadioMsg radioMsg = new RadioMsg();
+			radioMsg.setAvatar(avatarTopWar.getNomeJogador());
+			radioMsg.setMsg(msg);
+			radioMsg.setSomenteTime(somenteTime);
+			if (!radio.contains(radioMsg)) {
+				radio.add(radioMsg);
+				radioMsg.setId(radio.size());
+			}
+			Logger.logar(radioMsg.toString());
+		}
+		return ConstantesTopWar.OK;
 	}
 }

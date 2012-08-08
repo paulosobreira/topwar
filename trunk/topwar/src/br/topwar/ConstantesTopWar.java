@@ -27,6 +27,7 @@ public class ConstantesTopWar {
 	public static final String KILL_CAM = "K_C";
 	public static final String OBTER_PLCAR = "O_P";
 	public static final String EVENTO_JOGO = "E_J";
+	public static final String RADIO_JOGO = "R_J";
 	public static final String MUDAR_CLASSE = "M_C";
 
 	/**
@@ -101,5 +102,7 @@ public class ConstantesTopWar {
 	public static final int VELOCIDADE_SHOTGUN = 8;
 	public static final int VELOCIDADE_SNIPER = 6;
 	public static final double LIMITE_VISAO_SNIPER = LIMITE_VISAO * 1.2;
+	public static final String RADIO_TIME = "RADIO_TIME";
+	public static final String RADIO_TODOS = "RADIO_TODOS";
 
 }

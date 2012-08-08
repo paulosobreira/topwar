@@ -105,7 +105,7 @@ public class ControleCliente extends NnpeChatCliente {
 		botCombo.addItem(40);
 		botCombo.addItem(50);
 		botCombo.addItem(60);
-		// botCombo.addItem(200);
+		botCombo.addItem(1000);
 		botPanel.setBorder(new TitledBorder("") {
 			@Override
 			public String getTitle() {
@@ -157,12 +157,15 @@ public class ControleCliente extends NnpeChatCliente {
 					jogoCliente.setDadosJogoTopWar(dadosJogoTopWar);
 				} else {
 					jogoCliente = new JogoCliente(dadosJogoTopWar, this);
+
 				}
 				jogoCliente.inciaJogo();
 				if (local) {
 					JFrame frameTopWar = jogoCliente.getFrameTopWar();
-					frameTopWar.setSize(1024, 768);
+					frameTopWar.setSize(800, 600);
 					frameTopWar.setVisible(true);
+				} else {
+					jogoCliente.gerarRadio();
 				}
 			}
 		} else {
@@ -217,6 +220,7 @@ public class ControleCliente extends NnpeChatCliente {
 			dadosJogoTopWar = (DadosJogoTopWar) nnpeTO.getData();
 			jogoCliente = new JogoCliente(dadosJogoTopWar, this);
 			jogoCliente.inciaJogo();
+			jogoCliente.gerarRadio();
 		}
 	}
 
@@ -370,6 +374,7 @@ public class ControleCliente extends NnpeChatCliente {
 		acaoClienteTopWar.setAngulo(jogoCliente.getAngulo());
 		NnpeTO nnpeTO = new NnpeTO();
 		nnpeTO.setComando(ConstantesTopWar.OBTER_PLCAR);
+		nnpeTO.setSessaoCliente(sessaoCliente);
 		nnpeTO.setData(acaoClienteTopWar);
 		return enviarObjeto(nnpeTO);
 	}
@@ -378,9 +383,6 @@ public class ControleCliente extends NnpeChatCliente {
 		NnpeTO nnpeTO = new NnpeTO();
 		nnpeTO.setComando(ConstantesTopWar.SAIR_JOGO);
 		nnpeTO.setSessaoCliente(sessaoCliente);
-		DadosJogoTopWar dadosJogoTopWar = new DadosJogoTopWar();
-		dadosJogoTopWar.setNomeJogador(sessaoCliente.getNomeJogador());
-		nnpeTO.setData(dadosJogoTopWar);
 		Object ret = enviarObjeto(nnpeTO);
 	}
 
@@ -388,12 +390,26 @@ public class ControleCliente extends NnpeChatCliente {
 		NnpeTO nnpeTO = new NnpeTO();
 		nnpeTO.setComando(ConstantesTopWar.MUDAR_CLASSE);
 		nnpeTO.setSessaoCliente(sessaoCliente);
-		DadosJogoTopWar dadosJogoTopWar = new DadosJogoTopWar();
-		dadosJogoTopWar.setNomeJogador(sessaoCliente.getNomeJogador());
-		dadosJogoTopWar.setClasse(classe);
-		nnpeTO.setData(dadosJogoTopWar);
+		nnpeTO.setData(classe);
 		Object ret = enviarObjeto(nnpeTO);
 
+	}
+
+	public void enviaTextoRadio(String text, boolean somenteTime) {
+		if (verificaDelay()) {
+			return;
+		}
+		NnpeTO nnpeTO = new NnpeTO();
+		nnpeTO.setSessaoCliente(sessaoCliente);
+		if (somenteTime) {
+			nnpeTO.setComando(ConstantesTopWar.RADIO_TIME);
+		} else {
+			nnpeTO.setComando(ConstantesTopWar.RADIO_TODOS);
+		}
+		DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
+		nnpeTO.setData(text);
+		Object ret = enviarObjeto(nnpeTO);
+		ultAcao = System.currentTimeMillis();
 	}
 
 }
