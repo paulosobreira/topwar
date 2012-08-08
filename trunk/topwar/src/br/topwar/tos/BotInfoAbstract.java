@@ -305,19 +305,24 @@ public abstract class BotInfoAbstract {
 				if (analizar.equals(getUltimaGuia())) {
 					continue;
 				}
-				List<Point> drawBresenhamLine = GeoUtil.drawBresenhamLine(
-						avatarTopWar.getPontoAvatar(), analizar);
-				if (drawBresenhamLine.size() < ConstantesTopWar.LIMITE_VISAO
-						&& jogoServidor.campoVisao(drawBresenhamLine,
-								avatarTopWar, true)
-						&& drawBresenhamLine.size() > avatarTopWar
-								.getVelocidade()) {
-					canidatos.add(analizar);
+				if (GeoUtil.distaciaEntrePontos(avatarTopWar.getPontoAvatar(),
+						analizar) < ConstantesTopWar.LIMITE_VISAO) {
+					List<Point> drawBresenhamLine = GeoUtil.drawBresenhamLine(
+							avatarTopWar.getPontoAvatar(), analizar);
+					if (ultimaGuia == null
+							|| jogoServidor.campoVisao(drawBresenhamLine,
+									avatarTopWar, true)
+							&& drawBresenhamLine.size() > avatarTopWar
+									.getVelocidade()) {
+						canidatos.add(analizar);
+					}
 				}
 			}
 			if (!canidatos.isEmpty()) {
+
 				Collections.shuffle(canidatos);
-				Point point = canidatos.get(0);
+				Point point = canidatos.get(Util.intervalo(0,
+						canidatos.size() - 1));
 				setPontoDestino(point);
 				setUltimaGuia(point);
 			} else {
@@ -338,6 +343,9 @@ public abstract class BotInfoAbstract {
 	}
 
 	protected boolean vaiSeguirInfiltrar() {
+		if (ultimaGuia == null) {
+			return false;
+		}
 		if (seguindo == null || seguindo.getVida() < 0) {
 			return true;
 		}
