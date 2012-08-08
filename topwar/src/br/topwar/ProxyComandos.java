@@ -42,6 +42,10 @@ public class ProxyComandos extends NnpeProxyComandos {
 			return alternarFaca(nnpeTO);
 		} else if (ConstantesTopWar.RECARREGAR.equals(nnpeTO.getComando())) {
 			return recarregar(nnpeTO);
+		} else if (ConstantesTopWar.RADIO_TODOS.equals(nnpeTO.getComando())) {
+			return radioTodos(nnpeTO);
+		} else if (ConstantesTopWar.RADIO_TIME.equals(nnpeTO.getComando())) {
+			return radioTime(nnpeTO);
 		} else if (ConstantesTopWar.MUDAR_CLASSE.equals(nnpeTO.getComando())) {
 			return mudarClasse(nnpeTO);
 		} else if (ConstantesTopWar.ENTRAR_JOGO.equals(nnpeTO.getComando())) {
@@ -55,6 +59,14 @@ public class ProxyComandos extends NnpeProxyComandos {
 		} else {
 			return super.processarObjeto(object);
 		}
+	}
+
+	private Object radioTime(NnpeTO nnpeTO) {
+		return controleJogosServidor.radio(nnpeTO, true);
+	}
+
+	private Object radioTodos(NnpeTO nnpeTO) {
+		return controleJogosServidor.radio(nnpeTO, false);
 	}
 
 	private Object mudarClasse(NnpeTO nnpeTO) {

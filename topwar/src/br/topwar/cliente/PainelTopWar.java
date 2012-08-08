@@ -52,6 +52,7 @@ public class PainelTopWar {
 	private MapaTopWar mapaTopWar;
 	private boolean desenhaObjetos = false;
 	private boolean desenhaImagens = true;
+	private boolean desenhaNada = false;
 	private Hashtable<Point, Integer> mapaExplosoes = new Hashtable<Point, Integer>();
 	private int tabCont = 0;
 	private boolean gerouImagens;
@@ -491,6 +492,9 @@ public class PainelTopWar {
 
 			protected void paintComponent(java.awt.Graphics g) {
 				super.paintComponent(g);
+				if (desenhaNada) {
+					return;
+				}
 				Graphics2D graphics2d = (Graphics2D) g;
 				setarHints(graphics2d);
 				if (desenhaImagens) {

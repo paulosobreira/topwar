@@ -1,7 +1,11 @@
 package br.topwar.cliente;
 
+import java.awt.BorderLayout;
+import java.awt.Button;
 import java.awt.Cursor;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -19,7 +23,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
 import br.nnpe.GeoUtil;
@@ -28,6 +37,7 @@ import br.nnpe.Util;
 import br.nnpe.tos.NnpeTO;
 import br.topwar.ConstantesTopWar;
 import br.topwar.recursos.CarregadorRecursos;
+import br.topwar.recursos.idiomas.Lang;
 import br.topwar.serial.MapaTopWar;
 import br.topwar.serial.ObjetoMapa;
 import br.topwar.servidor.JogoServidor;
@@ -36,6 +46,7 @@ import br.topwar.tos.DadosAvatar;
 import br.topwar.tos.DadosJogoTopWar;
 import br.topwar.tos.EventoJogo;
 import br.topwar.tos.PlacarTopWar;
+import br.topwar.tos.RadioMsg;
 
 public class JogoCliente {
 	private MapaTopWar mapaTopWar;
@@ -67,7 +78,6 @@ public class JogoCliente {
 	private Thread threadRepaint;
 	private Thread threadDadosSrv;
 	private Thread threadMoverMouse;
-
 	private Thread threadAtacar;
 	private Thread threadRecarregar;
 	private Thread threadMudarClasse;
@@ -80,8 +90,10 @@ public class JogoCliente {
 	private String killCam;
 	private List<PlacarTopWar> placar;
 	private Set<EventoJogo> eventos = new HashSet<EventoJogo>();
+	private List<RadioMsg> radio = new ArrayList<RadioMsg>();
 	protected long clickTime;
 	private String proxClasse;
+	private long ultRadio = 0;
 
 	public String getProxClasse() {
 		return proxClasse;
@@ -261,6 +273,7 @@ public class JogoCliente {
 		painelTopWar.getPanel().addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				frameTopWar.requestFocus();
 				if (painelTopWar.verificaComandoMudarClasse(e.getPoint())) {
 					return;
 				}
@@ -555,9 +568,11 @@ public class JogoCliente {
 		if (mapaTopWar != null) {
 			frameTopWar.setCursor(crossHair);
 			frameTopWar.setTitle(mapaTopWar.getNome());
-			frameTopWar.getContentPane().add(painelTopWar.getScrollPane());
+			frameTopWar.getContentPane().setLayout(new BorderLayout());
+			frameTopWar.getContentPane().add(painelTopWar.getScrollPane(),
+					BorderLayout.CENTER);
 		}
-		frameTopWar.setSize(1024, 768);
+		frameTopWar.setSize(800, 600);
 		frameTopWar.setVisible(true);
 	}
 
@@ -622,7 +637,7 @@ public class JogoCliente {
 		nnpeTO.setComando(ConstantesTopWar.ATUALIZAR_LISTA_AVS);
 		nnpeTO.setSessaoCliente(controleCliente.getSessaoCliente());
 		nnpeTO.setData(dadosJogoTopWar.getNomeJogo() + "&"
-				+ obterUltimoEvento());
+				+ obterUltimoEvento() + "&" + obterUltRadio());
 		nnpeTO.setMillisSrv(millisSrv);
 		Object ret = controleCliente.enviarObjeto(nnpeTO);
 		if (!(ret instanceof NnpeTO)) {
@@ -646,11 +661,17 @@ public class JogoCliente {
 		EventoJogo eventoJogo = (EventoJogo) retorno
 				.get(ConstantesTopWar.EVENTO_JOGO);
 		if (eventoJogo != null) {
-			if (!eventos.contains(eventoJogo)) {
-				Logger.logar("Evento Recebido Cliente " + eventoJogo);
-			}
+			// if (!eventos.contains(eventoJogo)) {
+			// Logger.logar("Evento Recebido Cliente " + eventoJogo);
+			// }
 			eventos.add(eventoJogo);
 			utlEvento = new Long(eventoJogo.getTempo()).toString();
+		}
+		RadioMsg radioMsg = (RadioMsg) retorno.get(ConstantesTopWar.RADIO_JOGO);
+		if (radioMsg != null) {
+			Logger.logar("Radio Recebido Cliente " + radioMsg);
+			radio.add(radioMsg);
+			ultRadio = radioMsg.getId();
 		}
 		Set<ObjTopWar> avatarTopWars = (HashSet<ObjTopWar>) DadosAvatar
 				.desEmpacotarLista(retorno.get(ConstantesTopWar.LISTA_AVATARES));
@@ -700,6 +721,10 @@ public class JogoCliente {
 				iterator.remove();
 			}
 		}
+	}
+
+	private long obterUltRadio() {
+		return ultRadio;
 	}
 
 	private String obterUltimoEvento() {
@@ -793,7 +818,6 @@ public class JogoCliente {
 	}
 
 	private void processaComandosTeclado(int keyCode) {
-		
 
 		if (keyCode == KeyEvent.VK_A || keyCode == KeyEvent.VK_LEFT) {
 			if (avatarLocal != null) {
@@ -901,5 +925,42 @@ public class JogoCliente {
 		});
 		threadMudarClasse.start();
 
+	}
+
+	public void gerarRadio() {
+		ButtonGroup groupRadio = new ButtonGroup();
+		JRadioButton todos = new JRadioButton();
+		final JRadioButton time = new JRadioButton();
+		groupRadio.add(todos);
+		groupRadio.add(time);
+
+		JPanel radioPanel = new JPanel();
+		radioPanel.add(new JLabel() {
+			@Override
+			public String getText() {
+				return Lang.msg("radioTodos");
+			}
+		});
+		radioPanel.add(todos);
+		radioPanel.add(new JLabel() {
+			@Override
+			public String getText() {
+				return Lang.msg("radioTime");
+			}
+		});
+		radioPanel.add(time);
+		final JTextField radioText = new JTextField(50);
+		radioPanel.add(radioText);
+		frameTopWar.getContentPane().add(radioPanel, BorderLayout.SOUTH);
+		radioText.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				controleCliente.enviaTextoRadio(radioText.getText(), time
+						.isSelected());
+				radioText.setText("");
+				frameTopWar.requestFocus();
+			}
+		});
+		frameTopWar.requestFocus();
 	}
 }

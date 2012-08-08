@@ -31,11 +31,19 @@ public class ThreadBot implements Runnable {
 			synchronized (myBots) {
 				for (Iterator iterator = myBots.iterator(); iterator.hasNext();) {
 					BotInfoAbstract botInfo = (BotInfoAbstract) iterator.next();
+					long iniIN = System.currentTimeMillis();
 					botInfo.processaAcaoBot();
+					long fimIN = (System.currentTimeMillis() - iniIN);
+					botInfo.setTempoProcessaAcaoBot(fimIN);
+					// if (fimIN > 10)
+					// Logger.logar("Processa Acao Bot  "
+					// + botInfo.getAvatarTopWar().getClasse() + " "
+					// + (fimIN));
 				}
 			}
 			long fim = (System.currentTimeMillis() - ini);
-//			Logger.logar("Processa Acao Bot Tempo " + (fim));
+			if (fim > 0)
+				Logger.logar("Processa Acao Bot  " + (fim));
 			try {
 				long sleep = (ConstantesTopWar.ATRASO_REDE_PADRAO_BOTS) - fim;
 				if (sleep < 50) {

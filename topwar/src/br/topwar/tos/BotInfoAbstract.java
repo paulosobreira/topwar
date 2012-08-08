@@ -30,6 +30,18 @@ public abstract class BotInfoAbstract {
 	protected int contPtAtual;
 	protected int vidaUltAlvo;
 	protected String estado;
+	private long tempoProcessaAcaoBot = 0;
+
+	public long getTempoProcessaAcaoBot() {
+		return tempoProcessaAcaoBot;
+	}
+
+	public void setTempoProcessaAcaoBot(long tempoProcessaAcaoBot) {
+		if (this.tempoProcessaAcaoBot > tempoProcessaAcaoBot) {
+			return;
+		}
+		this.tempoProcessaAcaoBot = tempoProcessaAcaoBot;
+	}
 
 	public abstract void processaAcaoBot();
 
@@ -142,9 +154,8 @@ public abstract class BotInfoAbstract {
 					avatarTopWarCopia.getPontoAvatar()) > ConstantesTopWar.LIMITE_VISAO) {
 				continue;
 			}
-			List<Point> line = GeoUtil.drawBresenhamLine(
-					avatarTopWar.getPontoAvatar(),
-					avatarTopWarCopia.getPontoAvatar());
+			List<Point> line = GeoUtil.drawBresenhamLine(avatarTopWar
+					.getPontoAvatar(), avatarTopWarCopia.getPontoAvatar());
 			if (line.size() < ConstantesTopWar.LIMITE_VISAO
 					&& jogoServidor.campoVisaoTiro(line, avatarTopWar)) {
 				avatarTopWarCopia.setDistanciaDeUmAvatar(GeoUtil
@@ -166,10 +177,10 @@ public abstract class BotInfoAbstract {
 		return avataresOrdenadosDistancia;
 	}
 
-	public List<ObjTopWar> ordenaDistanciaAvatarMesmoTime(
+	public List<ObjTopWar> avataresVisiveisMesmoTime(
 			List<ObjTopWar> avatarTopWarsCopia, ObjTopWar avatarTopWar,
 			JogoServidor jogoServidor) {
-		List<ObjTopWar> avataresOrdenadosDistancia = new ArrayList<ObjTopWar>();
+		List<ObjTopWar> avataresDistancia = new ArrayList<ObjTopWar>();
 		for (Iterator iterator2 = avatarTopWarsCopia.iterator(); iterator2
 				.hasNext();) {
 			ObjTopWar avatarTopWarCopia = (ObjTopWar) iterator2.next();
@@ -187,38 +198,36 @@ public abstract class BotInfoAbstract {
 					avatarTopWarCopia.getPontoAvatar()) > ConstantesTopWar.LIMITE_VISAO) {
 				continue;
 			}
-			List<Point> line = GeoUtil.drawBresenhamLine(
-					avatarTopWar.getPontoAvatar(),
-					avatarTopWarCopia.getPontoAvatar());
+			List<Point> line = GeoUtil.drawBresenhamLine(avatarTopWar
+					.getPontoAvatar(), avatarTopWarCopia.getPontoAvatar());
 			if (jogoServidor.campoVisao(line, avatarTopWar, true)) {
 				avatarTopWarCopia.setDistanciaDeUmAvatar(GeoUtil
 						.distaciaEntrePontos(
 								avatarTopWarCopia.getPontoAvatar(),
 								avatarTopWar.getPontoAvatar()));
-				avataresOrdenadosDistancia.add(avatarTopWarCopia);
+				avataresDistancia.add(avatarTopWarCopia);
 			}
 		}
-		Collections.sort(avataresOrdenadosDistancia,
-				new Comparator<ObjTopWar>() {
-					@Override
-					public int compare(ObjTopWar o1, ObjTopWar o2) {
-						return new Double(o1.getDistanciaDeUmAvatar())
-								.compareTo(new Double(o2
-										.getDistanciaDeUmAvatar()));
-					}
-				});
-		return avataresOrdenadosDistancia;
+		return avataresDistancia;
 	}
 
 	public ObjTopWar avatarInfiltranteProximo(
 			List<ObjTopWar> avatarTopWarsCopia, ObjTopWar avatarTopWar,
 			JogoServidor jogoServidor) {
-		List<ObjTopWar> avataresOrdenadosDistancia = ordenaDistanciaAvatarMesmoTime(
+		List<ObjTopWar> avataresDistancia = avataresVisiveisMesmoTime(
 				avatarTopWarsCopia, avatarTopWar, jogoServidor);
-		if (avataresOrdenadosDistancia.size() > 2) {
+		if (avataresDistancia.size() > 5) {
 			return null;
 		}
-		for (Iterator iterator = avataresOrdenadosDistancia.iterator(); iterator
+		Collections.sort(avataresDistancia, new Comparator<ObjTopWar>() {
+			@Override
+			public int compare(ObjTopWar o1, ObjTopWar o2) {
+				return new Double(o1.getDistanciaDeUmAvatar())
+						.compareTo(new Double(o2.getDistanciaDeUmAvatar()));
+			}
+		});
+
+		for (Iterator iterator = avataresDistancia.iterator(); iterator
 				.hasNext();) {
 			ObjTopWar objTopWar = (ObjTopWar) iterator.next();
 			if (ConstantesTopWar.ASSAULT.equals(objTopWar.getClasse())
@@ -231,7 +240,7 @@ public abstract class BotInfoAbstract {
 	}
 
 	private void segueAvatarInfiltrante() {
-		if (Math.random() > .5) {
+		if (Math.random() < (tempoProcessaAcaoBot / 100.0)) {
 			return;
 		}
 		List<ObjTopWar> avatarTopWarsCopia = jogoServidor
@@ -246,8 +255,8 @@ public abstract class BotInfoAbstract {
 	}
 
 	public void botVaiPontoAleatorio() {
-		Point calculaPonto = GeoUtil.calculaPonto(Util.intervalo(0, 360),
-				Util.intervalo(100, 200), avatarTopWar.getPontoAvatar());
+		Point calculaPonto = GeoUtil.calculaPonto(Util.intervalo(0, 360), Util
+				.intervalo(100, 200), avatarTopWar.getPontoAvatar());
 		while (!jogoServidor.verificaAndavel(avatarTopWar.getPontoAvatar(),
 				calculaPonto)) {
 			calculaPonto = GeoUtil.calculaPonto(Util.intervalo(0, 360), 100,
@@ -349,8 +358,8 @@ public abstract class BotInfoAbstract {
 		if (seguindo == null || seguindo.getVida() < 0) {
 			return true;
 		}
-		if (GeoUtil.distaciaEntrePontos(avatarTopWar.getPontoAvatar(),
-				seguindo.getPontoAvatar()) > ConstantesTopWar.LIMITE_VISAO) {
+		if (GeoUtil.distaciaEntrePontos(avatarTopWar.getPontoAvatar(), seguindo
+				.getPontoAvatar()) > ConstantesTopWar.LIMITE_VISAO) {
 			return true;
 		}
 		return false;
@@ -360,9 +369,8 @@ public abstract class BotInfoAbstract {
 		if (avatarTopWar.getArma() != ConstantesTopWar.ARMA_FACA)
 			jogoServidor.alternarFaca(avatarTopWar);
 		boolean executouAcaoAtaque;
-		avatarTopWar.setAngulo(GeoUtil.calculaAngulo(
-				avatarTopWar.getPontoAvatar(),
-				avatarTopWarCopia.getPontoAvatar(), 90));
+		avatarTopWar.setAngulo(GeoUtil.calculaAngulo(avatarTopWar
+				.getPontoAvatar(), avatarTopWarCopia.getPontoAvatar(), 90));
 		jogoServidor.atacar(avatarTopWar, avatarTopWar.getAngulo(), 0);
 		executouAcaoAtaque = true;
 		jogoServidor.alternarFaca(avatarTopWar);

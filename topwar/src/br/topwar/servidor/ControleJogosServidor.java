@@ -210,8 +210,8 @@ public class ControleJogosServidor {
 		if (avatarTopWar == null) {
 			return null;
 		}
-		return jogoServidor.atualizaAngulo(avatarTopWar,
-				acaoClienteTopWar.getAngulo());
+		return jogoServidor.atualizaAngulo(avatarTopWar, acaoClienteTopWar
+				.getAngulo());
 	}
 
 	public Object recarregar(NnpeTO nnpeTO) {
@@ -274,23 +274,36 @@ public class ControleJogosServidor {
 	}
 
 	public Object sairJogo(NnpeTO nnpeTO) {
-		DadosJogoTopWar dadosJogoTopWar = (DadosJogoTopWar) nnpeTO.getData();
-		JogoServidor jogoServidor = obterJogoCliente(dadosJogoTopWar
+		JogoServidor jogoServidor = obterJogoCliente(nnpeTO.getSessaoCliente()
 				.getNomeJogador());
 		if (jogoServidor != null)
-			jogoServidor.sairJogo(dadosJogoTopWar.getNomeJogador());
+			jogoServidor.sairJogo(nnpeTO.getSessaoCliente().getNomeJogador());
 		return ConstantesTopWar.OK;
 	}
 
 	public Object mudarClasse(NnpeTO nnpeTO) {
-		DadosJogoTopWar dadosJogoTopWar = (DadosJogoTopWar) nnpeTO.getData();
-		ObjTopWar avatarTopWar = obterAvatarTopWarCliente(dadosJogoTopWar
-				.getNomeJogador());
+		ObjTopWar avatarTopWar = obterAvatarTopWarCliente(nnpeTO
+				.getSessaoCliente().getNomeJogador());
 		if (avatarTopWar == null) {
 			return null;
 		}
-		avatarTopWar.setProxClasse(dadosJogoTopWar.getClasse());
+		avatarTopWar.setProxClasse((String) nnpeTO.getData());
 		return ConstantesTopWar.OK;
+	}
+
+	public Object radio(NnpeTO nnpeTO, boolean somenteTime) {
+		JogoServidor jogoServidor = obterJogoCliente(nnpeTO.getSessaoCliente()
+				.getNomeJogador());
+		if (jogoServidor == null) {
+			return null;
+		}
+		ObjTopWar avatarTopWar = obterAvatarTopWarCliente(nnpeTO
+				.getSessaoCliente().getNomeJogador());
+		if (avatarTopWar == null) {
+			return null;
+		}
+		return jogoServidor.radio(avatarTopWar, (String) nnpeTO.getData(),
+				somenteTime);
 	}
 
 }
