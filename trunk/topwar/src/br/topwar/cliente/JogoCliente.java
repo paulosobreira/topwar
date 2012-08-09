@@ -94,6 +94,8 @@ public class JogoCliente {
 	protected long clickTime;
 	private String proxClasse;
 	private long ultRadio = 0;
+	protected boolean modoTexto;
+	private StringBuffer textoEnviar = new StringBuffer();
 
 	public String getProxClasse() {
 		return proxClasse;
@@ -593,11 +595,90 @@ public class JogoCliente {
 		}
 	}
 
+	public List<RadioMsg> getRadioMsgCopia() {
+		List<RadioMsg> radiosCopy = new ArrayList<RadioMsg>();
+		while (radiosCopy.isEmpty()) {
+			try {
+				if (radio.isEmpty()) {
+					return radiosCopy;
+				}
+				radiosCopy.addAll(radio);
+			} catch (Exception e) {
+				radiosCopy.clear();
+				Logger.logarExept(e);
+			}
+		}
+		return radiosCopy;
+	}
+
+	public List<RadioMsg> getRadioMsgCopiaPainel() {
+		List<RadioMsg> radiosCopy = new ArrayList<RadioMsg>();
+		while (radiosCopy.isEmpty()) {
+			try {
+				if (radio.isEmpty()) {
+					return radiosCopy;
+				}
+				int i = radio.size() - 1;
+				int cont = 0;
+				while (true) {
+					if (i < 0 || cont > 5) {
+						break;
+					}
+					radiosCopy.add(radio.get(i--));
+					cont++;
+				}
+			} catch (Exception e) {
+				radiosCopy.clear();
+				Logger.logarExept(e);
+			}
+		}
+		return radiosCopy;
+	}
+
+	public StringBuffer getTextoEnviar() {
+		return textoEnviar;
+	}
+
+	public void setTextoEnviar(StringBuffer textoEnviar) {
+		this.textoEnviar = textoEnviar;
+	}
+
+	public boolean isModoTexto() {
+		return modoTexto;
+	}
+
 	private void iniciaListenerTeclado() {
 		KeyAdapter keyAdapter = new KeyAdapter() {
+
 			@Override
 			public void keyPressed(final KeyEvent e) {
 				int keyCode = e.getKeyCode();
+				if (keyCode == KeyEvent.VK_ENTER) {
+					modoTexto = !modoTexto;
+					if (!modoTexto) {
+						controleCliente.enviaTextoRadio(textoEnviar.toString(),
+								false);
+						textoEnviar = new StringBuffer();
+					}
+				}
+
+				if (modoTexto) {
+					if (keyCode == KeyEvent.VK_BACK_SPACE) {
+						if (textoEnviar.length() > 0)
+							textoEnviar.delete(textoEnviar.length() - 1,
+									textoEnviar.length());
+					} else {
+						String keyToText = Util.keyToText(keyCode);
+						if (!e.isShiftDown()) {
+							keyToText = keyToText.toLowerCase();
+						}
+						// Logger.logar("keyToText " + keyToText);
+						textoEnviar.append(keyToText);
+					}
+
+					return;
+				}
+
 				processaComandosTeclado(keyCode);
 				if (keyCode == KeyEvent.VK_P || keyCode == KeyEvent.VK_TAB) {
 					if (painelTopWar.getTabCont() > 0) {
@@ -928,6 +1009,9 @@ public class JogoCliente {
 	}
 
 	public void gerarRadio() {
+		if (true) {
+			return;
+		}
 		ButtonGroup groupRadio = new ButtonGroup();
 		JRadioButton todos = new JRadioButton();
 		final JRadioButton time = new JRadioButton();
