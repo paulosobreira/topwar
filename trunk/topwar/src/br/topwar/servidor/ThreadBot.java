@@ -42,8 +42,8 @@ public class ThreadBot implements Runnable {
 				}
 			}
 			long fim = (System.currentTimeMillis() - ini);
-			if (fim > 0)
-				Logger.logar("Processa Acao Bot  " + (fim));
+//			if (fim > 0)
+//				Logger.logar("Processa Acao Bot  " + (fim));
 			try {
 				long sleep = (ConstantesTopWar.ATRASO_REDE_PADRAO_BOTS) - fim;
 				if (sleep < 50) {
