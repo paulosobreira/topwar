@@ -41,11 +41,14 @@ import br.topwar.serial.MapaTopWar;
 import br.topwar.serial.ObjetoMapa;
 import br.topwar.tos.EventoJogo;
 import br.topwar.tos.PlacarTopWar;
+import br.topwar.tos.RadioMsg;
 
 public class PainelTopWar {
 	private static final int FADE_MINIS = 100;
-	public final static Color transp = new Color(0, 0, 0, 50);
-	public final static Color transpBranc = new Color(255, 255, 255, 150);
+	public final static Color transpPreto = new Color(0, 0, 0, 50);
+	public final static Color transpBranco = new Color(255, 255, 255, 150);
+	public final static Color transpVerde = new Color(0, 255, 0, 150);
+	public final static Color verdeEscuro = new Color(0, 155, 0);
 	private JogoCliente jogoCliente;
 	private JPanel panel;
 	private JScrollPane scrollPane;
@@ -113,6 +116,7 @@ public class PainelTopWar {
 	private RoundRectangle2D shieldRect;
 	private RoundRectangle2D rocketRect;
 	private RoundRectangle2D sniperRect;
+	protected boolean cursor;
 
 	public PainelTopWar(JogoCliente jogoCliente) {
 		this.jogoCliente = jogoCliente;
@@ -196,7 +200,7 @@ public class PainelTopWar {
 
 		assautRect.setFrame(x, y, lifeBarAssalt.getWidth(), lifeBarAssalt
 				.getHeight());
-		graphics2d.setColor(transpBranc);
+		graphics2d.setColor(transpBranco);
 		graphics2d.fill(assautRect);
 		if (ConstantesTopWar.ASSAULT.equals(jogoCliente.getProxClasse())) {
 			graphics2d.setColor(Color.YELLOW);
@@ -210,7 +214,7 @@ public class PainelTopWar {
 
 		sniperRect.setFrame(x, y, lifeBarSniper.getWidth(), lifeBarSniper
 				.getHeight());
-		graphics2d.setColor(transpBranc);
+		graphics2d.setColor(transpBranco);
 		graphics2d.fill(sniperRect);
 		if (ConstantesTopWar.SNIPER.equals(jogoCliente.getProxClasse())) {
 			graphics2d.setColor(Color.YELLOW);
@@ -224,7 +228,7 @@ public class PainelTopWar {
 
 		machineRect.setFrame(x, y, lifeBarMachineGun.getWidth(),
 				lifeBarMachineGun.getHeight());
-		graphics2d.setColor(transpBranc);
+		graphics2d.setColor(transpBranco);
 		graphics2d.fill(machineRect);
 		if (ConstantesTopWar.MACHINEGUN.equals(jogoCliente.getProxClasse())) {
 			graphics2d.setColor(Color.YELLOW);
@@ -238,7 +242,7 @@ public class PainelTopWar {
 		y += 30;
 		shotgunRect.setFrame(x, y, lifeBarShotgun.getWidth(), lifeBarShotgun
 				.getHeight());
-		graphics2d.setColor(transpBranc);
+		graphics2d.setColor(transpBranco);
 		graphics2d.fill(shotgunRect);
 		if (ConstantesTopWar.SHOTGUN.equals(jogoCliente.getProxClasse())) {
 			graphics2d.setColor(Color.YELLOW);
@@ -251,7 +255,7 @@ public class PainelTopWar {
 		x += 110;
 		rocketRect.setFrame(x, y, lifeBarRocket.getWidth(), lifeBarRocket
 				.getHeight());
-		graphics2d.setColor(transpBranc);
+		graphics2d.setColor(transpBranco);
 		graphics2d.fill(rocketRect);
 		if (ConstantesTopWar.ROCKET.equals(jogoCliente.getProxClasse())) {
 			graphics2d.setColor(Color.YELLOW);
@@ -492,27 +496,59 @@ public class PainelTopWar {
 
 			protected void paintComponent(java.awt.Graphics g) {
 				super.paintComponent(g);
+				Graphics2D graphics2d = (Graphics2D) g;
 				if (desenhaNada) {
 					return;
 				}
-				Graphics2D graphics2d = (Graphics2D) g;
 				setarHints(graphics2d);
-				if (desenhaImagens) {
-					graphics2d.drawImage(img, null, 0, 0);
-				} else {
-					graphics2d.setColor(Color.DARK_GRAY);
-					graphics2d.fillRect(0, 0, mapaTopWar.getLargura(),
-							mapaTopWar.getAltura());
-				}
-				loopDesenhaAvatares(graphics2d);
-				loopDesenhaDisparoAvatares(graphics2d);
-				desenhaInfoJogo(graphics2d);
-				desenhaMira(graphics2d);
-				desenhaExplosao(graphics2d);
-				desenhaObjetosDebug(graphics2d);
-				desenhaClicou(graphics2d);
-				desenhaVaiPara(graphics2d);
+				// if (desenhaImagens) {
+				// graphics2d.drawImage(img, null, 0, 0);
+				// } else {
+				// graphics2d.setColor(Color.DARK_GRAY);
+				// graphics2d.fillRect(0, 0, mapaTopWar.getLargura(),
+				// mapaTopWar.getAltura());
+				// }
+				// loopDesenhaAvatares(graphics2d);
+				// loopDesenhaDisparoAvatares(graphics2d);
+				// desenhaInfoJogo(graphics2d);
+				// desenhaMira(graphics2d);
+				// desenhaExplosao(graphics2d);
+				// desenhaObjetosDebug(graphics2d);
+				// desenhaClicou(graphics2d);
+				// desenhaVaiPara(graphics2d);
 				desenhaControleMudarClasse(graphics2d);
+				desenhaChat(graphics2d);
+			}
+
+			private void desenhaChat(Graphics2D graphics2d) {
+				graphics2d.setColor(Color.BLACK);
+				Rectangle limitesViewPort = (Rectangle) limitesViewPort();
+				Point o = new Point(limitesViewPort.x + 10, limitesViewPort.y
+						+ limitesViewPort.height - 100);
+				int x = o.x + 10;
+				int y = o.y;
+
+				if (jogoCliente.isModoTexto()) {
+					String txt = jogoCliente.getTextoEnviar().toString();
+
+					graphics2d.setColor(transpPreto);
+					graphics2d.fillRoundRect(x - 5, y - 13, Util
+							.calculaLarguraText(txt + "   ", graphics2d), 16,
+							5, 5);
+					if (cursor) {
+						txt += "|";
+					}
+					cursor = !cursor;
+					graphics2d.setColor(verdeEscuro);
+					graphics2d.drawString(txt, x, y);
+				}
+				List<RadioMsg> radioMsgCopiaPainel = jogoCliente
+						.getRadioMsgCopiaPainel();
+				for (int i = 0; i < radioMsgCopiaPainel.size(); i++) {
+					RadioMsg radioMsg = radioMsgCopiaPainel.get(i);
+					graphics2d.drawString(radioMsg.getAvatar() + " "
+							+ radioMsg.getMsg(), x, y - 20 - (15 * i));
+				}
 			}
 
 			private void desenhaClicou(Graphics2D graphics2d) {
@@ -1810,7 +1846,7 @@ public class PainelTopWar {
 		Graphics2D cg = bufferedImage.createGraphics();
 		AffineTransform affineTransform = AffineTransform
 				.getScaleInstance(1, 1);
-		cg.setColor(PainelTopWar.transp);
+		cg.setColor(PainelTopWar.transpPreto);
 		cg.fill(new Rectangle(0, 0, limitesViewPort.getBounds().width,
 				limitesViewPort.getBounds().height));
 		AlphaComposite composite = AlphaComposite.getInstance(
@@ -2035,7 +2071,7 @@ public class PainelTopWar {
 					desenha.y - 200, 400, 400);
 			return ellipse2d;
 		} else {
-			graphics2d.setColor(transp);
+			graphics2d.setColor(transpPreto);
 			generalPath.closePath();
 			AffineTransform affineTransform = AffineTransform.getScaleInstance(
 					1, 1);

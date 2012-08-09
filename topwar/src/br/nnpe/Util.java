@@ -1,6 +1,7 @@
 package br.nnpe;
 
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -22,7 +23,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -95,8 +95,8 @@ public class Util {
 			// serialize and pass the object
 			oos.writeObject(oldObj); // C
 			oos.flush(); // D
-			ByteArrayInputStream bin = new ByteArrayInputStream(
-					bos.toByteArray()); // E
+			ByteArrayInputStream bin = new ByteArrayInputStream(bos
+					.toByteArray()); // E
 			ois = new ObjectInputStream(bin); // F
 			// return the new object
 			return ois.readObject(); // G
@@ -445,8 +445,8 @@ public class Util {
 			}
 
 			// Digito verificador do CPF que está sendo validado.
-			String nDigVerific = strCpf.substring(strCpf.length() - 2,
-					strCpf.length());
+			String nDigVerific = strCpf.substring(strCpf.length() - 2, strCpf
+					.length());
 
 			// Concatenando o primeiro resto com o segundo.
 			nDigResult = String.valueOf(digito1) + String.valueOf(digito2);
@@ -875,7 +875,7 @@ public class Util {
 		// for (int i = 0; i < 100; i++) {
 		// System.out.println(intervalo(0, 2));
 		// }
-//		System.out.println(intervalo(-5.0, 10.9));
+		// System.out.println(intervalo(-5.0, 10.9));
 		System.out.println(md5("hirna"));
 	}
 
@@ -982,4 +982,29 @@ public class Util {
 		else
 			return seg + "";
 	}
+
+	public static String keyToText(int keyCode) {
+		if (keyCode >= KeyEvent.VK_0 && keyCode <= KeyEvent.VK_9
+				|| keyCode >= KeyEvent.VK_A && keyCode <= KeyEvent.VK_Z) {
+			return String.valueOf((char) keyCode);
+		}
+		if (KeyEvent.VK_SPACE == keyCode) {
+			return " ";
+		}
+		if (KeyEvent.VK_SLASH == keyCode) {
+			return "?";
+		}
+		if (KeyEvent.VK_COMMA == keyCode) {
+			return ",";
+		}
+		if (KeyEvent.VK_PERIOD == keyCode) {
+			return ".";
+		}
+		if (KeyEvent.VK_EQUALS == keyCode) {
+			return "=";
+		}
+
+		return "";
+	}
+
 }
