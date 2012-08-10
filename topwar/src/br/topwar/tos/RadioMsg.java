@@ -12,6 +12,16 @@ public class RadioMsg implements Serializable {
 
 	private boolean somenteTime;
 
+	private transient String time;
+
+	public String getTime() {
+		return time;
+	}
+
+	public void setTime(String time) {
+		this.time = time;
+	}
+
 	@Override
 	public String toString() {
 		return "RadioMsg [avatar=" + avatar + ", id=" + id + ", msg=" + msg

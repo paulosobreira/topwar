@@ -68,14 +68,12 @@ public class MainFrame {
 			}
 		});
 		menuJogo.add(sobre);
+		frameTopWar.setTitle(Lang.msg("topawrsolo"));
 		frameTopWar.setVisible(true);
-		
-		
-		
 
 		// clienteLocal.criarJogoDepoisDeLogar(true);
 		// clienteLocal.getJogoCliente().getFrameTopWar().setVisible(false);
-		
+
 		clienteLocal.getJogoCliente().getFrameTopWar()
 				.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	}
