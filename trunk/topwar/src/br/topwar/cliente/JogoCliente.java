@@ -565,7 +565,6 @@ public class JogoCliente {
 				super.windowClosing(e);
 			}
 		});
-		frameTopWar.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		Cursor crossHair = new Cursor(Cursor.CROSSHAIR_CURSOR);
 		if (mapaTopWar != null) {
 			frameTopWar.setCursor(crossHair);
