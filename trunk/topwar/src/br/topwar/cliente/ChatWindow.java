@@ -1,19 +1,27 @@
 package br.topwar.cliente;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Iterator;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.WindowConstants;
 import javax.swing.border.TitledBorder;
 
@@ -21,6 +29,7 @@ import br.nnpe.Logger;
 import br.nnpe.cliente.NnpeChatCliente;
 import br.nnpe.cliente.NnpeChatWindow;
 import br.nnpe.tos.NnpeDados;
+import br.topwar.recursos.CarregadorRecursos;
 import br.topwar.recursos.idiomas.Lang;
 
 public class ChatWindow extends NnpeChatWindow {
@@ -39,9 +48,11 @@ public class ChatWindow extends NnpeChatWindow {
 
 	public void gerarLayout() {
 		JPanel cPanel = new JPanel(new BorderLayout());
+		compTransp(cPanel);
 		JPanel ePanel = new JPanel(new BorderLayout());
 		mainPanel.add(cPanel, BorderLayout.CENTER);
 		JPanel chatPanel = new JPanel();
+		compTransp(chatPanel);
 		String versao = "Rodando Main";
 		if (nnpeChatCliente != null) {
 			versao = nnpeChatCliente.getVersao();
@@ -143,8 +154,14 @@ public class ChatWindow extends NnpeChatWindow {
 				return new Dimension(600, 200);
 			}
 		};
-
+		compTransp(textAreaScrollPane);
+		compTransp(textAreaChat);
 		chatPanel.add(textAreaScrollPane, BorderLayout.CENTER);
+		chatPanel.setOpaque(false);
+	}
+
+	private void compTransp(JComponent c) {
+		c.setBackground(new Color(255, 255, 255, 0));
 	}
 
 	@Override
@@ -189,13 +206,34 @@ public class ChatWindow extends NnpeChatWindow {
 	}
 
 	public static void main(String[] args) {
-		ChatWindow nnpeChatWindow = new ChatWindow(null);
+		final ChatWindow nnpeChatWindow = new ChatWindow(null);
 		JFrame frame = new JFrame();
 		frame.getContentPane().add(nnpeChatWindow.getMainPanel());
-		// frame.setSize(820, 380);
+		JTextArea area = new JTextArea(20, 50);
+		area.setBackground(new Color(255, 255, 255, 0));
+		JScrollPane pane = new JScrollPane(area);
+		pane.setBackground(new Color(255, 255, 255, 0));
+		// frame.getContentPane().add(jPanel);
+		frame.setSize(820, 380);
 		frame.pack();
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		Thread thread = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				while (true) {
+					nnpeChatWindow.getMainPanel().repaint();
+					try {
+						Thread.sleep(10);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+		thread.start();
 	}
 
 	public String obterJogoSelecionado() {

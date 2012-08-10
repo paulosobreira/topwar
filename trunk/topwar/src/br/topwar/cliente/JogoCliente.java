@@ -96,6 +96,7 @@ public class JogoCliente {
 	private long ultRadio = 0;
 	protected boolean modoTexto;
 	private StringBuffer textoEnviar = new StringBuffer();
+	protected boolean modoTextoSomenteTime;
 
 	public String getProxClasse() {
 		return proxClasse;
@@ -656,12 +657,15 @@ public class JogoCliente {
 					modoTexto = !modoTexto;
 					if (!modoTexto) {
 						controleCliente.enviaTextoRadio(textoEnviar.toString(),
-								false);
+								modoTextoSomenteTime);
 						textoEnviar = new StringBuffer();
 					}
 				}
-
 				if (modoTexto) {
+					if (keyCode == KeyEvent.VK_F1) {
+						modoTextoSomenteTime = !modoTextoSomenteTime;
+					}
+
 					if (keyCode == KeyEvent.VK_BACK_SPACE) {
 						if (textoEnviar.length() > 0)
 							textoEnviar.delete(textoEnviar.length() - 1,
@@ -702,6 +706,10 @@ public class JogoCliente {
 
 		};
 		frameTopWar.addKeyListener(keyAdapter);
+	}
+
+	public boolean isModoTextoSomenteTime() {
+		return modoTextoSomenteTime;
 	}
 
 	public String getKillCam() {
