@@ -1,10 +1,14 @@
 package br.nnpe.cliente;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.text.SimpleDateFormat;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -27,6 +31,7 @@ import javax.swing.border.TitledBorder;
 import br.nnpe.Logger;
 import br.nnpe.tos.NnpeDados;
 import br.nnpe.tos.SessaoCliente;
+import br.topwar.recursos.CarregadorRecursos;
 import br.topwar.recursos.idiomas.Lang;
 
 /**
@@ -61,7 +66,16 @@ public class NnpeChatWindow {
 	protected SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
 	public NnpeChatWindow(NnpeChatCliente nnpeChatCliente) {
-		mainPanel = new JPanel(new BorderLayout());
+		final BufferedImage img = CarregadorRecursos
+				.carregaBackGround("mapa9.jpg");
+		mainPanel = new JPanel(new BorderLayout()) {
+			@Override
+			protected void paintComponent(Graphics g) {
+				super.paintComponent(g);
+				Graphics2D graphics2d = (Graphics2D) g;
+				graphics2d.drawImage(img, null, 0, 0);
+			}
+		};
 		if (nnpeChatCliente != null) {
 			this.nnpeChatCliente = nnpeChatCliente;
 		}
@@ -99,14 +113,14 @@ public class NnpeChatWindow {
 						+ "sowbreira@gmail.com \n"
 						+ "sowbreira.appspot.com/ \n" + "Janeiro de 2011 \n ";
 
-				JOptionPane.showMessageDialog(getMainPanel(), msg,
-						Lang.msg("autor"), JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(getMainPanel(), msg, Lang
+						.msg("autor"), JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 		sair.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int ret = JOptionPane.showConfirmDialog(getMainPanel(),
-						Lang.msg("confirmaSair"), Lang.msg("confirmaSair"),
+				int ret = JOptionPane.showConfirmDialog(getMainPanel(), Lang
+						.msg("confirmaSair"), Lang.msg("confirmaSair"),
 						JOptionPane.YES_NO_OPTION);
 				if (ret == JOptionPane.NO_OPTION) {
 					return;
@@ -232,7 +246,6 @@ public class NnpeChatWindow {
 				return new Dimension(600, 200);
 			}
 		};
-
 		chatPanel.add(textAreaScrollPane, BorderLayout.CENTER);
 	}
 
