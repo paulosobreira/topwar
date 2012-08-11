@@ -1,17 +1,23 @@
 package br.topwar.local;
 
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
+import br.nnpe.ImageUtil;
 import br.topwar.ProxyComandos;
 import br.topwar.cliente.JogoCliente;
+import br.topwar.recursos.CarregadorRecursos;
 import br.topwar.recursos.idiomas.Lang;
 
 public class MainFrame {
@@ -69,6 +75,17 @@ public class MainFrame {
 		});
 		menuJogo.add(sobre);
 		frameTopWar.setTitle(Lang.msg("topawrsolo"));
+		final BufferedImage img = ImageUtil.gerarFade(
+				CarregadorRecursos.carregaBackGround("mercs-chat.png"), 50);
+		frameTopWar.getContentPane().add(new JPanel() {
+			@Override
+			protected void paintComponent(Graphics g) {
+				super.paintComponent(g);
+				Graphics2D graphics2d = (Graphics2D) g;
+				if (img != null)
+					graphics2d.drawImage(img, null, 0, 0);
+			}
+		});
 		frameTopWar.setVisible(true);
 
 		// clienteLocal.criarJogoDepoisDeLogar(true);

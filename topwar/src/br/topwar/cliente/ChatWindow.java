@@ -25,6 +25,7 @@ import javax.swing.JTextArea;
 import javax.swing.WindowConstants;
 import javax.swing.border.TitledBorder;
 
+import br.nnpe.ImageUtil;
 import br.nnpe.Logger;
 import br.nnpe.cliente.NnpeChatCliente;
 import br.nnpe.cliente.NnpeChatWindow;
@@ -43,13 +44,15 @@ public class ChatWindow extends NnpeChatWindow {
 	public ChatWindow(NnpeChatCliente nnpeChatCliente) {
 		super(nnpeChatCliente);
 		this.controleChatCliente = (ControleCliente) nnpeChatCliente;
-
+		img = ImageUtil.gerarFade(
+				CarregadorRecursos.carregaBackGround("mercs-chat.png"), 50);
 	}
 
 	public void gerarLayout() {
 		JPanel cPanel = new JPanel(new BorderLayout());
 		compTransp(cPanel);
 		JPanel ePanel = new JPanel(new BorderLayout());
+		compTransp(ePanel);
 		mainPanel.add(cPanel, BorderLayout.CENTER);
 		JPanel chatPanel = new JPanel();
 		compTransp(chatPanel);
@@ -59,12 +62,14 @@ public class ChatWindow extends NnpeChatWindow {
 		}
 		chatPanel.setBorder(new TitledBorder("TopWar Chat Room " + versao));
 		JPanel usersPanel = new JPanel();
+		compTransp(usersPanel);
 		usersPanel.setBorder(new TitledBorder("Jogadores Online") {
 			public String getTitle() {
 				return Lang.msg("jogadoresOnline");
 			}
 		});
 		JPanel jogosPanel = new JPanel();
+		compTransp(jogosPanel);
 		jogosPanel.setBorder(new TitledBorder("Jogos") {
 			public String getTitle() {
 				return Lang.msg("jogos");
@@ -74,6 +79,7 @@ public class ChatWindow extends NnpeChatWindow {
 		cPanel.add(chatPanel, BorderLayout.CENTER);
 		mainPanel.add(ePanel, BorderLayout.EAST);
 		JPanel inputPanel = new JPanel();
+		compTransp(inputPanel);
 		cPanel.add(inputPanel, BorderLayout.SOUTH);
 		ePanel.add(usersPanel, BorderLayout.CENTER);
 		ePanel.add(jogosPanel, BorderLayout.SOUTH);
@@ -87,6 +93,8 @@ public class ChatWindow extends NnpeChatWindow {
 				return new Dimension(120, 210);
 			}
 		};
+		compTransp(listaClientes);
+		compTransp(usersPane);
 		listaJogos = new JList(new DefaultListModel());
 		JScrollPane jogsPane = new JScrollPane(listaJogos) {
 			@Override
@@ -95,7 +103,8 @@ public class ChatWindow extends NnpeChatWindow {
 				return new Dimension(120, 100);
 			}
 		};
-
+		compTransp(listaJogos);
+		compTransp(jogsPane);
 		usersPanel.add(usersPane);
 		jogosPanel.add(jogsPane);
 		JPanel buttonsPanel = new JPanel();
@@ -134,6 +143,7 @@ public class ChatWindow extends NnpeChatWindow {
 		});
 
 		JPanel panelTextoEnviar = new JPanel();
+		compTransp(panelTextoEnviar);
 		panelTextoEnviar.setBorder(new TitledBorder("Texto Enviar") {
 			public String getTitle() {
 				return Lang.msg("textoEnviar");
@@ -219,7 +229,6 @@ public class ChatWindow extends NnpeChatWindow {
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		Thread thread = new Thread(new Runnable() {
-
 			@Override
 			public void run() {
 				while (true) {
