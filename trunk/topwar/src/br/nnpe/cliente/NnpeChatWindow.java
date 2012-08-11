@@ -28,6 +28,7 @@ import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 import javax.swing.border.TitledBorder;
 
+import br.nnpe.ImageUtil;
 import br.nnpe.Logger;
 import br.nnpe.tos.NnpeDados;
 import br.nnpe.tos.SessaoCliente;
@@ -64,16 +65,16 @@ public class NnpeChatWindow {
 	protected JLabel infoLabel1 = new JLabel();
 	protected Set chatSet = new HashSet();
 	protected SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+	protected BufferedImage img;
 
 	public NnpeChatWindow(NnpeChatCliente nnpeChatCliente) {
-		final BufferedImage img = CarregadorRecursos
-				.carregaBackGround("mapa9.jpg");
 		mainPanel = new JPanel(new BorderLayout()) {
 			@Override
 			protected void paintComponent(Graphics g) {
 				super.paintComponent(g);
 				Graphics2D graphics2d = (Graphics2D) g;
-				graphics2d.drawImage(img, null, 0, 0);
+				if (img != null)
+					graphics2d.drawImage(img, null, 0, 0);
 			}
 		};
 		if (nnpeChatCliente != null) {
@@ -113,14 +114,14 @@ public class NnpeChatWindow {
 						+ "sowbreira@gmail.com \n"
 						+ "sowbreira.appspot.com/ \n" + "Janeiro de 2011 \n ";
 
-				JOptionPane.showMessageDialog(getMainPanel(), msg, Lang
-						.msg("autor"), JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(getMainPanel(), msg,
+						Lang.msg("autor"), JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 		sair.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int ret = JOptionPane.showConfirmDialog(getMainPanel(), Lang
-						.msg("confirmaSair"), Lang.msg("confirmaSair"),
+				int ret = JOptionPane.showConfirmDialog(getMainPanel(),
+						Lang.msg("confirmaSair"), Lang.msg("confirmaSair"),
 						JOptionPane.YES_NO_OPTION);
 				if (ret == JOptionPane.NO_OPTION) {
 					return;
@@ -147,7 +148,8 @@ public class NnpeChatWindow {
 			clientesModel.addElement(element);
 		}
 		listaClientes.setModel(clientesModel);
-
+		if (mainPanel != null)
+			mainPanel.repaint();
 	}
 
 	protected void atualizarChat(NnpeDados nnpeDadosChat) {
