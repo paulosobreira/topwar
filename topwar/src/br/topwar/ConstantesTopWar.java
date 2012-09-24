@@ -52,10 +52,6 @@ public class ConstantesTopWar {
 	public static final String OK = "K";
 	public static final String TIME_AZUL = "azul";
 	public static final String TIME_VERMELHO = "vermelho";
-	public static final int VIDA_COMPLETA = 100;
-	public static final int ASSALT_MAX_RANGE = 1000;
-	public static final int SNIPER_MAX_RANGE = 2000;
-	public static final int MACHINEGUN_MAX_RANGE = (int) (ASSALT_MAX_RANGE * 0.7);
 	public final static Color lightWhite = new Color(255, 255, 255, 150);
 	public final static Color lightBlu = new Color(180, 180, 255, 150);
 	public final static Color lightRed = new Color(255, 180, 180, 150);
@@ -69,39 +65,69 @@ public class ConstantesTopWar {
 	public static final int HEADSHOT = 0;
 	public static final int LIMITE_VISAO = 450;
 	public static final long ATRASO_REDE_PADRAO_BOTS = (long) (ATRASO_REDE_PADRAO * 1.5);
+
+	/*
+	 * ASSAULT
+	 */
 	public static final String ASSAULT = "assault";
 	public static final int BALAS_ASSALT = 50;
 	public static final int CARTUCHOS_ASSALT = 15;
+	public static final int VIDA_COMPLETA_ASSALT = 100;
+	public static final int VELOCIDADE_ASSAUT = 7;
+	public static final int DESVIO_ASSAULT = 2;
+	public static final int TEMPO_RECARGA_ASSAUT = 1000;
+	public static final int ASSALT_MAX_RANGE = 1000;
+	/*
+	 * SHOTGUN
+	 */
 	public static final String SHOTGUN = "shotgun";
+	public static final int VELOCIDADE_SHOTGUN = 8;
 	public static final int BALAS_SHOTGUN = 6;
 	public static final int CARTUCHOS_SHOTGUN = 3;
+	public static final int VIDA_COMPLETA_SHOTGUN = 120;
+	public static final long TEMPO_RECARGA_SHOTGUN = 900;
+	/*
+	 * SNIPER
+	 */
 	public static final String SNIPER = "sniper";
 	public static final int BALAS_SNIPER = 1;
 	public static final int CARTUCHOS_SNIPER = 16;
+	public static final int VIDA_COMPLETA_SNIPER = 80;
+	public static final int DESVIO_SNIPER = 0;
+	public static final int TEMPO_RECARGA_SNIPER = 4000;
+	public static final int VELOCIDADE_SNIPER = 6;
+	public static final double LIMITE_VISAO_SNIPER = LIMITE_VISAO * 1.2;
+	public static final int SNIPER_MAX_RANGE = 2000;
+	/*
+	 * MACHINEGUN
+	 */
 	public static final String MACHINEGUN = "machinegun";
 	public static final int BALAS_MACHINEGUN = 300;
 	public static final int CARTUCHOS_MACHINEGUN = 6;
+	public static final int VIDA_COMPLETA_MACHINEGUN = 200;
+	public static final int DESVIO_MACHINEGUN = 5;
+	public static final int TEMPO_RECARGA_MACHINEGUN = 3000;
+	public static final int VELOCIDADE_MACHINEGUN = 5;
+	public static final int MACHINEGUN_MAX_RANGE = (int) (ASSALT_MAX_RANGE * 0.8);
+	/*
+	 * ROCKET
+	 */
 	public static final String ROCKET = "rocket";
 	public static final int BALAS_ROCKET = 1;
 	public static final int CARTUCHOS_ROCKET = 10;
-	public static final String SHIELD = "shield";
-	public static final int DESVIO_ASSAULT = 2;
-	public static final int DESVIO_SNIPER = 0;
-	public static final int DESVIO_MACHINEGUN = 5;
-	public static final int DESVIO_ROCKET = 2;
-	public static final int TEMPO_RECARGA_ASSAUT = 1000;
-	public static final int TEMPO_RECARGA_MACHINEGUN = 3000;
-	public static final int TEMPO_RECARGA_SNIPER = 5000;
-	public static final int TEMPO_RECARGA = 2000;
-	public static final int TEMPO_RECARGA_ROCKET = 6000;
-	public static final int VELOCIDADE_ASSAUT = 7;
-	public static final int VELOCIDADE_FACA = 8;
-	public static final int VELOCIDADE_MACHINEGUN = 5;
+	public static final int VIDA_COMPLETA_ROCKET = 80;
 	public static final int VELOCIDADE_ROCKET = 4;
+	public static final int TEMPO_RECARGA_ROCKET = 5000;
+	public static final int DESVIO_ROCKET = 2;
+	/*
+	 * SHIELD
+	 */
+	public static final String SHIELD = "shield";
+	public static final int VIDA_COMPLETA_SHIELD = 300;
 	public static final int VELOCIDADE_SHIELD = 8;
-	public static final int VELOCIDADE_SHOTGUN = 8;
-	public static final int VELOCIDADE_SNIPER = 6;
-	public static final double LIMITE_VISAO_SNIPER = LIMITE_VISAO * 1.2;
+	public static final long TEMPO_RECARGA_SHIELD = 10;
+
+	public static final int VELOCIDADE_FACA = 8;
 	public static final String RADIO_TIME = "RADIO_TIME";
 	public static final String RADIO_TODOS = "RADIO_TODOS";
 

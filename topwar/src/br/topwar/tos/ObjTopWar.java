@@ -212,7 +212,6 @@ public class ObjTopWar {
 
 	@Transient
 	public void setupCalsseJogador() {
-		setVida(ConstantesTopWar.VIDA_COMPLETA);
 		if (proxClasse != null) {
 			setClasse(proxClasse);
 			setProxClasse(null);
@@ -221,24 +220,30 @@ public class ObjTopWar {
 			setArma(ConstantesTopWar.ARMA_ASSAULT);
 			setBalas(ConstantesTopWar.BALAS_ASSALT);
 			setCartuchos(ConstantesTopWar.CARTUCHOS_ASSALT);
+			setVida(ConstantesTopWar.VIDA_COMPLETA_ASSALT);
 		} else if (ConstantesTopWar.SHOTGUN.equals(getClasse())) {
 			setArma(ConstantesTopWar.ARMA_SHOTGUN);
 			setBalas(ConstantesTopWar.BALAS_SHOTGUN);
 			setCartuchos(ConstantesTopWar.CARTUCHOS_SHOTGUN);
+			setVida(ConstantesTopWar.VIDA_COMPLETA_SHOTGUN);
 		} else if (ConstantesTopWar.SNIPER.equals(getClasse())) {
 			setArma(ConstantesTopWar.ARMA_SNIPER);
 			setBalas(ConstantesTopWar.BALAS_SNIPER);
 			setCartuchos(ConstantesTopWar.CARTUCHOS_SNIPER);
+			setVida(ConstantesTopWar.VIDA_COMPLETA_SNIPER);
 		} else if (ConstantesTopWar.MACHINEGUN.equals(getClasse())) {
 			setArma(ConstantesTopWar.ARMA_MACHINEGUN);
 			setBalas(ConstantesTopWar.BALAS_MACHINEGUN);
 			setCartuchos(ConstantesTopWar.CARTUCHOS_MACHINEGUN);
+			setVida(ConstantesTopWar.VIDA_COMPLETA_MACHINEGUN);
 		} else if (ConstantesTopWar.ROCKET.equals(getClasse())) {
 			setArma(ConstantesTopWar.ARMA_ROCKET);
 			setBalas(ConstantesTopWar.BALAS_ROCKET);
 			setCartuchos(ConstantesTopWar.CARTUCHOS_ROCKET);
+			setVida(ConstantesTopWar.VIDA_COMPLETA_ROCKET);
 		} else if (ConstantesTopWar.SHIELD.equals(getClasse())) {
 			setArma(ConstantesTopWar.ARMA_SHIELD);
+			setVida(ConstantesTopWar.VIDA_COMPLETA_SHIELD);
 			setBalas(0);
 			setCartuchos(0);
 		}
