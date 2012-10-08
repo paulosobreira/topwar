@@ -1799,7 +1799,7 @@ public class PainelTopWar {
 					graphics2d.setColor(ConstantesTopWar.lightRed);
 				}
 				graphics2d.fillRoundRect(desenha.x - 20, desenha.y - 20,
-						avatarCliente.getVida(), 20, 5, 5);
+						avatarCliente.calculaProcetagemVidaAvatar(), 20, 5, 5);
 
 				if (ConstantesTopWar.ARMA_ASSAULT == avatarCliente.getArma()) {
 					graphics2d.drawImage(lifeBarAssalt, desenha.x - 20,
