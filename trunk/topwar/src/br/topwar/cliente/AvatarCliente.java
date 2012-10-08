@@ -274,4 +274,27 @@ public class AvatarCliente {
 				- (ConstantesTopWar.ALTURA_AREA_AVATAR));
 	}
 
+	public String getClasse() {
+		return avatarTopWar.getClasse();
+	}
+
+	public int calculaProcetagemVidaAvatar() {
+
+		if (ConstantesTopWar.ASSAULT.equals(avatarTopWar.getClasse())) {
+			return (getVida() * 100) / ConstantesTopWar.VIDA_COMPLETA_ASSALT;
+		} else if (ConstantesTopWar.SHOTGUN.equals(getClasse())) {
+			return (getVida() * 100) / ConstantesTopWar.VIDA_COMPLETA_SHOTGUN;
+		} else if (ConstantesTopWar.SNIPER.equals(getClasse())) {
+			return (getVida() * 100) / ConstantesTopWar.VIDA_COMPLETA_SNIPER;
+		} else if (ConstantesTopWar.MACHINEGUN.equals(getClasse())) {
+			return (getVida() * 100)
+					/ ConstantesTopWar.VIDA_COMPLETA_MACHINEGUN;
+		} else if (ConstantesTopWar.ROCKET.equals(getClasse())) {
+			return (getVida() * 100) / ConstantesTopWar.VIDA_COMPLETA_ROCKET;
+		} else if (ConstantesTopWar.SHIELD.equals(getClasse())) {
+			return (getVida() * 100) / ConstantesTopWar.VIDA_COMPLETA_SHIELD;
+		}
+		return 0;
+	}
+
 }

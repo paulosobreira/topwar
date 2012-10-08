@@ -1,6 +1,9 @@
 package br.topwar.tos;
 
 import java.awt.Point;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.util.Locale;
 
 import javax.persistence.Transient;
 
@@ -17,7 +20,7 @@ public class ObjTopWar {
 	private int arma = ConstantesTopWar.ARMA_FACA;
 	private int rangeUtlDisparo;
 	private boolean invencivel;
-	private transient String classe;
+	private String classe;
 	private transient Point pontoUtlDisparo;
 	private transient ObjTopWar mortoPor;
 	private transient int balas = 0;
@@ -210,6 +213,208 @@ public class ObjTopWar {
 		this.vida = vida;
 	}
 
+	public char charAt(int index) {
+		return classe.charAt(index);
+	}
+
+	public int codePointAt(int index) {
+		return classe.codePointAt(index);
+	}
+
+	public int codePointBefore(int index) {
+		return classe.codePointBefore(index);
+	}
+
+	public int codePointCount(int beginIndex, int endIndex) {
+		return classe.codePointCount(beginIndex, endIndex);
+	}
+
+	public int compareTo(String anotherString) {
+		return classe.compareTo(anotherString);
+	}
+
+	public int compareToIgnoreCase(String str) {
+		return classe.compareToIgnoreCase(str);
+	}
+
+	public String concat(String str) {
+		return classe.concat(str);
+	}
+
+	public boolean contains(CharSequence s) {
+		return classe.contains(s);
+	}
+
+	public boolean contentEquals(CharSequence cs) {
+		return classe.contentEquals(cs);
+	}
+
+	public boolean contentEquals(StringBuffer sb) {
+		return classe.contentEquals(sb);
+	}
+
+	public boolean endsWith(String suffix) {
+		return classe.endsWith(suffix);
+	}
+
+	public boolean equalsIgnoreCase(String anotherString) {
+		return classe.equalsIgnoreCase(anotherString);
+	}
+
+	public byte[] getBytes() {
+		return classe.getBytes();
+	}
+
+	public byte[] getBytes(Charset charset) {
+		return classe.getBytes(charset);
+	}
+
+	public void getBytes(int srcBegin, int srcEnd, byte[] dst, int dstBegin) {
+		classe.getBytes(srcBegin, srcEnd, dst, dstBegin);
+	}
+
+	public byte[] getBytes(String charsetName)
+			throws UnsupportedEncodingException {
+		return classe.getBytes(charsetName);
+	}
+
+	public void getChars(int srcBegin, int srcEnd, char[] dst, int dstBegin) {
+		classe.getChars(srcBegin, srcEnd, dst, dstBegin);
+	}
+
+	public int indexOf(int ch, int fromIndex) {
+		return classe.indexOf(ch, fromIndex);
+	}
+
+	public int indexOf(int ch) {
+		return classe.indexOf(ch);
+	}
+
+	public int indexOf(String str, int fromIndex) {
+		return classe.indexOf(str, fromIndex);
+	}
+
+	public int indexOf(String str) {
+		return classe.indexOf(str);
+	}
+
+	public String intern() {
+		return classe.intern();
+	}
+
+	public boolean isEmpty() {
+		return classe.isEmpty();
+	}
+
+	public int lastIndexOf(int ch, int fromIndex) {
+		return classe.lastIndexOf(ch, fromIndex);
+	}
+
+	public int lastIndexOf(int ch) {
+		return classe.lastIndexOf(ch);
+	}
+
+	public int lastIndexOf(String str, int fromIndex) {
+		return classe.lastIndexOf(str, fromIndex);
+	}
+
+	public int lastIndexOf(String str) {
+		return classe.lastIndexOf(str);
+	}
+
+	public int length() {
+		return classe.length();
+	}
+
+	public boolean matches(String regex) {
+		return classe.matches(regex);
+	}
+
+	public int offsetByCodePoints(int index, int codePointOffset) {
+		return classe.offsetByCodePoints(index, codePointOffset);
+	}
+
+	public boolean regionMatches(boolean ignoreCase, int toffset, String other,
+			int ooffset, int len) {
+		return classe.regionMatches(ignoreCase, toffset, other, ooffset, len);
+	}
+
+	public boolean regionMatches(int toffset, String other, int ooffset, int len) {
+		return classe.regionMatches(toffset, other, ooffset, len);
+	}
+
+	public String replace(char oldChar, char newChar) {
+		return classe.replace(oldChar, newChar);
+	}
+
+	public String replace(CharSequence target, CharSequence replacement) {
+		return classe.replace(target, replacement);
+	}
+
+	public String replaceAll(String regex, String replacement) {
+		return classe.replaceAll(regex, replacement);
+	}
+
+	public String replaceFirst(String regex, String replacement) {
+		return classe.replaceFirst(regex, replacement);
+	}
+
+	public String[] split(String regex, int limit) {
+		return classe.split(regex, limit);
+	}
+
+	public String[] split(String regex) {
+		return classe.split(regex);
+	}
+
+	public boolean startsWith(String prefix, int toffset) {
+		return classe.startsWith(prefix, toffset);
+	}
+
+	public boolean startsWith(String prefix) {
+		return classe.startsWith(prefix);
+	}
+
+	public CharSequence subSequence(int beginIndex, int endIndex) {
+		return classe.subSequence(beginIndex, endIndex);
+	}
+
+	public String substring(int beginIndex, int endIndex) {
+		return classe.substring(beginIndex, endIndex);
+	}
+
+	public String substring(int beginIndex) {
+		return classe.substring(beginIndex);
+	}
+
+	public char[] toCharArray() {
+		return classe.toCharArray();
+	}
+
+	public String toLowerCase() {
+		return classe.toLowerCase();
+	}
+
+	public String toLowerCase(Locale locale) {
+		return classe.toLowerCase(locale);
+	}
+
+	public String toString() {
+		return classe.toString();
+	}
+
+	public String toUpperCase() {
+		return classe.toUpperCase();
+	}
+
+	public String toUpperCase(Locale locale) {
+		return classe.toUpperCase(locale);
+	}
+
+	public String trim() {
+		return classe.trim();
+	}
+
 	@Transient
 	public void setupCalsseJogador() {
 		if (proxClasse != null) {
@@ -318,6 +523,51 @@ public class ObjTopWar {
 	@Transient
 	public boolean verificaObj() {
 		return ConstantesTopWar.OBJ_ROCKET == getArma();
+	}
+
+	@Transient
+	public int codClasse() {
+		if (ConstantesTopWar.ASSAULT.equals(getClasse())) {
+			return 0;
+		} else if (ConstantesTopWar.SHOTGUN.equals(getClasse())) {
+			return 1;
+		} else if (ConstantesTopWar.SNIPER.equals(getClasse())) {
+			return 2;
+		} else if (ConstantesTopWar.MACHINEGUN.equals(getClasse())) {
+			return 3;
+		} else if (ConstantesTopWar.ROCKET.equals(getClasse())) {
+			return 4;
+		} else if (ConstantesTopWar.SHIELD.equals(getClasse())) {
+			return 5;
+		}
+		return 0;
+	}
+
+	@Transient
+	public void setCodClasse(int codClasse) {
+		switch (codClasse) {
+		case 0:
+			setClasse(ConstantesTopWar.ASSAULT);
+			break;
+		case 1:
+			setClasse(ConstantesTopWar.SHOTGUN);
+			break;
+		case 2:
+			setClasse(ConstantesTopWar.SNIPER);
+			break;
+		case 3:
+			setClasse(ConstantesTopWar.MACHINEGUN);
+			break;
+		case 4:
+			setClasse(ConstantesTopWar.ROCKET);
+			break;
+		case 5:
+			setClasse(ConstantesTopWar.SHIELD);
+			break;
+		default:
+			break;
+		}
+
 	}
 
 }

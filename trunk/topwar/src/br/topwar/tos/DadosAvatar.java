@@ -15,13 +15,14 @@ public class DadosAvatar {
 	private long tempoUtlAtaque;
 	private int vida;
 	private int arma;
+	private int classe;
 	private int rangeUtlDisparo;
 	private boolean invencivel;
 
 	public String encode() {
 		return time + "!" + nomeJogador + "!" + x + "!" + y + "!" + angulo
-				+ "!" + tempoUtlAtaque + "!" + vida + "!" + arma + "!"
-				+ rangeUtlDisparo + "!" + (invencivel ? "1" : "0");
+				+ "!" + tempoUtlAtaque + "!" + vida + "!" + arma + "!" + classe
+				+ "!" + rangeUtlDisparo + "!" + (invencivel ? "1" : "0");
 	}
 
 	public void decode(String val) {
@@ -34,8 +35,9 @@ public class DadosAvatar {
 		tempoUtlAtaque = parseLong(sp[5]);
 		vida = parseInt(sp[6]);
 		arma = parseInt(sp[7]);
-		rangeUtlDisparo = parseInt(sp[8]);
-		invencivel = "1".equals(sp[9]);
+		classe = parseInt(sp[8]);
+		rangeUtlDisparo = parseInt(sp[9]);
+		invencivel = "1".equals(sp[10]);
 	}
 
 	private double parseDouble(String string) {
@@ -79,6 +81,7 @@ public class DadosAvatar {
 			dadosAvatar.arma = avatarTopWar.getArma();
 			dadosAvatar.rangeUtlDisparo = avatarTopWar.getRangeUtlDisparo();
 			dadosAvatar.invencivel = avatarTopWar.isInvencivel();
+			dadosAvatar.classe = avatarTopWar.codClasse();
 			buffer.append(dadosAvatar.encode() + "@");
 		}
 		return buffer.toString();
@@ -100,6 +103,7 @@ public class DadosAvatar {
 			avatarTopWar.setTempoUtlAtaque(dadosAvatar.tempoUtlAtaque);
 			avatarTopWar.setVida(dadosAvatar.vida);
 			avatarTopWar.setArma(dadosAvatar.arma);
+			avatarTopWar.setCodClasse(dadosAvatar.classe);
 			avatarTopWar.setRangeUtlDisparo(dadosAvatar.rangeUtlDisparo);
 			avatarTopWar.setInvencivel(dadosAvatar.invencivel);
 			avatarTopWars.add(avatarTopWar);
