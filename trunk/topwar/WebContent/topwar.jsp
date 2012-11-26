@@ -177,11 +177,11 @@ img {
 				<h1 id="description">Guerra Estrategica</h1>
 			</span>
 			<a id="link" style="position: absolute; left: 150px; top: 10px;font-size: 16px;"
-				href="http://twitter.com/mesa11" style="text-align: right;"
-				target="_BLANK">Twitter</a>
-			<a id="link" style="position: absolute; left: 250px; top: 10px;font-size: 16px;"
+				href="http://sowbra.com.br" style="text-align: right;"
+				target="_BLANK">Sowbra Games</a>
+			<a id="link" style="position: absolute; left: 350px; top: 10px;font-size: 16px;"
 				href="http://sowbreira.appspot.com/" style="text-align: right;"
-				target="_BLANK">Site Autor</a>
+				target="_BLANK">Sowbreira</a>
 			<a id="link" style="position: absolute; left: 370px; top: 10px;font-size: 16px;"
 				href="http://www.java.com/" style="text-align: right;"
 				target="_BLANK">Instale o Java</a>		
@@ -249,15 +249,15 @@ img {
 				<a id="link" 
 					href="../../f1mane" style="text-align: center;"
 					target="_BLANK">  F1-mane </a><br>
-				<a href="./../f1mane/fm1.-jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img  src="./../f1mane/fm1.-jpg" width="130" height="120" /></a>
-				<a href="./../f1mane/fm2.-jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img  src="./../f1mane/fm2.-jpg" width="130" height="120" /></a>
+				<a href="./../f1mane/fm1.jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img  src="./../f1mane/fm1.jpg" width="130" height="120" /></a>
+				<a href="./../f1mane/fm2.jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img  src="./../f1mane/fm2.jpg" width="130" height="120" /></a>
 			</td>
 			<td>				
 				<a id="link" 
 					href="../../mesa11" style="text-align: center;"
 					target="_BLANK">  Mesa-11 </a><br>
-				<a href="../../mesa11/m11-1.-jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img  src="../../mesa11/m11-1.-jpg" width="130" height="120" /></a>
-				<a href="../../mesa11/m11-2.-jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img  src="../../mesa11/m11-2.-jpg" width="130" height="120" /></a>
+				<a href="../../mesa11/m11-1.jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img  src="../../mesa11/m11-1.jpg" width="130" height="120" /></a>
+				<a href="../../mesa11/m11-2.jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img  src="../../mesa11/m11-2.jpg" width="130" height="120" /></a>
 			</td></tr>
 			</table>
 		</div>		

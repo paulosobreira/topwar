@@ -5,7 +5,6 @@
 		<title>TopWar</title>
 		<vendor>Paulo Sobreira</vendor>
 		<homepage href="http://sowbreira.appspot.com/" />
-		<icon href="icon.png"/>  
 		<description>TopWar (Guerra Estrategica)</description>
 		<offline-allowed />
 	</information>
