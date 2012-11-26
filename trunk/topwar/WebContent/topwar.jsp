@@ -179,21 +179,18 @@ img {
 			<a id="link" style="position: absolute; left: 150px; top: 10px;font-size: 16px;"
 				href="http://sowbra.com.br" style="text-align: right;"
 				target="_BLANK">Sowbra Games</a>
-			<a id="link" style="position: absolute; left: 350px; top: 10px;font-size: 16px;"
+			<a id="link" style="position: absolute; left: 320px; top: 10px;font-size: 16px;"
 				href="http://sowbreira.appspot.com/" style="text-align: right;"
 				target="_BLANK">Sowbreira</a>
-			<a id="link" style="position: absolute; left: 370px; top: 10px;font-size: 16px;"
-				href="http://www.java.com/" style="text-align: right;"
-				target="_BLANK">Instale o Java</a>		
 			<a id="link" style="position: absolute; left: 150px; top: 50px;font-size: 16px;"
 				style="text-align: right;" onclick="document.getElementById('pop').style.display='block';">
 				Como Jogar</a>				
 			<a id="link" style="position: absolute; left: 300px; top: 50px;font-size: 16px;"
-				href="mailto:sowbreira@gmail.com" style="text-align: right;"
-				target="_BLANK">XXXXXXXXXXXXXXXXXXX</a>
+				href="http://www.java.com/" style="text-align: right;"
+				target="_BLANK">Instale o Java</a>
 			<br>					
 		</div>
-		<div id="pop" style="background-color: #F0F0F0;">
+		<div id="pop" style="background-color: white;">
 	    	XXXXXXXXXXXXXXXXXX
 	    	<a href="#" style="position:absolute; left:92%" onclick="document.getElementById('pop').style.display='none';">[X]</a>
 			<p style="color: #0084B4;">
@@ -248,14 +245,14 @@ img {
 			<tr><td>
 				<a id="link" 
 					href="../../f1mane" style="text-align: center;"
-					target="_BLANK">  F1-mane </a><br>
+					target="_BLANK">  F1-mane </a><br><br>
 				<a href="./../f1mane/fm1.jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img  src="./../f1mane/fm1.jpg" width="130" height="120" /></a>
 				<a href="./../f1mane/fm2.jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img  src="./../f1mane/fm2.jpg" width="130" height="120" /></a>
 			</td>
 			<td>				
 				<a id="link" 
 					href="../../mesa11" style="text-align: center;"
-					target="_BLANK">  Mesa-11 </a><br>
+					target="_BLANK">  Mesa-11 </a><br><br>
 				<a href="../../mesa11/m11-1.jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img  src="../../mesa11/m11-1.jpg" width="130" height="120" /></a>
 				<a href="../../mesa11/m11-2.jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img  src="../../mesa11/m11-2.jpg" width="130" height="120" /></a>
 			</td></tr>
