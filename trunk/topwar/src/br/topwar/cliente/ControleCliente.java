@@ -130,9 +130,9 @@ public class ControleCliente extends NnpeChatCliente {
 		painelentrada.add(botPanel);
 		painelentrada.add(botsVsHumansPanel);
 
-		int result = JOptionPane.showConfirmDialog(this.nnpeChatWindow
-				.getMainPanel(), painelentrada, Lang.msg("criarJogo"),
-				JOptionPane.YES_NO_OPTION);
+		int result = JOptionPane.showConfirmDialog(
+				this.nnpeChatWindow.getMainPanel(), painelentrada,
+				Lang.msg("criarJogo"), JOptionPane.YES_NO_OPTION);
 		if (result == JOptionPane.YES_OPTION) {
 			NnpeTO nnpeTO = new NnpeTO();
 			nnpeTO.setComando(ConstantesTopWar.CRIAR_JOGO);
@@ -197,9 +197,11 @@ public class ControleCliente extends NnpeChatCliente {
 		ChatWindow chatWindow = (ChatWindow) this.nnpeChatWindow;
 		String nomeJogoSelecionado = chatWindow.obterJogoSelecionado();
 
-		int result = JOptionPane.showConfirmDialog(this.nnpeChatWindow
-				.getMainPanel(), classesPanel, Lang.msg("entrarJogo") + " "
-				+ Lang.decodeTexto(nomeJogoSelecionado),
+		int result = JOptionPane.showConfirmDialog(
+				this.nnpeChatWindow.getMainPanel(),
+				classesPanel,
+				Lang.msg("entrarJogo") + " "
+						+ Lang.decodeTexto(nomeJogoSelecionado),
 				JOptionPane.YES_NO_OPTION);
 		if (result != JOptionPane.YES_OPTION) {
 			return;
@@ -252,12 +254,7 @@ public class ControleCliente extends NnpeChatCliente {
 	}
 
 	public boolean verificaDelay() {
-		if (getLatenciaReal() < ConstantesTopWar.ATRASO_REDE_PADRAO) {
-			return ((System.currentTimeMillis() - ultAcao) < ConstantesTopWar.ATRASO_REDE_PADRAO);
-		} else {
-			return false;
-		}
-
+		return ((System.currentTimeMillis() - ultAcao) < getLatenciaMinima());
 	}
 
 	public Object moverEsquerda() {
@@ -283,8 +280,9 @@ public class ControleCliente extends NnpeChatCliente {
 		DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
 		acaoClienteTopWar.setNomeCliente(sessaoCliente.getNomeJogador());
 		acaoClienteTopWar.setAngulo(jogoCliente.getAngulo());
-		double distaciaEntrePontos = GeoUtil.distaciaEntrePontos(jogoCliente
-				.getPontoAvatar(), jogoCliente.getPontoMouseMovendo());
+		double distaciaEntrePontos = GeoUtil.distaciaEntrePontos(
+				jogoCliente.getPontoAvatar(),
+				jogoCliente.getPontoMouseMovendo());
 		if (jogoCliente.getArma() != ConstantesTopWar.ARMA_ROCKET)
 			distaciaEntrePontos *= 1.2;
 		acaoClienteTopWar.setRange((int) distaciaEntrePontos);

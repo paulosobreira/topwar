@@ -1300,7 +1300,7 @@ public class JogoServidor {
 		set.add(4);
 		set.add(5);
 		for (Iterator iterator = set.iterator(); iterator.hasNext();) {
-			System.out.println(iterator.next());
+			Logger.logar(iterator.next());
 		}
 
 	}

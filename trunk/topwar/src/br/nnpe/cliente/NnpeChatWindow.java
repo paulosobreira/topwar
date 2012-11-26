@@ -174,7 +174,8 @@ public class NnpeChatWindow {
 		text += " " + Lang.msg("maxJogos") + " " + 10;
 
 		infoLabel1.setText(text);
-
+		if (mainPanel != null)
+			mainPanel.repaint();
 	}
 
 	public void gerarLayout() {

@@ -222,7 +222,7 @@ public abstract class NnpeProxyComandos {
 		}
 		Logger.logar("cadastrarUsuario " + usuario);
 		if (erroMail) {
-			System.out.println("Senha para Usuario " + usuario + ":" + senha);
+			Logger.logar("Senha para Usuario " + usuario + ":" + senha);
 		}
 		return criarSessao(usuario);
 	}
@@ -238,9 +238,9 @@ public abstract class NnpeProxyComandos {
 	private void mandaMailSenha(String nome, String email, String senha)
 			throws AddressException, MessagingException {
 		Logger.logar("Senha para  :" + nome + " : " + senha);
-		NnpeServlet.email.sendSimpleMail("Nnpe Game Password",
-				new String[] { email }, "admin@nnpe.com",
-				"Your game user:password is " + nome + ":" + senha, false);
+		NnpeServlet.email.sendSimpleMail("Sowbra Game Password",
+				new String[] { email }, "Your game user:password is " + nome
+						+ ":" + senha, false);
 	}
 
 	public NnpeDados getNnpeDadosChat() {
