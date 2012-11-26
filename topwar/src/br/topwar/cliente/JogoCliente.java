@@ -41,6 +41,7 @@ import br.topwar.recursos.idiomas.Lang;
 import br.topwar.serial.MapaTopWar;
 import br.topwar.serial.ObjetoMapa;
 import br.topwar.servidor.JogoServidor;
+import br.topwar.tos.DadosAcaoClienteTopWar;
 import br.topwar.tos.ObjTopWar;
 import br.topwar.tos.DadosAvatar;
 import br.topwar.tos.DadosJogoTopWar;
@@ -83,6 +84,7 @@ public class JogoCliente {
 	private Thread threadMudarClasse;
 	private Thread threadAlternaFaca;
 	private Thread threadMouseCliqueUnico;
+	private Thread threadAtualizaAngulo;
 	private String utlEvento = "0";
 	private Long tempoRestanteJogo;
 	private boolean seguirMouse;
@@ -245,7 +247,14 @@ public class JogoCliente {
 						synchronized (avatarClientes) {
 							atualizaListaAvatares();
 						}
-						Thread.sleep(ConstantesTopWar.ATRASO_REDE_PADRAO);
+						long sleep = ConstantesTopWar.ATRASO_REDE_PADRAO;
+						if (controleCliente.getLatenciaReal() > ConstantesTopWar.ATRASO_REDE_PADRAO) {
+							sleep = ConstantesTopWar.DUPLO_ATRASO_REDE_PADRAO;
+						}
+						if (controleCliente.getLatenciaReal() > ConstantesTopWar.DUPLO_ATRASO_REDE_PADRAO) {
+							sleep = controleCliente.getLatenciaReal();
+						}
+						Thread.sleep(sleep);
 						if (tempoRestanteJogo <= 0) {
 							jogoEmAndamento = false;
 						}
@@ -428,7 +437,24 @@ public class JogoCliente {
 			angulo = GeoUtil.calculaAngulo(pontoAvatar, pontoMouseMovendo, 90);
 		if (!seguirMouse) {
 			if (!(threadMoverMouse != null && threadMoverMouse.isAlive())) {
-				controleCliente.atualizaAngulo();
+				if (threadAtualizaAngulo != null
+						&& threadAtualizaAngulo.isAlive()) {
+					return;
+				}
+				threadAtualizaAngulo = new Thread(new Runnable() {
+					@Override
+					public void run() {
+						while (controleCliente.verificaDelay()) {
+							try {
+								Thread.sleep(50);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						}
+						controleCliente.atualizaAngulo();
+					}
+				});
+				threadAtualizaAngulo.start();
 			}
 		}
 
@@ -440,50 +466,12 @@ public class JogoCliente {
 			Runnable runnable = new Runnable() {
 				@Override
 				public void run() {
-					Object ret = ConstantesTopWar.OK;
-					Point seguir = pontoMouseSeguir;
-					while (vida > 0
-							&& (ConstantesTopWar.OK.equals(ret) || ConstantesTopWar.ESPERE
-									.equals(ret))
-							&& GeoUtil.distaciaEntrePontos(pontoAvatar,
-									pontoMouseSeguir) > velocidade) {
-						if (GeoUtil.distaciaEntrePontos(pontoAvatar, seguir) < velocidade) {
-							seguir = pontoMouseSeguir;
-						}
-						List<Point> line = GeoUtil.drawBresenhamLine(
-								pontoAvatar, seguir);
-						if (line.size() > velocidade) {
-							Point p = line.get(velocidade);
-							if (GeoUtil.distaciaEntrePontos(pontoAvatar, p) > velocidade) {
-								p = line.get(velocidade - 1);
-							}
-							if (JogoServidor.verificaColisao(p, mapaTopWar)) {
-								seguir = obterPontoAleatorioAndavel(pontoAvatar);
-								continue;
-							}
-							ret = controleCliente.moverPonto(p);
-						}
-						try {
-							Thread.sleep(ConstantesTopWar.MEIO_ATRASO_REDE_PADRAO);
-						} catch (InterruptedException e) {
-							return;
-						}
-					}
+					controleCliente.moverPonto(pontoMouseSeguir);
 				}
 			};
 			threadMoverMouse = new Thread(runnable);
 			threadMoverMouse.start();
 		}
-	}
-
-	public Point obterPontoAleatorioAndavel(Point pontoAvatar) {
-		Point calculaPonto = GeoUtil.calculaPonto(Util.intervalo(0, 360),
-				Util.intervalo(10, 30), pontoAvatar);
-		while (JogoServidor.verificaColisao(calculaPonto, mapaTopWar)) {
-			calculaPonto = GeoUtil.calculaPonto(Util.intervalo(0, 360),
-					Util.intervalo(10, 30), pontoAvatar);
-		}
-		return calculaPonto;
 	}
 
 	public Point getPontoAvatar() {
@@ -573,13 +561,16 @@ public class JogoCliente {
 			frameTopWar.getContentPane().add(painelTopWar.getScrollPane(),
 					BorderLayout.CENTER);
 		}
-		frameTopWar.setSize(850, 500);
+		frameTopWar.setSize(900, 700);
 		frameTopWar.setVisible(true);
 	}
 
 	protected void matarTodasThreads() {
 		jogoEmAndamento = false;
 		try {
+			if (threadAtualizaAngulo != null) {
+				threadAtualizaAngulo.interrupt();
+			}
 			if (threadAtualizaPosAvatar != null) {
 				threadAtualizaPosAvatar.interrupt();
 			}

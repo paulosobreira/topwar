@@ -35,15 +35,9 @@ public class ThreadBot implements Runnable {
 					botInfo.processaAcaoBot();
 					long fimIN = (System.currentTimeMillis() - iniIN);
 					botInfo.setTempoProcessaAcaoBot(fimIN);
-					// if (fimIN > 10)
-					// Logger.logar("Processa Acao Bot  "
-					// + botInfo.getAvatarTopWar().getClasse() + " "
-					// + (fimIN));
 				}
 			}
 			long fim = (System.currentTimeMillis() - ini);
-//			if (fim > 0)
-//				Logger.logar("Processa Acao Bot  " + (fim));
 			try {
 				long sleep = (ConstantesTopWar.ATRASO_REDE_PADRAO_BOTS) - fim;
 				if (sleep < 50) {

@@ -33,9 +33,18 @@ public class ObjTopWar {
 	private transient double distanciaDeUmAvatar;
 	private transient BotInfoAbstract botInfo;
 	private transient String proxClasse;
+	private transient Point pontoDestinoMover;
 
 	public double getDistanciaDeUmAvatar() {
 		return distanciaDeUmAvatar;
+	}
+
+	public Point getPontoDestinoMover() {
+		return pontoDestinoMover;
+	}
+
+	public void setPontoDestinoMover(Point destinoMover) {
+		this.pontoDestinoMover = destinoMover;
 	}
 
 	public String getProxClasse() {
