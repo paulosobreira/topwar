@@ -45,6 +45,7 @@ import javax.swing.event.ChangeListener;
 
 import br.nnpe.GeoUtil;
 import br.nnpe.ImageUtil;
+import br.nnpe.Logger;
 import br.nnpe.Util;
 import br.topwar.ConstantesTopWar;
 import br.topwar.recursos.CarregadorRecursos;
@@ -315,7 +316,7 @@ public class Conceito {
 				graphics2d.setColor(Color.lightGray);
 				graphics2d.fillRect(0, 0, mapaTopWar.getLargura(),
 						mapaTopWar.getAltura());
-			    graphics2d.drawImage(img, null, 0, 0);
+				graphics2d.drawImage(img, null, 0, 0);
 				double angulo = GeoUtil.calculaAngulo(pontoAvatar, pontoMouse,
 						90);
 				if (angulo < 0) {
@@ -349,7 +350,7 @@ public class Conceito {
 						imgJog = mapImgs.get(time + "-" + anim + "-7");
 					}
 					if (imgJog == null) {
-						System.out.println("Angulo nulo " + angulo);
+						Logger.logar("Angulo nulo " + angulo);
 					} else {
 						Point desenha = new Point(
 								p.x - (imgJog.getWidth() / 2), p.y

@@ -2096,7 +2096,7 @@ public class PainelTopWar {
 			}
 		}
 		if (!iniciado) {
-			System.out.println("!iniciado");
+			Logger.logar("!iniciado");
 			Ellipse2D ellipse2d = new Ellipse2D.Double(desenha.x - 200,
 					desenha.y - 200, 400, 400);
 			return ellipse2d;

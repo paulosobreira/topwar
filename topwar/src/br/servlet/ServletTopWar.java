@@ -22,7 +22,7 @@ public class ServletTopWar extends NnpeServlet {
 			Logger.logarExept(e);
 		}
 	}
-	
+
 	@Override
 	public void destroy() {
 		proxyComandos.pararMonitor();

@@ -25,7 +25,7 @@ public class ControleBots {
 
 	public static void main(String[] args) throws IOException {
 		NameGenerator nameGenerator = new NameGenerator("silabas");
-		System.out.println(" ->  "
+		Logger.logar(" ->  "
 				+ nameGenerator.compose(Util.intervalo(2, 4)));
 
 	}

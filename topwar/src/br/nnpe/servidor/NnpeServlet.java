@@ -12,9 +12,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.Inet4Address;
+import java.net.UnknownHostException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
+import java.util.Properties;
 import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -36,6 +38,7 @@ import org.hibernate.tool.hbm2ddl.DatabaseMetadata;
 import br.nnpe.Constantes;
 import br.nnpe.Email;
 import br.nnpe.Logger;
+import br.nnpe.Util;
 import br.nnpe.ZipUtil;
 import br.nnpe.persistencia.HibernateUtil;
 import br.topwar.ProxyComandos;
@@ -78,6 +81,38 @@ public class NnpeServlet extends HttpServlet {
 	public void atualizarJnlp(String jnlp) throws IOException {
 		String file = webDir + File.separator + jnlp;
 		BufferedReader reader = new BufferedReader(new FileReader(file));
+		String host = obterHost();
+		String readLine = reader.readLine();
+		StringBuffer buffer = new StringBuffer();
+		while (readLine != null) {
+			if (readLine.contains("{host}")) {
+				buffer.append(readLine.replace(replaceHost, host));
+			} else {
+				buffer.append(readLine);
+			}
+			readLine = reader.readLine();
+		}
+		reader.close();
+		FileWriter fileWriter = new FileWriter(file);
+		fileWriter.write(buffer.toString());
+		fileWriter.close();
+
+	}
+
+	private String obterHost() throws UnknownHostException {
+		String host = "";
+		try {
+			Properties properties = new Properties();
+			properties.load(this.getClass().getResourceAsStream(
+					"server.properties"));
+			host = properties.getProperty("host");
+			if (!Util.isNullOrEmpty(host)) {
+				return host;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		String ip = Inet4Address.getLocalHost().getHostAddress();
 		int port = 80;
 		try {
@@ -91,23 +126,8 @@ public class NnpeServlet extends HttpServlet {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		String host = ip + ":" + port;
-		String readLine = reader.readLine();
-		StringBuffer buffer = new StringBuffer();
-		while (readLine != null) {
-			if (readLine.contains(replaceHost)) {
-				buffer.append(readLine.replace(replaceHost, host));
-			} else {
-				buffer.append(readLine);
-			}
-			readLine = reader.readLine();
-		}
-		reader.close();
-		FileWriter fileWriter = new FileWriter(file);
-		fileWriter.write(buffer.toString());
-		fileWriter.close();
-		Logger.logar("Atualizado " + jnlp);
-
+		host = ip + ":" + port;
+		return host;
 	}
 
 	public void destroy() {
