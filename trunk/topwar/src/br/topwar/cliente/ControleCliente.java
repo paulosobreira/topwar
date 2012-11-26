@@ -162,7 +162,7 @@ public class ControleCliente extends NnpeChatCliente {
 				jogoCliente.inciaJogo();
 				if (local) {
 					JFrame frameTopWar = jogoCliente.getFrameTopWar();
-					frameTopWar.setSize(800, 600);
+					frameTopWar.setSize(900, 700);
 					frameTopWar.setVisible(true);
 				} else {
 					jogoCliente.gerarRadio();
@@ -294,13 +294,10 @@ public class ControleCliente extends NnpeChatCliente {
 		return ret;
 	}
 
-	public Object atualizaAngulo() {
+	public void atualizaAngulo() {
 		if (!Util.isNullOrEmpty(jogoCliente.getKillCam())) {
-			return null;
+			return;
 		}
-		// if (verificaDelay()) {
-		// return null;
-		// }
 		DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
 		acaoClienteTopWar.setNomeCliente(sessaoCliente.getNomeJogador());
 		acaoClienteTopWar.setAngulo(jogoCliente.getAngulo());
@@ -308,9 +305,7 @@ public class ControleCliente extends NnpeChatCliente {
 		nnpeTO.setComando(ConstantesTopWar.ATUALIZA_ANGULO);
 		nnpeTO.setData(acaoClienteTopWar);
 		Object ret = enviarObjeto(nnpeTO);
-		// ultAcao = System.currentTimeMillis();
-		return ret;
-
+		ultAcao = System.currentTimeMillis();
 	}
 
 	public Object recarregar() {

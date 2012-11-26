@@ -27,6 +27,8 @@ public class MainFrame {
 	private ClienteLocal clienteLocal;
 	private ProxyComandos proxyComandos;
 
+	protected boolean jogoIniciado;
+
 	public MainFrame() {
 		proxyComandos = new ProxyComandos();
 		servidorLocal = new ServidorLocal(proxyComandos);
@@ -54,7 +56,7 @@ public class MainFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				clienteLocal.criarJogoDepoisDeLogar(true);
-
+				jogoIniciado = true;
 			}
 		});
 		menuJogo.add(iniciar);
@@ -80,10 +82,12 @@ public class MainFrame {
 		frameTopWar.getContentPane().add(new JPanel() {
 			@Override
 			protected void paintComponent(Graphics g) {
-				super.paintComponent(g);
-				Graphics2D graphics2d = (Graphics2D) g;
-				if (img != null)
-					graphics2d.drawImage(img, null, 0, 0);
+				if (!jogoIniciado) {
+					super.paintComponent(g);
+					Graphics2D graphics2d = (Graphics2D) g;
+					if (img != null)
+						graphics2d.drawImage(img, null, 0, 0);
+				}
 			}
 		});
 		frameTopWar.setVisible(true);

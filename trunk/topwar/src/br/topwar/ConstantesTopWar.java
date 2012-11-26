@@ -59,6 +59,7 @@ public class ConstantesTopWar {
 	public static final String RECARREGAR = "R";
 	public static final long ATRASO_REDE_PADRAO = 120;
 	public static final long MEIO_ATRASO_REDE_PADRAO = ATRASO_REDE_PADRAO / 2;
+	public static final long DUPLO_ATRASO_REDE_PADRAO = ATRASO_REDE_PADRAO * 2;
 
 	public static final String ANGULO = "ANGULO";
 

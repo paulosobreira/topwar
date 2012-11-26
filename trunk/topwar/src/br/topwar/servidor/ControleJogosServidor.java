@@ -84,7 +84,7 @@ public class ControleJogosServidor {
 		if (jogoServidor == null) {
 			return null;
 		}
-		ObjTopWar avatarTopWar = obterAvatarTopWarCliente(acaoClienteTopWar
+		ObjTopWar avatarTopWar = obterAvatarTopWarClienteCopia(acaoClienteTopWar
 				.getNomeCliente());
 		if (avatarTopWar == null) {
 			return null;
@@ -110,7 +110,7 @@ public class ControleJogosServidor {
 		return mapaJogos.get(nomeJogo);
 	}
 
-	private ObjTopWar obterAvatarTopWarCliente(String nomeCliente) {
+	private ObjTopWar obterAvatarTopWarClienteCopia(String nomeCliente) {
 		Collection jogosAndamento = nnpeDados.getJogosAndamento();
 		for (Iterator iterator = jogosAndamento.iterator(); iterator.hasNext();) {
 			String nmJogog = (String) iterator.next();
@@ -188,7 +188,7 @@ public class ControleJogosServidor {
 		if (jogoServidor == null) {
 			return null;
 		}
-		ObjTopWar avatarTopWar = obterAvatarTopWarCliente(acaoClienteTopWar
+		ObjTopWar avatarTopWar = obterAvatarTopWarClienteCopia(acaoClienteTopWar
 				.getNomeCliente());
 		if (avatarTopWar == null) {
 			return null;
@@ -205,7 +205,7 @@ public class ControleJogosServidor {
 		if (jogoServidor == null) {
 			return null;
 		}
-		ObjTopWar avatarTopWar = obterAvatarTopWarCliente(acaoClienteTopWar
+		ObjTopWar avatarTopWar = obterAvatarTopWarClienteCopia(acaoClienteTopWar
 				.getNomeCliente());
 		if (avatarTopWar == null) {
 			return null;
@@ -222,7 +222,7 @@ public class ControleJogosServidor {
 		if (jogoServidor == null) {
 			return null;
 		}
-		ObjTopWar avatarTopWar = obterAvatarTopWarCliente(acaoClienteTopWar
+		ObjTopWar avatarTopWar = obterAvatarTopWarClienteCopia(acaoClienteTopWar
 				.getNomeCliente());
 		if (avatarTopWar == null) {
 			return null;
@@ -238,7 +238,7 @@ public class ControleJogosServidor {
 		if (jogoServidor == null) {
 			return null;
 		}
-		ObjTopWar avatarTopWar = obterAvatarTopWarCliente(acaoClienteTopWar
+		ObjTopWar avatarTopWar = obterAvatarTopWarClienteCopia(acaoClienteTopWar
 				.getNomeCliente());
 		if (avatarTopWar == null) {
 			return null;
@@ -254,7 +254,7 @@ public class ControleJogosServidor {
 		if (jogoServidor == null) {
 			return null;
 		}
-		ObjTopWar avatarTopWar = obterAvatarTopWarCliente(acaoClienteTopWar
+		ObjTopWar avatarTopWar = obterAvatarTopWarClienteCopia(acaoClienteTopWar
 				.getNomeCliente());
 		if (avatarTopWar == null) {
 			return null;
@@ -282,7 +282,7 @@ public class ControleJogosServidor {
 	}
 
 	public Object mudarClasse(NnpeTO nnpeTO) {
-		ObjTopWar avatarTopWar = obterAvatarTopWarCliente(nnpeTO
+		ObjTopWar avatarTopWar = obterAvatarTopWarClienteCopia(nnpeTO
 				.getSessaoCliente().getNomeJogador());
 		if (avatarTopWar == null) {
 			return null;
@@ -297,7 +297,7 @@ public class ControleJogosServidor {
 		if (jogoServidor == null) {
 			return null;
 		}
-		ObjTopWar avatarTopWar = obterAvatarTopWarCliente(nnpeTO
+		ObjTopWar avatarTopWar = obterAvatarTopWarClienteCopia(nnpeTO
 				.getSessaoCliente().getNomeJogador());
 		if (avatarTopWar == null) {
 			return null;
