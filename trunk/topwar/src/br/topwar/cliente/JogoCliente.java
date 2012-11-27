@@ -186,6 +186,22 @@ public class JogoCliente {
 										.getPontoAvatar());
 								continue;
 							}
+							if (avatarCliente.isInvencivel()
+									&& getMapaTopWar() != null
+									&& (GeoUtil.distaciaEntrePontos(
+											getMapaTopWar().getPontoTimeAzul(),
+											avatarCliente.getPontoAvatar()) < avatarCliente
+											.getVelocidade() || GeoUtil
+											.distaciaEntrePontos(
+													getMapaTopWar()
+															.getPontoTimeVermelho(),
+													avatarCliente
+															.getPontoAvatar()) < avatarCliente
+											.getVelocidade())) {
+								avatarCliente.setPontoAvatarSuave(avatarCliente
+										.getPontoAvatar());
+								continue;
+							}
 							List<Point> linha = GeoUtil.drawBresenhamLine(
 									avatarCliente.getPontoAvatar(),
 									avatarCliente.getPontoAvatarSuave());
