@@ -698,8 +698,8 @@ public class JogoServidor {
 					}
 					Point explo = objTopWar.getPontoAvatar();
 					Ellipse2D circ = new Ellipse2D.Double(
-							(double) explo.x - 50.0, (double) explo.y - 50.0,
-							100.0, 100.0);
+							(double) explo.x - 75.0, (double) explo.y - 75.0,
+							150.0, 150.0);
 					List<EventoJogo> eventosTemp = new ArrayList<EventoJogo>();
 					List<ObjTopWar> avatarTopWarsCopia = getAvatarTopWarsCopia();
 					List<ObjTopWar> atingidosList = new ArrayList<ObjTopWar>();

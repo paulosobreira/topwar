@@ -44,24 +44,7 @@ public class BotInfoMachine extends BotInfoAbstract {
 					executouAcaoAtaque);
 		}
 		if (!executouAcaoAtaque) {
-			patrulhar();
-			List<Point> lineMove = GeoUtil.drawBresenhamLine(
-					avatarTopWar.getPontoAvatar(), getPontoDestino());
-			if (lineMove.size() < avatarTopWar.getVelocidade()) {
-				setPontoDestino(null);
-				setEstado(null);
-			} else {
-				Point dstMover = lineMove.get(avatarTopWar.getVelocidade() - 1);
-				DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
-				acaoClienteTopWar.setPonto(dstMover);
-				acaoClienteTopWar.setAngulo(GeoUtil.calculaAngulo(
-						avatarTopWar.getPontoAvatar(), dstMover, 90));
-				String mover = (String) jogoServidor.moverPontoAvatar(
-						avatarTopWar, acaoClienteTopWar);
-				if (!ConstantesTopWar.OK.equals(mover)) {
-					setPontoDestino(null);
-				}
-			}
+			moverBot();
 		}
 
 	}
