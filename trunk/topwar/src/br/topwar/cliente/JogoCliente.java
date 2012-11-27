@@ -85,10 +85,10 @@ public class JogoCliente {
 	private Thread threadAlternaFaca;
 	private Thread threadMouseCliqueUnico;
 	private Thread threadAtualizaAngulo;
+	private Thread threadSeguirMouse;
 	private String utlEvento = "0";
 	private Long tempoRestanteJogo;
 	private boolean seguirMouse;
-	private Thread threadSeguirMouse;
 	private String killCam;
 	private List<PlacarTopWar> placar;
 	private Set<EventoJogo> eventos = new HashSet<EventoJogo>();
@@ -171,38 +171,36 @@ public class JogoCliente {
 				while (jogoEmAndamento && !interrupt) {
 					try {
 						int media = 0;
-						synchronized (avatarClientes) {
-							for (Iterator iterator = avatarClientes.iterator(); iterator
-									.hasNext();) {
-								AvatarCliente avatarCliente = (AvatarCliente) iterator
-										.next();
-								if (avatarCliente.isLocal()) {
-									avatarLocal = avatarCliente;
-								}
-								if (avatarCliente.getPontoAvatarSuave() == null) {
-									avatarCliente
-											.setPontoAvatarSuave(avatarCliente
-													.getPontoAvatar());
-									continue;
-								}
-								List<Point> linha = GeoUtil.drawBresenhamLine(
-										avatarCliente.getPontoAvatar(),
-										avatarCliente.getPontoAvatarSuave());
-								int noventaPorcento = (int) ((linha.size() * 0.9));
-								if (linha.size() > avatarCliente
-										.getVelocidade()) {
-									avatarCliente.setPontoAvatarSuave(linha
-											.get(noventaPorcento));
-								} else if (linha.size() > 1) {
-									Point point = linha.get(linha.size() - 2);
-									avatarCliente.setPontoAvatarSuave(point);
-								} else {
-									avatarCliente
-											.setPontoAvatarSuave(avatarCliente
-													.getPontoAvatar());
-								}
-								media += linha.size();
+						for (Iterator iterator = avatarClientes.iterator(); iterator
+								.hasNext();) {
+							AvatarCliente avatarCliente = (AvatarCliente) iterator
+									.next();
+							if (avatarCliente.getVida() <= 0) {
+								continue;
 							}
+							if (avatarCliente.isLocal()) {
+								avatarLocal = avatarCliente;
+							}
+							if (avatarCliente.getPontoAvatarSuave() == null) {
+								avatarCliente.setPontoAvatarSuave(avatarCliente
+										.getPontoAvatar());
+								continue;
+							}
+							List<Point> linha = GeoUtil.drawBresenhamLine(
+									avatarCliente.getPontoAvatar(),
+									avatarCliente.getPontoAvatarSuave());
+							int noventaPorcento = (int) ((linha.size() * 0.9));
+							if (linha.size() > avatarCliente.getVelocidade()) {
+								avatarCliente.setPontoAvatarSuave(linha
+										.get(noventaPorcento));
+							} else if (linha.size() > 1) {
+								Point point = linha.get(linha.size() - 2);
+								avatarCliente.setPontoAvatarSuave(point);
+							} else {
+								avatarCliente.setPontoAvatarSuave(avatarCliente
+										.getPontoAvatar());
+							}
+							media += linha.size();
 						}
 						if (media > velocidade) {
 							atulaizaAvatarSleep -= (media - velocidade);
@@ -212,10 +210,18 @@ public class JogoCliente {
 						} else {
 							atulaizaAvatarSleep = 30;
 						}
+						if (controleCliente.getLatenciaReal() > controleCliente
+								.getLatenciaMinima()) {
+							atulaizaAvatarSleep += controleCliente
+									.getLatenciaReal() / 10;
+						}
+						if (atulaizaAvatarSleep > 50) {
+							atulaizaAvatarSleep = 50;
+						}
 						Thread.sleep(atulaizaAvatarSleep);
 					} catch (InterruptedException e) {
-						interrupt = true;
-						Logger.logarExept(e);
+						// interrupt = true;
+						// Logger.logarExept(e);
 					}
 				}
 			}
@@ -251,9 +257,10 @@ public class JogoCliente {
 						if (controleCliente.getLatenciaReal() > ConstantesTopWar.ATRASO_REDE_PADRAO) {
 							sleep = ConstantesTopWar.DUPLO_ATRASO_REDE_PADRAO;
 						}
-						if (controleCliente.getLatenciaReal() > ConstantesTopWar.DUPLO_ATRASO_REDE_PADRAO) {
-							sleep = controleCliente.getLatenciaReal();
-						}
+						// if (controleCliente.getLatenciaReal() >
+						// ConstantesTopWar.DUPLO_ATRASO_REDE_PADRAO) {
+						// sleep = controleCliente.getLatenciaReal();
+						// }
 						Thread.sleep(sleep);
 						if (tempoRestanteJogo <= 0) {
 							jogoEmAndamento = false;
