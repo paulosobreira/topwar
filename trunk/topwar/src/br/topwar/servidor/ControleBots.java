@@ -8,6 +8,7 @@ import br.nnpe.Logger;
 import br.nnpe.NameGenerator;
 import br.nnpe.Util;
 import br.topwar.ConstantesTopWar;
+import br.topwar.local.ServidorLocal;
 import br.topwar.tos.ObjTopWar;
 import br.topwar.tos.BotInfoAssault;
 import br.topwar.tos.DadosJogoTopWar;
@@ -15,7 +16,7 @@ import br.topwar.tos.DadosJogoTopWar;
 public class ControleBots {
 
 	private JogoServidor jogoServidor;
-
+	private ControleJogosServidor controleJogosServidor;
 	private ThreadBot thBot1;
 	private ThreadBot thBot2;
 
@@ -25,13 +26,14 @@ public class ControleBots {
 
 	public static void main(String[] args) throws IOException {
 		NameGenerator nameGenerator = new NameGenerator("silabas");
-		Logger.logar(" ->  "
-				+ nameGenerator.compose(Util.intervalo(2, 4)));
+		Logger.logar(" ->  " + nameGenerator.compose(Util.intervalo(2, 4)));
 
 	}
 
-	public ControleBots(JogoServidor jogoServidor) {
+	public ControleBots(JogoServidor jogoServidor,
+			ControleJogosServidor controleJogosServidor) {
 		this.jogoServidor = jogoServidor;
+		this.controleJogosServidor = controleJogosServidor;
 		thBot1 = new ThreadBot(jogoServidor);
 		thread1 = new Thread(thBot1);
 		thBot2 = new ThreadBot(jogoServidor);
@@ -45,6 +47,10 @@ public class ControleBots {
 					.isBotsVsHumans();
 
 			NameGenerator nameGenerator = new NameGenerator("silabas");
+			if (!(controleJogosServidor instanceof ServidorLocal)
+					&& numBots > 20) {
+				numBots = 20;
+			}
 			for (int i = 0; i < numBots; i++) {
 				String nome = "Bot " + i;
 				// while (nome == null)

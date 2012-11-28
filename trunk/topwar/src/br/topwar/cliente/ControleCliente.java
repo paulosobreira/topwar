@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.Point;
 
+import javax.swing.JApplet;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -105,7 +106,6 @@ public class ControleCliente extends NnpeChatCliente {
 		botCombo.addItem(40);
 		botCombo.addItem(50);
 		botCombo.addItem(60);
-		botCombo.addItem(1000);
 		botPanel.setBorder(new TitledBorder("") {
 			@Override
 			public String getTitle() {
@@ -162,7 +162,7 @@ public class ControleCliente extends NnpeChatCliente {
 				jogoCliente.inciaJogo();
 				if (local) {
 					JFrame frameTopWar = jogoCliente.getFrameTopWar();
-					frameTopWar.setSize(900, 700);
+					frameTopWar.setSize(1024, 768);
 					frameTopWar.setVisible(true);
 				} else {
 					jogoCliente.gerarRadio();
@@ -403,6 +403,10 @@ public class ControleCliente extends NnpeChatCliente {
 		nnpeTO.setData(text);
 		Object ret = enviarObjeto(nnpeTO);
 		ultAcao = System.currentTimeMillis();
+	}
+
+	public JApplet getApplet() {
+		return nnpeApplet;
 	}
 
 }

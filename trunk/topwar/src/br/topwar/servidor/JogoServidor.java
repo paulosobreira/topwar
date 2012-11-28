@@ -47,12 +47,15 @@ public class JogoServidor {
 	private Set<EventoJogo> eventos = new HashSet<EventoJogo>();
 	private List<RadioMsg> radio = new ArrayList<RadioMsg>();
 	private ControleBots controleBots;
+	private ControleJogosServidor controleJogosServidor;
 
 	public JogoServidor(DadosJogoTopWar dadosJogoTopWar,
-			ProxyComandos proxyComandos) {
+			ProxyComandos proxyComandos,
+			ControleJogosServidor controleJogosServidor) {
 		this.dadosJogoTopWar = dadosJogoTopWar;
 		this.proxyComandos = proxyComandos;
-		controleBots = new ControleBots(this);
+		this.controleJogosServidor = controleJogosServidor;
+		controleBots = new ControleBots(this, controleJogosServidor);
 		carregarMapa(dadosJogoTopWar);
 		incluirAvatarCriadorJogo(dadosJogoTopWar);
 		iniciarContadorTempoJogo();

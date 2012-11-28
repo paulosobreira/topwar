@@ -8,6 +8,8 @@ import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ContainerEvent;
+import java.awt.event.ContainerListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
@@ -48,6 +50,24 @@ public class ChatWindow extends NnpeChatWindow {
 				CarregadorRecursos.carregaBackGround("mercs-chat.png"), 50);
 	}
 
+	protected void geraListenerBGRepaint() {
+		super.geraListenerBGRepaint();
+		listaJogos.addContainerListener(new ContainerListener() {
+
+			@Override
+			public void componentRemoved(ContainerEvent e) {
+				if (mainPanel != null)
+					mainPanel.repaint();
+			}
+
+			@Override
+			public void componentAdded(ContainerEvent e) {
+				if (mainPanel != null)
+					mainPanel.repaint();
+			}
+		});
+	}
+
 	public void gerarLayout() {
 		JPanel cPanel = new JPanel(new BorderLayout());
 		compTransp(cPanel);
@@ -56,11 +76,11 @@ public class ChatWindow extends NnpeChatWindow {
 		mainPanel.add(cPanel, BorderLayout.CENTER);
 		JPanel chatPanel = new JPanel();
 		compTransp(chatPanel);
-		String versao = "Rodando Main";
+		String versao = "Local Main";
 		if (nnpeChatCliente != null) {
 			versao = nnpeChatCliente.getVersao();
 		}
-		chatPanel.setBorder(new TitledBorder("TopWar Chat Room " + versao));
+		chatPanel.setBorder(new TitledBorder("TopWar Chat Room Ver." + versao));
 		JPanel usersPanel = new JPanel();
 		compTransp(usersPanel);
 		usersPanel.setBorder(new TitledBorder("Jogadores Online") {
@@ -201,14 +221,6 @@ public class ChatWindow extends NnpeChatWindow {
 			String nmJogo = (String) iter.next();
 			Logger.logar("nmJogo" + nmJogo);
 			String key = Lang.decodeTexto(nmJogo);
-			// NnpeTO nnpeTO = new NnpeTO();
-			// nnpeTO.setComando(ConstantesTopWar.OBTER_DADOS_JOGO);
-			// nnpeTO.setData(nmJogo);
-			// String placar = "";
-			// Object ret = nnpeChatCliente.enviarObjeto(nnpeTO);
-			// if (ret instanceof NnpeTO) {
-			// nnpeTO = (NnpeTO) ret;
-			// }
 			mapaJogosAndamento.put(key, nmJogo);
 			modelJogosCriados.addElement(key);
 		}
