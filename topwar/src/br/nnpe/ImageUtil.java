@@ -9,7 +9,7 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
 import java.awt.Image;
-import java.awt.Point;
+import java.awt.MediaTracker;
 import java.awt.Rectangle;
 import java.awt.Transparency;
 import java.awt.geom.AffineTransform;
@@ -19,10 +19,10 @@ import java.awt.image.ColorModel;
 import java.awt.image.PixelGrabber;
 import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
+import java.net.URL;
 
 import javax.swing.ImageIcon;
-
-import br.topwar.serial.MapaTopWar;
+import javax.swing.JApplet;
 
 /**
  * @author Paulo Sobreira Criado Em 21/08/2005
@@ -35,8 +35,8 @@ public class ImageUtil {
 				img.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
 		srcBufferedImage.getGraphics().drawImage(img.getImage(), 0, 0, null);
 
-		BufferedImage bufferedImageRetorno = new BufferedImage(img
-				.getIconWidth(), img.getIconHeight(),
+		BufferedImage bufferedImageRetorno = new BufferedImage(
+				img.getIconWidth(), img.getIconHeight(),
 				BufferedImage.TYPE_INT_ARGB);
 		Raster srcRaster = srcBufferedImage.getData();
 		WritableRaster destRaster = bufferedImageRetorno.getRaster();
@@ -93,8 +93,8 @@ public class ImageUtil {
 
 			GraphicsConfiguration gc = gs.getDefaultConfiguration();
 
-			bimage = gc.createCompatibleImage(image.getWidth(null), image
-					.getHeight(null), transparency);
+			bimage = gc.createCompatibleImage(image.getWidth(null),
+					image.getHeight(null), transparency);
 		} catch (HeadlessException e) {
 			// The system does not have a screen
 		}
@@ -107,8 +107,8 @@ public class ImageUtil {
 				type = BufferedImage.TYPE_INT_ARGB;
 			}
 
-			bimage = new BufferedImage(image.getWidth(null), image
-					.getHeight(null), type);
+			bimage = new BufferedImage(image.getWidth(null),
+					image.getHeight(null), type);
 		}
 
 		// Copy image to buffered image
@@ -166,8 +166,8 @@ public class ImageUtil {
 				img.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
 		srcBufferedImage.getGraphics().drawImage(img.getImage(), 0, 0, null);
 
-		BufferedImage bufferedImageRetorno = new BufferedImage(img
-				.getIconWidth(), img.getIconHeight(),
+		BufferedImage bufferedImageRetorno = new BufferedImage(
+				img.getIconWidth(), img.getIconHeight(),
 				BufferedImage.TYPE_INT_ARGB);
 		Raster srcRaster = srcBufferedImage.getData();
 		WritableRaster destRaster = bufferedImageRetorno.getRaster();
@@ -196,8 +196,8 @@ public class ImageUtil {
 
 	public static BufferedImage processaSombra(BufferedImage imgJog) {
 
-		BufferedImage novaImg = new BufferedImage(imgJog.getWidth(), imgJog
-				.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		BufferedImage novaImg = new BufferedImage(imgJog.getWidth(),
+				imgJog.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2d = novaImg.createGraphics();
 		AlphaComposite composite = AlphaComposite.getInstance(
 				AlphaComposite.SRC_OUT, 1);
@@ -207,8 +207,9 @@ public class ImageUtil {
 
 		g2d.dispose();
 
-		BufferedImage imgSombraProcessada = new BufferedImage(novaImg
-				.getWidth(), novaImg.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		BufferedImage imgSombraProcessada = new BufferedImage(
+				novaImg.getWidth(), novaImg.getHeight(),
+				BufferedImage.TYPE_INT_ARGB);
 		Raster srcRaster = novaImg.getData();
 		WritableRaster destRaster = imgSombraProcessada.getRaster();
 		int[] argbArray = new int[4];
@@ -269,8 +270,8 @@ public class ImageUtil {
 		BufferedImage srcBufferedImage = new BufferedImage(img.getIconWidth(),
 				img.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
 		srcBufferedImage.getGraphics().drawImage(img.getImage(), 0, 0, null);
-		BufferedImage bufferedImageRetorno = new BufferedImage(img
-				.getIconWidth(), img.getIconHeight(),
+		BufferedImage bufferedImageRetorno = new BufferedImage(
+				img.getIconWidth(), img.getIconHeight(),
 				BufferedImage.TYPE_INT_ARGB);
 		Raster srcRaster = srcBufferedImage.getData();
 		WritableRaster destRaster = bufferedImageRetorno.getRaster();
@@ -306,5 +307,31 @@ public class ImageUtil {
 				AffineTransformOp.TYPE_BILINEAR);
 		op.filter(src, dst);
 		return dst;
+	}
+
+	public static BufferedImage carregaImagemWebContent(String backGround,
+			JApplet applet, String pathResouces) {
+		if (applet == null) {
+			Logger.logar("applet null ");
+			return null;
+		}
+		URL url = null;
+		try {
+			String caminho = applet.getCodeBase() + pathResouces + backGround;
+			Logger.logar("Caminho Carregar Bkg " + caminho);
+			url = new URL(caminho);
+			ImageIcon icon = new ImageIcon(url);
+			BufferedImage buff = ImageUtil.toBufferedImage(icon.getImage());
+			if (icon.getImageLoadStatus() != MediaTracker.COMPLETE) {
+				Logger.logar("Status " + icon.getImageLoadStatus()
+						+ " Nao Carregado " + url);
+				return null;
+			} else {
+				return buff;
+			}
+		} catch (Exception e) {
+			Logger.logarExept(e);
+		}
+		return null;
 	}
 }

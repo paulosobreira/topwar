@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JApplet;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -584,7 +585,7 @@ public class JogoCliente {
 			frameTopWar.getContentPane().add(painelTopWar.getScrollPane(),
 					BorderLayout.CENTER);
 		}
-		frameTopWar.setSize(900, 700);
+		frameTopWar.setSize(1024, 768);
 		frameTopWar.setVisible(true);
 	}
 
@@ -921,41 +922,21 @@ public class JogoCliente {
 	private void processaComandosTeclado(int keyCode) {
 
 		if (keyCode == KeyEvent.VK_A || keyCode == KeyEvent.VK_LEFT) {
-			if (avatarLocal != null) {
-				Point p = avatarLocal.getPontoAvatarSuave();
-				p.x -= 1;
-				avatarLocal.setPontoAvatarSuave(p);
-			}
 			controleCliente.moverEsquerda();
 			pararMovimentoMouse();
 			seguirMouse = false;
 		}
 		if (keyCode == KeyEvent.VK_S || keyCode == KeyEvent.VK_DOWN) {
-			if (avatarLocal != null) {
-				Point p = avatarLocal.getPontoAvatarSuave();
-				p.y += 1;
-				avatarLocal.setPontoAvatarSuave(p);
-			}
 			controleCliente.moverBaixo();
 			pararMovimentoMouse();
 			seguirMouse = false;
 		}
 		if (keyCode == KeyEvent.VK_D || keyCode == KeyEvent.VK_RIGHT) {
-			if (avatarLocal != null) {
-				Point p = avatarLocal.getPontoAvatarSuave();
-				p.x += 1;
-				avatarLocal.setPontoAvatarSuave(p);
-			}
 			controleCliente.moverDireita();
 			pararMovimentoMouse();
 			seguirMouse = false;
 		}
 		if (keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_UP) {
-			if (avatarLocal != null) {
-				Point p = avatarLocal.getPontoAvatarSuave();
-				p.y -= 1;
-				avatarLocal.setPontoAvatarSuave(p);
-			}
 			controleCliente.moverCima();
 			pararMovimentoMouse();
 			seguirMouse = false;
@@ -1066,5 +1047,9 @@ public class JogoCliente {
 			}
 		});
 		frameTopWar.requestFocus();
+	}
+
+	public JApplet getApplet() {
+		return controleCliente.getApplet();
 	}
 }

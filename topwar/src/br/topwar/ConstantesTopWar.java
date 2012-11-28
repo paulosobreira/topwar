@@ -131,5 +131,6 @@ public class ConstantesTopWar {
 	public static final int VELOCIDADE_FACA = 8;
 	public static final String RADIO_TIME = "RADIO_TIME";
 	public static final String RADIO_TODOS = "RADIO_TODOS";
+	public static final int NUMERO_JOGOS = 1;
 
 }

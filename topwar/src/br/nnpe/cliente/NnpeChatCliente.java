@@ -172,6 +172,9 @@ public abstract class NnpeChatCliente {
 					Constantes.RECUPERAR));
 			nnpeCliente.setTextoCapcha(nnpeFormLogin.getCapchaTextoRecuperar());
 			nnpeTO.setComando(Constantes.RECUPERA_SENHA);
+			nnpeFormLogin.getNomeRegistrar().setText("");
+			nnpeFormLogin.getEmail().setText("");
+			nnpeFormLogin.getNomeLogar().setText("");
 		}
 		if (!Util.isNullOrEmpty(nnpeFormLogin.getNomeRegistrar().getText())
 				&& !Util.isNullOrEmpty(nnpeFormLogin.getEmail().getText())) {
@@ -182,6 +185,7 @@ public abstract class NnpeChatCliente {
 					Constantes.REGISTRAR));
 			nnpeCliente.setTextoCapcha(nnpeFormLogin.getCapchaTexto());
 			nnpeTO.setComando(Constantes.NOVO_USUARIO);
+			nnpeFormLogin.getNomeLogar().setText("");
 		}
 
 		if (!Util.isNullOrEmpty(nnpeFormLogin.getNomeLogar().getText())) {

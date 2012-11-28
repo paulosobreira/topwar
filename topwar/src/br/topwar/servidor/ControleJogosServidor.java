@@ -47,11 +47,15 @@ public class ControleJogosServidor {
 		if (verificaJaEmUmJogo(nnpeTO.getSessaoCliente())) {
 			return new MsgSrv(Lang.msg("jaEstaEmUmjogo"));
 		}
+		if (mapaJogos.size() >= ConstantesTopWar.NUMERO_JOGOS) {
+			return new MsgSrv(Lang.msg("numeroMaximoJogos", new String[] { ""
+					+ ConstantesTopWar.NUMERO_JOGOS }));
+		}
 		DadosJogoTopWar dadosJogoTopWar = (DadosJogoTopWar) nnpeTO.getData();
 		dadosJogoTopWar.setNomeJogo(Lang.msg("jogo") + contadorJogos++);
 		nnpeDados.getJogosAndamento().add(dadosJogoTopWar.getNomeJogo());
 		JogoServidor jogoServidor = new JogoServidor(dadosJogoTopWar,
-				proxyComandos);
+				proxyComandos, this);
 		mapaJogos.put(dadosJogoTopWar.getNomeJogo(), jogoServidor);
 		nnpeTO = new NnpeTO();
 		nnpeTO.setData(dadosJogoTopWar);
@@ -210,8 +214,8 @@ public class ControleJogosServidor {
 		if (avatarTopWar == null) {
 			return null;
 		}
-		return jogoServidor.atualizaAngulo(avatarTopWar, acaoClienteTopWar
-				.getAngulo());
+		return jogoServidor.atualizaAngulo(avatarTopWar,
+				acaoClienteTopWar.getAngulo());
 	}
 
 	public Object recarregar(NnpeTO nnpeTO) {
