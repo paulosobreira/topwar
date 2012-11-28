@@ -13,7 +13,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Mesa-11 Conf</title>
+<title>TopWar Conf</title>
 <style type="text/css">
 A:link {
 	text-decoration: none;
@@ -40,7 +40,7 @@ A:hover {
 <table>
 	<thead>
 		<tr>
-			<th colspan="2" align="left" class="info-header">Mesa-11
+			<th colspan="2" align="left" class="info-header">TopWar
 			Configuration Environment</th>
 		</tr>
 	</thead>
@@ -74,9 +74,8 @@ A:hover {
 		<tr>
 			<td class="c1">Locale / Timezone:</td>
 
-			<td class="c2"><%=Locale.getDefault()%> / <%=TimeZone.getDefault().getDisplayName(
-									Locale.getDefault())%> (<%=(TimeZone.getDefault().getRawOffset() / 1000 / 60 / 60)%>
-			GMT)</td>
+			<td class="c2"><%=Locale.getDefault()%> / <%=TimeZone.getDefault().getDisplayName(Locale.getDefault())%>
+			(<%=(TimeZone.getDefault().getRawOffset() / 1000 / 60 / 60)%> GMT)</td>
 		</tr>
 		<tr>
 			<td class="c1">Java Memory</td>
@@ -154,14 +153,14 @@ A:hover {
 			</td>
 		</tr>
 		<tr>
-			<td class="c1"><a href="mesa11?act=create_schema"> Create
+			<td class="c1"><a href="topwar?act=create_schema"> Create
 			Schema </a></td>
-			<td class="c2"><a href="mesa11?act=update_schema"> Update
+			<td class="c2"><a href="topwar?act=update_schema"> Update
 			Schema </a></td>
 		</tr>
 		<tr>
-			<td class="c1"><a href="mesa11?act=x"> Exceptions </a></td>
-			<td class="c1"><a href="mesa11?act=backup"> Imagens </a></td>
+			<td class="c1"><a href="topwar?act=x"> Exceptions </a></td>
+			<td class="c1"><a href="topwar?act=backup"> Imagens </a></td>
 		</tr>
 	</tbody>
 </table>
