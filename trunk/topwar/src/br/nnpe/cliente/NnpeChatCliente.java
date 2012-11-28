@@ -296,24 +296,17 @@ public abstract class NnpeChatCliente {
 	}
 
 	public void sair() {
-		if (sessaoCliente == null) {
-			logar();
-			return;
+		if (sessaoCliente != null) {
+			NnpeCliente nnpeCliente = new NnpeCliente(sessaoCliente);
+			NnpeTO nnpeTO = new NnpeTO();
+			nnpeTO.setData(nnpeCliente);
+			nnpeTO.setComando(Constantes.ENCERRAR_SESSAO);
+			Object ret = nnpeApplet.enviarObjeto(nnpeTO);
 		}
-		NnpeCliente nnpeCliente = new NnpeCliente(sessaoCliente);
-		NnpeTO nnpeTO = new NnpeTO();
-		nnpeTO.setData(nnpeCliente);
-		nnpeTO.setComando(Constantes.ENCERRAR_SESSAO);
-		Object ret = nnpeApplet.enviarObjeto(nnpeTO);
-		if (retornoNaoValido(ret)) {
-			return;
-		}
-		if (ret == null) {
-			return;
-		}
-		nnpeTO = (NnpeTO) ret;
-		nnpeChatWindow.atualizar((NnpeDados) nnpeTO.getData());
 		sessaoCliente = null;
+		if (threadAtualizadora != null) {
+			threadAtualizadora.interrupt();
+		}
 	}
 
 	public SessaoCliente getSessaoCliente() {

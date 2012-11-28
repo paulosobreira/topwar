@@ -73,9 +73,6 @@ public class NnpeServlet extends HttpServlet {
 			Logger.logarExept(e);
 			email = null;
 		}
-		if (Logger.ativo) {
-			email = null;
-		}
 	}
 
 	public void atualizarJnlp(String jnlp) throws IOException {
