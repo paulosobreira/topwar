@@ -80,10 +80,12 @@
 	<target name="atualizaLib">
 		<delete file="WebContent/WEB-INF/lib/topwar.jar" />
 		<delete file="WebContent/topwar.jar" />
+		<delete file="WebContent/topwarRecursos.jar" />
 		<copy file="topwar.jar" todir="WebContent" />
 		<copy file="topwarRecursos.jar" todir="WebContent" />
 		<copy file="topwar.jar" todir="WebContent/WEB-INF/lib" />
 		<delete file="topwar.jar" />
+		<delete file="topwarRecursos.jar" />
 		<copy todir="WebContent">
 			<fileset dir="src">
 				<include name="**/*.jpg" />
