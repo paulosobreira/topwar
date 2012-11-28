@@ -216,14 +216,14 @@ img {
 			</UL>				
 		</div>		
 		<div id="shots" class="highslide-gallery">
-			<a href="m11-1.jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img src="m11-1.jpg" width="130" height="120" /></a>
-			<a href="m11-2.jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img src="m11-2.jpg" width="130" height="120" /></a>
-			<a href="m11-3.jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img src="m11-3.jpg" width="130" height="120" /></a>
-			<a href="m11-4.jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img src="m11-4.jpg" width="130" height="120" /></a><br>
-			<a href="m11-5.jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img src="m11-5.jpg" width="130" height="120" /></a>
-			<a href="m11-6.jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img src="m11-6.jpg" width="130" height="120" /></a>
-			<a href="m11-8.jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img src="m11-8.jpg" width="130" height="120" /></a>
-			<a href="m11-10.jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img src="m11-10.jpg" width="130" height="120" /></a><br>
+			<a href="tw1.jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img src="tw1.jpg" width="130" height="120" /></a>
+			<a href="tw2.jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img src="tw2.jpg" width="130" height="120" /></a>
+			<a href="tw3.jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img src="tw3.jpg" width="130" height="120" /></a>
+			<a href="tw4.jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img src="tw4.jpg" width="130" height="120" /></a><br>
+			<a href="tw5.jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img src="tw5.jpg" width="130" height="120" /></a>
+			<a href="tw6.jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img src="tw6.jpg" width="130" height="120" /></a>
+			<a href="tw7.jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img src="tw7.jpg" width="130" height="120" /></a>
+			<a href="tw8.jpg" style="padding: 5px" onclick="return hs.expand(this)"> <img src="tw8.jpg" width="130" height="120" /></a><br>
 		</div>
 		<div style="text-align: center;">
 			<a id="link"  href="topwarOnline.jnlp" style="text-align: left;">
