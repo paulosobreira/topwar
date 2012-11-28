@@ -409,4 +409,12 @@ public class ControleCliente extends NnpeChatCliente {
 		return nnpeApplet;
 	}
 
+	@Override
+	public void sair() {
+		super.sair();
+		if (jogoCliente != null) {
+			jogoCliente.matarTodasThreads();
+		}
+	}
+
 }
