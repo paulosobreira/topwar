@@ -39,6 +39,9 @@ public abstract class NnpeApplet extends JApplet {
 	protected int latenciaMinima = 120;
 	protected int latenciaReal;
 
+	public static final int LATENCIA_MAX = 240;
+	public static final int LATENCIA_MIN = 120;
+
 	public abstract NnpeChatCliente getNnpeChatCliente();
 
 	protected List pacotes = new LinkedList();
@@ -200,14 +203,14 @@ public abstract class NnpeApplet extends JApplet {
 					somatorio += longElement.longValue();
 				}
 				int media = (int) (somatorio / 10);
-				if (media > 240) {
-					setLatenciaMinima(240);
+				if (media > LATENCIA_MAX) {
+					setLatenciaMinima(LATENCIA_MAX);
 				} else {
 					setLatenciaMinima(media);
 				}
-				if (media < 120)
-					setLatenciaMinima(120);
-				else if (media < 240) {
+				if (media < LATENCIA_MIN)
+					setLatenciaMinima(LATENCIA_MIN);
+				else if (media < LATENCIA_MAX) {
 					setLatenciaMinima(media);
 				}
 				setLatenciaReal(media);

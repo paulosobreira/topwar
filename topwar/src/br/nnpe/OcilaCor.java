@@ -104,4 +104,21 @@ public class OcilaCor {
 		return ImageUtil.gerarFade(src, geraOcila.getAlpha());
 	}
 
+	public static Color porcentVermelho100Verde0(int porcent) {
+		int r, g;
+		if (porcent < 1) {
+			porcent = 1;
+		}
+		if (porcent > 99) {
+			porcent = 99;
+		}
+		g = 510 * (100 - porcent) / 100;
+		if (g < 255) {
+			r = 255;
+		} else {
+			r = 255 * (porcent + 25) / 100;
+			g = 255;
+		}
+		return new Color(r, g, 0, 150);
+	}
 }
