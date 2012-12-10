@@ -35,6 +35,7 @@ import javax.swing.WindowConstants;
 import br.nnpe.GeoUtil;
 import br.nnpe.Logger;
 import br.nnpe.Util;
+import br.nnpe.cliente.NnpeApplet;
 import br.nnpe.tos.NnpeTO;
 import br.topwar.ConstantesTopWar;
 import br.topwar.recursos.CarregadorRecursos;
@@ -137,9 +138,9 @@ public class JogoCliente {
 		}
 		ObjectInputStream ois;
 		try {
-			ois = new ObjectInputStream(
-					CarregadorRecursos.recursoComoStream(dadosJogoTopWar
-							.getNomeMapa() + ".topwar"));
+			ois = new ObjectInputStream(CarregadorRecursos
+					.recursoComoStream(dadosJogoTopWar.getNomeMapa()
+							+ ".topwar"));
 			mapaTopWar = (MapaTopWar) ois.readObject();
 		} catch (Exception e1) {
 			Logger.logarExept(e1);
@@ -1040,8 +1041,8 @@ public class JogoCliente {
 		radioText.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				controleCliente.enviaTextoRadio(radioText.getText(),
-						time.isSelected());
+				controleCliente.enviaTextoRadio(radioText.getText(), time
+						.isSelected());
 				radioText.setText("");
 				frameTopWar.requestFocus();
 			}
@@ -1051,5 +1052,19 @@ public class JogoCliente {
 
 	public JApplet getApplet() {
 		return controleCliente.getApplet();
+	}
+
+	public boolean verificaLag() {
+		if (controleCliente == null) {
+			return false;
+		}
+		return controleCliente.getLatenciaReal() > NnpeApplet.LATENCIA_MAX;
+	}
+
+	public int getLag() {
+		if (controleCliente == null) {
+			return 0;
+		}
+		return controleCliente.getLatenciaReal();
 	}
 }
