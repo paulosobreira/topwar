@@ -524,6 +524,7 @@ public class PainelTopWar {
 				desenhaClicou(graphics2d);
 				desenhaVaiPara(graphics2d);
 				desenhaControleMudarClasse(graphics2d);
+				desenhaLag(graphics2d);
 				desenhaChat(graphics2d);
 			}
 
