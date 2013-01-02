@@ -16,7 +16,7 @@
     </resources>
 
 	<application-desc
-		main-class="br.topwar.editor.Conceito" >
+		main-class="br.topwar.local.MainFrame" >
 		<argument>http://{host}/topwar/</argument>
 	</application-desc> 
 </jnlp>
