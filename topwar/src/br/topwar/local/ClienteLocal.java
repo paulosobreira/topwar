@@ -10,6 +10,7 @@ import br.nnpe.tos.NnpeTO;
 import br.nnpe.tos.SessaoCliente;
 import br.topwar.ProxyComandos;
 import br.topwar.cliente.ControleCliente;
+import br.topwar.cliente.TopWarAppletLocal;
 import br.topwar.recursos.idiomas.Lang;
 
 public class ClienteLocal extends ControleCliente {
@@ -21,18 +22,14 @@ public class ClienteLocal extends ControleCliente {
 		this.nnpeApplet = topWarApplet;
 	}
 
-	public ClienteLocal(ProxyComandos comandos, TopWarApplet topWarApplet) {
-		super(topWarApplet);
+	public ClienteLocal(ProxyComandos comandos, TopWarAppletLocal topWarApplet) {
+		super(null);
+		this.nnpeApplet = topWarApplet;
 		this.comandos = comandos;
 		this.sessaoCliente = new SessaoCliente();
 		sessaoCliente.setNomeJogador("TopWar");
 		sessaoCliente.setUlimaAtividade(System.currentTimeMillis());
 		definirImplementacaoChatWindow();
-	}
-
-	@Override
-	public String getVersao() {
-		return "Local";
 	}
 
 	@Override
@@ -43,16 +40,16 @@ public class ClienteLocal extends ControleCliente {
 		if (retorno instanceof ErroServ) {
 			ErroServ erroServ = (ErroServ) retorno;
 			Logger.logar(erroServ.obterErroFormatado());
-			JOptionPane.showMessageDialog(null,
-					Lang.decodeTexto(erroServ.obterErroFormatado()),
-					Lang.msg("erroRecebendo"), JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, Lang.decodeTexto(erroServ
+					.obterErroFormatado()), Lang.msg("erroRecebendo"),
+					JOptionPane.ERROR_MESSAGE);
 			return null;
 		}
 		if (retorno instanceof MsgSrv) {
 			MsgSrv msgSrv = (MsgSrv) retorno;
-			JOptionPane.showMessageDialog(null,
-					Lang.msg(Lang.decodeTexto(msgSrv.getMessageString())),
-					Lang.msg("msgServidor"), JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null, Lang.msg(Lang
+					.decodeTexto(msgSrv.getMessageString())), Lang
+					.msg("msgServidor"), JOptionPane.INFORMATION_MESSAGE);
 			return null;
 		}
 		return retorno;

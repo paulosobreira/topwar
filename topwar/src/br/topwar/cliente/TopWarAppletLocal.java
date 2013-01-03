@@ -1,4 +1,4 @@
-package br.topwar.local;
+package br.topwar.cliente;
 
 import java.awt.Component;
 import java.awt.Frame;
@@ -6,8 +6,9 @@ import java.awt.GridLayout;
 
 import br.nnpe.cliente.NnpeApplet;
 import br.nnpe.cliente.NnpeChatCliente;
+import br.topwar.local.MainFrame;
 
-public class TopWarApplet extends NnpeApplet {
+public class TopWarAppletLocal extends NnpeApplet {
 
 	MainFrame frameTopWar;
 

@@ -23,6 +23,7 @@ import javax.swing.JRootPane;
 import br.nnpe.ImageUtil;
 import br.topwar.ProxyComandos;
 import br.topwar.cliente.JogoCliente;
+import br.topwar.cliente.TopWarAppletLocal;
 import br.topwar.recursos.CarregadorRecursos;
 import br.topwar.recursos.idiomas.Lang;
 
@@ -32,10 +33,10 @@ public class MainFrame {
 	private ClienteLocal clienteLocal;
 	private ProxyComandos proxyComandos;
 	private JFrame frameTopWar;
-	private TopWarApplet topWarApplet;
+	private TopWarAppletLocal topWarApplet;
 	protected boolean jogoIniciado;
 
-	public MainFrame(TopWarApplet topWarApplet) {
+	public MainFrame(TopWarAppletLocal topWarApplet) {
 		this.topWarApplet = topWarApplet;
 	}
 
@@ -49,6 +50,21 @@ public class MainFrame {
 			@Override
 			public JRootPane getRootPane() {
 				return topWarApplet.getRootPane();
+			}
+
+			@Override
+			public void remove(Component comp) {
+				topWarApplet.remove(comp);
+			}
+
+			@Override
+			public void setTitle(String title) {
+				Component parent = topWarApplet;
+				while (parent.getParent() != null)
+					parent = parent.getParent();
+				if (parent instanceof Frame) {
+					((Frame) parent).setTitle(title);
+				}
 			}
 
 			@Override
@@ -85,6 +101,31 @@ public class MainFrame {
 			public synchronized KeyListener[] getKeyListeners() {
 				return topWarApplet.getKeyListeners();
 			}
+
+			@Override
+			public void repaint() {
+				topWarApplet.repaint();
+			}
+
+			@Override
+			public void requestFocus() {
+				topWarApplet.requestFocus();
+			}
+
+			@Override
+			public void update(Graphics g) {
+				topWarApplet.update(g);
+			}
+
+			@Override
+			public void doLayout() {
+				topWarApplet.doLayout();
+			}
+
+			@Override
+			public void pack() {
+				topWarApplet.update(topWarApplet.getGraphics());
+			}
 		};
 	}
 
@@ -109,7 +150,7 @@ public class MainFrame {
 			}
 		};
 		clienteLocal.setJogoCliente(jogoCliente);
-		frameTopWar.setJMenuBar(bar);
+		frameTopWar.getRootPane().setJMenuBar(bar);
 		JMenu menuJogo = new JMenu() {
 			public String getText() {
 				return Lang.msg("principal");
@@ -131,6 +172,23 @@ public class MainFrame {
 			}
 		});
 		menuJogo.add(iniciar);
+
+		JMenuItem sair = new JMenuItem("Sair Jogo") {
+			public String getText() {
+				return Lang.msg("sair");
+			}
+
+		};
+		sair.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				clienteLocal.sairJogo();
+				clienteLocal.sair();
+				servidorLocal.removerJogosVaziosFinalizados();
+			}
+		});
+		menuJogo.add(sair);
+
 		JMenuItem sobre = new JMenuItem("Sobre o autor do jogo") {
 			public String getText() {
 				return Lang.msg("sobre");
@@ -147,9 +205,10 @@ public class MainFrame {
 			}
 		});
 		menuJogo.add(sobre);
-		frameTopWar.setTitle(Lang.msg("topawrsolo"));
-		final BufferedImage img = ImageUtil.gerarFade(
-				CarregadorRecursos.carregaBackGround("mercs-chat.png"), 50);
+		String versao = topWarApplet.getVersao();
+		frameTopWar.setTitle(Lang.msg("topawrsolo") + " Ver. " + versao);
+		final BufferedImage img = ImageUtil.gerarFade(CarregadorRecursos
+				.carregaBackGround("mercs-chat.png"), 50);
 		frameTopWar.getContentPane().add(new JPanel() {
 			@Override
 			protected void paintComponent(Graphics g) {

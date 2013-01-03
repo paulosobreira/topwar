@@ -1,5 +1,6 @@
 package br.servlet;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -18,6 +19,7 @@ import org.hibernate.dialect.Dialect;
 import org.hibernate.tool.hbm2ddl.DatabaseMetadata;
 
 import br.nnpe.Logger;
+import br.nnpe.Util;
 import br.nnpe.persistencia.HibernateUtil;
 import br.nnpe.servidor.NnpeServlet;
 import br.topwar.ProxyComandos;
@@ -34,7 +36,26 @@ public class ServletTopWar extends NnpeServlet {
 		try {
 			atualizarJnlp("topwarOnline.jnlp");
 			atualizarJnlp("topwar.jnlp");
+			copiaJars();
 		} catch (Exception e) {
+			Logger.logarExept(e);
+		}
+	}
+
+	private void copiaJars() {
+		try {
+			String[] files = { "commons-collections-3.1.jar",
+					"commons-logging-1.1.1.jar", "jcaptcha-1.0-all.jar",
+					"hibernate-core.jar" };
+			for (int i = 0; i < files.length; i++) {
+				String file = files[i];
+				String oriPath = webDir + File.separator + "WEB-INF"
+						+ File.separator + "lib" + File.separator + file;
+				String dstPath = webDir + File.separator + file;
+				Util.copyFile(new File(oriPath), new File(dstPath));
+
+			}
+		} catch (IOException e) {
 			Logger.logarExept(e);
 		}
 	}
