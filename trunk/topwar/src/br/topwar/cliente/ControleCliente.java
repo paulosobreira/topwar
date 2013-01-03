@@ -141,12 +141,9 @@ public class ControleCliente extends NnpeChatCliente {
 			dadosJogoTopWar.setNomeMapa((String) mapaCombo.getSelectedItem());
 			String classe = (String) classesCombo.getSelectedItem();
 			dadosJogoTopWar.setClasse(Lang.key(classe));
-
 			Integer numBots = (Integer) botCombo.getSelectedItem();
 			dadosJogoTopWar.setNumBots(numBots);
-
 			dadosJogoTopWar.setBotsVsHumans(botsVsHumansCheckBox.isSelected());
-
 			nnpeTO.setData(dadosJogoTopWar);
 			Object ret = enviarObjeto(nnpeTO);
 			if (ret instanceof NnpeTO) {
@@ -156,7 +153,6 @@ public class ControleCliente extends NnpeChatCliente {
 					jogoCliente.setDadosJogoTopWar(dadosJogoTopWar);
 				} else {
 					jogoCliente = new JogoCliente(dadosJogoTopWar, this);
-
 				}
 				jogoCliente.inciaJogo();
 				if (!local) {
