@@ -102,6 +102,10 @@ public class JogoCliente {
 	private StringBuffer textoEnviar = new StringBuffer();
 	protected boolean modoTextoSomenteTime;
 
+	public PainelTopWar getPainelTopWar() {
+		return painelTopWar;
+	}
+
 	public String getProxClasse() {
 		return proxClasse;
 	}
@@ -138,9 +142,9 @@ public class JogoCliente {
 		}
 		ObjectInputStream ois;
 		try {
-			ois = new ObjectInputStream(
-					CarregadorRecursos.recursoComoStream(dadosJogoTopWar
-							.getNomeMapa() + ".topwar"));
+			ois = new ObjectInputStream(CarregadorRecursos
+					.recursoComoStream(dadosJogoTopWar.getNomeMapa()
+							+ ".topwar"));
 			mapaTopWar = (MapaTopWar) ois.readObject();
 		} catch (Exception e1) {
 			Logger.logarExept(e1);
@@ -574,6 +578,9 @@ public class JogoCliente {
 			return;
 		}
 		setarFrameTopWar();
+		if (controleCliente.isLocal()) {
+			frameTopWar.getContentPane().removeAll();
+		}
 		frameTopWar.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -591,7 +598,10 @@ public class JogoCliente {
 			frameTopWar.getContentPane().add(painelTopWar.getScrollPane(),
 					BorderLayout.CENTER);
 		}
-		if (!controleCliente.isLocal()) {
+		if (controleCliente.isLocal()) {
+			frameTopWar.getContentPane().validate();
+			frameTopWar.requestFocus();
+		} else {
 			frameTopWar.setSize(1024, 768);
 			frameTopWar.setVisible(true);
 		}
@@ -732,6 +742,7 @@ public class JogoCliente {
 		frameTopWar.addKeyListener(keyAdapter);
 		if (frameTopWar.getParent() != null) {
 			frameTopWar.getParent().addKeyListener(keyAdapter);
+			painelTopWar.getPanel().addKeyListener(keyAdapter);
 		}
 	}
 
@@ -1023,9 +1034,6 @@ public class JogoCliente {
 	}
 
 	public void gerarRadio() {
-		if (true) {
-			return;
-		}
 		ButtonGroup groupRadio = new ButtonGroup();
 		JRadioButton todos = new JRadioButton();
 		final JRadioButton time = new JRadioButton();
@@ -1053,8 +1061,8 @@ public class JogoCliente {
 		radioText.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				controleCliente.enviaTextoRadio(radioText.getText(),
-						time.isSelected());
+				controleCliente.enviaTextoRadio(radioText.getText(), time
+						.isSelected());
 				radioText.setText("");
 				frameTopWar.requestFocus();
 			}

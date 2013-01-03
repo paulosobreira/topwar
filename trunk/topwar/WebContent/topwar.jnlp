@@ -22,9 +22,9 @@
     <applet-desc 
 	      documentBase="http://{host}/topwar" 
 	      name="TopWar" 
-	      main-class="br.topwar.local.TopWarApplet" 
-	      width="870" 
-	      height="550"> 
+	      main-class="br.topwar.cliente.TopWarAppletLocal" 
+	      width="850" 
+	      height="500"> 
 	  </applet-desc>
 
 </jnlp>

@@ -5,12 +5,15 @@ import java.awt.event.KeyEvent;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.channels.FileChannel;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Blob;
@@ -1007,4 +1010,26 @@ public class Util {
 		return "";
 	}
 
+	public static void copyFile(File sourceFile, File destFile)
+			throws IOException {
+		if (!destFile.exists()) {
+			destFile.createNewFile();
+		}
+
+		FileChannel source = null;
+		FileChannel destination = null;
+
+		try {
+			source = new FileInputStream(sourceFile).getChannel();
+			destination = new FileOutputStream(destFile).getChannel();
+			destination.transferFrom(source, 0, source.size());
+		} finally {
+			if (source != null) {
+				source.close();
+			}
+			if (destination != null) {
+				destination.close();
+			}
+		}
+	}
 }
