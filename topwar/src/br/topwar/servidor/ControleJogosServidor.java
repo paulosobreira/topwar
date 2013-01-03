@@ -15,9 +15,9 @@ import br.nnpe.tos.SessaoCliente;
 import br.topwar.ConstantesTopWar;
 import br.topwar.ProxyComandos;
 import br.topwar.recursos.idiomas.Lang;
-import br.topwar.tos.ObjTopWar;
 import br.topwar.tos.DadosAcaoClienteTopWar;
 import br.topwar.tos.DadosJogoTopWar;
+import br.topwar.tos.ObjTopWar;
 
 public class ControleJogosServidor {
 
@@ -151,14 +151,15 @@ public class ControleJogosServidor {
 	}
 
 	public void removerJogosVaziosFinalizados() {
-		Set<String> keySet = mapaJogos.keySet();
 		synchronized (mapaJogos) {
+			Set<String> keySet = mapaJogos.keySet();
 			for (Iterator iterator = keySet.iterator(); iterator.hasNext();) {
 				String key = (String) iterator.next();
 				JogoServidor jogoServidor = mapaJogos.get(key);
 				jogoServidor.removerClientesInativos();
 				if (jogoServidor.verificaFinalizado()) {
 					mapaJogos.remove(key);
+					Logger.logar("Removendo Jogo " + key);
 					Collection jogosAndamento = nnpeDados.getJogosAndamento();
 					synchronized (jogosAndamento) {
 						for (Iterator iterator2 = jogosAndamento.iterator(); iterator2
@@ -170,7 +171,6 @@ public class ControleJogosServidor {
 						}
 					}
 				}
-
 			}
 		}
 	}
@@ -308,6 +308,25 @@ public class ControleJogosServidor {
 		}
 		return jogoServidor.radio(avatarTopWar, (String) nnpeTO.getData(),
 				somenteTime);
+	}
+
+	public void finalizaJogosServidor() {
+		synchronized (mapaJogos) {
+			Set<String> keySet = mapaJogos.keySet();
+			for (Iterator iterator = keySet.iterator(); iterator.hasNext();) {
+				String key = (String) iterator.next();
+				JogoServidor jogoServidor = mapaJogos.get(key);
+				List<ObjTopWar> avatarTopWarsCopia = jogoServidor
+						.getAvatarTopWarsCopia();
+				for (Iterator iterator2 = avatarTopWarsCopia.iterator(); iterator2
+						.hasNext();) {
+					ObjTopWar objTopWar = (ObjTopWar) iterator2.next();
+					jogoServidor.removerJogador(objTopWar.getNomeJogador());
+				}
+				jogoServidor.setFinalizado(true);
+			}
+			mapaJogos.clear();
+		}
 	}
 
 }

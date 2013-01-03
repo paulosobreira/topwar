@@ -143,30 +143,28 @@ public class MainFrame {
 		clienteLocal = new ClienteLocal(proxyComandos, topWarApplet);
 		gerarJframeApplet();
 		JMenuBar bar = new JMenuBar();
-		JogoCliente jogoCliente = new JogoCliente(null, clienteLocal) {
-			@Override
-			public void setarFrameTopWar() {
-				setFrameTopWar(frameTopWar);
-			}
-		};
-		clienteLocal.setJogoCliente(jogoCliente);
 		frameTopWar.getRootPane().setJMenuBar(bar);
 		JMenu menuJogo = new JMenu() {
 			public String getText() {
 				return Lang.msg("principal");
 			}
-
 		};
 		bar.add(menuJogo);
 		JMenuItem iniciar = new JMenuItem("Iniciar Jogo") {
 			public String getText() {
 				return Lang.msg("iniciar");
 			}
-
 		};
 		iniciar.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				JogoCliente jogoCliente = new JogoCliente(null, clienteLocal) {
+					@Override
+					public void setarFrameTopWar() {
+						setFrameTopWar(frameTopWar);
+					}
+				};
+				clienteLocal.setJogoCliente(jogoCliente);
 				clienteLocal.criarJogoDepoisDeLogar(true);
 				jogoIniciado = true;
 			}
@@ -183,8 +181,7 @@ public class MainFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				clienteLocal.sairJogo();
-				clienteLocal.sair();
-				servidorLocal.removerJogosVaziosFinalizados();
+				servidorLocal.finalizaJogosServidor();
 			}
 		});
 		menuJogo.add(sair);
@@ -207,8 +204,8 @@ public class MainFrame {
 		menuJogo.add(sobre);
 		String versao = topWarApplet.getVersao();
 		frameTopWar.setTitle(Lang.msg("topawrsolo") + " Ver. " + versao);
-		final BufferedImage img = ImageUtil.gerarFade(CarregadorRecursos
-				.carregaBackGround("mercs-chat.png"), 50);
+		final BufferedImage img = ImageUtil.gerarFade(
+				CarregadorRecursos.carregaBackGround("mercs-chat.png"), 50);
 		frameTopWar.getContentPane().add(new JPanel() {
 			@Override
 			protected void paintComponent(Graphics g) {

@@ -26,13 +26,7 @@ public class ServidorLocal extends ControleJogosServidor {
 		proxyComandos.getNnpeDadosChat().getClientes().add(sessaoCliente);
 	}
 
-	public Object sairJogo(NnpeTO nnpeTO) {
-		DadosJogoTopWar dadosJogoTopWar = (DadosJogoTopWar) nnpeTO.getData();
-		JogoServidor jogoServidor = obterJogo(dadosJogoTopWar.getNomeJogo());
-		jogoServidor.setFinalizado(true);
-		return ConstantesTopWar.OK;
-	}
-
 	public void removerClienteInativo(SessaoCliente sessaoClienteRemover) {
 	}
+
 }
