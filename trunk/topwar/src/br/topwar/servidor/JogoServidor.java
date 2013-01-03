@@ -79,7 +79,7 @@ public class JogoServidor {
 					try {
 						Thread
 								.sleep(Util
-										.inte(ConstantesTopWar.ATRASO_REDE_PADRAO * 2.5));
+										.inte(ConstantesTopWar.ATRASO_REDE_PADRAO * 3));
 					} catch (InterruptedException e) {
 						Logger.logarExept(e);
 						finalizado = true;

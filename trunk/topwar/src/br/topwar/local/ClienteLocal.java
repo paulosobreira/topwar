@@ -17,16 +17,22 @@ public class ClienteLocal extends ControleCliente {
 	private ProxyComandos comandos;
 
 	public ClienteLocal(NnpeApplet topWarApplet) {
-		super(topWarApplet);
+		super(null);
+		this.nnpeApplet = topWarApplet;
 	}
 
-	public ClienteLocal(ProxyComandos comandos) {
-		super(null);
+	public ClienteLocal(ProxyComandos comandos, TopWarApplet topWarApplet) {
+		super(topWarApplet);
 		this.comandos = comandos;
 		this.sessaoCliente = new SessaoCliente();
 		sessaoCliente.setNomeJogador("TopWar");
 		sessaoCliente.setUlimaAtividade(System.currentTimeMillis());
 		definirImplementacaoChatWindow();
+	}
+
+	@Override
+	public String getVersao() {
+		return "Local";
 	}
 
 	@Override
@@ -37,19 +43,25 @@ public class ClienteLocal extends ControleCliente {
 		if (retorno instanceof ErroServ) {
 			ErroServ erroServ = (ErroServ) retorno;
 			Logger.logar(erroServ.obterErroFormatado());
-			JOptionPane.showMessageDialog(null, Lang.decodeTexto(erroServ
-					.obterErroFormatado()), Lang.msg("erroRecebendo"),
-					JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null,
+					Lang.decodeTexto(erroServ.obterErroFormatado()),
+					Lang.msg("erroRecebendo"), JOptionPane.ERROR_MESSAGE);
 			return null;
 		}
 		if (retorno instanceof MsgSrv) {
 			MsgSrv msgSrv = (MsgSrv) retorno;
-			JOptionPane.showMessageDialog(null, Lang.msg(Lang
-					.decodeTexto(msgSrv.getMessageString())), Lang
-					.msg("msgServidor"), JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null,
+					Lang.msg(Lang.decodeTexto(msgSrv.getMessageString())),
+					Lang.msg("msgServidor"), JOptionPane.INFORMATION_MESSAGE);
 			return null;
 		}
 		return retorno;
 	}
 
+	@Override
+	public void sair() {
+		if (getJogoCliente() != null) {
+			getJogoCliente().matarTodasThreads();
+		}
+	}
 }
