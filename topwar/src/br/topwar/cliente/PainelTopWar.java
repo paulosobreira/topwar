@@ -630,7 +630,6 @@ public class PainelTopWar {
 	}
 
 	public void carregaBackGround() {
-
 		try {
 			if (!(threadCarregarBkg != null && threadCarregarBkg.isAlive()))
 				backGround = CarregadorRecursos.carregaBackGround(mapaTopWar

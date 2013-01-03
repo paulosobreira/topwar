@@ -138,9 +138,9 @@ public class JogoCliente {
 		}
 		ObjectInputStream ois;
 		try {
-			ois = new ObjectInputStream(CarregadorRecursos
-					.recursoComoStream(dadosJogoTopWar.getNomeMapa()
-							+ ".topwar"));
+			ois = new ObjectInputStream(
+					CarregadorRecursos.recursoComoStream(dadosJogoTopWar
+							.getNomeMapa() + ".topwar"));
 			mapaTopWar = (MapaTopWar) ois.readObject();
 		} catch (Exception e1) {
 			Logger.logarExept(e1);
@@ -152,9 +152,9 @@ public class JogoCliente {
 		painelTopWar = new PainelTopWar(this);
 		iniciaJFrame();
 		iniciaMouseListener();
+		iniciaListenerTeclado();
 		iniciaThreadAtualizaTela();
 		iniciaThreadAtualizaDadosServidor();
-		iniciaListenerTeclado();
 		iniciaThreadAtualizaPosAvatar();
 	}
 
@@ -561,14 +561,19 @@ public class JogoCliente {
 		return frameTopWar;
 	}
 
+	public void setFrameTopWar(JFrame frameTopWar) {
+		this.frameTopWar = frameTopWar;
+	}
+
 	public void iniciaJFrame() {
 		if (frameTopWar != null && frameTopWar.isVisible()) {
 			if (mapaTopWar != null)
 				frameTopWar.setTitle(mapaTopWar.getNome());
+			frameTopWar.getContentPane().removeAll();
 			frameTopWar.getContentPane().add(painelTopWar.getScrollPane());
 			return;
 		}
-		frameTopWar = new JFrame();
+		setarFrameTopWar();
 		frameTopWar.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -586,11 +591,17 @@ public class JogoCliente {
 			frameTopWar.getContentPane().add(painelTopWar.getScrollPane(),
 					BorderLayout.CENTER);
 		}
-		frameTopWar.setSize(1024, 768);
-		frameTopWar.setVisible(true);
+		if (!controleCliente.isLocal()) {
+			frameTopWar.setSize(1024, 768);
+			frameTopWar.setVisible(true);
+		}
 	}
 
-	protected void matarTodasThreads() {
+	public void setarFrameTopWar() {
+		frameTopWar = new JFrame();
+	}
+
+	public void matarTodasThreads() {
 		jogoEmAndamento = false;
 		try {
 			if (threadAtualizaAngulo != null) {
@@ -664,7 +675,6 @@ public class JogoCliente {
 
 	private void iniciaListenerTeclado() {
 		KeyAdapter keyAdapter = new KeyAdapter() {
-
 			@Override
 			public void keyPressed(final KeyEvent e) {
 				int keyCode = e.getKeyCode();
@@ -696,7 +706,6 @@ public class JogoCliente {
 
 					return;
 				}
-
 				processaComandosTeclado(keyCode);
 				if (keyCode == KeyEvent.VK_P || keyCode == KeyEvent.VK_TAB) {
 					if (painelTopWar.getTabCont() > 0) {
@@ -721,6 +730,9 @@ public class JogoCliente {
 
 		};
 		frameTopWar.addKeyListener(keyAdapter);
+		if (frameTopWar.getParent() != null) {
+			frameTopWar.getParent().addKeyListener(keyAdapter);
+		}
 	}
 
 	public boolean isModoTextoSomenteTime() {
@@ -1041,8 +1053,8 @@ public class JogoCliente {
 		radioText.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				controleCliente.enviaTextoRadio(radioText.getText(), time
-						.isSelected());
+				controleCliente.enviaTextoRadio(radioText.getText(),
+						time.isSelected());
 				radioText.setText("");
 				frameTopWar.requestFocus();
 			}
