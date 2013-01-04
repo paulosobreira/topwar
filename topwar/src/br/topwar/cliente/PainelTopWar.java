@@ -58,7 +58,7 @@ public class PainelTopWar {
 	private JScrollPane scrollPane;
 	private MapaTopWar mapaTopWar;
 	private boolean desenhaObjetos = false;
-	private boolean desenhaImagens = true;
+	private boolean desenhaImagens = false;
 	private boolean desenhaNada = false;
 	private Hashtable<Point, Integer> mapaExplosoes = new Hashtable<Point, Integer>();
 	private int tabCont = 0;

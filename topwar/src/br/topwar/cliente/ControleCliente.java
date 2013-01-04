@@ -155,9 +155,9 @@ public class ControleCliente extends NnpeChatCliente {
 					jogoCliente = new JogoCliente(dadosJogoTopWar, this);
 				}
 				jogoCliente.inciaJogo();
-				if (!local) {
-					jogoCliente.gerarRadio();
-				}
+//				if (!local) {
+//					jogoCliente.gerarRadio();
+//				}
 			}
 		} else {
 			return false;
