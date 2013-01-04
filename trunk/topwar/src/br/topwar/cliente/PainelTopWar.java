@@ -9,6 +9,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Shape;
+import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
@@ -123,6 +124,7 @@ public class PainelTopWar {
 	private int contMostraLag;
 
 	public PainelTopWar(JogoCliente jogoCliente) {
+
 		this.jogoCliente = jogoCliente;
 		mapaTopWar = jogoCliente.getMapaTopWar();
 		carregaImagens();
@@ -526,6 +528,7 @@ public class PainelTopWar {
 				desenhaControleMudarClasse(graphics2d);
 				desenhaLag(graphics2d);
 				desenhaChat(graphics2d);
+				Toolkit.getDefaultToolkit().sync();
 			}
 
 			private void desenhaChat(Graphics2D graphics2d) {
@@ -588,7 +591,6 @@ public class PainelTopWar {
 					graphics2d.drawString(lnTxt, x, nvY);
 				}
 			}
-
 			private void desenhaClicou(Graphics2D graphics2d) {
 				if (System.currentTimeMillis() - jogoCliente.getClickTime() < 200) {
 					Point p = jogoCliente.getPontoMouseClicado();
@@ -598,7 +600,6 @@ public class PainelTopWar {
 				}
 
 			}
-
 			private void desenhaVaiPara(Graphics2D graphics2d) {
 				if (jogoCliente.getPontoMouseMovendo() != null
 						&& jogoCliente.isSeguirMouse()) {

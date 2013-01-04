@@ -49,8 +49,9 @@ public class ServletTopWar extends NnpeServlet {
 					"hibernate-core.jar" };
 			for (int i = 0; i < files.length; i++) {
 				String file = files[i];
-				String oriPath = webDir + File.separator + "WEB-INF"
-						+ File.separator + "lib" + File.separator + file;
+				String oriPath = webDir.replace("webapps" + File.separator
+						+ "topwar", "lib")
+						+ file;
 				String dstPath = webDir + File.separator + file;
 				Util.copyFile(new File(oriPath), new File(dstPath));
 

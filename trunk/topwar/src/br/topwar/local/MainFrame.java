@@ -158,6 +158,13 @@ public class MainFrame {
 		iniciar.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				if (clienteLocal.getJogoCliente() != null
+						&& clienteLocal.getJogoCliente().isJogoEmAndamento()) {
+					JOptionPane.showMessageDialog(frameTopWar, Lang
+							.msg("jaEstaEmUmJogo"), "TopWar",
+							JOptionPane.INFORMATION_MESSAGE);
+					return;
+				}
 				JogoCliente jogoCliente = new JogoCliente(null, clienteLocal) {
 					@Override
 					public void setarFrameTopWar() {
@@ -181,6 +188,7 @@ public class MainFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				clienteLocal.sairJogo();
+				clienteLocal.getJogoCliente().matarTodasThreads();
 				servidorLocal.finalizaJogosServidor();
 			}
 		});
@@ -204,8 +212,8 @@ public class MainFrame {
 		menuJogo.add(sobre);
 		String versao = topWarApplet.getVersao();
 		frameTopWar.setTitle(Lang.msg("topawrsolo") + " Ver. " + versao);
-		final BufferedImage img = ImageUtil.gerarFade(
-				CarregadorRecursos.carregaBackGround("mercs-chat.png"), 50);
+		final BufferedImage img = ImageUtil.gerarFade(CarregadorRecursos
+				.carregaBackGround("mercs-chat.png"), 50);
 		frameTopWar.getContentPane().add(new JPanel() {
 			@Override
 			protected void paintComponent(Graphics g) {

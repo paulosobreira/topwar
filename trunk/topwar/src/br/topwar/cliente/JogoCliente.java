@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
@@ -739,6 +740,10 @@ public class JogoCliente {
 			}
 
 		};
+		KeyListener[] keyListeners = frameTopWar.getKeyListeners();
+		for (int i = 0; i < keyListeners.length; i++) {
+			frameTopWar.removeKeyListener(keyListeners[i]);
+		}
 		frameTopWar.addKeyListener(keyAdapter);
 		if (frameTopWar.getParent() != null) {
 			frameTopWar.getParent().addKeyListener(keyAdapter);
