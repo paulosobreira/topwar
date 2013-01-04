@@ -326,7 +326,14 @@ public class ControleJogosServidor {
 				jogoServidor.setFinalizado(true);
 			}
 			mapaJogos.clear();
-			System.out.println("mapaJogos.size() " + mapaJogos.size());
+			Logger.logar("mapaJogos.size() " + mapaJogos.size());
+		}
+		if (nnpeDados != null) {
+			Collection jogosAndamento = nnpeDados.getJogosAndamento();
+			if (jogosAndamento != null) {
+				jogosAndamento.clear();
+				Logger.logar("jogosAndamento.size() " + jogosAndamento.size());
+			}
 		}
 	}
 
