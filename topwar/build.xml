@@ -101,7 +101,8 @@
 			</fileset>
 			<fileset dir="WebContent">
 				<include name="WEB-INF/lib/topwar.jar" />
-				<include name="**/*.jar" />
+				<include name="topwar.jar" />
+				<include name="topwarRecursos.jar" />
 			</fileset>
 		</war>
 		<delete dir="WebContent/br" />
