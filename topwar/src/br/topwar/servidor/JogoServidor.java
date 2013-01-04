@@ -77,9 +77,8 @@ public class JogoServidor {
 						finalizado = true;
 					}
 					try {
-						Thread
-								.sleep(Util
-										.inte(ConstantesTopWar.ATRASO_REDE_PADRAO * 3));
+						Thread.sleep(Util
+								.inte(ConstantesTopWar.ATRASO_REDE_PADRAO * 3));
 					} catch (InterruptedException e) {
 						Logger.logarExept(e);
 						finalizado = true;
@@ -216,7 +215,7 @@ public class JogoServidor {
 
 	public List<EventoJogo> getEventosCopia() {
 		List<EventoJogo> eventosCopy = new ArrayList<EventoJogo>();
-		while (eventosCopy.isEmpty()) {
+		while (!verificaFinalizado() && eventosCopy.isEmpty()) {
 			try {
 				if (eventos.isEmpty()) {
 					return eventosCopy;
@@ -235,7 +234,8 @@ public class JogoServidor {
 		Point calculaPonto = GeoUtil.calculaPonto(
 				Util.intervalo(-90, 90) + ang, velocidade, pontoAvatar);
 		int cont = 0;
-		while (!verificaAndavel(pontoAvatar, calculaPonto)) {
+		while (!verificaFinalizado()
+				&& !verificaAndavel(pontoAvatar, calculaPonto)) {
 			calculaPonto = GeoUtil.calculaPonto(Util.intervalo(-90, 90) + ang,
 					velocidade, pontoAvatar);
 			if (cont > 100) {
@@ -248,7 +248,7 @@ public class JogoServidor {
 
 	public List<RadioMsg> getRadioMsgCopia() {
 		List<RadioMsg> radiosCopy = new ArrayList<RadioMsg>();
-		while (radiosCopy.isEmpty()) {
+		while (!verificaFinalizado() && radiosCopy.isEmpty()) {
 			try {
 				if (radio.isEmpty()) {
 					return radiosCopy;
@@ -264,7 +264,7 @@ public class JogoServidor {
 
 	public List<ObjTopWar> getAvatarTopWarsCopia() {
 		List<ObjTopWar> avataresCopy = new ArrayList<ObjTopWar>();
-		while (avataresCopy.isEmpty()) {
+		while (!verificaFinalizado() && avataresCopy.isEmpty()) {
 			try {
 				for (Iterator iterator = avatarTopWars.keySet().iterator(); iterator
 						.hasNext();) {

@@ -214,8 +214,8 @@ public class ControleJogosServidor {
 		if (avatarTopWar == null) {
 			return null;
 		}
-		return jogoServidor.atualizaAngulo(avatarTopWar,
-				acaoClienteTopWar.getAngulo());
+		return jogoServidor.atualizaAngulo(avatarTopWar, acaoClienteTopWar
+				.getAngulo());
 	}
 
 	public Object recarregar(NnpeTO nnpeTO) {
@@ -326,6 +326,7 @@ public class ControleJogosServidor {
 				jogoServidor.setFinalizado(true);
 			}
 			mapaJogos.clear();
+			System.out.println("mapaJogos.size() " + mapaJogos.size());
 		}
 	}
 
