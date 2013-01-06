@@ -143,9 +143,9 @@ public class JogoCliente {
 		}
 		ObjectInputStream ois;
 		try {
-			ois = new ObjectInputStream(CarregadorRecursos
-					.recursoComoStream(dadosJogoTopWar.getNomeMapa()
-							+ ".topwar"));
+			ois = new ObjectInputStream(
+					CarregadorRecursos.recursoComoStream(dadosJogoTopWar
+							.getNomeMapa() + ".topwar"));
 			mapaTopWar = (MapaTopWar) ois.readObject();
 		} catch (Exception e1) {
 			Logger.logarExept(e1);
@@ -496,7 +496,12 @@ public class JogoCliente {
 			Runnable runnable = new Runnable() {
 				@Override
 				public void run() {
-					controleCliente.moverPonto(pontoMouseSeguir);
+					Object moverPonto = controleCliente
+							.moverPonto(pontoMouseSeguir);
+					if (ConstantesTopWar.ESPERE.equals(moverPonto)
+							|| moverPonto == null) {
+						setPontoMouseClicado(null);
+					}
 				}
 			};
 			threadMoverMouse = new Thread(runnable);
@@ -510,6 +515,10 @@ public class JogoCliente {
 
 	public Point getPontoMouseClicado() {
 		return pontoMouseClicado;
+	}
+
+	public void setPontoMouseClicado(Point pontoMouseClicado) {
+		this.pontoMouseClicado = pontoMouseClicado;
 	}
 
 	public Point getPontoAvatarDesenha() {
@@ -1066,8 +1075,8 @@ public class JogoCliente {
 		radioText.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				controleCliente.enviaTextoRadio(radioText.getText(), time
-						.isSelected());
+				controleCliente.enviaTextoRadio(radioText.getText(),
+						time.isSelected());
 				radioText.setText("");
 				frameTopWar.requestFocus();
 			}
