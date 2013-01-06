@@ -40,6 +40,105 @@ public class MainFrame {
 		this.topWarApplet = topWarApplet;
 	}
 
+	public static void main(String[] args) {
+		MainFrame mainFrame = new MainFrame(null);
+	}
+
+	public ClienteLocal getClienteLocal() {
+		return clienteLocal;
+	}
+
+	public void iniciar() {
+		proxyComandos = new ProxyComandos();
+		servidorLocal = new ServidorLocal(proxyComandos);
+		proxyComandos.setControleJogosServidor(servidorLocal);
+		clienteLocal = new ClienteLocal(proxyComandos, topWarApplet);
+		gerarJframeApplet();
+		JMenuBar bar = new JMenuBar();
+		frameTopWar.getRootPane().setJMenuBar(bar);
+		JMenu menuJogo = new JMenu() {
+			public String getText() {
+				return Lang.msg("principal");
+			}
+		};
+		bar.add(menuJogo);
+		JMenuItem iniciar = new JMenuItem("Iniciar Jogo") {
+			public String getText() {
+				return Lang.msg("iniciar");
+			}
+		};
+		iniciar.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (clienteLocal.getJogoCliente() != null
+						&& clienteLocal.getJogoCliente().isJogoEmAndamento()) {
+					JOptionPane.showMessageDialog(frameTopWar,
+							Lang.msg("jaEstaEmUmJogo"), "TopWar",
+							JOptionPane.INFORMATION_MESSAGE);
+					return;
+				}
+				JogoCliente jogoCliente = new JogoCliente(null, clienteLocal) {
+					@Override
+					public void setarFrameTopWar() {
+						setFrameTopWar(frameTopWar);
+					}
+				};
+				clienteLocal.setJogoCliente(jogoCliente);
+				clienteLocal.criarJogoDepoisDeLogar(true);
+				jogoIniciado = true;
+			}
+		});
+		menuJogo.add(iniciar);
+
+		JMenuItem sair = new JMenuItem("Sair Jogo") {
+			public String getText() {
+				return Lang.msg("sair");
+			}
+
+		};
+		sair.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				clienteLocal.sairJogo();
+				clienteLocal.getJogoCliente().matarTodasThreads();
+				servidorLocal.finalizaJogosServidor();
+			}
+		});
+		menuJogo.add(sair);
+
+		JMenuItem sobre = new JMenuItem("Sobre o autor do jogo") {
+			public String getText() {
+				return Lang.msg("sobre");
+			}
+
+		};
+		sobre.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String msg = Lang.msg("feitoPor")
+						+ " Paulo Sobreira \n sowbreira@gmail.com \n"
+						+ "http://sowbreira.appspot.com \n" + "2007-2012";
+				JOptionPane.showMessageDialog(frameTopWar, msg,
+						Lang.msg("093"), JOptionPane.INFORMATION_MESSAGE);
+			}
+		});
+		menuJogo.add(sobre);
+		String versao = topWarApplet.getVersao();
+		frameTopWar.setTitle(Lang.msg("topawrsolo") + " Ver. " + versao);
+		final BufferedImage img = ImageUtil.gerarFade(
+				CarregadorRecursos.carregaBackGround("mercs-chat.png"), 50);
+		frameTopWar.getContentPane().add(new JPanel() {
+			@Override
+			protected void paintComponent(Graphics g) {
+				if (!jogoIniciado) {
+					super.paintComponent(g);
+					Graphics2D graphics2d = (Graphics2D) g;
+					if (img != null)
+						graphics2d.drawImage(img, null, 0, 0);
+				}
+			}
+		});
+	}
+
 	public void gerarJframeApplet() {
 		frameTopWar = new JFrame() {
 			@Override
@@ -127,103 +226,5 @@ public class MainFrame {
 				topWarApplet.update(topWarApplet.getGraphics());
 			}
 		};
-	}
-
-	public static void main(String[] args) {
-		MainFrame mainFrame = new MainFrame(null);
-	}
-
-	public ClienteLocal getClienteLocal() {
-		return clienteLocal;
-	}
-
-	public void iniciar() {
-		proxyComandos = new ProxyComandos();
-		servidorLocal = new ServidorLocal(proxyComandos);
-		clienteLocal = new ClienteLocal(proxyComandos, topWarApplet);
-		gerarJframeApplet();
-		JMenuBar bar = new JMenuBar();
-		frameTopWar.getRootPane().setJMenuBar(bar);
-		JMenu menuJogo = new JMenu() {
-			public String getText() {
-				return Lang.msg("principal");
-			}
-		};
-		bar.add(menuJogo);
-		JMenuItem iniciar = new JMenuItem("Iniciar Jogo") {
-			public String getText() {
-				return Lang.msg("iniciar");
-			}
-		};
-		iniciar.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (clienteLocal.getJogoCliente() != null
-						&& clienteLocal.getJogoCliente().isJogoEmAndamento()) {
-					JOptionPane.showMessageDialog(frameTopWar, Lang
-							.msg("jaEstaEmUmJogo"), "TopWar",
-							JOptionPane.INFORMATION_MESSAGE);
-					return;
-				}
-				JogoCliente jogoCliente = new JogoCliente(null, clienteLocal) {
-					@Override
-					public void setarFrameTopWar() {
-						setFrameTopWar(frameTopWar);
-					}
-				};
-				clienteLocal.setJogoCliente(jogoCliente);
-				clienteLocal.criarJogoDepoisDeLogar(true);
-				jogoIniciado = true;
-			}
-		});
-		menuJogo.add(iniciar);
-
-		JMenuItem sair = new JMenuItem("Sair Jogo") {
-			public String getText() {
-				return Lang.msg("sair");
-			}
-
-		};
-		sair.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				clienteLocal.sairJogo();
-				clienteLocal.getJogoCliente().matarTodasThreads();
-				servidorLocal.finalizaJogosServidor();
-			}
-		});
-		menuJogo.add(sair);
-
-		JMenuItem sobre = new JMenuItem("Sobre o autor do jogo") {
-			public String getText() {
-				return Lang.msg("sobre");
-			}
-
-		};
-		sobre.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String msg = Lang.msg("feitoPor")
-						+ " Paulo Sobreira \n sowbreira@gmail.com \n"
-						+ "http://sowbreira.appspot.com \n" + "2007-2012";
-				JOptionPane.showMessageDialog(frameTopWar, msg,
-						Lang.msg("093"), JOptionPane.INFORMATION_MESSAGE);
-			}
-		});
-		menuJogo.add(sobre);
-		String versao = topWarApplet.getVersao();
-		frameTopWar.setTitle(Lang.msg("topawrsolo") + " Ver. " + versao);
-		final BufferedImage img = ImageUtil.gerarFade(CarregadorRecursos
-				.carregaBackGround("mercs-chat.png"), 50);
-		frameTopWar.getContentPane().add(new JPanel() {
-			@Override
-			protected void paintComponent(Graphics g) {
-				if (!jogoIniciado) {
-					super.paintComponent(g);
-					Graphics2D graphics2d = (Graphics2D) g;
-					if (img != null)
-						graphics2d.drawImage(img, null, 0, 0);
-				}
-			}
-		});
 	}
 }

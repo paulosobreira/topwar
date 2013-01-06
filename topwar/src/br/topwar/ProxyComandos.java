@@ -12,11 +12,15 @@ public class ProxyComandos extends NnpeProxyComandos {
 
 	private ControlePersistencia controlePersistencia;
 	private ControleJogosServidor controleJogosServidor;
-	private boolean removeInativos = true;
+	private boolean removeInativos;
 
 	public ProxyComandos() {
-		this(null, null);
-		removeInativos = false;
+		super(null, null);
+		this.removeInativos = false;
+	}
+
+	public void setControleJogosServidor(ControleJogosServidor controleJogosServidor) {
+		this.controleJogosServidor = controleJogosServidor;
 	}
 
 	public ProxyComandos(String webDir, String webInfDir) {
