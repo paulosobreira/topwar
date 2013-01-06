@@ -12,6 +12,7 @@ public class ServidorLocal extends ControleJogosServidor {
 		sessaoCliente.setNomeJogador("TopWar");
 		sessaoCliente.setUlimaAtividade(System.currentTimeMillis());
 		proxyComandos.getNnpeDadosChat().getClientes().add(sessaoCliente);
+		nnpeDados = proxyComandos.getNnpeDadosChat();
 	}
 
 	public void removerClienteInativo(SessaoCliente sessaoClienteRemover) {
