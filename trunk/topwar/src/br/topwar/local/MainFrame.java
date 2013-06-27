@@ -42,6 +42,9 @@ public class MainFrame {
 
 	public static void main(String[] args) {
 		MainFrame mainFrame = new MainFrame(null);
+		mainFrame.iniciar();
+		mainFrame.frameTopWar.setVisible(true);
+		mainFrame.frameTopWar.setSize(800, 570);
 	}
 
 	public ClienteLocal getClienteLocal() {
@@ -140,6 +143,11 @@ public class MainFrame {
 	}
 
 	public void gerarJframeApplet() {
+		if (topWarApplet == null) {
+			frameTopWar = new JFrame();
+			topWarApplet = new TopWarAppletLocal();
+			return;
+		}
 		frameTopWar = new JFrame() {
 			@Override
 			public Container getContentPane() {
