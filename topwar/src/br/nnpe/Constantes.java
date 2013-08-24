@@ -34,10 +34,6 @@ public class Constantes {
 	public static final String BANCO = "BANCO";
 	public static final String FORM_TAB0 = "bl_formtab0";
 	public static final String RELATORIO = "R";
-	public static final int MAX_VOLTAS = 42;
-	public static final int MIN_VOLTAS = 12;
-	public static final int MIN_CICLO = 50;
-	public static final int MAX_CICLO = 120;
 	public static final String RECUPERAR = "RECUPERAR";
 	public static final String REGISTRAR = "REGISTRAR";
 	public static final String ENVIAR_TEXTO = "ENVIAR_TEXTO";

@@ -1019,9 +1019,13 @@ public class PainelTopWar {
 			if (ConstantesTopWar.TIME_AZUL.equals(avatarCliente.getTime())) {
 				graphics2d.setColor(Color.CYAN);
 				graphics2d.draw(avatarCliente.gerarCorpo());
+				graphics2d.setColor(Color.BLUE);
+				graphics2d.draw(avatarCliente.gerarCorpoSuave());
 			} else {
 				graphics2d.setColor(Color.MAGENTA);
 				graphics2d.draw(avatarCliente.gerarCorpo());
+				graphics2d.setColor(Color.RED);
+				graphics2d.draw(avatarCliente.gerarCorpoSuave());
 			}
 		}
 
@@ -1833,9 +1837,13 @@ public class PainelTopWar {
 				if (ConstantesTopWar.TIME_AZUL.equals(avatarCliente.getTime())) {
 					graphics2d.setColor(Color.CYAN);
 					graphics2d.draw(avatarCliente.gerarCorpo());
+					graphics2d.setColor(Color.BLUE);
+					graphics2d.draw(avatarCliente.gerarCorpoSuave());
 				} else {
 					graphics2d.setColor(Color.MAGENTA);
 					graphics2d.draw(avatarCliente.gerarCorpo());
+					graphics2d.setColor(Color.RED);
+					graphics2d.draw(avatarCliente.gerarCorpoSuave());
 				}
 			}
 			/**

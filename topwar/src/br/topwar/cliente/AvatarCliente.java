@@ -120,6 +120,21 @@ public class AvatarCliente {
 		return gpCorpo.createTransformedShape(afRotate);
 	}
 
+	public Shape gerarCorpoSuave() {
+		AffineTransform afRotate = new AffineTransform();
+		Point pontoAvatar = getPontoAvatarSuave();
+		if (pontoAvatar == null) {
+			pontoAvatar = getPontoAvatar();
+		}
+		Shape corpo = desenhaCorpo(pontoAvatar);
+		double angulo = getAngulo();
+		double rad = Math.toRadians((double) angulo);
+		GeneralPath gpCorpo = new GeneralPath(corpo);
+		afRotate.setToRotation(rad, gpCorpo.getBounds().getCenterX(), gpCorpo
+				.getBounds().getCenterY());
+		return gpCorpo.createTransformedShape(afRotate);
+	}
+
 	public Shape gerarEscudo() {
 		double angulo = getAngulo();
 		int distEscudo = 3;
