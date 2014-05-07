@@ -3,6 +3,7 @@ package br.topwar.cliente;
 import java.awt.BorderLayout;
 import java.awt.Button;
 import java.awt.Cursor;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,6 +14,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferStrategy;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -1100,5 +1102,14 @@ public class JogoCliente {
 			return 0;
 		}
 		return controleCliente.getLatenciaReal();
+	}
+
+	public Graphics2D obterGraficos() {
+		BufferStrategy strategy = getFrameTopWar().getBufferStrategy();
+		if (strategy == null) {
+			getFrameTopWar().createBufferStrategy(2);
+			strategy = getFrameTopWar().getBufferStrategy();
+		}
+		return (Graphics2D) strategy.getDrawGraphics();
 	}
 }

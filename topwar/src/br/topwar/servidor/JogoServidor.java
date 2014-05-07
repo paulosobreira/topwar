@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import br.nnpe.GeoUtil;
 import br.nnpe.Logger;
@@ -36,7 +37,7 @@ public class JogoServidor {
 	private DadosJogoTopWar dadosJogoTopWar;
 	private MapaTopWar mapaTopWar;
 	private ProxyComandos proxyComandos;
-	private Map<String, ObjTopWar> avatarTopWars = new HashMap<String, ObjTopWar>();
+	private Map<String, ObjTopWar> avatarTopWars = new ConcurrentHashMap<String, ObjTopWar>();
 	private Thread monitorJogo;
 	private int ptsVermelho;
 	private int ptsAzul;
