@@ -19,12 +19,12 @@ import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
@@ -60,10 +60,16 @@ public class PainelTopWar {
 	private boolean desenhaObjetos = false;
 	private boolean desenhaImagens = true;
 	private boolean desenhaNada = false;
-	private Hashtable<Point, Integer> mapaExplosoes = new Hashtable<Point, Integer>();
+	private Map<Point, Integer> mapaExplosoes = new ConcurrentHashMap<Point, Integer>();
 	private int tabCont = 0;
 	private boolean gerouImagens;
 	private AvatarCliente avatarLocal;
+
+	private Point descontoCentraliza;
+	private Point pontoCentralizado;
+	private Point pontoCentralizadoOld;
+	private int dezporSuave;
+
 	private static DecimalFormat mil = new DecimalFormat("000");
 	private BufferedImage miniAssalt;
 	private BufferedImage miniKnife;
@@ -81,7 +87,7 @@ public class PainelTopWar {
 	private BufferedImage lifeBarSniper;
 	private BufferedImage lifeBarRocket;
 
-	public Map<String, BufferedImage> mapImgs = new HashMap<String, BufferedImage>();
+	public Map<String, BufferedImage> mapImgs = new ConcurrentHashMap<String, BufferedImage>();
 
 	public BufferedImage shield;
 	public BufferedImage crosshair;
@@ -498,6 +504,155 @@ public class PainelTopWar {
 		return scrollPane;
 	}
 
+	protected void render() {
+		try {
+			Graphics2D graphics2d = jogoCliente.obterGraficos();
+			descontoCentraliza();
+			if (desenhaNada) {
+				return;
+			}
+			setarHints(graphics2d);
+			if (desenhaImagens) {
+				desenhaBackGround(graphics2d);
+			} else {
+				graphics2d.setColor(Color.DARK_GRAY);
+				graphics2d.fillRect(0, 0, mapaTopWar.getLargura(),
+						mapaTopWar.getAltura());
+			}
+			loopDesenhaAvatares(graphics2d);
+			loopDesenhaDisparoAvatares(graphics2d);
+			desenhaInfoJogo(graphics2d);
+			desenhaMira(graphics2d);
+			desenhaExplosao(graphics2d);
+			desenhaObjetosDebug(graphics2d);
+			desenhaClicou(graphics2d);
+			desenhaVaiPara(graphics2d);
+			desenhaControleMudarClasse(graphics2d);
+			desenhaLag(graphics2d);
+			desenhaChat(graphics2d);
+		} catch (Exception e) {
+			Logger.logarExept(e);
+		}
+	}
+
+	private void descontoCentraliza() {
+		int x = 0;
+		int y = 0;
+
+		if (pontoCentralizado != null) {
+			JFrame frameTopWar = jogoCliente.getFrameTopWar();
+			x = (int) (pontoCentralizado.x - ((frameTopWar.getWidth() / 2)));
+			y = (int) (pontoCentralizado.y - ((frameTopWar.getHeight() / 2)));
+		}
+		if (descontoCentraliza == null) {
+			descontoCentraliza = new Point(x, y);
+		} else {
+			descontoCentraliza.x = x;
+			descontoCentraliza.y = y;
+		}
+	}
+
+	public void centralizarPonto(Point p) {
+		pontoCentralizado = p;
+		if (pontoCentralizadoOld != null) {
+			List reta = GeoUtil.drawBresenhamLine(pontoCentralizadoOld,
+					pontoCentralizado);
+			int dezpor = (int) (reta.size() * 0.05);
+			if (dezpor > dezporSuave) {
+				dezporSuave++;
+			}
+			if (dezpor < dezporSuave) {
+				dezporSuave--;
+			}
+			if (dezporSuave >= reta.size()) {
+				dezporSuave = reta.size() - 1;
+			}
+			if (dezporSuave < 0) {
+				dezporSuave = 0;
+			}
+			pontoCentralizado = (Point) reta.get(dezporSuave);
+		}
+		render();
+		pontoCentralizadoOld = pontoCentralizado;
+	}
+
+	private void desenhaChat(Graphics2D graphics2d) {
+		graphics2d.setColor(Color.BLACK);
+		Rectangle limitesViewPort = (Rectangle) limitesViewPort();
+		Point o = new Point(limitesViewPort.x + 10, limitesViewPort.y
+				+ limitesViewPort.height - 100);
+		int x = o.x + 10;
+		int y = o.y;
+
+		if (jogoCliente.isModoTexto()) {
+			String txt = jogoCliente.getTextoEnviar().toString();
+
+			if (jogoCliente.isModoTextoSomenteTime()) {
+				if (ConstantesTopWar.TIME_AZUL.equals(avatarLocal.getTime())) {
+					graphics2d.setColor(ConstantesTopWar.lightBlu);
+				}
+				if (ConstantesTopWar.TIME_VERMELHO
+						.equals(avatarLocal.getTime())) {
+					graphics2d.setColor(ConstantesTopWar.lightRed);
+				}
+			} else {
+				graphics2d.setColor(transpPreto);
+			}
+
+			graphics2d.fillRoundRect(x - 5, y - 13,
+					Util.calculaLarguraText(txt + "   ", graphics2d), 16, 5, 5);
+			if (cursor) {
+				txt += "|";
+			}
+			cursor = !cursor;
+			graphics2d.setColor(Color.YELLOW);
+			graphics2d.drawString(txt, x, y);
+		}
+		List<RadioMsg> radioMsgCopiaPainel = jogoCliente
+				.getRadioMsgCopiaPainel();
+		for (int i = 0; i < radioMsgCopiaPainel.size(); i++) {
+			RadioMsg radioMsg = radioMsgCopiaPainel.get(i);
+			int nvY = y - 20 - (15 * i);
+			String lnTxt = radioMsg.getAvatar() + ">" + radioMsg.getMsg();
+			if (radioMsg.isSomenteTime()) {
+				if (ConstantesTopWar.TIME_AZUL.equals(avatarLocal.getTime())) {
+					graphics2d.setColor(ConstantesTopWar.lightBlu);
+				}
+				if (ConstantesTopWar.TIME_VERMELHO
+						.equals(avatarLocal.getTime())) {
+					graphics2d.setColor(ConstantesTopWar.lightRed);
+				}
+			} else {
+				graphics2d.setColor(transpPreto);
+			}
+			graphics2d.fillRoundRect(x - 5, nvY - 13,
+					Util.calculaLarguraText(lnTxt + "   ", graphics2d), 16, 5,
+					5);
+			graphics2d.setColor(Color.white);
+			graphics2d.drawString(lnTxt, x, nvY);
+		}
+	}
+
+	private void desenhaVaiPara(Graphics2D graphics2d) {
+		if (jogoCliente.getPontoMouseMovendo() != null
+				&& jogoCliente.isSeguirMouse()) {
+			Point p = jogoCliente.getPontoMouseMovendo();
+			graphics2d.drawImage(ImageUtil.geraResize(
+					OcilaCor.geraOcila("vaiaqui", vaiAqui), 1.5), p.x - 12,
+					p.y - 12, null);
+		}
+	}
+
+	private void desenhaClicou(Graphics2D graphics2d) {
+		Point p = jogoCliente.getPontoMouseClicado();
+		if (p != null) {
+			graphics2d.drawImage(ImageUtil.geraResize(
+					OcilaCor.geraOcila("vaiaqui", vaiAqui), 1.5), p.x - 12,
+					p.y - 12, null);
+		}
+
+	}
+
 	private void geraPainel() {
 		panel = new JPanel() {
 			public Dimension getPreferredSize() {
@@ -531,87 +686,6 @@ public class PainelTopWar {
 				desenhaLag(graphics2d);
 				desenhaChat(graphics2d);
 				Toolkit.getDefaultToolkit().sync();
-			}
-
-			private void desenhaChat(Graphics2D graphics2d) {
-				graphics2d.setColor(Color.BLACK);
-				Rectangle limitesViewPort = (Rectangle) limitesViewPort();
-				Point o = new Point(limitesViewPort.x + 10, limitesViewPort.y
-						+ limitesViewPort.height - 100);
-				int x = o.x + 10;
-				int y = o.y;
-
-				if (jogoCliente.isModoTexto()) {
-					String txt = jogoCliente.getTextoEnviar().toString();
-
-					if (jogoCliente.isModoTextoSomenteTime()) {
-						if (ConstantesTopWar.TIME_AZUL.equals(avatarLocal
-								.getTime())) {
-							graphics2d.setColor(ConstantesTopWar.lightBlu);
-						}
-						if (ConstantesTopWar.TIME_VERMELHO.equals(avatarLocal
-								.getTime())) {
-							graphics2d.setColor(ConstantesTopWar.lightRed);
-						}
-					} else {
-						graphics2d.setColor(transpPreto);
-					}
-
-					graphics2d.fillRoundRect(x - 5, y - 13,
-							Util.calculaLarguraText(txt + "   ", graphics2d),
-							16, 5, 5);
-					if (cursor) {
-						txt += "|";
-					}
-					cursor = !cursor;
-					graphics2d.setColor(Color.YELLOW);
-					graphics2d.drawString(txt, x, y);
-				}
-				List<RadioMsg> radioMsgCopiaPainel = jogoCliente
-						.getRadioMsgCopiaPainel();
-				for (int i = 0; i < radioMsgCopiaPainel.size(); i++) {
-					RadioMsg radioMsg = radioMsgCopiaPainel.get(i);
-					int nvY = y - 20 - (15 * i);
-					String lnTxt = radioMsg.getAvatar() + ">"
-							+ radioMsg.getMsg();
-					if (radioMsg.isSomenteTime()) {
-						if (ConstantesTopWar.TIME_AZUL.equals(avatarLocal
-								.getTime())) {
-							graphics2d.setColor(ConstantesTopWar.lightBlu);
-						}
-						if (ConstantesTopWar.TIME_VERMELHO.equals(avatarLocal
-								.getTime())) {
-							graphics2d.setColor(ConstantesTopWar.lightRed);
-						}
-					} else {
-						graphics2d.setColor(transpPreto);
-					}
-					graphics2d.fillRoundRect(x - 5, nvY - 13,
-							Util.calculaLarguraText(lnTxt + "   ", graphics2d),
-							16, 5, 5);
-					graphics2d.setColor(Color.white);
-					graphics2d.drawString(lnTxt, x, nvY);
-				}
-			}
-
-			private void desenhaClicou(Graphics2D graphics2d) {
-				Point p = jogoCliente.getPontoMouseClicado();
-				if (p != null) {
-					graphics2d.drawImage(ImageUtil.geraResize(
-							OcilaCor.geraOcila("vaiaqui", vaiAqui), 1.5),
-							p.x - 12, p.y - 12, null);
-				}
-
-			}
-
-			private void desenhaVaiPara(Graphics2D graphics2d) {
-				if (jogoCliente.getPontoMouseMovendo() != null
-						&& jogoCliente.isSeguirMouse()) {
-					Point p = jogoCliente.getPontoMouseMovendo();
-					graphics2d.drawImage(ImageUtil.geraResize(
-							OcilaCor.geraOcila("vaiaqui", vaiAqui), 1.5),
-							p.x - 12, p.y - 12, null);
-				}
 			}
 
 		};
