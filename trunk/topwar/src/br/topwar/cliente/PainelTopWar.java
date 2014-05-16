@@ -54,8 +54,6 @@ public class PainelTopWar {
 	private BufferedImage backGround;
 	private Thread threadCarregarBkg;
 	private JogoCliente jogoCliente;
-	private JPanel panel;
-	private JScrollPane scrollPane;
 	private MapaTopWar mapaTopWar;
 	private boolean desenhaObjetos = false;
 	private boolean desenhaImagens = true;
@@ -126,13 +124,16 @@ public class PainelTopWar {
 	private RoundRectangle2D shieldRect;
 	private RoundRectangle2D rocketRect;
 	private RoundRectangle2D sniperRect;
+	private Rectangle limitesViewPort;
 	protected boolean cursor;
 	private int contMostraLag;
+	private AffineTransform translateObjetos;
 
 	public PainelTopWar(JogoCliente jogoCliente) {
 
 		this.jogoCliente = jogoCliente;
 		mapaTopWar = jogoCliente.getMapaTopWar();
+		translateObjetos = new AffineTransform();
 		carregaImagens();
 		gerarMapaImagensExplosao();
 		gerarMapaImagens(azul, "azul");
@@ -160,7 +161,6 @@ public class PainelTopWar {
 				e.printStackTrace();
 			}
 		}
-		geraPainel();
 		gerarMinis();
 		gerarMudaClasseBtns();
 	}
@@ -496,18 +496,11 @@ public class PainelTopWar {
 		}
 	}
 
-	public JPanel getPanel() {
-		return panel;
-	}
-
-	public JScrollPane getScrollPane() {
-		return scrollPane;
-	}
-
 	protected void render() {
 		try {
-			Graphics2D graphics2d = jogoCliente.obterGraficos();
 			descontoCentraliza();
+			limitesViewPort = (Rectangle) limitesViewPort();
+			Graphics2D graphics2d = jogoCliente.obterGraficos();
 			if (desenhaNada) {
 				return;
 			}
@@ -519,17 +512,17 @@ public class PainelTopWar {
 				graphics2d.fillRect(0, 0, mapaTopWar.getLargura(),
 						mapaTopWar.getAltura());
 			}
-			loopDesenhaAvatares(graphics2d);
-			loopDesenhaDisparoAvatares(graphics2d);
-			desenhaInfoJogo(graphics2d);
-			desenhaMira(graphics2d);
-			desenhaExplosao(graphics2d);
-			desenhaObjetosDebug(graphics2d);
-			desenhaClicou(graphics2d);
-			desenhaVaiPara(graphics2d);
-			desenhaControleMudarClasse(graphics2d);
-			desenhaLag(graphics2d);
-			desenhaChat(graphics2d);
+//			loopDesenhaAvatares(graphics2d);
+//			loopDesenhaDisparoAvatares(graphics2d);
+//			desenhaInfoJogo(graphics2d);
+//			desenhaMira(graphics2d);
+//			desenhaExplosao(graphics2d);
+//			desenhaObjetosDebug(graphics2d);
+//			desenhaClicou(graphics2d);
+//			desenhaVaiPara(graphics2d);
+//			desenhaControleMudarClasse(graphics2d);
+//			desenhaLag(graphics2d);
+//			desenhaChat(graphics2d);
 		} catch (Exception e) {
 			Logger.logarExept(e);
 		}
@@ -572,7 +565,6 @@ public class PainelTopWar {
 			}
 			pontoCentralizado = (Point) reta.get(dezporSuave);
 		}
-		render();
 		pontoCentralizadoOld = pontoCentralizado;
 	}
 
@@ -653,58 +645,101 @@ public class PainelTopWar {
 
 	}
 
-	private void geraPainel() {
-		panel = new JPanel() {
-			public Dimension getPreferredSize() {
-				return new Dimension(mapaTopWar.getLargura(),
-						mapaTopWar.getAltura());
-			}
+	// protected void desenhaBackGround(Graphics2D graphics2d) {
+	// if (backGround == null) {
+	// carregaBackGround();
+	// } else {
+	// graphics2d.drawImage(backGround, null, 0, 0);
+	// }
+	// }
 
-			protected void paintComponent(java.awt.Graphics g) {
-				super.paintComponent(g);
-				Graphics2D graphics2d = (Graphics2D) g;
-				if (desenhaNada) {
-					return;
-				}
-				setarHints(graphics2d);
-				if (desenhaImagens) {
-					desenhaBackGround(graphics2d);
-				} else {
-					graphics2d.setColor(Color.DARK_GRAY);
-					graphics2d.fillRect(0, 0, mapaTopWar.getLargura(),
-							mapaTopWar.getAltura());
-				}
-				loopDesenhaAvatares(graphics2d);
-				loopDesenhaDisparoAvatares(graphics2d);
-				desenhaInfoJogo(graphics2d);
-				desenhaMira(graphics2d);
-				desenhaExplosao(graphics2d);
-				desenhaObjetosDebug(graphics2d);
-				desenhaClicou(graphics2d);
-				desenhaVaiPara(graphics2d);
-				desenhaControleMudarClasse(graphics2d);
-				desenhaLag(graphics2d);
-				desenhaChat(graphics2d);
-				Toolkit.getDefaultToolkit().sync();
-			}
-
-		};
-		scrollPane = new JScrollPane(panel,
-				JScrollPane.VERTICAL_SCROLLBAR_NEVER,
-				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPane.getViewport().addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent e) {
-			}
-		});
-
-	}
-
-	protected void desenhaBackGround(Graphics2D graphics2d) {
+	private void desenhaBackGround(Graphics2D g2d) {
 		if (backGround == null) {
 			carregaBackGround();
 		} else {
-			graphics2d.drawImage(backGround, null, 0, 0);
+			if (desenhaImagens) {
+				g2d.setColor(Color.BLACK);
+			} else {
+				g2d.setColor(Color.LIGHT_GRAY);
+			}
+			g2d.fillRect(0, 0, (int) limitesViewPort.getWidth(),
+					(int) limitesViewPort.getHeight());
+			BufferedImage subimage = null;
+			Rectangle rectangle = null;
+			int diffX = 0;
+			int diffY = 0;
+			try {
+				if (backGround != null) {
+					BufferedImage bg = backGround;
+					double largura = limitesViewPort.getWidth();
+					double altura = limitesViewPort.getHeight();
+
+					int x = descontoCentraliza.x;
+					int y = descontoCentraliza.y;
+
+					int bgWidth = bg.getWidth();
+					int bgHeight = bg.getHeight();
+
+					if (x <= 0) {
+						diffX += (x * -1);
+						x = 0;
+					}
+					if (y < 0) {
+						diffY += (y * -1);
+						y = 0;
+					}
+
+					double maxLarg = (x + largura);
+					double maxAlt = (y + altura);
+
+					if (maxLarg >= bgWidth) {
+						largura -= (maxLarg - bgWidth);
+					}
+
+					if (maxAlt >= bgHeight) {
+						altura -= (maxAlt - bgHeight);
+					}
+
+					if ((x + largura) >= bgWidth) {
+						x -= ((x + largura) - bgWidth);
+					}
+					if ((y + altura) >= bgHeight) {
+						y -= (y + altura) - bgHeight;
+					}
+
+					if (x <= 0) {
+						x = 0;
+					}
+					if (y < 0) {
+						y = 0;
+					}
+
+					if (largura > bg.getWidth()) {
+						largura = bg.getWidth();
+					}
+
+					if (altura > bg.getHeight()) {
+						altura = bg.getHeight();
+					}
+
+					rectangle = new Rectangle((int) x, (int) y, (int) largura,
+							(int) altura);
+
+					subimage = bg.getSubimage(rectangle.x, rectangle.y,
+							rectangle.width, rectangle.height);
+
+				}
+			} catch (Exception e) {
+				Logger.logarExept(e);
+				subimage = backGround;
+			}
+
+			if (desenhaImagens) {
+				subimage.setAccelerationPriority(1);
+				int newX = Util.inte(limitesViewPort.getX() + (diffX));
+				int newY = Util.inte(limitesViewPort.getY() + (diffY));
+				g2d.drawImage(subimage, newX, newY, null);
+			}
 		}
 	}
 
@@ -1072,6 +1107,8 @@ public class PainelTopWar {
 			p = avatarCliente.getPontoAvatar();
 		}
 
+		p = new Point(p.x - descontoCentraliza.x, p.y - descontoCentraliza.y);
+
 		AffineTransform afRotate = new AffineTransform();
 		double rad = Math.toRadians((double) avatarCliente.getAngulo());
 		int larg = rocket.getWidth();
@@ -1168,6 +1205,8 @@ public class PainelTopWar {
 		 * Desenha Faca
 		 */
 		Point pFaca = GeoUtil.calculaPonto(angulo, 10, desenha);
+		pFaca = new Point(pFaca.x - descontoCentraliza.x, pFaca.x
+				- descontoCentraliza.y);
 		AffineTransform afRotate = new AffineTransform();
 		double rad = Math.toRadians((double) angulo - 60);
 		afRotate.setToRotation(rad, knifeAtttack.getWidth() / 2,
@@ -1177,7 +1216,8 @@ public class PainelTopWar {
 		BufferedImage rotBuffer = new BufferedImage(knifeAtttack.getWidth(),
 				knifeAtttack.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		opRotate.filter(knifeAtttack, rotBuffer);
-		graphics2d.drawImage(rotBuffer, pFaca.x, pFaca.y, null);
+		graphics2d.drawImage(rotBuffer, pFaca.x - descontoCentraliza.x, pFaca.y
+				- descontoCentraliza.y, null);
 
 	}
 
@@ -1613,7 +1653,9 @@ public class PainelTopWar {
 				int intIni = Util.intervalo(10, 20);
 				Point pIni = linha.get(intIni);
 				Point pFim = linha.get(intIni + Util.intervalo(1, 20));
-				graphics2d.drawLine(pIni.x, pIni.y, pFim.x, pFim.y);
+				graphics2d.drawLine(pIni.x - descontoCentraliza.x, pIni.y
+						- descontoCentraliza.y, pFim.x - descontoCentraliza.x,
+						pFim.y - descontoCentraliza.y);
 			}
 		}
 
@@ -1633,8 +1675,10 @@ public class PainelTopWar {
 			if (indexPtFaiscaFim < linhaDisparo.size() && Math.random() > .989) {
 				Point ptFaiscaFim = linhaDisparo.get(indexPtFaiscaFim);
 				graphics2d.setColor(Color.YELLOW);
-				graphics2d.drawLine(tiro.x, tiro.y, ptFaiscaFim.x,
-						ptFaiscaFim.y);
+				graphics2d.drawLine(tiro.x - descontoCentraliza.x, tiro.y
+						- descontoCentraliza.y, ptFaiscaFim.x
+						- descontoCentraliza.x, ptFaiscaFim.y
+						- descontoCentraliza.y);
 			}
 			for (Iterator iterator = avatarClientes.iterator(); iterator
 					.hasNext();) {
@@ -1709,7 +1753,10 @@ public class PainelTopWar {
 						int intIni = Util.intervalo(5, 14);
 						Point pIni = linha.get(intIni);
 						Point pFim = linha.get(intIni + Util.intervalo(1, 24));
-						graphics2d.drawLine(pIni.x, pIni.y, pFim.x, pFim.y);
+						graphics2d.drawLine(pIni.x - descontoCentraliza.x,
+								pIni.y - descontoCentraliza.y, pFim.x
+										- descontoCentraliza.x, pFim.y
+										- descontoCentraliza.y);
 					}
 				}
 			}
@@ -1731,7 +1778,10 @@ public class PainelTopWar {
 						int intIni = Util.intervalo(10, 19);
 						Point pIni = linha.get(intIni + Util.intervalo(1, 19));
 						Point pFim = linha.get(intIni);
-						graphics2d.drawLine(pIni.x, pIni.y, pFim.x, pFim.y);
+						graphics2d.drawLine(pIni.x - descontoCentraliza.x,
+								pIni.y - descontoCentraliza.y, pFim.x
+										- descontoCentraliza.x, pFim.y
+										- descontoCentraliza.y);
 					}
 				}
 			}
@@ -1763,7 +1813,10 @@ public class PainelTopWar {
 					int intIni = Util.intervalo(5, 14);
 					Point pIni = linha.get(intIni);
 					Point pFim = linha.get(intIni + Util.intervalo(1, 24));
-					graphics2d.drawLine(pIni.x, pIni.y, pFim.x, pFim.y);
+					graphics2d.drawLine(pIni.x - descontoCentraliza.x, pIni.y
+							- descontoCentraliza.y, pFim.x
+							- descontoCentraliza.x, pFim.y
+							- descontoCentraliza.y);
 				}
 			}
 		}
@@ -1786,7 +1839,8 @@ public class PainelTopWar {
 		Rectangle area = new Rectangle(p.x, p.y, larg, larg);
 		rotBuffer = processaSobreposicoesAvatar(rotBuffer, p, area, mapaTopWar);
 		rotBuffer = processaGrade(rotBuffer, desenha, area, mapaTopWar);
-		graphics2d.drawImage(rotBuffer, p.x, p.y, null);
+		graphics2d.drawImage(rotBuffer, p.x - descontoCentraliza.x, p.y
+				- descontoCentraliza.y, null);
 	}
 
 	protected void desenhaAvatares(Graphics2D graphics2d,
@@ -1867,6 +1921,8 @@ public class PainelTopWar {
 			if (desenha == null) {
 				return;
 			}
+			desenha = new Point(desenha.x - descontoCentraliza.x, desenha.y
+					- descontoCentraliza.y);
 			Rectangle areaAvatar = new Rectangle(desenha.x, desenha.y,
 					imgJog.getWidth(), imgJog.getHeight());
 			imgJog = processaSobreposicoesAvatar(imgJog, desenha, areaAvatar,
@@ -1878,10 +1934,10 @@ public class PainelTopWar {
 			int transp = 255;
 			if (jogoCliente.getPontoAvatar() != null
 					&& !avatarCliente.isLocal()) {
-				int distacia = (int) GeoUtil.distaciaEntrePontos(
+				int distancia = (int) GeoUtil.distaciaEntrePontos(
 						jogoCliente.getPontoAvatar(), pontoAvatar);
-				if (distacia > 250) {
-					transp = (510 - (distacia - 200)) / 2;
+				if (distancia > 250) {
+					transp = (510 - (distancia - 200)) / 2;
 					if (transp > 255) {
 						transp = 255;
 					}
@@ -1906,18 +1962,31 @@ public class PainelTopWar {
 				desenhaCampoVisao(graphics2d, avatarCliente, desenha);
 			}
 			if (desenhaObjetos) {
+				translateObjetos.setToTranslation(-descontoCentraliza.x,
+						-descontoCentraliza.y);
 				graphics2d.setColor(Color.WHITE);
-				graphics2d.draw(avatarCliente.gerarCabeca());
+				graphics2d.draw(translateObjetos
+						.createTransformedShape(avatarCliente.gerarCabeca()));
 				if (ConstantesTopWar.TIME_AZUL.equals(avatarCliente.getTime())) {
 					graphics2d.setColor(Color.CYAN);
-					graphics2d.draw(avatarCliente.gerarCorpo());
+					graphics2d
+							.draw(translateObjetos
+									.createTransformedShape(avatarCliente
+											.gerarCorpo()));
 					graphics2d.setColor(Color.BLUE);
-					graphics2d.draw(avatarCliente.gerarCorpoSuave());
+					graphics2d.draw(translateObjetos
+							.createTransformedShape(avatarCliente
+									.gerarCorpoSuave()));
 				} else {
 					graphics2d.setColor(Color.MAGENTA);
-					graphics2d.draw(avatarCliente.gerarCorpo());
+					graphics2d
+							.draw(translateObjetos
+									.createTransformedShape(avatarCliente
+											.gerarCorpo()));
 					graphics2d.setColor(Color.RED);
-					graphics2d.draw(avatarCliente.gerarCorpoSuave());
+					graphics2d.draw(translateObjetos
+							.createTransformedShape(avatarCliente
+									.gerarCorpoSuave()));
 				}
 			}
 			/**
@@ -1977,8 +2046,7 @@ public class PainelTopWar {
 					graphics2d.setColor(Color.BLACK);
 				}
 				graphics2d.drawString("" + avatarCliente.getNomeJogador() + " "
-						+ avatarCliente.getVida(), desenha.x,
-						pontoAvatar.y - 20);
+						+ avatarCliente.getVida(), desenha.x, desenha.y - 20);
 			}
 		}
 
@@ -2037,6 +2105,29 @@ public class PainelTopWar {
 				limitesViewPort.getBounds().y, null);
 	}
 
+	private void desenhaFPS(Graphics2D g2d) {
+		// String msg = "FPS";
+		// if (contMostraFPS >= 0 && contMostraFPS < 200) {
+		//
+		// msg = "  " + gerenciadorVisual.getFps();
+		// } else if (contMostraFPS > 200) {
+		// contMostraFPS = -20;
+		// }
+		// contMostraFPS++;
+		// Point pointDesenhaFPS = new Point(limitesViewPort.x
+		// + (limitesViewPort.width) - 70, Util.inte(limitesViewPort.y
+		// + limitesViewPort.getHeight() - 90));
+		// g2d.setColor(transpMenus);
+		// fps.setFrame(pointDesenhaFPS.x, pointDesenhaFPS.y, 65, 35);
+		// g2d.fill(fps);
+		// Font fontOri = g2d.getFont();
+		// g2d.setFont(new Font(fontOri.getName(), Font.BOLD, 28));
+		// g2d.setColor(OcilaCor.porcentVerde100Vermelho0(Util
+		// .inte(gerenciadorVisual.getFps() * 1.6)));
+		// g2d.drawString(msg, pointDesenhaFPS.x + 2, pointDesenhaFPS.y + 26);
+		// g2d.setFont(fontOri);
+	}
+
 	public void atualiza() {
 		Collection<AvatarCliente> avatarClientes = jogoCliente
 				.getAvatarClientesCopia();
@@ -2057,9 +2148,10 @@ public class PainelTopWar {
 				break;
 			}
 		}
-		if (panel != null) {
-			panel.repaint();
-		}
+		render();
+		// if (panel != null) {
+		// panel.repaint();
+		// }
 	}
 
 	private void contralizaPontoNoAvatar(AvatarCliente avatarCliente) {
@@ -2067,7 +2159,8 @@ public class PainelTopWar {
 		if (pontoAv == null) {
 			pontoAv = avatarCliente.getPontoAvatar();
 		}
-		centralizarPontoDireto(pontoAv);
+		// centralizarPontoDireto(pontoAv);
+		centralizarPonto(pontoAv);
 	}
 
 	private void setarHints(Graphics2D g2d) {
@@ -2082,45 +2175,54 @@ public class PainelTopWar {
 
 	}
 
+	// public Shape limitesViewPort() {
+	// if (scrollPane == null) {
+	// return null;
+	// }
+	// Rectangle rectangle = scrollPane.getViewport().getBounds();
+	// rectangle.x = scrollPane.getViewport().getViewPosition().x;
+	// rectangle.y = scrollPane.getViewport().getViewPosition().y;
+	// return rectangle;
+	// }
+
 	public Shape limitesViewPort() {
-		if (scrollPane == null) {
-			return null;
-		}
-		Rectangle rectangle = scrollPane.getViewport().getBounds();
-		rectangle.x = scrollPane.getViewport().getViewPosition().x;
-		rectangle.y = scrollPane.getViewport().getViewPosition().y;
+		int x = 0;
+		int y = 0;
+		JFrame frameTopWar = jogoCliente.getFrameTopWar();
+		Rectangle rectangle = new Rectangle(x, y,
+				(int) (frameTopWar.getWidth()), (int) (frameTopWar.getHeight()));
 		return rectangle;
 	}
 
-	public void centralizarPontoDireto(Point pin) {
-		final Point p = new Point((int) (pin.x)
-				- (scrollPane.getViewport().getWidth() / 2), (int) (pin.y)
-				- (scrollPane.getViewport().getHeight() / 2));
-		if (p.x < 0) {
-			p.x = 1;
-		}
-		double maxX = ((panel.getWidth()) - scrollPane.getViewport().getWidth());
-		if (p.x > maxX) {
-			p.x = Util.inte(maxX) - 1;
-		}
-		if (p.y < 0) {
-			p.y = 1;
-		}
-		double maxY = ((panel.getHeight()) - (scrollPane.getViewport()
-				.getHeight()));
-		if (p.y > maxY) {
-			p.y = Util.inte(maxY) - 1;
-		}
-		Point oldp = scrollPane.getViewport().getViewPosition();
-		if (!oldp.equals(p)) {
-			SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					scrollPane.getViewport().setViewPosition(p);
-				}
-			});
-		}
-	}
+	// public void centralizarPontoDireto(Point pin) {
+	// final Point p = new Point((int) (pin.x)
+	// - (scrollPane.getViewport().getWidth() / 2), (int) (pin.y)
+	// - (scrollPane.getViewport().getHeight() / 2));
+	// if (p.x < 0) {
+	// p.x = 1;
+	// }
+	// double maxX = ((panel.getWidth()) - scrollPane.getViewport().getWidth());
+	// if (p.x > maxX) {
+	// p.x = Util.inte(maxX) - 1;
+	// }
+	// if (p.y < 0) {
+	// p.y = 1;
+	// }
+	// double maxY = ((panel.getHeight()) - (scrollPane.getViewport()
+	// .getHeight()));
+	// if (p.y > maxY) {
+	// p.y = Util.inte(maxY) - 1;
+	// }
+	// Point oldp = scrollPane.getViewport().getViewPosition();
+	// if (!oldp.equals(p)) {
+	// SwingUtilities.invokeLater(new Runnable() {
+	// @Override
+	// public void run() {
+	// scrollPane.getViewport().setViewPosition(p);
+	// }
+	// });
+	// }
+	// }
 
 	protected BufferedImage processaSobreposicoesAvatar(BufferedImage imgJog,
 			Point desenha, Rectangle areaAvatar, MapaTopWar mapaTopWar) {

@@ -104,6 +104,8 @@ public class JogoCliente {
 	protected boolean modoTexto;
 	private StringBuffer textoEnviar = new StringBuffer();
 	protected boolean modoTextoSomenteTime;
+	private int fps = 0;
+	protected double fpsLimite = 60D;
 
 	public PainelTopWar getPainelTopWar() {
 		return painelTopWar;
@@ -302,7 +304,7 @@ public class JogoCliente {
 	}
 
 	private void iniciaMouseListener() {
-		painelTopWar.getPanel().addMouseMotionListener(new MouseAdapter() {
+		frameTopWar.addMouseMotionListener(new MouseAdapter() {
 			@Override
 			public void mouseMoved(MouseEvent e) {
 				if (pontoAvatar == null) {
@@ -314,7 +316,7 @@ public class JogoCliente {
 
 		});
 
-		painelTopWar.getPanel().addMouseListener(new MouseAdapter() {
+		frameTopWar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				frameTopWar.requestFocus();
@@ -552,6 +554,34 @@ public class JogoCliente {
 						Logger.logarExept(e);
 					}
 				}
+
+				// int frames = 0;
+				// long startTime = System.currentTimeMillis();
+				// long lastTime = System.nanoTime();
+				//
+				// double delta = 0;
+				// while (jogoEmAndamento) {
+				// long now = System.nanoTime();
+				// double nsPerTick = 1000000000D / fpsLimite;
+				// delta += (now - lastTime) / nsPerTick;
+				// lastTime = now;
+				// boolean render = false;
+				// while (delta >= 1) {
+				// render = true;
+				// delta -= 1;
+				// }
+				// if (render) {
+				// painelTopWar.atualiza();
+				// ++frames;
+				// }
+				// if ((System.currentTimeMillis() - startTime) > 1000) {
+				// startTime = System.currentTimeMillis();
+				// fps = frames;
+				// frames = 0;
+				// delta = 0;
+				// }
+				// }
+
 				NnpeTO nnpeTO = (NnpeTO) controleCliente.obterPlacar();
 				placar = (List<PlacarTopWar>) nnpeTO.getData();
 				painelTopWar.setTabCont(100);
@@ -586,7 +616,6 @@ public class JogoCliente {
 			if (mapaTopWar != null)
 				frameTopWar.setTitle(mapaTopWar.getNome());
 			frameTopWar.getContentPane().removeAll();
-			frameTopWar.getContentPane().add(painelTopWar.getScrollPane());
 			return;
 		}
 		setarFrameTopWar();
@@ -606,9 +635,6 @@ public class JogoCliente {
 		if (mapaTopWar != null) {
 			frameTopWar.setCursor(crossHair);
 			frameTopWar.setTitle(mapaTopWar.getNome());
-			frameTopWar.getContentPane().setLayout(new BorderLayout());
-			frameTopWar.getContentPane().add(painelTopWar.getScrollPane(),
-					BorderLayout.CENTER);
 		}
 		if (controleCliente.isLocal()) {
 			frameTopWar.getContentPane().validate();
@@ -758,7 +784,7 @@ public class JogoCliente {
 		frameTopWar.addKeyListener(keyAdapter);
 		if (frameTopWar.getParent() != null) {
 			frameTopWar.getParent().addKeyListener(keyAdapter);
-			painelTopWar.getPanel().addKeyListener(keyAdapter);
+			frameTopWar.addKeyListener(keyAdapter);
 		}
 	}
 
@@ -935,10 +961,6 @@ public class JogoCliente {
 				avataresCopy.addAll(avatarClientes);
 			} catch (Exception e) {
 				avataresCopy.clear();
-				try {
-					Thread.sleep(5);
-				} catch (InterruptedException e1) {
-				}
 			}
 		}
 		return avataresCopy;
@@ -950,11 +972,6 @@ public class JogoCliente {
 			eventosCopy.addAll(eventos);
 		} catch (Exception e) {
 			Logger.logarExept(e);
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException e1) {
-				e1.printStackTrace();
-			}
 		}
 		return eventosCopy;
 	}
