@@ -158,8 +158,8 @@ public class JogoCliente {
 
 	public void inciaJogo() {
 		carregaMapa();
-		painelTopWar = new PainelTopWar(this);
 		iniciaJFrame();
+		painelTopWar = new PainelTopWar(this);
 		iniciaMouseListener();
 		iniciaListenerTeclado();
 		iniciaThreadAtualizaTela();
@@ -182,7 +182,8 @@ public class JogoCliente {
 				while (jogoEmAndamento && !interrupt) {
 					try {
 						int media = 0;
-						for (Iterator iterator = avatarClientes.iterator(); iterator
+						Collection<AvatarCliente> avatarClientesCopia = getAvatarClientesCopia();
+						for (Iterator iterator = avatarClientesCopia.iterator(); iterator
 								.hasNext();) {
 							AvatarCliente avatarCliente = (AvatarCliente) iterator
 									.next();
@@ -247,8 +248,7 @@ public class JogoCliente {
 						}
 						Thread.sleep(atulaizaAvatarSleep);
 					} catch (InterruptedException e) {
-						// interrupt = true;
-						// Logger.logarExept(e);
+						Logger.logarExept(e);
 					}
 				}
 			}
@@ -462,11 +462,13 @@ public class JogoCliente {
 	}
 
 	private void setarPontoMouseMover(MouseEvent e) {
+		Point descontoCentraliza = painelTopWar.getDescontoCentraliza();
 		if (pontoMouseMovendo == null) {
-			pontoMouseMovendo = new Point(e.getX(), e.getY());
+			pontoMouseMovendo = new Point(e.getX() + descontoCentraliza.x,
+					e.getY() + descontoCentraliza.y);
 		}
-		pontoMouseMovendo.x = e.getX();
-		pontoMouseMovendo.y = e.getY();
+		pontoMouseMovendo.x = e.getX() + descontoCentraliza.x;
+		pontoMouseMovendo.y = e.getY() + descontoCentraliza.y;
 		if (pontoAvatar != null)
 			angulo = GeoUtil.calculaAngulo(pontoAvatar, pontoMouseMovendo, 90);
 		if (!seguirMouse) {
@@ -544,43 +546,32 @@ public class JogoCliente {
 		threadRepaint = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				boolean interrupt = false;
-				while (jogoEmAndamento && !interrupt) {
-					try {
+				int frames = 0;
+				long startTime = System.currentTimeMillis();
+				long lastTime = System.nanoTime();
+
+				double delta = 0;
+				while (jogoEmAndamento) {
+					long now = System.nanoTime();
+					double nsPerTick = 1000000000D / fpsLimite;
+					delta += (now - lastTime) / nsPerTick;
+					lastTime = now;
+					boolean render = false;
+					while (delta >= 1) {
+						render = true;
+						delta -= 1;
+					}
+					if (render) {
 						painelTopWar.atualiza();
-						Thread.sleep(40);
-					} catch (InterruptedException e) {
-						interrupt = true;
-						Logger.logarExept(e);
+						++frames;
+					}
+					if ((System.currentTimeMillis() - startTime) > 1000) {
+						startTime = System.currentTimeMillis();
+						fps = frames;
+						frames = 0;
+						delta = 0;
 					}
 				}
-
-				// int frames = 0;
-				// long startTime = System.currentTimeMillis();
-				// long lastTime = System.nanoTime();
-				//
-				// double delta = 0;
-				// while (jogoEmAndamento) {
-				// long now = System.nanoTime();
-				// double nsPerTick = 1000000000D / fpsLimite;
-				// delta += (now - lastTime) / nsPerTick;
-				// lastTime = now;
-				// boolean render = false;
-				// while (delta >= 1) {
-				// render = true;
-				// delta -= 1;
-				// }
-				// if (render) {
-				// painelTopWar.atualiza();
-				// ++frames;
-				// }
-				// if ((System.currentTimeMillis() - startTime) > 1000) {
-				// startTime = System.currentTimeMillis();
-				// fps = frames;
-				// frames = 0;
-				// delta = 0;
-				// }
-				// }
 
 				NnpeTO nnpeTO = (NnpeTO) controleCliente.obterPlacar();
 				placar = (List<PlacarTopWar>) nnpeTO.getData();
@@ -646,7 +637,8 @@ public class JogoCliente {
 	}
 
 	public void setarFrameTopWar() {
-		frameTopWar = new JFrame();
+		if (frameTopWar == null)
+			frameTopWar = new JFrame();
 	}
 
 	public void matarTodasThreads() {
@@ -919,11 +911,13 @@ public class JogoCliente {
 	}
 
 	private void setarPontoMouseClicado(MouseEvent e) {
+		Point descontoCentraliza = painelTopWar.getDescontoCentraliza();
 		if (pontoMouseClicado == null) {
-			pontoMouseClicado = new Point(e.getX(), e.getY());
+			pontoMouseClicado = new Point(e.getX() + descontoCentraliza.x,
+					e.getY() + descontoCentraliza.y);
 		}
-		pontoMouseClicado.x = e.getX();
-		pontoMouseClicado.y = e.getY();
+		pontoMouseClicado.x = e.getX() + descontoCentraliza.x;
+		pontoMouseClicado.y = e.getY() + descontoCentraliza.y;
 		clickTime = System.currentTimeMillis();
 	}
 
@@ -1121,6 +1115,12 @@ public class JogoCliente {
 		return controleCliente.getLatenciaReal();
 	}
 
+	public void mostrarGraficos() {
+		BufferStrategy strategy = getFrameTopWar().getBufferStrategy();
+		strategy.getDrawGraphics().dispose();
+		strategy.show();
+	}
+
 	public Graphics2D obterGraficos() {
 		BufferStrategy strategy = getFrameTopWar().getBufferStrategy();
 		if (strategy == null) {
@@ -1128,5 +1128,18 @@ public class JogoCliente {
 			strategy = getFrameTopWar().getBufferStrategy();
 		}
 		return (Graphics2D) strategy.getDrawGraphics();
+	}
+
+	public int getFps() {
+		return fps;
+	}
+
+	public void mudaLimiteFps() {
+		if (fpsLimite == 60D) {
+			fpsLimite = 30D;
+		} else if (fpsLimite == 30D) {
+			fpsLimite = 60D;
+		}
+
 	}
 }
