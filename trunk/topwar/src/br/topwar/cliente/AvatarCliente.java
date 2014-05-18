@@ -226,10 +226,6 @@ public class AvatarCliente {
 		return avatarTopWar.hashCode();
 	}
 
-	public void setAngulo(double angulo) {
-		avatarTopWar.setAngulo(angulo);
-	}
-
 	public void setNomeJogador(String nomeJogador) {
 		avatarTopWar.setNomeJogador(nomeJogador);
 	}
