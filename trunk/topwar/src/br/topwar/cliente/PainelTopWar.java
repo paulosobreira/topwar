@@ -638,7 +638,7 @@ public class PainelTopWar {
 
 	private void desenhaClicou(Graphics2D graphics2d) {
 		Point p = jogoCliente.getPontoMouseClicado();
-		if (p != null) {
+		if (p != null && !jogoCliente.isSeguirMouse()) {
 			graphics2d.drawImage(ImageUtil.geraResize(
 					OcilaCor.geraOcila("vaiaqui", vaiAqui), 1.5), p.x
 					- descontoCentraliza.x - 12, p.y - descontoCentraliza.y

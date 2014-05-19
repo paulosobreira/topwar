@@ -88,7 +88,6 @@ public class JogoCliente {
 	private Thread threadRecarregar;
 	private Thread threadMudarClasse;
 	private Thread threadAlternaFaca;
-	private Thread threadMouseCliqueUnico;
 	private Thread threadAtualizaAngulo;
 	private Thread threadSeguirMouse;
 	private String utlEvento = "0";
@@ -230,22 +229,6 @@ public class JogoCliente {
 							}
 							media += linha.size();
 						}
-						if (media > velocidade) {
-							atulaizaAvatarSleep -= (media - velocidade);
-							if (atulaizaAvatarSleep < 15) {
-								atulaizaAvatarSleep = 15;
-							}
-						} else {
-							atulaizaAvatarSleep = 30;
-						}
-						if (controleCliente.getLatenciaReal() > controleCliente
-								.getLatenciaMinima()) {
-							atulaizaAvatarSleep += controleCliente
-									.getLatenciaReal() / 10;
-						}
-						if (atulaizaAvatarSleep > 50) {
-							atulaizaAvatarSleep = 50;
-						}
 						Thread.sleep(atulaizaAvatarSleep);
 					} catch (InterruptedException e) {
 						Logger.logarExept(e);
@@ -324,39 +307,32 @@ public class JogoCliente {
 					return;
 				}
 
-				if (MouseEvent.BUTTON3 == e.getButton()) {
-					doisCliques();
+				setarPontoMouseClicado(e);
+				if (e.getClickCount() == 1
+						&& MouseEvent.BUTTON3 == e.getButton()) {
+					System.out
+							.println("e.getClickCount() == 1 && MouseEvent.BUTTON3 == e.getButton()");
+					moverAvatarPeloMouse(pontoMouseClicado);
 					return;
 				}
 
-				setarPontoMouseClicado(e);
 				seguirMouse = false;
 				if (ConstantesTopWar.ARMA_FACA != arma
 						&& clicouAvatarAdversario(e.getPoint())) {
+					System.out
+							.println("ConstantesTopWar.ARMA_FACA != arma && clicouAvatarAdversario(e.getPoint())");
 					atacar();
 				} else {
-					if (e.getClickCount() > 1) {
+					if (MouseEvent.BUTTON3 == e.getButton()) {
+						System.out
+								.println("( MouseEvent.BUTTON3 == e.getButton()");
 						doisCliques();
 					} else {
-						umClique();
+						System.out.println("atacar();");
+						atacar();
 					}
 				}
 				super.mouseClicked(e);
-			}
-
-			private void umClique() {
-				if ((threadMouseCliqueUnico != null && threadMouseCliqueUnico
-						.isAlive())) {
-					Logger.logar("Retorno Clique");
-					return;
-				}
-				threadMouseCliqueUnico = new Thread(new Runnable() {
-					@Override
-					public void run() {
-						moverAvatarPeloMouse(pontoMouseClicado);
-					}
-				});
-				threadMouseCliqueUnico.start();
 			}
 
 			private void doisCliques() {
