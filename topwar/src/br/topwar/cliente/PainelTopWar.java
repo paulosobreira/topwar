@@ -1548,7 +1548,7 @@ public class PainelTopWar {
 		int x = limitesViewPort.getBounds().x
 				+ (limitesViewPort.getBounds().width - 140);
 		int y = limitesViewPort.getBounds().y
-				+ (limitesViewPort.getBounds().height - 10);
+				+ (limitesViewPort.getBounds().height - 20);
 		Font fontOri = g2d.getFont();
 		g2d.setFont(new Font(fontOri.getName(), fontOri.getStyle(), 32));
 
@@ -2084,7 +2084,8 @@ public class PainelTopWar {
 				graphics2d.setColor(OcilaCor.geraOcila("INVENC_VERMELHO",
 						new Color(255, 150, 150)));
 			}
-			graphics2d.fillOval(ar.x, ar.y, ar.width, ar.height);
+			graphics2d.fillOval(ar.x - descontoCentraliza.x, ar.y
+					- descontoCentraliza.y, ar.width, ar.height);
 		}
 
 	}
@@ -2144,7 +2145,7 @@ public class PainelTopWar {
 		contMostraFPS++;
 		Point pointDesenhaFPS = new Point(limitesViewPort.x
 				+ (limitesViewPort.width) - 70, Util.inte(limitesViewPort.y
-				+ limitesViewPort.getHeight() - 90));
+				+ limitesViewPort.getHeight() - 100));
 		g2d.setColor(transpBranco);
 		fps.setFrame(pointDesenhaFPS.x, pointDesenhaFPS.y, 65, 35);
 		g2d.fill(fps);
