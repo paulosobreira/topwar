@@ -310,27 +310,22 @@ public class JogoCliente {
 				setarPontoMouseClicado(e);
 				if (e.getClickCount() == 1
 						&& MouseEvent.BUTTON3 == e.getButton()) {
-					System.out
-							.println("e.getClickCount() == 1 && MouseEvent.BUTTON3 == e.getButton()");
 					moverAvatarPeloMouse(pontoMouseClicado);
 					return;
 				}
 
+				if (e.getClickCount() > 1
+						&& MouseEvent.BUTTON3 == e.getButton()) {
+					doisCliques();
+					return;
+				}
+
 				seguirMouse = false;
-				if (ConstantesTopWar.ARMA_FACA != arma
-						&& clicouAvatarAdversario(e.getPoint())) {
-					System.out
-							.println("ConstantesTopWar.ARMA_FACA != arma && clicouAvatarAdversario(e.getPoint())");
+				if (ConstantesTopWar.ARMA_FACA == arma) {
+					moverAvatarPeloMouse(pontoMouseClicado);
 					atacar();
 				} else {
-					if (MouseEvent.BUTTON3 == e.getButton()) {
-						System.out
-								.println("( MouseEvent.BUTTON3 == e.getButton()");
-						doisCliques();
-					} else {
-						System.out.println("atacar();");
-						atacar();
-					}
+					atacar();
 				}
 				super.mouseClicked(e);
 			}
@@ -362,7 +357,7 @@ public class JogoCliente {
 		return seguirMouse;
 	}
 
-	protected boolean clicouAvatarAdversario(Point p) {
+	protected boolean mirouAvatarAdversario(Point p) {
 		Collection<AvatarCliente> avatarClientesCopia = getAvatarClientesCopia();
 		for (Iterator iterator = avatarClientesCopia.iterator(); iterator
 				.hasNext();) {

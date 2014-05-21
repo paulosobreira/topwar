@@ -864,7 +864,7 @@ public class PainelTopWar {
 	private void desenhaMira(Graphics2D graphics2d) {
 		Point pontoMouse = jogoCliente.getPontoMouseMovendo();
 		if (pontoMouse != null
-				&& jogoCliente.clicouAvatarAdversario(pontoMouse)) {
+				&& jogoCliente.mirouAvatarAdversario(pontoMouse)) {
 			Point desenha = new Point(
 					pontoMouse.x - (crosshair.getWidth() / 2), pontoMouse.y
 							- (crosshair.getHeight() / 2));
