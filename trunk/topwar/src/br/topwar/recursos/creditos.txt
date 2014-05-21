@@ -1,0 +1,19 @@
+-Top-War
+Simulador de combate
+-Desenvolvido / Developed
+Paulo Sobreira
+-Imanges / images
+Commandos , Mercs
+-Web Site & E-mail 
+http://sowbreira.appspot.com
+sowbreira@gmail.com
+-Licença / License
+Codigo aberto / Open Source
+-Status
+Top-War é um prototipo e seus graficos 
+    e jogabilidade podem mudar com novas versões
+Top-War is a prototype and its graphics 
+    and gameplay game can change with new versions
+-Sobreira 2007-2014  
+ Obrigado por jogar
+ Thanks for playng

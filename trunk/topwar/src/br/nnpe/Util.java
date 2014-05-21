@@ -1032,4 +1032,17 @@ public class Util {
 			}
 		}
 	}
+
+	public static int larguraTexto(String msg, Graphics2D g2d) {
+		int largura = 0;
+		for (int i = 0; i < msg.length(); i++) {
+			if (g2d == null) {
+				largura += 7;
+			} else {
+				largura += g2d.getFontMetrics().charWidth(msg.charAt(i));
+			}
+		}
+		return largura;
+	}
+
 }
