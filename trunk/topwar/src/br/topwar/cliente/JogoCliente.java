@@ -302,6 +302,7 @@ public class JogoCliente {
 		frameTopWar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				System.out.println("Click");
 				frameTopWar.requestFocus();
 				if (painelTopWar.verificaComandoMudarClasse(e.getPoint())) {
 					return;
@@ -331,6 +332,7 @@ public class JogoCliente {
 			}
 
 			private void doisCliques() {
+				System.out.println("doisCliques()");
 				seguirMouse = true;
 				if (threadSeguirMouse != null && threadSeguirMouse.isAlive()) {
 					threadSeguirMouse.interrupt();
@@ -378,6 +380,7 @@ public class JogoCliente {
 	}
 
 	protected void atacar() {
+		System.out.println("Atacar");
 		if (avatarClientes == null) {
 			return;
 		}
@@ -420,7 +423,7 @@ public class JogoCliente {
 				} else {
 					while (controleCliente.verificaDelay()) {
 						try {
-							Thread.sleep(5);
+							Thread.sleep(1);
 						} catch (InterruptedException e) {
 							Logger.logarExept(e);
 						}
@@ -468,6 +471,7 @@ public class JogoCliente {
 	}
 
 	public void moverAvatarPeloMouse(final Point pontoMouseSeguir) {
+		System.out.println("moverAvatarPeloMouse");
 		pararMovimentoMouse();
 		if (pontoAvatar != null && pontoMouseSeguir != null) {
 			Runnable runnable = new Runnable() {
