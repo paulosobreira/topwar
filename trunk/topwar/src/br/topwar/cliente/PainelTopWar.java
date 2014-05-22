@@ -863,8 +863,7 @@ public class PainelTopWar {
 
 	private void desenhaMira(Graphics2D graphics2d) {
 		Point pontoMouse = jogoCliente.getPontoMouseMovendo();
-		if (pontoMouse != null
-				&& jogoCliente.mirouAvatarAdversario(pontoMouse)) {
+		if (pontoMouse != null && jogoCliente.mirouAvatarAdversario(pontoMouse)) {
 			Point desenha = new Point(
 					pontoMouse.x - (crosshair.getWidth() / 2), pontoMouse.y
 							- (crosshair.getHeight() / 2));
@@ -1194,7 +1193,8 @@ public class PainelTopWar {
 					} else {
 						graphics2d.setColor(Color.LIGHT_GRAY);
 					}
-					graphics2d.drawOval(point.x, point.y, Util.intervalo(1, 2),
+					graphics2d.drawOval(point.x - descontoCentraliza.x, point.y
+							- descontoCentraliza.y, Util.intervalo(1, 2),
 							Util.intervalo(1, 2));
 				}
 			}
@@ -1207,7 +1207,9 @@ public class PainelTopWar {
 				} else {
 					graphics2d.setColor(Color.LIGHT_GRAY);
 				}
-				graphics2d.drawLine(pIni.x, pIni.y, pFim.x, pFim.y);
+				graphics2d.drawLine(pIni.x - descontoCentraliza.x, pIni.y
+						- descontoCentraliza.y, pFim.x - descontoCentraliza.x,
+						pFim.y - descontoCentraliza.y);
 			}
 		}
 
