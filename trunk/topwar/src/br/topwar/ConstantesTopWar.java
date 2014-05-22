@@ -75,7 +75,7 @@ public class ConstantesTopWar {
 	public static final int CARTUCHOS_ASSALT = 15;
 	public static final int VIDA_COMPLETA_ASSALT = 100;
 	public static final int VELOCIDADE_ASSAUT = 7;
-	public static final int DESVIO_ASSAULT = 2;
+	public static final int DESVIO_ASSAULT = 1;
 	public static final int TEMPO_RECARGA_ASSAUT = 1000;
 	public static final int ASSALT_MAX_RANGE = 1000;
 	/*
@@ -85,7 +85,7 @@ public class ConstantesTopWar {
 	public static final int VELOCIDADE_SHOTGUN = 8;
 	public static final int BALAS_SHOTGUN = 6;
 	public static final int CARTUCHOS_SHOTGUN = 3;
-	public static final int VIDA_COMPLETA_SHOTGUN = 120;
+	public static final int VIDA_COMPLETA_SHOTGUN = 150;
 	public static final long TEMPO_RECARGA_SHOTGUN = 900;
 	/*
 	 * SNIPER
@@ -93,9 +93,9 @@ public class ConstantesTopWar {
 	public static final String SNIPER = "sniper";
 	public static final int BALAS_SNIPER = 1;
 	public static final int CARTUCHOS_SNIPER = 16;
-	public static final int VIDA_COMPLETA_SNIPER = 80;
+	public static final int VIDA_COMPLETA_SNIPER = 60;
 	public static final int DESVIO_SNIPER = 0;
-	public static final int TEMPO_RECARGA_SNIPER = 4000;
+	public static final int TEMPO_RECARGA_SNIPER = 3500;
 	public static final int VELOCIDADE_SNIPER = 6;
 	public static final double LIMITE_VISAO_SNIPER = LIMITE_VISAO * 1.2;
 	public static final int SNIPER_MAX_RANGE = 2000;
@@ -106,7 +106,7 @@ public class ConstantesTopWar {
 	public static final int BALAS_MACHINEGUN = 300;
 	public static final int CARTUCHOS_MACHINEGUN = 6;
 	public static final int VIDA_COMPLETA_MACHINEGUN = 200;
-	public static final int DESVIO_MACHINEGUN = 5;
+	public static final int DESVIO_MACHINEGUN = 2;
 	public static final int TEMPO_RECARGA_MACHINEGUN = 3000;
 	public static final int VELOCIDADE_MACHINEGUN = 5;
 	public static final int MACHINEGUN_MAX_RANGE = (int) (ASSALT_MAX_RANGE * 0.8);
@@ -116,9 +116,9 @@ public class ConstantesTopWar {
 	public static final String ROCKET = "rocket";
 	public static final int BALAS_ROCKET = 1;
 	public static final int CARTUCHOS_ROCKET = 10;
-	public static final int VIDA_COMPLETA_ROCKET = 80;
+	public static final int VIDA_COMPLETA_ROCKET = 120;
 	public static final int VELOCIDADE_ROCKET = 4;
-	public static final int TEMPO_RECARGA_ROCKET = 5000;
+	public static final int TEMPO_RECARGA_ROCKET = 4000;
 	public static final int DESVIO_ROCKET = 2;
 	/*
 	 * SHIELD
