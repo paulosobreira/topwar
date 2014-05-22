@@ -16,6 +16,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 import java.io.ObjectInputStream;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -398,7 +400,7 @@ public class JogoCliente {
 				if (arma == ConstantesTopWar.ARMA_SHIELD) {
 					while (controleCliente.verificaDelay()) {
 						try {
-							Thread.sleep(5);
+							Thread.sleep(500);
 						} catch (InterruptedException e) {
 							Logger.logarExept(e);
 						}
@@ -414,7 +416,7 @@ public class JogoCliente {
 					controleCliente.atacar();
 					while (controleCliente.verificaDelay()) {
 						try {
-							Thread.sleep(5);
+							Thread.sleep(500);
 						} catch (InterruptedException e) {
 							Logger.logarExept(e);
 						}
@@ -423,7 +425,7 @@ public class JogoCliente {
 				} else {
 					while (controleCliente.verificaDelay()) {
 						try {
-							Thread.sleep(1);
+							Thread.sleep(5);
 						} catch (InterruptedException e) {
 							Logger.logarExept(e);
 						}
@@ -456,7 +458,7 @@ public class JogoCliente {
 					public void run() {
 						while (controleCliente.verificaDelay()) {
 							try {
-								Thread.sleep(50);
+								Thread.sleep(5);
 							} catch (InterruptedException e) {
 								e.printStackTrace();
 							}
@@ -466,12 +468,16 @@ public class JogoCliente {
 				});
 				threadAtualizaAngulo.start();
 			}
+			if (mirouAvatarAdversario(pontoMouseMovendo)
+					&& (arma == ConstantesTopWar.ARMA_SHOTGUN
+							|| arma == ConstantesTopWar.ARMA_MACHINEGUN || arma == ConstantesTopWar.ARMA_ASSAULT)) {
+				atacar();
+			}
 		}
 
 	}
 
 	public void moverAvatarPeloMouse(final Point pontoMouseSeguir) {
-		System.out.println("moverAvatarPeloMouse");
 		pararMovimentoMouse();
 		if (pontoAvatar != null && pontoMouseSeguir != null) {
 			Runnable runnable = new Runnable() {

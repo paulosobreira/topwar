@@ -84,9 +84,7 @@ public class JogoServidor {
 						Logger.logarExept(e);
 						finalizado = true;
 					}
-
 				}
-
 			}
 		});
 		monitorJogo.start();
@@ -438,7 +436,6 @@ public class JogoServidor {
 				/**
 				 * Checa objeto nao visivel para tiro
 				 */
-
 				if (campoVisaoTiro && (objetoMapa.getTransparencia() > 70)
 						&& objetoMapa.getForma().contains(point)) {
 					return false;
@@ -512,7 +509,6 @@ public class JogoServidor {
 				return true;
 			}
 		}
-
 		return false;
 	}
 
