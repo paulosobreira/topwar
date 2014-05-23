@@ -474,7 +474,7 @@ public class JogoCliente {
 			}
 			if (mirouAvatarAdversario(pontoMouseMovendo)
 					&& (arma == ConstantesTopWar.ARMA_MACHINEGUN || arma == ConstantesTopWar.ARMA_ASSAULT)) {
-				atacar(500);
+				atacar(250);
 			}
 
 		}

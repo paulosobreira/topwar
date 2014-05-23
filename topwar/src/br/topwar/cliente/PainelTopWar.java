@@ -626,9 +626,10 @@ public class PainelTopWar {
 	}
 
 	private void desenhaVaiPara(Graphics2D graphics2d) {
+		Point p = jogoCliente.getPontoMouseMovendo();
 		if (jogoCliente.getPontoMouseMovendo() != null
-				&& jogoCliente.isSeguirMouse()) {
-			Point p = jogoCliente.getPontoMouseMovendo();
+				&& jogoCliente.isSeguirMouse()
+				&& GeoUtil.distaciaEntrePontos(jogoCliente.getPontoAvatar(), p) > 10) {
 			graphics2d.drawImage(ImageUtil.geraResize(
 					OcilaCor.geraOcila("vaiaqui", vaiAqui), 1.5), p.x
 					- descontoCentraliza.x, p.y - descontoCentraliza.y - 12,

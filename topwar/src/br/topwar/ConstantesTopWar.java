@@ -119,7 +119,7 @@ public class ConstantesTopWar {
 	public static final int VIDA_COMPLETA_ROCKET = 120;
 	public static final int VELOCIDADE_ROCKET = 4;
 	public static final int TEMPO_RECARGA_ROCKET = 4000;
-	public static final int DESVIO_ROCKET = 2;
+	public static final int DESVIO_ROCKET = 0;
 	/*
 	 * SHIELD
 	 */
