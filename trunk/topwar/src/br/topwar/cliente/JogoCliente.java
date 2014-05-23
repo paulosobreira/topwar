@@ -107,6 +107,7 @@ public class JogoCliente {
 	protected boolean modoTextoSomenteTime;
 	private int fps = 0;
 	protected double fpsLimite = 60D;
+	private boolean atacando;
 
 	public PainelTopWar getPainelTopWar() {
 		return painelTopWar;
@@ -382,7 +383,13 @@ public class JogoCliente {
 	}
 
 	protected void atacar() {
-		System.out.println("Atacar");
+		atacar(5);
+	}
+
+	protected void atacar(final int deleyAtacar) {
+		if (atacando) {
+			return;
+		}
 		if (avatarClientes == null) {
 			return;
 		}
@@ -391,46 +398,39 @@ public class JogoCliente {
 			recarregar();
 			return;
 		}
-		if (threadAtacar != null && threadAtacar.isAlive()) {
-			return;
-		}
 		threadAtacar = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				if (arma == ConstantesTopWar.ARMA_SHIELD) {
-					while (controleCliente.verificaDelay()) {
-						try {
-							Thread.sleep(500);
-						} catch (InterruptedException e) {
-							Logger.logarExept(e);
+				atacando = true;
+				try {
+					if (arma == ConstantesTopWar.ARMA_SHIELD) {
+						while (controleCliente.verificaDelay()) {
+							try {
+								Thread.sleep(5);
+							} catch (InterruptedException e) {
+								Logger.logarExept(e);
+							}
 						}
-					}
-					controleCliente.alternaFaca();
-					while (controleCliente.verificaDelay()) {
-						try {
+						controleCliente.alternaFaca();
+						while (controleCliente.verificaDelay()) {
 							Thread.sleep(5);
-						} catch (InterruptedException e) {
-							Logger.logarExept(e);
 						}
-					}
-					controleCliente.atacar();
-					while (controleCliente.verificaDelay()) {
-						try {
-							Thread.sleep(500);
-						} catch (InterruptedException e) {
-							Logger.logarExept(e);
-						}
-					}
-					controleCliente.alternaFaca();
-				} else {
-					while (controleCliente.verificaDelay()) {
-						try {
+						controleCliente.atacar();
+						while (controleCliente.verificaDelay()) {
 							Thread.sleep(5);
-						} catch (InterruptedException e) {
-							Logger.logarExept(e);
 						}
+						controleCliente.alternaFaca();
+					} else {
+						while (controleCliente.verificaDelay()) {
+							Thread.sleep(deleyAtacar);
+						}
+						controleCliente.atacar();
 					}
-					controleCliente.atacar();
+				} catch (Exception e) {
+					Logger.logarExept(e);
+
+				} finally {
+					atacando = false;
 				}
 			}
 		});
@@ -469,10 +469,14 @@ public class JogoCliente {
 				threadAtualizaAngulo.start();
 			}
 			if (mirouAvatarAdversario(pontoMouseMovendo)
-					&& (arma == ConstantesTopWar.ARMA_SHOTGUN
-							|| arma == ConstantesTopWar.ARMA_MACHINEGUN || arma == ConstantesTopWar.ARMA_ASSAULT)) {
-				atacar();
+					&& arma == ConstantesTopWar.ARMA_SHOTGUN) {
+				atacar(1000);
 			}
+			if (mirouAvatarAdversario(pontoMouseMovendo)
+					&& (arma == ConstantesTopWar.ARMA_MACHINEGUN || arma == ConstantesTopWar.ARMA_ASSAULT)) {
+				atacar(500);
+			}
+
 		}
 
 	}
@@ -1091,7 +1095,7 @@ public class JogoCliente {
 
 	public int getLag() {
 		if (controleCliente == null) {
-			return 0;
+			return 5;
 		}
 		return controleCliente.getLatenciaReal();
 	}

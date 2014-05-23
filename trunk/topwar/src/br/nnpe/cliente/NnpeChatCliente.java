@@ -274,7 +274,7 @@ public abstract class NnpeChatCliente {
 	public int getLatenciaMinima() {
 		if (nnpeApplet != null)
 			return nnpeApplet.getLatenciaMinima();
-		return 0;
+		return 5;
 	}
 
 	public int getLatenciaReal() {

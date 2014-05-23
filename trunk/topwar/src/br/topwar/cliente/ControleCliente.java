@@ -250,7 +250,7 @@ public class ControleCliente extends NnpeChatCliente {
 
 	public boolean verificaDelay() {
 		if (jogoCliente.verificaLag()) {
-			return false;
+			return true;
 		}
 		return ((System.currentTimeMillis() - ultAcao) < getLatenciaMinima());
 	}

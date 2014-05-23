@@ -625,9 +625,9 @@ public class JogoServidor {
 	}
 
 	public Object atacar(ObjTopWar avatarAtacando, double angulo, int range) {
-//		if (!"TopWar".equals(avatarAtacando.getNomeJogador())) {
-//			return null;
-//		}
+		// if (!"TopWar".equals(avatarAtacando.getNomeJogador())) {
+		// return null;
+		// }
 		if (!(ConstantesTopWar.ARMA_FACA == avatarAtacando.getArma() || ConstantesTopWar.ARMA_SHOTGUN == avatarAtacando
 				.getArma()))
 			avatarAtacando.setPontoDestinoMover(null);
@@ -1183,7 +1183,7 @@ public class JogoServidor {
 		if (avatarAtirador.getBalas() <= 0) {
 			return 0;
 		}
-		int balas = Util.intervalo(3, 7);
+		int balas = Util.intervalo(1, 2);
 		if (avatarAtirador.getBalas() < balas) {
 			balas = avatarAtirador.getBalas();
 		}
