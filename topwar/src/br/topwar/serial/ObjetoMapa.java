@@ -56,7 +56,7 @@ public class ObjetoMapa implements Serializable {
 		generalPath.transform(affineTransform);
 		int x = 0;
 		int y = 0;
-		int value = (int) GeoUtil.distaciaEntrePontos(p, center);
+		int value = GeoUtil.distaciaEntrePontos(p, center);
 
 		if (center.x < p.x) {
 			x = value;
@@ -97,11 +97,9 @@ public class ObjetoMapa implements Serializable {
 	}
 
 	/**
-	 * Transparencia = 0
-	 * Terreno Dificil % = 1 -> 10
-	 * Estrutura Resistente (Ver Atraves) % = 11 -> 50
-	 * Estrutura Resistente (Não Ver Atraves) % = 51 -> 100
-	 * Estrutura Solida = maior que 100
+	 * Transparencia = 0 Terreno Dificil % = 1 -> 10 Estrutura Resistente (Ver
+	 * Atraves) % = 11 -> 50 Estrutura Resistente (Não Ver Atraves) % = 51 ->
+	 * 100 Estrutura Solida = maior que 100
 	 */
 	public int getTransparencia() {
 		return transparencia;

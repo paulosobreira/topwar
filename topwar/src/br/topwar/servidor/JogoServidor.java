@@ -979,8 +979,8 @@ public class JogoServidor {
 		} else if (ConstantesTopWar.ARMA_MACHINEGUN == avatarAtacando.getArma()) {
 			desvio = ConstantesTopWar.DESVIO_MACHINEGUN;
 		}
-		Point pontoTiro = GeoUtil.calculaPonto(
-				angulo + Util.intervalo(-desvio, desvio), range,
+		double ang = angulo + Util.intervalo(-desvio, desvio);
+		Point pontoTiro = GeoUtil.calculaPonto(ang, range,
 				avatarAtacando.getPontoAvatar());
 		List<Point> linhaTiro = GeoUtil.drawBresenhamLine(
 				avatarAtacando.getPontoAvatar(), pontoTiro);
