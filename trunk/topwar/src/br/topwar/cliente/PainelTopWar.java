@@ -628,8 +628,7 @@ public class PainelTopWar {
 	private void desenhaVaiPara(Graphics2D graphics2d) {
 		Point p = jogoCliente.getPontoMouseMovendo();
 		if (jogoCliente.getPontoMouseMovendo() != null
-				&& jogoCliente.isSeguirMouse()
-				&& GeoUtil.distaciaEntrePontos(jogoCliente.getPontoAvatar(), p) > 10) {
+				&& jogoCliente.isSeguirMouse()) {
 			graphics2d.drawImage(ImageUtil.geraResize(
 					OcilaCor.geraOcila("vaiaqui", vaiAqui), 1.5), p.x
 					- descontoCentraliza.x, p.y - descontoCentraliza.y - 12,
@@ -639,7 +638,9 @@ public class PainelTopWar {
 
 	private void desenhaClicou(Graphics2D graphics2d) {
 		Point p = jogoCliente.getPontoMouseClicado();
-		if (p != null && !jogoCliente.isSeguirMouse()) {
+		if (p != null
+				&& !jogoCliente.isSeguirMouse()
+				&& GeoUtil.distaciaEntrePontos(jogoCliente.getPontoAvatar(), p) > 10) {
 			graphics2d.drawImage(ImageUtil.geraResize(
 					OcilaCor.geraOcila("vaiaqui", vaiAqui), 1.5), p.x
 					- descontoCentraliza.x - 12, p.y - descontoCentraliza.y
@@ -809,8 +810,23 @@ public class PainelTopWar {
 				if (pontoMouseClicado != null && pontoAvatarLocal != null) {
 					graphics2d.drawLine(pontoAvatarLocal.x
 							- descontoCentraliza.x, pontoAvatarLocal.y
-							- descontoCentraliza.y, pontoMouseClicado.x,
-							pontoMouseClicado.y);
+							- descontoCentraliza.y, pontoMouseClicado.x
+							- descontoCentraliza.x, pontoMouseClicado.y
+							- descontoCentraliza.y);
+					// List<Point> drawBresenhamLine =
+					// GeoUtil.drawBresenhamLineAL(
+					// pontoAvatarLocal.x - descontoCentraliza.x,
+					// pontoAvatarLocal.y - descontoCentraliza.y,
+					// pontoMouseClicado.x - descontoCentraliza.x,
+					// pontoMouseClicado.y - descontoCentraliza.y);
+					// System.out.println(drawBresenhamLine.size());
+					// for (Iterator iterator = drawBresenhamLine.iterator();
+					// iterator
+					// .hasNext();) {
+					// Point point = (Point) iterator.next();
+					// graphics2d.fillOval(point.x, point.y, 1, 1);
+					// }
+
 				}
 
 				double anguloJog = angulo;
