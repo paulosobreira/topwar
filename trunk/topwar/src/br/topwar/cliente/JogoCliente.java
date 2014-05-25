@@ -305,7 +305,6 @@ public class JogoCliente {
 		frameTopWar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				System.out.println("Click");
 				frameTopWar.requestFocus();
 				if (painelTopWar.verificaComandoMudarClasse(e.getPoint())) {
 					return;
@@ -470,11 +469,15 @@ public class JogoCliente {
 			}
 			if (mirouAvatarAdversario(pontoMouseMovendo)
 					&& arma == ConstantesTopWar.ARMA_SHOTGUN) {
-				atacar(1000);
+				atacar(500);
 			}
 			if (mirouAvatarAdversario(pontoMouseMovendo)
-					&& (arma == ConstantesTopWar.ARMA_MACHINEGUN || arma == ConstantesTopWar.ARMA_ASSAULT)) {
+					&& arma == ConstantesTopWar.ARMA_ASSAULT) {
 				atacar(250);
+			}
+			if (mirouAvatarAdversario(pontoMouseMovendo)
+					&& arma == ConstantesTopWar.ARMA_MACHINEGUN) {
+				atacar(150);
 			}
 
 		}
