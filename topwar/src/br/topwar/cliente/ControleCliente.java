@@ -280,6 +280,8 @@ public class ControleCliente extends NnpeChatCliente {
 		acaoClienteTopWar.setAngulo(jogoCliente.getAngulo());
 		int range = GeoUtil.distaciaEntrePontos(jogoCliente.getPontoAvatar(),
 				jogoCliente.getPontoMouseMovendo());
+		if (jogoCliente.getArma() != ConstantesTopWar.ARMA_ROCKET)
+			range += 50;
 		acaoClienteTopWar.setRange(range);
 		NnpeTO nnpeTO = new NnpeTO();
 		nnpeTO.setComando(ConstantesTopWar.ATACAR);

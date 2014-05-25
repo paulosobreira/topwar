@@ -702,6 +702,9 @@ public class JogoServidor {
 						avatarTopWars.remove(objTopWar.getNomeJogador());
 					}
 					Point explo = objTopWar.getPontoAvatar();
+					if (explo == null) {
+						return;
+					}
 					Ellipse2D circ = new Ellipse2D.Double(
 							(double) explo.x - 75.0, (double) explo.y - 75.0,
 							150.0, 150.0);
