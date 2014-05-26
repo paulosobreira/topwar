@@ -404,11 +404,7 @@ public class JogoCliente {
 				try {
 					if (arma == ConstantesTopWar.ARMA_SHIELD) {
 						while (controleCliente.verificaDelay()) {
-							try {
-								Thread.sleep(5);
-							} catch (InterruptedException e) {
-								Logger.logarExept(e);
-							}
+							Thread.sleep(5);
 						}
 						controleCliente.alternaFaca();
 						while (controleCliente.verificaDelay()) {
