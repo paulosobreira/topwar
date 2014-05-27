@@ -107,4 +107,10 @@ public class BotInfoShotGun extends BotInfoAbstract {
 	protected boolean vaiSeguirInfiltrar() {
 		return false;
 	}
+
+	@Override
+	public void gerarDesvioBot() {
+		setDesvio(0);
+
+	}
 }

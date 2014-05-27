@@ -1,15 +1,12 @@
 package br.topwar.tos;
 
 import java.awt.Point;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 import br.nnpe.GeoUtil;
 import br.nnpe.Util;
 import br.topwar.ConstantesTopWar;
-import br.topwar.serial.ObjetoMapa;
 import br.topwar.servidor.JogoServidor;
 
 public class BotInfoAssault extends BotInfoAbstract {
@@ -92,8 +89,8 @@ public class BotInfoAssault extends BotInfoAbstract {
 							avatarTopWar.getPontoAvatar(),
 							avatarTopWarCopia.getPontoAvatar(), 90));
 					vidaUltAlvo = avatarTopWar.getVida();
-					jogoServidor.atacar(avatarTopWar, avatarTopWar.getAngulo(),
-							Util.inte(line.size() * 1.5));
+					jogoServidor.atacar(avatarTopWar, avatarTopWar.getAngulo()
+							+ getDesvio(), Util.inte(line.size() * 1.5));
 					if (vidaUltAlvo != avatarTopWar.getVida()) {
 						executouAcaoAtaque = true;
 					} else {
@@ -111,5 +108,10 @@ public class BotInfoAssault extends BotInfoAbstract {
 
 	protected boolean vaiSeguirInfiltrar() {
 		return false;
+	}
+
+	@Override
+	public void gerarDesvioBot() {
+		setDesvio(Util.intervalo(-3, 3));
 	}
 }

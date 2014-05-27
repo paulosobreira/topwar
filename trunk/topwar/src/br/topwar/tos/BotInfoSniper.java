@@ -97,7 +97,7 @@ public class BotInfoSniper extends BotInfoAbstract {
 
 						vidaUltAlvo = avatarTopWar.getVida();
 						jogoServidor.atacar(avatarTopWar,
-								avatarTopWar.getAngulo(),
+								avatarTopWar.getAngulo() + getDesvio(),
 								Util.inte(line.size() * 1.5));
 						if (vidaUltAlvo != avatarTopWar.getVida()) {
 							executouAcaoAtaque = true;
@@ -116,4 +116,9 @@ public class BotInfoSniper extends BotInfoAbstract {
 		return executouAcaoAtaque;
 	}
 
+	@Override
+	public void gerarDesvioBot() {
+		setDesvio(Util.intervalo(-2, 2));
+
+	}
 }

@@ -25,6 +25,7 @@ public abstract class BotInfoAbstract {
 	protected Point pontoDestino;
 	protected int contPatrulha;
 	private int contGuia;
+	private int desvio;
 	private Point ultimaGuia;
 	protected Point ptAtual;
 	protected int contPtAtual;
@@ -45,8 +46,18 @@ public abstract class BotInfoAbstract {
 
 	public abstract void processaAcaoBot();
 
+	public abstract void gerarDesvioBot();
+
 	protected abstract boolean seguirAtacarInimigo(
 			List<ObjTopWar> avatarTopWarsCopia, boolean executouAcaoAtaque);
+
+	public int getDesvio() {
+		return desvio;
+	}
+
+	public void setDesvio(int desvio) {
+		this.desvio = desvio;
+	}
 
 	public Point getPontoDestino() {
 		return pontoDestino;
@@ -139,6 +150,7 @@ public abstract class BotInfoAbstract {
 	public List<ObjTopWar> ordenaDistanciaAvatarCampoVisaoTiro(
 			List<ObjTopWar> avatarTopWarsCopia, ObjTopWar avatarTopWar,
 			JogoServidor jogoServidor) {
+		gerarDesvioBot();
 		List<ObjTopWar> avataresOrdenadosDistancia = new ArrayList<ObjTopWar>();
 		for (Iterator iterator2 = avatarTopWarsCopia.iterator(); iterator2
 				.hasNext();) {
