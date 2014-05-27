@@ -86,8 +86,8 @@ public class BotInfoMachine extends BotInfoAbstract {
 							avatarTopWar.getPontoAvatar(),
 							avatarTopWarCopia.getPontoAvatar(), 90));
 					vidaUltAlvo = avatarTopWar.getVida();
-					jogoServidor.atacar(avatarTopWar, avatarTopWar.getAngulo(),
-							Util.inte(line.size() * 1.5));
+					jogoServidor.atacar(avatarTopWar, avatarTopWar.getAngulo()
+							+ getDesvio(), Util.inte(line.size() * 1.5));
 					if (vidaUltAlvo != avatarTopWar.getVida()) {
 						executouAcaoAtaque = true;
 					} else {
@@ -102,6 +102,12 @@ public class BotInfoMachine extends BotInfoAbstract {
 		}
 
 		return executouAcaoAtaque;
+	}
+
+	@Override
+	public void gerarDesvioBot() {
+		setDesvio(Util.intervalo(-4, 4));
+
 	}
 
 }

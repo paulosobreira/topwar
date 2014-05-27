@@ -84,4 +84,9 @@ public class BotInfoShield extends BotInfoAbstract {
 		return false;
 	}
 
+	@Override
+	public void gerarDesvioBot() {
+		setDesvio(0);
+
+	}
 }

@@ -404,15 +404,15 @@ public class JogoCliente {
 				try {
 					if (arma == ConstantesTopWar.ARMA_SHIELD) {
 						while (controleCliente.verificaDelay()) {
-							Thread.sleep(5);
+							Thread.sleep(200);
 						}
 						controleCliente.alternaFaca();
 						while (controleCliente.verificaDelay()) {
-							Thread.sleep(5);
+							Thread.sleep(200);
 						}
 						controleCliente.atacar();
 						while (controleCliente.verificaDelay()) {
-							Thread.sleep(5);
+							Thread.sleep(200);
 						}
 						controleCliente.alternaFaca();
 					} else {
@@ -469,11 +469,11 @@ public class JogoCliente {
 			}
 			if (mirouAvatarAdversario(pontoMouseMovendo)
 					&& arma == ConstantesTopWar.ARMA_ASSAULT) {
-				atacar(250);
+				atacar(200);
 			}
 			if (mirouAvatarAdversario(pontoMouseMovendo)
 					&& arma == ConstantesTopWar.ARMA_MACHINEGUN) {
-				atacar(150);
+				atacar(100);
 			}
 
 		}
