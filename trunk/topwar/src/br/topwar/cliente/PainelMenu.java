@@ -35,7 +35,7 @@ public class PainelMenu {
 
 	public static String MENU_PRINCIPAL = "MENU_PRINCIPAL";
 
-	public static String MENU_MATAR = "MENU_MATAR";
+	public static String MENU_BUSCAR_MATAR = "MENU_BUSCAR_MATAR";
 
 	private String MENU = MENU_PRINCIPAL;
 
@@ -127,12 +127,11 @@ public class PainelMenu {
 
 	protected void processaClick(MouseEvent e) {
 		if (MENU.equals(MENU_PRINCIPAL) && menuMatarRect.contains(e.getPoint())) {
-			MENU = MENU_MATAR;
+			MENU = MENU_BUSCAR_MATAR;
 			return;
 		}
 		if (sobreRect.contains(e.getPoint())) {
 			try {
-				// mainFrame.mostraSobre();
 				MENU = MENU_SOBRE;
 				yCreditos = 0;
 			} catch (Exception e1) {
@@ -191,19 +190,37 @@ public class PainelMenu {
 				int centerY = mainFrame.getFrameTopWar().getHeight() / 2;
 				int bgX = bg.getWidth() / 2;
 				int bgY = bg.getHeight() / 2;
-				g2d.drawImage(bg, centerX - bgX, centerY - bgY, null);
+				// g2d.drawImage(bg, centerX - bgX, centerY - bgY, null);
 			}
 			if (desenhaCarregando) {
 				desenhaCarregando(g2d);
 				return;
 			}
 			desenhaMenuPrincipalSelecao(g2d);
+			desenhaMenuBuscaMatar(g2d);
 			desenhaMenuSobre(g2d);
 			desenhaFPS(g2d, getWidth() - 70, getHeight() - 50);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Logger.logarExept(e);
 		}
+
+	}
+
+	private void desenhaMenuBuscaMatar(Graphics2D g2d) {
+		if (!MENU.equals(MENU_BUSCAR_MATAR)) {
+			return;
+		}
+		int x = (int) (getWidth() / 2);
+		int y = (int) (getHeight() / 2);
+
+		// x -= 490;
+		// y -= 285;
+		
+		x = (int) (getWidth() / 2);
+		y = (int) (getHeight() / 2);
+
+		desenhaAnteriroProximo(g2d, x - 140, y + 215);
 
 	}
 
@@ -272,16 +289,25 @@ public class PainelMenu {
 		String txt = Lang.msg("carregando").toUpperCase();
 		int larguraTexto = Util.larguraTexto(txt, g2d);
 		int desl = larguraTexto / 2;
-		menuMatarRect.setFrame(x - desl, y - 25, larguraTexto + 10, 30);
-		g2d.fill(menuMatarRect);
+		g2d.fillRoundRect(x - desl, y - 25, larguraTexto + 10, 30, 10, 10);
 		g2d.setColor(Color.BLACK);
 		g2d.drawString(txt, x - desl + 5, y);
 		g2d.setFont(fontOri);
 
 	}
 
+	private void proximoMenu() {
+		if (MENU.equals(MENU_BUSCAR_MATAR)) {
+			return;
+		}
+		if (MENU.equals(MENU_SOBRE)) {
+			MENU = MENU_PRINCIPAL;
+			return;
+		}
+	}
+
 	private void anteriorMenu() {
-		if (MENU.equals(MENU_MATAR)) {
+		if (MENU.equals(MENU_BUSCAR_MATAR)) {
 			MENU = MENU_PRINCIPAL;
 			return;
 		}
@@ -318,16 +344,6 @@ public class PainelMenu {
 			e.printStackTrace();
 		}
 
-	}
-
-	private void proximoMenu() {
-		if (MENU.equals(MENU_MATAR)) {
-			return;
-		}
-		if (MENU.equals(MENU_SOBRE)) {
-			MENU = MENU_PRINCIPAL;
-			return;
-		}
 	}
 
 	private void desenhaAnteriroProximo(Graphics2D g2d, int x, int y) {
@@ -381,9 +397,9 @@ public class PainelMenu {
 		g2d.fillRoundRect(centerX, centerY - 120, larguraTexto + 10, 130, 15,
 				15);
 		g2d.setColor(Color.BLACK);
-		g2d.drawString(txt, centerX + 5, centerY);
+		//g2d.drawString(txt, centerX + 5, centerY);
 
-		centerX += 300;
+		centerX += 250;
 		centerY += 70;
 
 		g2d.setFont(new Font(fontOri.getName(), Font.BOLD, 28));
