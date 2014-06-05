@@ -37,6 +37,12 @@ public class PainelMenu {
 
 	public static String MENU_BUSCAR_MATAR = "MENU_BUSCAR_MATAR";
 
+	public static String MAPA_DESERTO = "MAPA_DESERTO";
+
+	public static String MAPA_CIDADE = "MAPA_CIDADE";
+
+	public static String MAPA_PRAIA = "MAPA_PRAIA";
+
 	private String MENU = MENU_PRINCIPAL;
 
 	private MainFrame mainFrame;
@@ -64,6 +70,21 @@ public class PainelMenu {
 	private RoundRectangle2D anteriroMenuRct = new RoundRectangle2D.Double(0,
 			0, 1, 1, 10, 10);
 
+	private RoundRectangle2D desertoRct = new RoundRectangle2D.Double(0, 0, 1,
+			1, 10, 10);
+
+	private RoundRectangle2D cidadeRct = new RoundRectangle2D.Double(0, 0, 1,
+			1, 10, 10);
+
+	private RoundRectangle2D praiaRct = new RoundRectangle2D.Double(0, 0, 1, 1,
+			10, 10);
+
+	private RoundRectangle2D menosBotsRect = new RoundRectangle2D.Double(0, 0,
+			1, 1, 10, 10);
+
+	private RoundRectangle2D maisBotsRect = new RoundRectangle2D.Double(0, 0,
+			1, 1, 10, 10);
+
 	private boolean desenhaCarregando = false;
 
 	private List<String> creditos;
@@ -71,6 +92,10 @@ public class PainelMenu {
 	public boolean renderThreadAlive = true;
 
 	private Object MENU_ANTERIOR;
+
+	private String mapaSelecionado;
+
+	private int numBotsSelecionado;
 
 	private int yCreditos;
 	private int contMostraFPS;
@@ -140,7 +165,18 @@ public class PainelMenu {
 			}
 			return;
 		}
-
+		if (desertoRct.contains(e.getPoint())) {
+			mapaSelecionado = MAPA_DESERTO;
+			return;
+		}
+		if (cidadeRct.contains(e.getPoint())) {
+			mapaSelecionado = MAPA_CIDADE;
+			return;
+		}
+		if (praiaRct.contains(e.getPoint())) {
+			mapaSelecionado = MAPA_PRAIA;
+			return;
+		}
 		if (proximoMenuRect.contains(e.getPoint())) {
 			proximoMenu();
 			return;
@@ -214,13 +250,59 @@ public class PainelMenu {
 		int x = (int) (getWidth() / 2);
 		int y = (int) (getHeight() / 2);
 
-		// x -= 490;
-		// y -= 285;
-		
-		x = (int) (getWidth() / 2);
-		y = (int) (getHeight() / 2);
+		desenhaMapasBuscarMatar(x - 200, y - 100, g2d);
 
 		desenhaAnteriroProximo(g2d, x - 140, y + 215);
+
+	}
+
+	private void desenhaMapasBuscarMatar(int x, int y, Graphics2D g2d) {
+
+		Font fontOri = g2d.getFont();
+		g2d.setFont(new Font(fontOri.getName(), Font.BOLD, 28));
+
+		int xOri = x;
+
+		String desertoTxt = Lang.msg("deserto").toUpperCase();
+		int tam = Util.calculaLarguraText(desertoTxt, g2d);
+		desertoRct.setFrame(x - 15, y - 12, tam + 10, 32);
+		g2d.setColor(lightWhite);
+		g2d.fill(desertoRct);
+		if (MAPA_DESERTO.equals(mapaSelecionado)) {
+			g2d.setColor(yel);
+			g2d.draw(desertoRct);
+		}
+		g2d.setColor(Color.BLACK);
+		g2d.drawString(desertoTxt, x - 10, y + 15);
+
+		x += (tam + 30);
+
+		String cidadeTxt = Lang.msg("cidade").toUpperCase();
+		tam = Util.calculaLarguraText(cidadeTxt, g2d);
+		cidadeRct.setFrame(x - 15, y - 12, tam + 10, 32);
+		g2d.setColor(lightWhite);
+		g2d.fill(cidadeRct);
+		if (MAPA_CIDADE.equals(mapaSelecionado)) {
+			g2d.setColor(yel);
+			g2d.draw(cidadeRct);
+		}
+		g2d.setColor(Color.BLACK);
+		g2d.drawString(cidadeTxt, x - 10, y + 15);
+
+		x += (tam + 30);
+
+		String praiaTxt = Lang.msg("praia").toUpperCase();
+		tam = Util.calculaLarguraText(praiaTxt, g2d);
+		praiaRct.setFrame(x - 15, y - 12, tam + 10, 32);
+		g2d.setColor(lightWhite);
+		g2d.fill(praiaRct);
+		if (MAPA_PRAIA.equals(mapaSelecionado)) {
+			g2d.setColor(yel);
+			g2d.draw(praiaRct);
+		}
+		g2d.setColor(Color.BLACK);
+		g2d.drawString(praiaTxt, x - 10, y + 15);
+		g2d.setFont(fontOri);
 
 	}
 
@@ -397,7 +479,7 @@ public class PainelMenu {
 		g2d.fillRoundRect(centerX, centerY - 120, larguraTexto + 10, 130, 15,
 				15);
 		g2d.setColor(Color.BLACK);
-		//g2d.drawString(txt, centerX + 5, centerY);
+		// g2d.drawString(txt, centerX + 5, centerY);
 
 		centerX += 250;
 		centerY += 70;
@@ -465,6 +547,54 @@ public class PainelMenu {
 		g2d.setColor(OcilaCor.porcentVerde100Vermelho0(Util.inte(fps * 1.6)));
 		g2d.drawString(msg, x + 2, y + 26);
 		g2d.setFont(fontOri);
+	}
+
+	private void desenhaSeletorNumeroBots(Graphics2D g2d, int x, int y) {
+		Font fontOri = g2d.getFont();
+		g2d.setFont(new Font(fontOri.getName(), Font.BOLD, 28));
+
+		int xOri = x;
+
+		String menos = "-";
+		int tamMenos = Util.calculaLarguraText(menos, g2d);
+		menosBotsRect.setFrame(x - 16, y - 6, tamMenos + 6, 22);
+		g2d.setColor(lightWhite);
+		g2d.fill(menosBotsRect);
+		g2d.setColor(Color.BLACK);
+		g2d.drawString(menos, x - 14, y + 15);
+
+		x += 20;
+
+		String numVoltasStr = (numBotsSelecionado + " " + Lang.msg("bots"))
+				.toUpperCase();
+		int tamVoltas = Util.calculaLarguraText(numVoltasStr, g2d);
+		g2d.setColor(lightWhite);
+		g2d.fillRoundRect(x - 15, y - 12, tamVoltas + 10, 32, 10, 10);
+		g2d.setColor(Color.BLACK);
+		g2d.drawString(numVoltasStr, x - 10, y + 15);
+
+		x += (tamVoltas + 15);
+
+		String mais = "+";
+		int tamMais = Util.calculaLarguraText(mais, g2d);
+		maisBotsRect.setFrame(x - 17, y - 6, tamMais + 5, 22);
+		g2d.setColor(lightWhite);
+		g2d.fill(maisBotsRect);
+		g2d.setColor(Color.BLACK);
+		g2d.drawString(mais, x - 13, y + 16);
+
+		g2d.setFont(fontOri);
+
+		int porcetNumVolta = Util.inte((numBotsSelecionado - 12) * 1.66);
+
+		int tamNumVoltaSelecionado = porcetNumVolta * tamVoltas / 100;
+		x = xOri + 20;
+
+		g2d.setColor(yel);
+		g2d.drawRoundRect(x - 15, y - 12, tamNumVoltaSelecionado, 32, 10, 10);
+		g2d.setColor(blu);
+		g2d.fillRoundRect(x - 15, y - 12, tamNumVoltaSelecionado, 32, 10, 10);
+
 	}
 
 }
