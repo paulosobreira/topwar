@@ -11,6 +11,7 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -23,6 +24,7 @@ import br.nnpe.ImageUtil;
 import br.nnpe.Logger;
 import br.nnpe.OcilaCor;
 import br.nnpe.Util;
+import br.topwar.ConstantesTopWar;
 import br.topwar.local.MainFrame;
 import br.topwar.recursos.CarregadorRecursos;
 import br.topwar.recursos.idiomas.Lang;
@@ -31,17 +33,19 @@ public class PainelMenu {
 
 	public BufferedImage bg;
 
+	private static final int FADE_MINIS = 100;
+
 	public static String MENU_SOBRE = "MENU_SOBRE";
 
 	public static String MENU_PRINCIPAL = "MENU_PRINCIPAL";
 
 	public static String MENU_BUSCAR_MATAR = "MENU_BUSCAR_MATAR";
 
-	public static String MAPA_DESERTO = "MAPA_DESERTO";
+	public static String MAPA_DESERTO = "mapa9";
 
-	public static String MAPA_CIDADE = "MAPA_CIDADE";
+	public static String MAPA_CIDADE = "mapa16";
 
-	public static String MAPA_PRAIA = "MAPA_PRAIA";
+	public static String MAPA_PRAIA = "mapa9";
 
 	private String MENU = MENU_PRINCIPAL;
 
@@ -54,6 +58,9 @@ public class PainelMenu {
 	public final static Color yel = new Color(255, 255, 0, 150);
 
 	public final static Color oran = new Color(255, 188, 40, 180);
+
+	public final static DecimalFormat df2 = new DecimalFormat("00");
+	public final static DecimalFormat df3 = new DecimalFormat("000");
 
 	public final static Color blu = new Color(105, 105, 105, 40);
 	public final static Color bluQualy = new Color(105, 105, 205);
@@ -85,6 +92,85 @@ public class PainelMenu {
 	private RoundRectangle2D maisBotsRect = new RoundRectangle2D.Double(0, 0,
 			1, 1, 10, 10);
 
+	private RoundRectangle2D menosTempoRect = new RoundRectangle2D.Double(0, 0,
+			1, 1, 10, 10);
+
+	private RoundRectangle2D maisTempoRect = new RoundRectangle2D.Double(0, 0,
+			1, 1, 10, 10);
+
+	private RoundRectangle2D assautRect;
+	private RoundRectangle2D shotgunRect;
+	private RoundRectangle2D machineRect;
+	private RoundRectangle2D shieldRect;
+	private RoundRectangle2D rocketRect;
+	private RoundRectangle2D sniperRect;
+
+	private BufferedImage lifeBarShield;
+	private BufferedImage lifeBarAssalt;
+	private BufferedImage lifeBarMachineGun;
+	private BufferedImage lifeBarShotgun;
+	private BufferedImage lifeBarSniper;
+	private BufferedImage lifeBarRocket;
+
+	public BufferedImage assault;
+	public BufferedImage shotgun;
+	public BufferedImage machinegun;
+	public BufferedImage sniper;
+	public BufferedImage headShot;
+	public BufferedImage rocket;
+	public BufferedImage rocket_launcher;
+	private BufferedImage riot_shield;
+
+	{
+		assault = CarregadorRecursos.carregaBufferedImageTransparecia(
+				"assault.png", null);
+		machinegun = CarregadorRecursos.carregaBufferedImageTransparecia(
+				"machinegun.png", null);
+		shotgun = CarregadorRecursos.carregaBufferedImageTransparecia(
+				"shotgun.png", null);
+		sniper = CarregadorRecursos.carregaBufferedImageTransparecia(
+				"sniper.png", null);
+		rocket_launcher = CarregadorRecursos.carregaBufferedImageTransparecia(
+				"rocket_launcher.png", null);
+		riot_shield = CarregadorRecursos.carregaBufferedImageTransparecia(
+				"riot-shield.png", null);
+
+		lifeBarAssalt = ImageUtil.gerarFade(
+				ImageUtil.geraResize(assault, 0.55, 0.4), FADE_MINIS);
+
+		lifeBarMachineGun = ImageUtil.gerarFade(
+				ImageUtil.geraResize(machinegun, 0.45, 0.27), FADE_MINIS);
+
+		lifeBarShotgun = ImageUtil.gerarFade(
+				ImageUtil.geraResize(shotgun, 0.6, 0.5), FADE_MINIS);
+
+		lifeBarSniper = ImageUtil.gerarFade(
+				ImageUtil.geraResize(sniper, 0.50, 0.4), FADE_MINIS);
+
+		lifeBarRocket = ImageUtil.gerarFade(
+				ImageUtil.geraResize(rocket_launcher, 0.42, 0.30), FADE_MINIS);
+
+		lifeBarShield = ImageUtil.gerarFade(
+				ImageUtil.geraResize(riot_shield, 0.75, 0.25), 255);
+
+		assautRect = new RoundRectangle2D.Double(0, 0,
+				lifeBarAssalt.getWidth(), lifeBarAssalt.getHeight(), 10, 10);
+		shotgunRect = new RoundRectangle2D.Double(0, 0,
+				lifeBarShotgun.getWidth(), lifeBarShotgun.getHeight(), 10, 10);
+		machineRect = new RoundRectangle2D.Double(0, 0,
+				lifeBarMachineGun.getWidth(), lifeBarMachineGun.getHeight(),
+				10, 10);
+		shieldRect = new RoundRectangle2D.Double(0, 0,
+				lifeBarMachineGun.getWidth(), lifeBarMachineGun.getHeight(),
+				10, 10);
+		rocketRect = new RoundRectangle2D.Double(0, 0,
+				lifeBarRocket.getWidth(), lifeBarRocket.getHeight(), 10, 10);
+		sniperRect = new RoundRectangle2D.Double(0, 0,
+				lifeBarSniper.getWidth(), lifeBarSniper.getHeight(), 10, 10);
+		shieldRect = new RoundRectangle2D.Double(0, 0,
+				lifeBarShield.getWidth(), lifeBarShield.getHeight(), 10, 10);
+	}
+
 	private boolean desenhaCarregando = false;
 
 	private List<String> creditos;
@@ -93,14 +179,34 @@ public class PainelMenu {
 
 	private Object MENU_ANTERIOR;
 
-	private String mapaSelecionado;
+	private String mapaSelecionado = MAPA_DESERTO;
 
-	private int numBotsSelecionado;
+	private int numBotsSelecionado = 9;
+
+	private int tempoJogoSelecionado = 10;
+
+	private String classeSelecionada = ConstantesTopWar.ASSAULT;
 
 	private int yCreditos;
 	private int contMostraFPS;
 	private int fps = 0;
 	protected double fpsLimite = 60D;
+
+	public String getMapaSelecionado() {
+		return mapaSelecionado;
+	}
+
+	public int getNumBotsSelecionado() {
+		return numBotsSelecionado;
+	}
+
+	public int getTempoJogoSelecionado() {
+		return tempoJogoSelecionado;
+	}
+
+	public String getClasseSelecionada() {
+		return classeSelecionada;
+	}
 
 	public PainelMenu(MainFrame mainFrame) {
 		this.mainFrame = mainFrame;
@@ -177,6 +283,58 @@ public class PainelMenu {
 			mapaSelecionado = MAPA_PRAIA;
 			return;
 		}
+		if (maisBotsRect.contains(e.getPoint())) {
+			numBotsSelecionado++;
+			if (numBotsSelecionado > 50) {
+				numBotsSelecionado = 50;
+			}
+		}
+
+		if (menosBotsRect.contains(e.getPoint())) {
+			numBotsSelecionado--;
+			if (numBotsSelecionado < 0) {
+				numBotsSelecionado = 0;
+			}
+		}
+
+		if (maisTempoRect.contains(e.getPoint())) {
+			tempoJogoSelecionado += 10;
+			if (tempoJogoSelecionado > 100) {
+				tempoJogoSelecionado = 100;
+			}
+		}
+
+		if (menosTempoRect.contains(e.getPoint())) {
+			tempoJogoSelecionado -= 10;
+			if (tempoJogoSelecionado < 10) {
+				tempoJogoSelecionado = 10;
+			}
+		}
+
+		if (assautRect.contains(e.getPoint())) {
+			classeSelecionada = ConstantesTopWar.ASSAULT;
+		}
+
+		if (shieldRect.contains(e.getPoint())) {
+			classeSelecionada = ConstantesTopWar.SHIELD;
+		}
+
+		if (shotgunRect.contains(e.getPoint())) {
+			classeSelecionada = ConstantesTopWar.SHOTGUN;
+		}
+
+		if (machineRect.contains(e.getPoint())) {
+			classeSelecionada = ConstantesTopWar.MACHINEGUN;
+		}
+
+		if (sniperRect.contains(e.getPoint())) {
+			classeSelecionada = ConstantesTopWar.SNIPER;
+		}
+
+		if (rocketRect.contains(e.getPoint())) {
+			classeSelecionada = ConstantesTopWar.ROCKET;
+		}
+
 		if (proximoMenuRect.contains(e.getPoint())) {
 			proximoMenu();
 			return;
@@ -226,7 +384,7 @@ public class PainelMenu {
 				int centerY = mainFrame.getFrameTopWar().getHeight() / 2;
 				int bgX = bg.getWidth() / 2;
 				int bgY = bg.getHeight() / 2;
-				// g2d.drawImage(bg, centerX - bgX, centerY - bgY, null);
+				g2d.drawImage(bg, centerX - bgX, centerY - bgY, null);
 			}
 			if (desenhaCarregando) {
 				desenhaCarregando(g2d);
@@ -250,7 +408,13 @@ public class PainelMenu {
 		int x = (int) (getWidth() / 2);
 		int y = (int) (getHeight() / 2);
 
-		desenhaMapasBuscarMatar(x - 200, y - 100, g2d);
+		desenhaMapasBuscarMatar(x - 150, y - 100, g2d);
+
+		desenhaSeletorNumeroBots(x - 150, y - 40, g2d);
+
+		desenhaSeletorTempoJogo(x - 150, y + 20, g2d);
+
+		desenhaSeletorClasse(x - 150, y + 100, g2d);
 
 		desenhaAnteriroProximo(g2d, x - 140, y + 215);
 
@@ -380,6 +544,7 @@ public class PainelMenu {
 
 	private void proximoMenu() {
 		if (MENU.equals(MENU_BUSCAR_MATAR)) {
+			mainFrame.criarJogoLocal(this);
 			return;
 		}
 		if (MENU.equals(MENU_SOBRE)) {
@@ -479,7 +644,7 @@ public class PainelMenu {
 		g2d.fillRoundRect(centerX, centerY - 120, larguraTexto + 10, 130, 15,
 				15);
 		g2d.setColor(Color.BLACK);
-		// g2d.drawString(txt, centerX + 5, centerY);
+		g2d.drawString(txt, centerX + 5, centerY);
 
 		centerX += 250;
 		centerY += 70;
@@ -549,7 +714,7 @@ public class PainelMenu {
 		g2d.setFont(fontOri);
 	}
 
-	private void desenhaSeletorNumeroBots(Graphics2D g2d, int x, int y) {
+	private void desenhaSeletorNumeroBots(int x, int y, Graphics2D g2d) {
 		Font fontOri = g2d.getFont();
 		g2d.setFont(new Font(fontOri.getName(), Font.BOLD, 28));
 
@@ -565,15 +730,15 @@ public class PainelMenu {
 
 		x += 20;
 
-		String numVoltasStr = (numBotsSelecionado + " " + Lang.msg("bots"))
-				.toUpperCase();
-		int tamVoltas = Util.calculaLarguraText(numVoltasStr, g2d);
+		String numBotsStr = (df2.format(numBotsSelecionado) + " " + Lang
+				.msg("bots")).toUpperCase();
+		int tamBots = Util.calculaLarguraText(numBotsStr, g2d);
 		g2d.setColor(lightWhite);
-		g2d.fillRoundRect(x - 15, y - 12, tamVoltas + 10, 32, 10, 10);
+		g2d.fillRoundRect(x - 15, y - 12, tamBots + 10, 32, 10, 10);
 		g2d.setColor(Color.BLACK);
-		g2d.drawString(numVoltasStr, x - 10, y + 15);
+		g2d.drawString(numBotsStr, x - 10, y + 15);
 
-		x += (tamVoltas + 15);
+		x += (tamBots + 15);
 
 		String mais = "+";
 		int tamMais = Util.calculaLarguraText(mais, g2d);
@@ -585,15 +750,168 @@ public class PainelMenu {
 
 		g2d.setFont(fontOri);
 
-		int porcetNumVolta = Util.inte((numBotsSelecionado - 12) * 1.66);
+		int porcetNumBots = Util.inte((numBotsSelecionado) * 2);
 
-		int tamNumVoltaSelecionado = porcetNumVolta * tamVoltas / 100;
+		int tamNumBotsSelecionado = porcetNumBots * (tamBots + 10) / 100;
 		x = xOri + 20;
 
 		g2d.setColor(yel);
-		g2d.drawRoundRect(x - 15, y - 12, tamNumVoltaSelecionado, 32, 10, 10);
+		g2d.drawRoundRect(x - 15, y - 12, tamNumBotsSelecionado, 32, 10, 10);
 		g2d.setColor(blu);
-		g2d.fillRoundRect(x - 15, y - 12, tamNumVoltaSelecionado, 32, 10, 10);
+		g2d.fillRoundRect(x - 15, y - 12, tamNumBotsSelecionado, 32, 10, 10);
+
+	}
+
+	private void desenhaSeletorTempoJogo(int x, int y, Graphics2D g2d) {
+		Font fontOri = g2d.getFont();
+		g2d.setFont(new Font(fontOri.getName(), Font.BOLD, 28));
+
+		int xOri = x;
+
+		String menos = "-";
+		int tamMenos = Util.calculaLarguraText(menos, g2d);
+		menosTempoRect.setFrame(x - 16, y - 6, tamMenos + 6, 22);
+		g2d.setColor(lightWhite);
+		g2d.fill(menosTempoRect);
+		g2d.setColor(Color.BLACK);
+		g2d.drawString(menos, x - 14, y + 15);
+
+		x += 20;
+
+		String tempoStr = (df3.format(tempoJogoSelecionado) + " " + Lang
+				.msg("tempo jogo")).toUpperCase();
+		int tamTempo = Util.calculaLarguraText(tempoStr, g2d);
+		g2d.setColor(lightWhite);
+		g2d.fillRoundRect(x - 15, y - 12, tamTempo + 10, 32, 10, 10);
+		g2d.setColor(Color.BLACK);
+		g2d.drawString(tempoStr, x - 10, y + 15);
+
+		x += (tamTempo + 15);
+
+		String mais = "+";
+		int tamMais = Util.calculaLarguraText(mais, g2d);
+		maisTempoRect.setFrame(x - 17, y - 6, tamMais + 5, 22);
+		g2d.setColor(lightWhite);
+		g2d.fill(maisTempoRect);
+		g2d.setColor(Color.BLACK);
+		g2d.drawString(mais, x - 13, y + 16);
+
+		g2d.setFont(fontOri);
+
+		int porcetTempo = tempoJogoSelecionado;
+
+		int tamTempoSelecionado = porcetTempo * (tamTempo + 10) / 100;
+		x = xOri + 20;
+
+		g2d.setColor(yel);
+		g2d.drawRoundRect(x - 15, y - 12, tamTempoSelecionado, 32, 10, 10);
+		g2d.setColor(blu);
+		g2d.fillRoundRect(x - 15, y - 12, tamTempoSelecionado, 32, 10, 10);
+
+	}
+
+	private void desenhaSeletorClasse(int ox, int oy, Graphics2D graphics2d) {
+
+		int x = ox;
+		int y = oy;
+
+		assautRect.setFrame(x, y, lifeBarAssalt.getWidth(),
+				lifeBarAssalt.getHeight());
+		graphics2d.setColor(PainelTopWar.transpBranco);
+		graphics2d.fill(assautRect);
+		if (ConstantesTopWar.ASSAULT.equals(classeSelecionada)) {
+			graphics2d.setColor(Color.YELLOW);
+		} else {
+			graphics2d.setColor(Color.BLACK);
+		}
+		graphics2d.draw(assautRect);
+		graphics2d.drawImage(lifeBarAssalt, null, x, y);
+
+		x += 110;
+
+		sniperRect.setFrame(x, y, lifeBarSniper.getWidth(),
+				lifeBarSniper.getHeight());
+		graphics2d.setColor(PainelTopWar.transpBranco);
+		graphics2d.fill(sniperRect);
+		if (ConstantesTopWar.SNIPER.equals(classeSelecionada)) {
+			graphics2d.setColor(Color.YELLOW);
+		} else {
+			graphics2d.setColor(Color.BLACK);
+		}
+		graphics2d.draw(sniperRect);
+		graphics2d.drawImage(lifeBarSniper, null, x, y);
+
+		x += 110;
+
+		machineRect.setFrame(x, y, lifeBarMachineGun.getWidth(),
+				lifeBarMachineGun.getHeight());
+		graphics2d.setColor(PainelTopWar.transpBranco);
+		graphics2d.fill(machineRect);
+		if (ConstantesTopWar.MACHINEGUN.equals(classeSelecionada)) {
+			graphics2d.setColor(Color.YELLOW);
+		} else {
+			graphics2d.setColor(Color.BLACK);
+		}
+		graphics2d.draw(machineRect);
+		graphics2d.drawImage(lifeBarMachineGun, null, x, y);
+
+		x = ox;
+		y += 30;
+		shotgunRect.setFrame(x, y, lifeBarShotgun.getWidth(),
+				lifeBarShotgun.getHeight());
+		graphics2d.setColor(PainelTopWar.transpBranco);
+		graphics2d.fill(shotgunRect);
+		if (ConstantesTopWar.SHOTGUN.equals(classeSelecionada)) {
+			graphics2d.setColor(Color.YELLOW);
+		} else {
+			graphics2d.setColor(Color.BLACK);
+		}
+		graphics2d.draw(shotgunRect);
+		graphics2d.drawImage(lifeBarShotgun, null, x, y);
+
+		x += 110;
+		rocketRect.setFrame(x, y, lifeBarRocket.getWidth(),
+				lifeBarRocket.getHeight());
+		graphics2d.setColor(PainelTopWar.transpBranco);
+		graphics2d.fill(rocketRect);
+		if (ConstantesTopWar.ROCKET.equals(classeSelecionada)) {
+			graphics2d.setColor(Color.YELLOW);
+		} else {
+			graphics2d.setColor(Color.BLACK);
+		}
+		graphics2d.draw(rocketRect);
+		graphics2d.drawImage(lifeBarRocket, null, x, y);
+
+		x += 110;
+		shieldRect.setFrame(x, y, lifeBarShield.getWidth(),
+				lifeBarShield.getHeight());
+		if (ConstantesTopWar.SHIELD.equals(classeSelecionada)) {
+			graphics2d.setColor(Color.YELLOW);
+		} else {
+			graphics2d.setColor(Color.BLACK);
+		}
+		graphics2d.draw(shieldRect);
+		graphics2d.drawImage(lifeBarShield, null, x, y);
+
+		int centerXAssaut = (int) assautRect.getCenterX();
+
+		int centerXMachine = (int) machineRect.getCenterX();
+
+		y = oy;
+
+		graphics2d.setColor(Color.BLACK);
+		graphics2d.drawLine(centerXAssaut, y, centerXAssaut, y - 20);
+		graphics2d.drawLine(centerXMachine, y, centerXMachine, y - 20);
+
+		graphics2d.drawLine(centerXAssaut, y - 20, centerXAssaut + 20, y - 20);
+		graphics2d
+				.drawLine(centerXMachine, y - 20, centerXMachine - 20, y - 20);
+		graphics2d.setColor(ConstantesTopWar.lightWhite);
+
+		graphics2d.fillRoundRect(centerXAssaut + 20, y - 27, 180, 15, 10, 10);
+		graphics2d.setColor(Color.BLACK);
+		graphics2d.drawString(Lang.msg("escolherclasse"), centerXAssaut + 30,
+				y - 15);
 
 	}
 

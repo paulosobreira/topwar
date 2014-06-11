@@ -14,7 +14,17 @@ public class DadosJogoTopWar implements Serializable {
 
 	private Integer numBots;
 
+	private Integer tempoJogo;
+
 	private boolean botsVsHumans;
+
+	public Integer getTempoJogo() {
+		return tempoJogo;
+	}
+
+	public void setTempoJogo(Integer tempoJogo) {
+		this.tempoJogo = tempoJogo;
+	}
 
 	public Integer getNumBots() {
 		return numBots;
