@@ -9,6 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseWheelListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
@@ -59,86 +61,21 @@ public class MainFrame {
 		proxyComandos.setControleJogosServidor(servidorLocal);
 		clienteLocal = new ClienteLocal(proxyComandos, topWarApplet);
 		gerarJframeApplet();
-		JMenuBar bar = new JMenuBar();
-		JMenu menuJogo = new JMenu() {
-			public String getText() {
-				return Lang.msg("principal");
-			}
-		};
-		bar.add(menuJogo);
-		JMenuItem iniciar = new JMenuItem("Iniciar Jogo") {
-			public String getText() {
-				return Lang.msg("iniciar");
-			}
-		};
-		iniciar.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (clienteLocal.getJogoCliente() != null
-						&& clienteLocal.getJogoCliente().isJogoEmAndamento()) {
-					JOptionPane.showMessageDialog(frameTopWar,
-							Lang.msg("jaEstaEmUmJogo"), "TopWar",
-							JOptionPane.INFORMATION_MESSAGE);
-					return;
-				}
-				JogoCliente jogoCliente = new JogoCliente(null, clienteLocal) {
-					@Override
-					public void setarFrameTopWar() {
-						setFrameTopWar(frameTopWar);
-					}
-				};
-				clienteLocal.setJogoCliente(jogoCliente);
-				clienteLocal.criarJogoDepoisDeLogar(true);
-				jogoIniciado = true;
-				painelMenu.renderThreadAlive = false;
-			}
-		});
-		menuJogo.add(iniciar);
-
-		JMenuItem sair = new JMenuItem("Sair Jogo") {
-			public String getText() {
-				return Lang.msg("sair");
-			}
-
-		};
-		sair.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				clienteLocal.sairJogo();
-				clienteLocal.getJogoCliente().matarTodasThreads();
-				servidorLocal.finalizaJogosServidor();
-			}
-		});
-		menuJogo.add(sair);
-
-		JMenuItem sobre = new JMenuItem("Sobre o autor do jogo") {
-			public String getText() {
-				return Lang.msg("sobre");
-			}
-
-		};
-		sobre.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String msg = Lang.msg("feitoPor")
-						+ " Paulo Sobreira \n sowbreira@gmail.com \n"
-						+ "http://sowbreira.appspot.com \n" + "2007-2012";
-				JOptionPane.showMessageDialog(frameTopWar, msg,
-						Lang.msg("093"), JOptionPane.INFORMATION_MESSAGE);
-			}
-		});
-		menuJogo.add(sobre);
-
 		String versao = topWarApplet.getVersao();
 		frameTopWar.setTitle(Lang.msg("topawrsolo") + " Ver. " + versao);
 		painelMenu = new PainelMenu(this);
 
 		frameTopWar.setVisible(visivel);
 		frameTopWar.setSize(800, 520);
-
-		JFrame frame = new JFrame();
-		frame.getRootPane().setJMenuBar(bar);
-		frame.pack();
-		frame.setVisible(true);
+		frameTopWar.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosed(WindowEvent e) {
+				clienteLocal.sairJogo();
+				clienteLocal.getJogoCliente().matarTodasThreads();
+				servidorLocal.finalizaJogosServidor();
+				super.windowClosed(e);
+			}
+		});
 	}
 
 	public JFrame getFrameTopWar() {
@@ -256,5 +193,26 @@ public class MainFrame {
 
 	public void iniciar() {
 		iniciar(false);
+	}
+
+	public void criarJogoLocal(PainelMenu painelMenu) {
+		if (clienteLocal.getJogoCliente() != null
+				&& clienteLocal.getJogoCliente().isJogoEmAndamento()) {
+			JOptionPane.showMessageDialog(frameTopWar,
+					Lang.msg("jaEstaEmUmJogo"), "TopWar",
+					JOptionPane.INFORMATION_MESSAGE);
+			return;
+		}
+		JogoCliente jogoCliente = new JogoCliente(null, clienteLocal) {
+			@Override
+			public void setarFrameTopWar() {
+				setFrameTopWar(frameTopWar);
+			}
+		};
+		clienteLocal.setJogoCliente(jogoCliente);
+		clienteLocal.criarJogoLocal(true, painelMenu);
+		jogoIniciado = true;
+		painelMenu.renderThreadAlive = false;
+
 	}
 }

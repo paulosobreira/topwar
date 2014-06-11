@@ -58,10 +58,10 @@ public class ControleCliente extends NnpeChatCliente {
 			logar();
 			return;
 		}
-		criarJogoDepoisDeLogar(false);
+		criarJogoLogadoSwing(false);
 	}
 
-	public boolean criarJogoDepoisDeLogar(boolean local) {
+	public boolean criarJogoLogadoSwing(boolean local) {
 		this.local = local;
 		JPanel mapaPanel = new JPanel();
 		JComboBox mapaCombo = new JComboBox();
@@ -159,6 +159,40 @@ public class ControleCliente extends NnpeChatCliente {
 				// jogoCliente.gerarRadio();
 				// }
 			}
+		} else {
+			return false;
+		}
+		return true;
+	}
+
+	public boolean criarJogoLocal(boolean local, PainelMenu painelMenu) {
+		this.local = local;
+		NnpeTO nnpeTO = new NnpeTO();
+		nnpeTO.setComando(ConstantesTopWar.CRIAR_JOGO);
+		nnpeTO.setSessaoCliente(sessaoCliente);
+		DadosJogoTopWar dadosJogoTopWar = new DadosJogoTopWar();
+		dadosJogoTopWar.setNomeJogador(getNomeJogador());
+		dadosJogoTopWar.setNomeMapa(painelMenu.getMapaSelecionado());
+		String classe = painelMenu.getClasseSelecionada();
+		dadosJogoTopWar.setClasse(classe);
+		Integer numBots = painelMenu.getNumBotsSelecionado();
+		dadosJogoTopWar.setNumBots(numBots);
+		dadosJogoTopWar.setBotsVsHumans(false);
+		dadosJogoTopWar.setTempoJogo(painelMenu.getTempoJogoSelecionado());
+		nnpeTO.setData(dadosJogoTopWar);
+		Object ret = enviarObjeto(nnpeTO);
+		if (ret instanceof NnpeTO) {
+			nnpeTO = (NnpeTO) ret;
+			dadosJogoTopWar = (DadosJogoTopWar) nnpeTO.getData();
+			if (local) {
+				jogoCliente.setDadosJogoTopWar(dadosJogoTopWar);
+			} else {
+				jogoCliente = new JogoCliente(dadosJogoTopWar, this);
+			}
+			jogoCliente.inciaJogo();
+			// if (!local) {
+			// jogoCliente.gerarRadio();
+			// }
 		} else {
 			return false;
 		}

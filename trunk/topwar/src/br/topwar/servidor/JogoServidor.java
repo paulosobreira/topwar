@@ -59,7 +59,7 @@ public class JogoServidor {
 		controleBots = new ControleBots(this, controleJogosServidor);
 		carregarMapa(dadosJogoTopWar);
 		incluirAvatarCriadorJogo(dadosJogoTopWar);
-		iniciarContadorTempoJogo();
+		iniciarContadorTempoJogo(dadosJogoTopWar.getTempoJogo());
 		iniciaMonitorDeJogo();
 		controleBots.adicionarBots();
 	}
@@ -90,8 +90,7 @@ public class JogoServidor {
 		monitorJogo.start();
 	}
 
-	private void iniciarContadorTempoJogo() {
-		int tempoJogoMinutos = 10;
+	private void iniciarContadorTempoJogo(int tempoJogoMinutos) {
 		tempoJogoMilis = tempoJogoMinutos * 60 * 1000;
 		inicioJogoMilis = System.currentTimeMillis();
 		fimJogoMilis = inicioJogoMilis + tempoJogoMilis;
