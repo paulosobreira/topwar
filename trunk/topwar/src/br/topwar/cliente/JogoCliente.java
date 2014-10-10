@@ -361,7 +361,7 @@ public class JogoCliente {
 		return seguirMouse;
 	}
 
-	protected boolean mirouAvatarAdversario(Point p) {
+	protected boolean mirouAvatarAdversario(Point p, int arma) {
 		Collection<AvatarCliente> avatarClientesCopia = getAvatarClientesCopia();
 		for (Iterator iterator = avatarClientesCopia.iterator(); iterator
 				.hasNext();) {
@@ -374,7 +374,9 @@ public class JogoCliente {
 			}
 			double distaciaEntrePontos = GeoUtil.distaciaEntrePontos(p,
 					avatarCliente.getPontoAvatar());
-			if (distaciaEntrePontos < 50) {
+			if (ConstantesTopWar.ARMA_FACA == arma && distaciaEntrePontos > 50) {
+				return false;
+			} else if (distaciaEntrePontos < 50) {
 				return true;
 			}
 		}
@@ -463,16 +465,19 @@ public class JogoCliente {
 				});
 				threadAtualizaAngulo.start();
 			}
-			if (mirouAvatarAdversario(pontoMouseMovendo)
-					&& arma == ConstantesTopWar.ARMA_SHOTGUN) {
+			boolean mirouAvatarAdversario = mirouAvatarAdversario(
+					pontoMouseMovendo, arma);
+			if (mirouAvatarAdversario && arma == ConstantesTopWar.ARMA_SHOTGUN) {
 				atacar(500);
 			}
-			if (mirouAvatarAdversario(pontoMouseMovendo)
-					&& arma == ConstantesTopWar.ARMA_ASSAULT) {
+			if (mirouAvatarAdversario && arma == ConstantesTopWar.ARMA_ASSAULT) {
 				atacar(200);
 			}
-			if (mirouAvatarAdversario(pontoMouseMovendo)
+			if (mirouAvatarAdversario
 					&& arma == ConstantesTopWar.ARMA_MACHINEGUN) {
+				atacar(100);
+			}
+			if (mirouAvatarAdversario && arma == ConstantesTopWar.ARMA_FACA) {
 				atacar(100);
 			}
 

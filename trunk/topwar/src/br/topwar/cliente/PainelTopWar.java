@@ -49,7 +49,7 @@ public class PainelTopWar {
 	private JogoCliente jogoCliente;
 	private MapaTopWar mapaTopWar;
 	public static boolean desenhaObjetos = true;
-	public static boolean desenhaImagens = false;
+	public static boolean desenhaImagens = true;
 	public static boolean desenhaNada = false;
 	private Map<Point, Integer> mapaExplosoes = new ConcurrentHashMap<Point, Integer>();
 	private int tabCont = 0;
@@ -880,7 +880,9 @@ public class PainelTopWar {
 
 	private void desenhaMira(Graphics2D graphics2d) {
 		Point pontoMouse = jogoCliente.getPontoMouseMovendo();
-		if (pontoMouse != null && jogoCliente.mirouAvatarAdversario(pontoMouse)) {
+		if (pontoMouse != null
+				&& jogoCliente.mirouAvatarAdversario(pontoMouse,
+						ConstantesTopWar.ARMA_ASSAULT)) {
 			Point desenha = new Point(
 					pontoMouse.x - (crosshair.getWidth() / 2), pontoMouse.y
 							- (crosshair.getHeight() / 2));
