@@ -135,6 +135,12 @@ public class GeoUtil {
 	}
 
 	public static int distaciaEntrePontos(Point p1, Point p2) {
+		if (p1 == null) {
+			return 0;
+		}
+		if (p2 == null) {
+			return 0;
+		}
 		return distaciaEntrePontos(p1.x, p1.y, p2.x, p2.y);
 	}
 
