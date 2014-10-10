@@ -1110,35 +1110,15 @@ public class JogoServidor {
 			} else {
 				return false;
 			}
-			boolean headShot = false;
 			if (avatarAtirador.getTime().equals(avatarAlvo.getTime())) {
 				return true;
 			} else {
-				if (Math.random() > 0.8 && gerarCabeca.contains(point)) {
-					avatarAlvo.setVida(0);
-					headShot = true;
-				} else if (gerarCorpo.contains(point)
-						&& (indice + ConstantesTopWar.LARGURA_AVATAR < linha
-								.size())) {
-					for (int i = indice; i < indice
-							+ ConstantesTopWar.LARGURA_AVATAR; i++) {
-						Point p = (Point) linha.get(i);
-						if (Math.random() > 0.8 && gerarCabeca.contains(p)) {
-							avatarAlvo.setVida(0);
-							headShot = true;
-							break;
-						}
-					}
-				}
-				if (!headShot) {
-					if (ConstantesTopWar.ARMA_SNIPER == avatarAtirador
-							.getArma()) {
-						avatarAlvo.setVida(avatarAlvo.getVida()
-								- Util.intervalo(120, 130));
-					} else {
-						avatarAlvo.setVida(avatarAlvo.getVida()
-								- (balas * Util.intervalo(1, 2)));
-					}
+				if (ConstantesTopWar.ARMA_SNIPER == avatarAtirador.getArma()) {
+					avatarAlvo.setVida(avatarAlvo.getVida()
+							- Util.intervalo(120, 130));
+				} else {
+					avatarAlvo.setVida(avatarAlvo.getVida()
+							- (balas * Util.intervalo(1, 2)));
 				}
 				if (avatarAlvo.getVida() < 1) {
 					if (ConstantesTopWar.TIME_AZUL.equals(avatarAlvo.getTime())) {
@@ -1151,9 +1131,6 @@ public class JogoServidor {
 					avatarAtirador.setKills(avatarAtirador.getKills() + 1);
 					EventoJogo eventoJogo = new EventoJogo();
 					eventoJogo.setArma(avatarAtirador.getArma());
-					if (headShot) {
-						eventoJogo.setArma(ConstantesTopWar.HEADSHOT);
-					}
 					eventoJogo.setAtacante(avatarAtirador.getNomeJogador());
 					if (ConstantesTopWar.TIME_AZUL.equals(avatarAtirador
 							.getTime())) {

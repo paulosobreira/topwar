@@ -379,7 +379,7 @@ public class PainelMenu {
 			setarHints(g2d);
 			g2d.setColor(g2d.getBackground());
 			g2d.fillRect(0, 0, getWidth(), getHeight());
-			if (bg != null) {
+			if (bg != null && PainelTopWar.desenhaImagens) {
 				int centerX = mainFrame.getFrameTopWar().getWidth() / 2;
 				int centerY = mainFrame.getFrameTopWar().getHeight() / 2;
 				int bgX = bg.getWidth() / 2;
@@ -652,7 +652,7 @@ public class PainelMenu {
 		g2d.setFont(new Font(fontOri.getName(), Font.BOLD, 28));
 
 		g2d.setColor(lightWhite);
-		txt = Lang.msg("buscar e matar").toUpperCase();
+		txt = Lang.msg("buscarMatar").toUpperCase();
 		larguraTexto = Util.larguraTexto(txt, g2d);
 		menuMatarRect.setFrame(centerX, centerY - 25, larguraTexto + 10, 30);
 		g2d.fill(menuMatarRect);

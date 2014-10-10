@@ -48,9 +48,9 @@ public class PainelTopWar {
 	private Thread threadCarregarBkg;
 	private JogoCliente jogoCliente;
 	private MapaTopWar mapaTopWar;
-	private boolean desenhaObjetos = false;
-	private boolean desenhaImagens = true;
-	private boolean desenhaNada = false;
+	public static boolean desenhaObjetos = true;
+	public static boolean desenhaImagens = false;
+	public static boolean desenhaNada = false;
 	private Map<Point, Integer> mapaExplosoes = new ConcurrentHashMap<Point, Integer>();
 	private int tabCont = 0;
 	private boolean gerouImagens;
