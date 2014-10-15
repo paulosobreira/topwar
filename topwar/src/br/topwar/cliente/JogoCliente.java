@@ -563,9 +563,11 @@ public class JogoCliente {
 				}
 
 				NnpeTO nnpeTO = (NnpeTO) controleCliente.obterPlacar();
-				placar = (List<PlacarTopWar>) nnpeTO.getData();
-				painelTopWar.setTabCont(100);
-				painelTopWar.atualiza();
+				if (nnpeTO != null) {
+					placar = (List<PlacarTopWar>) nnpeTO.getData();
+					painelTopWar.setTabCont(100);
+					painelTopWar.atualiza();
+				}
 			}
 		});
 		threadRepaint.start();
