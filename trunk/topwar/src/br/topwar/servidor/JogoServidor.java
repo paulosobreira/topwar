@@ -601,6 +601,9 @@ public class JogoServidor {
 		if (avatarTopWars.isEmpty()) {
 			finalizado = true;
 		}
+		if((System.currentTimeMillis()-fimJogoMilis)<10000){
+			finalizado = false;
+		}
 		return finalizado;
 	}
 
