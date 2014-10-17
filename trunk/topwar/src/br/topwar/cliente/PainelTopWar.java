@@ -119,6 +119,8 @@ public class PainelTopWar {
 	private RoundRectangle2D sniperRect;
 	private RoundRectangle2D fps = new RoundRectangle2D.Double(0, 0, 1, 1, 10,
 			10);
+	private RoundRectangle2D voltaMenuPrincipalRect = new RoundRectangle2D.Double(
+			0, 0, 1, 1, 10, 10);
 	private Rectangle limitesViewPort;
 	protected boolean cursor;
 	private int contMostraLag;
@@ -520,9 +522,32 @@ public class PainelTopWar {
 			desenhaLag(graphics2d);
 			desenhaChat(graphics2d);
 			desenhaFPS(graphics2d);
+			desenhaVoltarMenuPrincipal(graphics2d);
 		} catch (Exception e) {
 			Logger.logarExept(e);
 		}
+	}
+
+	private void desenhaVoltarMenuPrincipal(Graphics2D g2d) {
+		if (jogoCliente.isJogoEmAndamento()) {
+			voltaMenuPrincipalRect.setFrame(0, 0, 1, 1);
+			return;
+		}
+		int x = limitesViewPort.x + (int) (limitesViewPort.getWidth() / 2);
+		int y = limitesViewPort.y + (int) (limitesViewPort.getHeight()) - 50;
+		Font fontOri = g2d.getFont();
+		g2d.setFont(new Font(fontOri.getName(), Font.BOLD, 28));
+		g2d.setColor(transpBranco);
+		String txt = Lang.msg("voltarMenuPrincipal").toUpperCase();
+		int larguraTexto = Util.larguraTexto(txt, g2d);
+		int desl = larguraTexto / 2;
+		voltaMenuPrincipalRect
+				.setFrame(x - desl, y - 25, larguraTexto + 10, 30);
+		g2d.fill(voltaMenuPrincipalRect);
+		g2d.setColor(Color.BLACK);
+		g2d.drawString(txt, x - desl + 5, y);
+		g2d.setFont(fontOri);
+
 	}
 
 	private void descontoCentraliza() {
@@ -1888,7 +1913,7 @@ public class PainelTopWar {
 
 	protected void desenhaAvatares(Graphics2D graphics2d,
 			AvatarCliente avatarCliente) {
-		if (!gerouImagens) {
+		if (!gerouImagens || !jogoCliente.isJogoEmAndamento()) {
 			return;
 		}
 		Point pontoAvatar = avatarCliente.getPontoAvatarSuave();
@@ -2200,9 +2225,6 @@ public class PainelTopWar {
 		}
 		render();
 		jogoCliente.mostrarGraficos();
-		// if (panel != null) {
-		// panel.repaint();
-		// }
 	}
 
 	private void contralizaPontoNoAvatar(AvatarCliente avatarCliente) {

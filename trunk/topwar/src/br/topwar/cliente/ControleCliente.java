@@ -178,7 +178,8 @@ public class ControleCliente extends NnpeChatCliente {
 		Integer numBots = painelMenu.getNumBotsSelecionado();
 		dadosJogoTopWar.setNumBots(numBots);
 		dadosJogoTopWar.setBotsVsHumans(false);
-		dadosJogoTopWar.setTempoJogo(painelMenu.getTempoJogoSelecionado());
+		//dadosJogoTopWar.setTempoJogo(painelMenu.getTempoJogoSelecionado());
+		dadosJogoTopWar.setTempoJogo(1);
 		nnpeTO.setData(dadosJogoTopWar);
 		Object ret = enviarObjeto(nnpeTO);
 		if (ret instanceof NnpeTO) {

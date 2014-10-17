@@ -63,9 +63,8 @@ public class MainFrame {
 		gerarJframeApplet();
 		String versao = topWarApplet.getVersao();
 		frameTopWar.setTitle(Lang.msg("topawrsolo") + " Ver. " + versao);
-		painelMenu = new PainelMenu(this);
-
 		frameTopWar.setVisible(visivel);
+		painelMenu = new PainelMenu(this);
 		frameTopWar.setSize(800, 520);
 		frameTopWar.addWindowListener(new WindowAdapter() {
 			@Override
