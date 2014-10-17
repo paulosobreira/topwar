@@ -1,5 +1,6 @@
 package br.topwar.cliente;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -391,7 +392,7 @@ public class PainelMenu {
 				return;
 			}
 			desenhaMenuPrincipalSelecao(g2d);
-			desenhaMenuBuscaMatar(g2d);
+			desenhaMenuEnfretamento(g2d);
 			desenhaMenuSobre(g2d);
 			desenhaFPS(g2d, getWidth() - 70, getHeight() - 50);
 		} catch (Exception e) {
@@ -401,14 +402,14 @@ public class PainelMenu {
 
 	}
 
-	private void desenhaMenuBuscaMatar(Graphics2D g2d) {
+	private void desenhaMenuEnfretamento(Graphics2D g2d) {
 		if (!MENU.equals(MENU_BUSCAR_MATAR)) {
 			return;
 		}
 		int x = (int) (getWidth() / 2);
 		int y = (int) (getHeight() / 2);
 
-		desenhaMapasBuscarMatar(x - 150, y - 100, g2d);
+		desenhaMapas(x - 150, y - 100, g2d);
 
 		desenhaSeletorNumeroBots(x - 150, y - 40, g2d);
 
@@ -420,7 +421,7 @@ public class PainelMenu {
 
 	}
 
-	private void desenhaMapasBuscarMatar(int x, int y, Graphics2D g2d) {
+	private void desenhaMapas(int x, int y, Graphics2D g2d) {
 
 		Font fontOri = g2d.getFont();
 		g2d.setFont(new Font(fontOri.getName(), Font.BOLD, 28));
@@ -461,8 +462,8 @@ public class PainelMenu {
 		g2d.setColor(lightWhite);
 		g2d.fill(praiaRct);
 		if (MAPA_PRAIA.equals(mapaSelecionado)) {
-			g2d.setColor(yel);
-			g2d.draw(praiaRct);
+//			g2d.setColor(yel);
+//			g2d.draw(praiaRct);
 		}
 		g2d.setColor(Color.BLACK);
 		g2d.drawString(praiaTxt, x - 10, y + 15);
@@ -623,6 +624,7 @@ public class PainelMenu {
 				RenderingHints.VALUE_DITHER_ENABLE);
 		g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
 				RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		g2d.setStroke(new BasicStroke(2.0f));
 	}
 
 	private void desenhaMenuPrincipalSelecao(Graphics2D g2d) {

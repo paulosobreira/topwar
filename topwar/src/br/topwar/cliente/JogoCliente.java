@@ -64,6 +64,7 @@ public class JogoCliente {
 	private Point pontoAvatarDesenha;
 	private double angulo;
 	private boolean jogoEmAndamento = true;
+	private boolean renderiza = true;
 	private boolean recarregando;
 	private int ptsVermelho;
 	private int ptsAzul;
@@ -531,6 +532,7 @@ public class JogoCliente {
 	private void iniciaThreadAtualizaTela() {
 		if (threadRepaint != null) {
 			threadRepaint.interrupt();
+			renderiza = false;
 		}
 		threadRepaint = new Thread(new Runnable() {
 			@Override
@@ -540,7 +542,7 @@ public class JogoCliente {
 				long lastTime = System.nanoTime();
 
 				double delta = 0;
-				while (jogoEmAndamento) {
+				while (renderiza) {
 					long now = System.nanoTime();
 					double nsPerTick = 1000000000D / fpsLimite;
 					delta += (now - lastTime) / nsPerTick;
@@ -643,6 +645,7 @@ public class JogoCliente {
 			}
 			if (threadRepaint != null) {
 				threadRepaint.interrupt();
+				renderiza = false;
 			}
 			if (threadDadosSrv != null) {
 				threadDadosSrv.interrupt();
