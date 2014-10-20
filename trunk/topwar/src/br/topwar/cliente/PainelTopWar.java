@@ -2479,4 +2479,8 @@ public class PainelTopWar {
 
 	}
 
+	public boolean verificaVoltaMenuPrincipal(Point point) {
+		return voltaMenuPrincipalRect.contains(point);
+	}
+
 }

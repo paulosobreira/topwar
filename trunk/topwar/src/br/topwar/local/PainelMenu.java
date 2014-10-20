@@ -1,4 +1,4 @@
-package br.topwar.cliente;
+package br.topwar.local;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -26,7 +26,7 @@ import br.nnpe.Logger;
 import br.nnpe.OcilaCor;
 import br.nnpe.Util;
 import br.topwar.ConstantesTopWar;
-import br.topwar.local.MainFrame;
+import br.topwar.cliente.PainelTopWar;
 import br.topwar.recursos.CarregadorRecursos;
 import br.topwar.recursos.idiomas.Lang;
 
@@ -211,7 +211,11 @@ public class PainelMenu {
 
 	public PainelMenu(MainFrame mainFrame) {
 		this.mainFrame = mainFrame;
+		inicializar();
+	}
 
+	public void inicializar() {
+		renderThreadAlive = true;
 		mainFrame.getFrameTopWar().addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				processaClick(e);
@@ -254,7 +258,6 @@ public class PainelMenu {
 		iniciaRecursos();
 		renderThread.start();
 		desenhaCarregando = false;
-
 	}
 
 	protected void processaClick(MouseEvent e) {

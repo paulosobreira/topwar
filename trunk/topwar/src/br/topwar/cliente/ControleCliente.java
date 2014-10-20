@@ -18,6 +18,7 @@ import br.nnpe.cliente.NnpeApplet;
 import br.nnpe.cliente.NnpeChatCliente;
 import br.nnpe.tos.NnpeTO;
 import br.topwar.ConstantesTopWar;
+import br.topwar.local.PainelMenu;
 import br.topwar.recursos.idiomas.Lang;
 import br.topwar.tos.DadosAcaoClienteTopWar;
 import br.topwar.tos.DadosJogoTopWar;
@@ -25,6 +26,7 @@ import br.topwar.tos.DadosJogoTopWar;
 public class ControleCliente extends NnpeChatCliente {
 
 	private JogoCliente jogoCliente;
+	private PainelMenu painelMenu;
 	protected long ultAcao;
 	private boolean local;
 
@@ -167,6 +169,7 @@ public class ControleCliente extends NnpeChatCliente {
 
 	public boolean criarJogoLocal(boolean local, PainelMenu painelMenu) {
 		this.local = local;
+		this.painelMenu = painelMenu;
 		NnpeTO nnpeTO = new NnpeTO();
 		nnpeTO.setComando(ConstantesTopWar.CRIAR_JOGO);
 		nnpeTO.setSessaoCliente(sessaoCliente);
@@ -447,6 +450,11 @@ public class ControleCliente extends NnpeChatCliente {
 		if (jogoCliente != null) {
 			jogoCliente.matarTodasThreads();
 		}
+	}
+
+	public void voltaMenuPrincipal() {
+		sair();
+		painelMenu.inicializar();
 	}
 
 }
