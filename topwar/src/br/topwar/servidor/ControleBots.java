@@ -48,8 +48,8 @@ public class ControleBots {
 
 			NameGenerator nameGenerator = new NameGenerator("silabas");
 			if (!(controleJogosServidor instanceof ServidorLocal)
-					&& numBots > 20) {
-				numBots = 20;
+					&& numBots > 99) {
+				numBots = 99;
 			}
 			for (int i = 0; i < numBots; i++) {
 				String nome = "Bot " + i;

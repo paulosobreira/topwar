@@ -26,7 +26,6 @@ import javax.swing.JRootPane;
 import br.nnpe.ImageUtil;
 import br.topwar.ProxyComandos;
 import br.topwar.cliente.JogoCliente;
-import br.topwar.cliente.PainelMenu;
 import br.topwar.cliente.TopWarAppletLocal;
 import br.topwar.recursos.CarregadorRecursos;
 import br.topwar.recursos.idiomas.Lang;
@@ -65,7 +64,7 @@ public class MainFrame {
 		frameTopWar.setTitle(Lang.msg("topawrsolo") + " Ver. " + versao);
 		frameTopWar.setVisible(visivel);
 		painelMenu = new PainelMenu(this);
-		frameTopWar.setSize(800, 520);
+		frameTopWar.setSize(800, 600);
 		frameTopWar.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosed(WindowEvent e) {

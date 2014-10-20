@@ -307,6 +307,11 @@ public class JogoCliente {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				frameTopWar.requestFocus();
+				if (painelTopWar.verificaVoltaMenuPrincipal(e.getPoint())) {
+					controleCliente.voltaMenuPrincipal();
+					return;
+				}
+
 				if (painelTopWar.verificaComandoMudarClasse(e.getPoint())) {
 					return;
 				}

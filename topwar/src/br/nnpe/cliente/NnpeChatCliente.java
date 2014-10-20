@@ -301,7 +301,7 @@ public abstract class NnpeChatCliente {
 			NnpeTO nnpeTO = new NnpeTO();
 			nnpeTO.setData(nnpeCliente);
 			nnpeTO.setComando(Constantes.ENCERRAR_SESSAO);
-			Object ret = nnpeApplet.enviarObjeto(nnpeTO);
+			Object ret = enviarObjeto(nnpeTO);
 		}
 		sessaoCliente = null;
 		if (threadAtualizadora != null) {
