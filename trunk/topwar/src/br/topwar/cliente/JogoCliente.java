@@ -160,6 +160,7 @@ public class JogoCliente {
 	}
 
 	public void inciaJogo() {
+		jogoEmAndamento = true;
 		carregaMapa();
 		iniciaJFrame();
 		painelTopWar = new PainelTopWar(this);
@@ -568,7 +569,6 @@ public class JogoCliente {
 						delta = 0;
 					}
 				}
-
 				NnpeTO nnpeTO = (NnpeTO) controleCliente.obterPlacar();
 				if (nnpeTO != null) {
 					placar = (List<PlacarTopWar>) nnpeTO.getData();
@@ -644,16 +644,20 @@ public class JogoCliente {
 		try {
 			if (threadAtualizaAngulo != null) {
 				threadAtualizaAngulo.interrupt();
+				Logger.logar("threadAtualizaAngulo.interrupt()");
 			}
 			if (threadAtualizaPosAvatar != null) {
 				threadAtualizaPosAvatar.interrupt();
+				Logger.logar("threadAtualizaPosAvatar.interrupt()");
 			}
 			if (threadRepaint != null) {
 				threadRepaint.interrupt();
+				Logger.logar("threadRepaint.interrupt()");
 				renderiza = false;
 			}
 			if (threadDadosSrv != null) {
 				threadDadosSrv.interrupt();
+				Logger.logar("threadDadosSrv.interrupt()");
 			}
 		} catch (Exception e) {
 			Logger.logarExept(e);
@@ -749,6 +753,9 @@ public class JogoCliente {
 				if (keyCode == KeyEvent.VK_P || keyCode == KeyEvent.VK_TAB) {
 					if (painelTopWar.getTabCont() > 0) {
 						painelTopWar.setTabCont(-1);
+						return;
+					}
+					if (!isJogoEmAndamento()) {
 						return;
 					}
 					NnpeTO nnpeTO = (NnpeTO) controleCliente.obterPlacar();

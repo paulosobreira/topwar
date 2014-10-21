@@ -181,7 +181,7 @@ public class ControleCliente extends NnpeChatCliente {
 		Integer numBots = painelMenu.getNumBotsSelecionado();
 		dadosJogoTopWar.setNumBots(numBots);
 		dadosJogoTopWar.setBotsVsHumans(false);
-		//dadosJogoTopWar.setTempoJogo(painelMenu.getTempoJogoSelecionado());
+		// dadosJogoTopWar.setTempoJogo(painelMenu.getTempoJogoSelecionado());
 		dadosJogoTopWar.setTempoJogo(1);
 		nnpeTO.setData(dadosJogoTopWar);
 		Object ret = enviarObjeto(nnpeTO);
@@ -331,6 +331,9 @@ public class ControleCliente extends NnpeChatCliente {
 
 	public void atualizaAngulo() {
 		if (!Util.isNullOrEmpty(jogoCliente.getKillCam())) {
+			return;
+		}
+		if (jogoCliente == null || !jogoCliente.isJogoEmAndamento()) {
 			return;
 		}
 		DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();

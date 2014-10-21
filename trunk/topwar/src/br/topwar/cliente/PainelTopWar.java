@@ -49,7 +49,7 @@ public class PainelTopWar {
 	private JogoCliente jogoCliente;
 	private MapaTopWar mapaTopWar;
 	public static boolean desenhaObjetos = false;
-	public static boolean desenhaImagens = true;
+	public static boolean desenhaImagens = false;
 	public static boolean desenhaNada = false;
 	private Map<Point, Integer> mapaExplosoes = new ConcurrentHashMap<Point, Integer>();
 	private int tabCont = 0;
