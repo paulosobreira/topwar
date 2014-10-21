@@ -24,6 +24,7 @@ import javax.swing.JPanel;
 import javax.swing.JRootPane;
 
 import br.nnpe.ImageUtil;
+import br.nnpe.Logger;
 import br.topwar.ProxyComandos;
 import br.topwar.cliente.JogoCliente;
 import br.topwar.cliente.TopWarAppletLocal;
@@ -58,7 +59,6 @@ public class MainFrame {
 		proxyComandos = new ProxyComandos();
 		servidorLocal = new ServidorLocal(proxyComandos);
 		proxyComandos.setControleJogosServidor(servidorLocal);
-		clienteLocal = new ClienteLocal(proxyComandos, topWarApplet);
 		gerarJframeApplet();
 		String versao = topWarApplet.getVersao();
 		frameTopWar.setTitle(Lang.msg("topawrsolo") + " Ver. " + versao);
@@ -194,11 +194,13 @@ public class MainFrame {
 	}
 
 	public void criarJogoLocal(PainelMenu painelMenu) {
+		clienteLocal = new ClienteLocal(proxyComandos, topWarApplet);
 		if (clienteLocal.getJogoCliente() != null
 				&& clienteLocal.getJogoCliente().isJogoEmAndamento()) {
 			JOptionPane.showMessageDialog(frameTopWar,
 					Lang.msg("jaEstaEmUmJogo"), "TopWar",
 					JOptionPane.INFORMATION_MESSAGE);
+			Logger.logar("criarJogoLocal jaEstaEmUmJogo ");
 			return;
 		}
 		JogoCliente jogoCliente = new JogoCliente(null, clienteLocal) {
@@ -207,6 +209,7 @@ public class MainFrame {
 				setFrameTopWar(frameTopWar);
 			}
 		};
+		Logger.logar("criarJogoLocal");
 		clienteLocal.setJogoCliente(jogoCliente);
 		clienteLocal.criarJogoLocal(true, painelMenu);
 		jogoIniciado = true;

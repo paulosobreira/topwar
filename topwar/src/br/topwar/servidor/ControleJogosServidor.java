@@ -45,6 +45,7 @@ public class ControleJogosServidor {
 			return new MsgSrv(Lang.msg("usuarioSemSessao"));
 		}
 		if (verificaJaEmUmJogo(nnpeTO.getSessaoCliente())) {
+			Logger.logar("criarJogo jaEstaEmUmJogo ");
 			return new MsgSrv(Lang.msg("jaEstaEmUmjogo"));
 		}
 		if (mapaJogos.size() >= ConstantesTopWar.NUMERO_JOGOS) {
@@ -71,6 +72,7 @@ public class ControleJogosServidor {
 			return new MsgSrv(Lang.msg("usuarioSemSessao"));
 		}
 		if (verificaJaEmUmJogo(nnpeTO.getSessaoCliente())) {
+			Logger.logar("criarJogo jaEstaEmUmJogo ");
 			return new MsgSrv(Lang.msg("jaEstaEmUmjogo"));
 		}
 		DadosJogoTopWar dadosJogoTopWar = (DadosJogoTopWar) nnpeTO.getData();
