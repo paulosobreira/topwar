@@ -87,6 +87,7 @@ public abstract class NnpeProxyComandos {
 					new String[] { sessaoClienteRemover.getNomeJogador() }));
 			nnpeDados.setDataTime(System.currentTimeMillis());
 			nnpeTO.setData(nnpeDados);
+			ganchoMonitorAtividade();
 			return nnpeTO;
 		}
 		return null;

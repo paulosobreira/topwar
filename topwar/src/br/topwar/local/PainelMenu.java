@@ -40,7 +40,7 @@ public class PainelMenu {
 
 	public static String MENU_PRINCIPAL = "MENU_PRINCIPAL";
 
-	public static String MENU_BUSCAR_MATAR = "MENU_BUSCAR_MATAR";
+	public static String MENU_ENFRENTAMENTO = "MENU_ENFRENTAMENTO";
 
 	public static String MAPA_DESERTO = "mapa9";
 
@@ -65,6 +65,8 @@ public class PainelMenu {
 
 	public final static Color blu = new Color(105, 105, 105, 40);
 	public final static Color bluQualy = new Color(105, 105, 205);
+
+	private static final String CARREAGANDO = "CARREAGANDO";
 
 	private RoundRectangle2D sobreRect = new RoundRectangle2D.Double(0, 0, 1,
 			1, 10, 10);
@@ -215,6 +217,7 @@ public class PainelMenu {
 	}
 
 	public void inicializar() {
+		MENU = MENU_PRINCIPAL;
 		renderThreadAlive = true;
 		mainFrame.getFrameTopWar().addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
@@ -262,7 +265,7 @@ public class PainelMenu {
 
 	protected void processaClick(MouseEvent e) {
 		if (MENU.equals(MENU_PRINCIPAL) && menuMatarRect.contains(e.getPoint())) {
-			MENU = MENU_BUSCAR_MATAR;
+			MENU = MENU_ENFRENTAMENTO;
 			return;
 		}
 		if (sobreRect.contains(e.getPoint())) {
@@ -289,6 +292,7 @@ public class PainelMenu {
 		}
 		if (maisBotsRect.contains(e.getPoint())) {
 			numBotsSelecionado++;
+			Logger.logar("numBotsSelecionado++;");
 			if (numBotsSelecionado > 50) {
 				numBotsSelecionado = 50;
 			}
@@ -296,6 +300,7 @@ public class PainelMenu {
 
 		if (menosBotsRect.contains(e.getPoint())) {
 			numBotsSelecionado--;
+			Logger.logar("numBotsSelecionado--;");
 			if (numBotsSelecionado < 0) {
 				numBotsSelecionado = 0;
 			}
@@ -406,7 +411,7 @@ public class PainelMenu {
 	}
 
 	private void desenhaMenuEnfretamento(Graphics2D g2d) {
-		if (!MENU.equals(MENU_BUSCAR_MATAR)) {
+		if (!MENU.equals(MENU_ENFRENTAMENTO)) {
 			return;
 		}
 		int x = (int) (getWidth() / 2);
@@ -465,8 +470,8 @@ public class PainelMenu {
 		g2d.setColor(lightWhite);
 		g2d.fill(praiaRct);
 		if (MAPA_PRAIA.equals(mapaSelecionado)) {
-//			g2d.setColor(yel);
-//			g2d.draw(praiaRct);
+			// g2d.setColor(yel);
+			// g2d.draw(praiaRct);
 		}
 		g2d.setColor(Color.BLACK);
 		g2d.drawString(praiaTxt, x - 10, y + 15);
@@ -547,8 +552,9 @@ public class PainelMenu {
 	}
 
 	private void proximoMenu() {
-		if (MENU.equals(MENU_BUSCAR_MATAR)) {
+		if (MENU.equals(MENU_ENFRENTAMENTO)) {
 			mainFrame.criarJogoLocal(this);
+			MENU = CARREAGANDO;
 			return;
 		}
 		if (MENU.equals(MENU_SOBRE)) {
@@ -558,7 +564,7 @@ public class PainelMenu {
 	}
 
 	private void anteriorMenu() {
-		if (MENU.equals(MENU_BUSCAR_MATAR)) {
+		if (MENU.equals(MENU_ENFRENTAMENTO)) {
 			MENU = MENU_PRINCIPAL;
 			return;
 		}
