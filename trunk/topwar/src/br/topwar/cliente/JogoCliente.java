@@ -221,7 +221,7 @@ public class JogoCliente {
 							List<Point> linha = GeoUtil.drawBresenhamLine(
 									avatarCliente.getPontoAvatar(),
 									avatarCliente.getPontoAvatarSuave());
-							int noventaPorcento = (int) ((linha.size() * 0.9));
+							int noventaPorcento = (int) ((linha.size() * 0.8));
 							if (linha.size() > avatarCliente.getVelocidade()) {
 								avatarCliente.setPontoAvatarSuave(linha
 										.get(noventaPorcento));
@@ -229,6 +229,13 @@ public class JogoCliente {
 								Point point = linha.get(linha.size() - 2);
 								avatarCliente.setPontoAvatarSuave(point);
 							} else {
+								avatarCliente.setPontoAvatarSuave(avatarCliente
+										.getPontoAvatar());
+							}
+							if (avatarCliente.getPontoAvatarOld() != null
+									&& avatarCliente.getPontoAvatarOld()
+											.equals(avatarCliente
+													.getPontoAvatar())) {
 								avatarCliente.setPontoAvatarSuave(avatarCliente
 										.getPontoAvatar());
 							}

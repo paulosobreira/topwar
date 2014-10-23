@@ -43,6 +43,7 @@ public class ControleBots {
 	public void adicionarBots() {
 		try {
 			Integer numBots = jogoServidor.getDadosJogoTopWar().getNumBots();
+			Logger.logar("numBots " + numBots);
 			boolean botsVsHumans = jogoServidor.getDadosJogoTopWar()
 					.isBotsVsHumans();
 

@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
 import br.nnpe.GeoUtil;
+import br.nnpe.Logger;
 import br.nnpe.Util;
 import br.nnpe.cliente.NnpeApplet;
 import br.nnpe.cliente.NnpeChatCliente;
@@ -179,6 +180,8 @@ public class ControleCliente extends NnpeChatCliente {
 		String classe = painelMenu.getClasseSelecionada();
 		dadosJogoTopWar.setClasse(classe);
 		Integer numBots = painelMenu.getNumBotsSelecionado();
+		Logger.logar("painelMenu.getNumBotsSelecionado(); "
+				+ painelMenu.getNumBotsSelecionado());
 		dadosJogoTopWar.setNumBots(numBots);
 		dadosJogoTopWar.setBotsVsHumans(false);
 		// dadosJogoTopWar.setTempoJogo(painelMenu.getTempoJogoSelecionado());
@@ -313,6 +316,9 @@ public class ControleCliente extends NnpeChatCliente {
 		if (!Util.isNullOrEmpty(jogoCliente.getKillCam())) {
 			return null;
 		}
+		if (sessaoCliente == null) {
+			return null;
+		}
 		DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
 		acaoClienteTopWar.setNomeCliente(sessaoCliente.getNomeJogador());
 		acaoClienteTopWar.setAngulo(jogoCliente.getAngulo());
@@ -368,6 +374,9 @@ public class ControleCliente extends NnpeChatCliente {
 		if (!Util.isNullOrEmpty(jogoCliente.getKillCam())) {
 			return null;
 		}
+		if (sessaoCliente == null) {
+			return null;
+		}
 		if (verificaDelay()) {
 			return ConstantesTopWar.ESPERE;
 		}
@@ -400,6 +409,9 @@ public class ControleCliente extends NnpeChatCliente {
 	}
 
 	public Object obterPlacar() {
+		if (sessaoCliente == null) {
+			return null;
+		}
 		DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
 		acaoClienteTopWar.setNomeCliente(sessaoCliente.getNomeJogador());
 		acaoClienteTopWar.setAngulo(jogoCliente.getAngulo());
