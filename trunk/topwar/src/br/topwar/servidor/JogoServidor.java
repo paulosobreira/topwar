@@ -595,14 +595,14 @@ public class JogoServidor {
 	}
 
 	public boolean verificaFinalizado() {
+		if(!finalizado && (System.currentTimeMillis()-fimJogoMilis)<10000){
+			return false;
+		}
 		if (tempoRestanteJogo() <= 0) {
 			finalizado = true;
 		}
 		if (avatarTopWars.isEmpty()) {
 			finalizado = true;
-		}
-		if((System.currentTimeMillis()-fimJogoMilis)<10000){
-			finalizado = false;
 		}
 		return finalizado;
 	}

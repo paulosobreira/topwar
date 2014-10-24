@@ -34,6 +34,9 @@ public class ClienteLocal extends ControleCliente {
 
 	@Override
 	public Object enviarObjeto(NnpeTO nnpeTO) {
+		if(sessaoCliente==null){
+			return null;
+		}
 		sessaoCliente.setUlimaAtividade(System.currentTimeMillis());
 		nnpeTO.setSessaoCliente(sessaoCliente);
 		Object retorno = comandos.processarObjeto(nnpeTO);

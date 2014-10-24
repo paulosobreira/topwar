@@ -1,7 +1,6 @@
 package br.topwar.cliente;
 
 import java.awt.BorderLayout;
-import java.awt.Button;
 import java.awt.Cursor;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -16,8 +15,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 import java.io.ObjectInputStream;
-import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -35,7 +32,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
-import javax.swing.WindowConstants;
 
 import br.nnpe.GeoUtil;
 import br.nnpe.Logger;
@@ -46,13 +42,10 @@ import br.topwar.ConstantesTopWar;
 import br.topwar.recursos.CarregadorRecursos;
 import br.topwar.recursos.idiomas.Lang;
 import br.topwar.serial.MapaTopWar;
-import br.topwar.serial.ObjetoMapa;
-import br.topwar.servidor.JogoServidor;
-import br.topwar.tos.DadosAcaoClienteTopWar;
-import br.topwar.tos.ObjTopWar;
 import br.topwar.tos.DadosAvatar;
 import br.topwar.tos.DadosJogoTopWar;
 import br.topwar.tos.EventoJogo;
+import br.topwar.tos.ObjTopWar;
 import br.topwar.tos.PlacarTopWar;
 import br.topwar.tos.RadioMsg;
 
@@ -75,7 +68,6 @@ public class JogoCliente {
 	private ControleCliente controleCliente;
 	private DadosJogoTopWar dadosJogoTopWar;
 	private long millisSrv;
-	private int velocidade;
 	protected long atulaizaAvatarSleep = 30;
 	private int balas;
 	private int cartuchos;
@@ -485,14 +477,14 @@ public class JogoCliente {
 				atacar(500);
 			}
 			if (mirouAvatarAdversario && arma == ConstantesTopWar.ARMA_ASSAULT) {
-				atacar(200);
+				atacar(30);
 			}
 			if (mirouAvatarAdversario
 					&& arma == ConstantesTopWar.ARMA_MACHINEGUN) {
 				atacar(100);
 			}
 			if (mirouAvatarAdversario && arma == ConstantesTopWar.ARMA_FACA) {
-				atacar(100);
+				atacar(50);
 			}
 
 		}
@@ -865,7 +857,6 @@ public class JogoCliente {
 						time = avatarCliente.getTime();
 						arma = avatarCliente.getArma();
 						vida = avatarCliente.getVida();
-						velocidade = avatarCliente.getVelocidade();
 						pontoAvatar = avatarCliente.getPontoAvatar();
 						pontoAvatarDesenha = avatarCliente.getPontoDesenha();
 						if (vida <= 0) {
@@ -924,6 +915,9 @@ public class JogoCliente {
 	}
 
 	private void setarPontoMouseClicado(MouseEvent e) {
+		if(!isJogoEmAndamento()){
+			return;
+		}
 		Point descontoCentraliza = painelTopWar.getDescontoCentraliza();
 		if (pontoMouseClicado == null) {
 			pontoMouseClicado = new Point(e.getX() + descontoCentraliza.x,

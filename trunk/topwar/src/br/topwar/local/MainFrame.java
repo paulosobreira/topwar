@@ -194,6 +194,7 @@ public class MainFrame {
 	}
 
 	public void criarJogoLocal(PainelMenu painelMenu) {
+		servidorLocal.finalizaJogosServidor();
 		clienteLocal = new ClienteLocal(proxyComandos, topWarApplet);
 		if (clienteLocal.getJogoCliente() != null
 				&& clienteLocal.getJogoCliente().isJogoEmAndamento()) {

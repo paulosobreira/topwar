@@ -184,8 +184,7 @@ public class ControleCliente extends NnpeChatCliente {
 				+ painelMenu.getNumBotsSelecionado());
 		dadosJogoTopWar.setNumBots(numBots);
 		dadosJogoTopWar.setBotsVsHumans(false);
-		// dadosJogoTopWar.setTempoJogo(painelMenu.getTempoJogoSelecionado());
-		dadosJogoTopWar.setTempoJogo(1);
+		dadosJogoTopWar.setTempoJogo(painelMenu.getTempoJogoSelecionado());
 		nnpeTO.setData(dadosJogoTopWar);
 		Object ret = enviarObjeto(nnpeTO);
 		if (ret instanceof NnpeTO) {
@@ -285,7 +284,6 @@ public class ControleCliente extends NnpeChatCliente {
 		nnpeTO.setComando(ConstantesTopWar.MOVER);
 		nnpeTO.setData(acaoClienteTopWar);
 		Object ret = enviarObjeto(nnpeTO);
-		ultAcao = System.currentTimeMillis();
 		return ret;
 	}
 
@@ -388,9 +386,7 @@ public class ControleCliente extends NnpeChatCliente {
 		nnpeTO.setComando(ConstantesTopWar.MOVER_PONTO);
 		nnpeTO.setData(acaoClienteTopWar);
 		Object ret = enviarObjeto(nnpeTO);
-		ultAcao = System.currentTimeMillis();
 		return ret;
-
 	}
 
 	public Object alternaFaca() {
