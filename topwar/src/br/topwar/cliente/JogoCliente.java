@@ -407,6 +407,7 @@ public class JogoCliente {
 			recarregar();
 			return;
 		}
+		pararMovimentoMouse();
 		threadAtacar = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -429,6 +430,7 @@ public class JogoCliente {
 						while (controleCliente.verificaDelay()) {
 							Thread.sleep(deleyAtacar);
 						}
+						angulo = GeoUtil.calculaAngulo(pontoAvatar, pontoMouseMovendo, 90);
 						controleCliente.atacar();
 					}
 				} catch (Exception e) {
@@ -450,7 +452,6 @@ public class JogoCliente {
 		}
 		pontoMouseMovendo.x = e.getX() + descontoCentraliza.x;
 		pontoMouseMovendo.y = e.getY() + descontoCentraliza.y;
-		mirouAvatarAdversario = mirouAvatarAdversario(pontoMouseMovendo, arma);
 		atualizarAngulo();
 		atacarAlvoMirando();
 	}
@@ -463,6 +464,7 @@ public class JogoCliente {
 		threadAtacarAlvoMirando = new Thread(new Runnable() {
 			@Override
 			public void run() {
+				mirouAvatarAdversario = mirouAvatarAdversario(pontoMouseMovendo, arma);
 				while (mirouAvatarAdversario) {
 					if (mirouAvatarAdversario
 							&& arma == ConstantesTopWar.ARMA_SHOTGUN) {
