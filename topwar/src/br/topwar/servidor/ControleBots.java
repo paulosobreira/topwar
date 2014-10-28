@@ -59,6 +59,7 @@ public class ControleBots {
 				DadosJogoTopWar dadosJogoTopWar = new DadosJogoTopWar();
 				int botNumClass = Util.intervalo(0, 5);
 
+				botNumClass = 5;
 				switch (botNumClass) {
 				case 0:
 					dadosJogoTopWar.setClasse(ConstantesTopWar.MACHINEGUN);
