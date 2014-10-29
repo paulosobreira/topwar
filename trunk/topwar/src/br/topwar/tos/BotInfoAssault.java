@@ -41,6 +41,10 @@ public class BotInfoAssault extends BotInfoAbstract {
 					executouAcaoAtaque);
 		}
 		if (!executouAcaoAtaque) {
+			seguir();
+			if (!SEGUINDO.equals(getEstado())) {
+				patrulhar();
+			}
 			moverBot();
 		}
 

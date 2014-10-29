@@ -399,10 +399,6 @@ public abstract class BotInfoAbstract {
 	}
 
 	protected void moverBot() {
-		seguir();
-		if (!SEGUINDO.equals(getEstado())) {
-			patrulhar();
-		}
 		List<Point> lineMove = GeoUtil.drawBresenhamLine(
 				avatarTopWar.getPontoAvatar(), getPontoDestino());
 		if (lineMove.size() < avatarTopWar.getVelocidade()) {
