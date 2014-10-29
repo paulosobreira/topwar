@@ -106,7 +106,7 @@ public class BotInfoAssault extends BotInfoAbstract {
 		return executouAcaoAtaque;
 	}
 
-	protected boolean vaiSeguirInfiltrar() {
+	protected boolean seguindo() {
 		return false;
 	}
 

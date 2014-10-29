@@ -468,15 +468,15 @@ public class JogoCliente {
 				while (mirouAvatarAdversario) {
 					if (mirouAvatarAdversario
 							&& arma == ConstantesTopWar.ARMA_SHOTGUN) {
-						atacar(500);
+						atacar(200);
 					}
 					if (mirouAvatarAdversario
 							&& arma == ConstantesTopWar.ARMA_ASSAULT) {
-						atacar(50);
+						atacar(60);
 					}
 					if (mirouAvatarAdversario
 							&& arma == ConstantesTopWar.ARMA_MACHINEGUN) {
-						atacar(100);
+						atacar(80);
 					}
 					if (mirouAvatarAdversario
 							&& arma == ConstantesTopWar.ARMA_FACA) {

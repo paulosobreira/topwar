@@ -244,7 +244,8 @@ public abstract class BotInfoAbstract {
 		for (Iterator iterator = avataresDistancia.iterator(); iterator
 				.hasNext();) {
 			ObjTopWar objTopWar = (ObjTopWar) iterator.next();
-			if (ConstantesTopWar.ASSAULT.equals(objTopWar.getClasse())
+			if (avatarTopWar.getBotInfo() == null
+					|| ConstantesTopWar.ASSAULT.equals(objTopWar.getClasse())
 					|| (ConstantesTopWar.SHOTGUN.equals(objTopWar.getClasse()) || ConstantesTopWar.SHIELD
 							.equals(objTopWar.getClasse()))) {
 				return objTopWar;
@@ -253,10 +254,7 @@ public abstract class BotInfoAbstract {
 		return null;
 	}
 
-	private void segueAvatarInfiltrante() {
-		if (Math.random() < (tempoProcessaAcaoBot / 100.0)) {
-			return;
-		}
+	private void segueAvatar() {
 		List<ObjTopWar> avatarTopWarsCopia = jogoServidor
 				.getAvatarTopWarsCopia();
 		ObjTopWar avatarInfiltranteProximo = avatarInfiltranteProximo(
@@ -265,6 +263,10 @@ public abstract class BotInfoAbstract {
 			setPontoDestino(avatarInfiltranteProximo.getPontoAvatar());
 			setSeguindo(avatarInfiltranteProximo);
 			setEstado(SEGUINDO);
+		}else{
+			setPontoDestino(null);
+			setSeguindo(null);
+			setEstado(null);
 		}
 	}
 
@@ -301,16 +303,20 @@ public abstract class BotInfoAbstract {
 		return true;
 	}
 
+	protected void seguir() {
+		if (!seguindo()) {
+			setPontoDestino(null);
+			setSeguindo(null);
+			setEstado(null);
+			return;
+		}
+		segueAvatar();
+	}
+
 	/**
 	 * Patrulhando
 	 */
 	protected void patrulhar() {
-		if (getPontoDestino() != null) {
-			return;
-		}
-		if (vaiSeguirInfiltrar()) {
-			segueAvatarInfiltrante();
-		}
 		if (getPontoDestino() != null) {
 			return;
 		}
@@ -363,18 +369,10 @@ public abstract class BotInfoAbstract {
 		setEstado(BotInfoAssault.PATRULHANDO);
 	}
 
-	protected boolean vaiSeguirInfiltrar() {
-		if (ultimaGuia == null) {
-			return false;
-		}
-		if (seguindo == null || seguindo.getVida() < 0) {
-			return true;
-		}
-		if (GeoUtil.distaciaEntrePontos(avatarTopWar.getPontoAvatar(),
-				seguindo.getPontoAvatar()) > ConstantesTopWar.LIMITE_VISAO) {
-			return true;
-		}
-		return false;
+	protected boolean seguindo() {
+		return (seguindo != null && seguindo.getVida() > 0 && (GeoUtil
+				.distaciaEntrePontos(avatarTopWar.getPontoAvatar(),
+						seguindo.getPontoAvatar()) > ConstantesTopWar.LIMITE_VISAO));
 	}
 
 	protected boolean atacaComFaca(ObjTopWar avatarTopWarCopia) {
@@ -401,7 +399,10 @@ public abstract class BotInfoAbstract {
 	}
 
 	protected void moverBot() {
-		patrulhar();
+		seguir();
+		if (!SEGUINDO.equals(getEstado())) {
+			patrulhar();
+		}
 		List<Point> lineMove = GeoUtil.drawBresenhamLine(
 				avatarTopWar.getPontoAvatar(), getPontoDestino());
 		if (lineMove.size() < avatarTopWar.getVelocidade()) {
