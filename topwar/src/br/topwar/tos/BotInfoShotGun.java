@@ -104,7 +104,7 @@ public class BotInfoShotGun extends BotInfoAbstract {
 		return executouAcaoAtaque;
 	}
 
-	protected boolean vaiSeguirInfiltrar() {
+	protected boolean seguindo() {
 		return false;
 	}
 
