@@ -26,27 +26,31 @@ public class BotInfoAssault extends BotInfoAbstract {
 		if (avatarTopWar.getVida() <= 0) {
 			return;
 		}
-		Point pontoAvatar = avatarTopWar.getPontoAvatar();
-		if (pontoAvatar.equals(ptAtual)) {
-			contPtAtual++;
-		} else {
-			contPtAtual = 0;
-		}
-		ptAtual = pontoAvatar;
-		List<ObjTopWar> avatarTopWarsCopia = jogoServidor
-				.getAvatarTopWarsCopia();
-		boolean executouAcaoAtaque = false;
-		if (contPtAtual < 50) {
-			executouAcaoAtaque = seguirAtacarInimigo(avatarTopWarsCopia,
-					executouAcaoAtaque);
-		}
-		if (!executouAcaoAtaque) {
-			seguir();
-			if (!SEGUINDO.equals(getEstado())) {
-				patrulhar();
-			}
-			moverBot();
-		}
+		processaAvataresVisiveis(avatarTopWar, jogoServidor);
+		seguir();
+		moverBot();
+
+		// Point pontoAvatar = avatarTopWar.getPontoAvatar();
+		// if (pontoAvatar.equals(ptAtual)) {
+		// contPtAtual++;
+		// } else {
+		// contPtAtual = 0;
+		// }
+		// ptAtual = pontoAvatar;
+		// List<ObjTopWar> avatarTopWarsCopia = jogoServidor
+		// .getAvatarTopWarsCopia();
+		// boolean executouAcaoAtaque = false;
+		// if (contPtAtual < 50) {
+		// executouAcaoAtaque = seguirAtacarInimigo(avatarTopWarsCopia,
+		// executouAcaoAtaque);
+		// }
+		// if (!executouAcaoAtaque) {
+		// seguir();
+		// if (!SEGUINDO.equals(getEstado())) {
+		// patrulhar();
+		// }
+		// moverBot();
+		// }
 
 	}
 
@@ -55,9 +59,7 @@ public class BotInfoAssault extends BotInfoAbstract {
 	 */
 	protected boolean seguirAtacarInimigo(List<ObjTopWar> avatarTopWarsCopia,
 			boolean executouAcaoAtaque) {
-		List<ObjTopWar> avataresOrdenadosDistancia = ordenaDistanciaAvatarCampoVisaoTiro(
-				avatarTopWarsCopia, avatarTopWar, jogoServidor);
-		for (Iterator iterator2 = avataresOrdenadosDistancia.iterator(); iterator2
+		for (Iterator iterator2 = avataresVisiveis.iterator(); iterator2
 				.hasNext();) {
 			ObjTopWar avatarTopWarCopia = (ObjTopWar) iterator2.next();
 			if (avatarTopWar.getTime().equals(avatarTopWarCopia.getTime())

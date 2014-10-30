@@ -408,8 +408,14 @@ public class ObjTopWar {
 		return classe.toLowerCase(locale);
 	}
 
+	@Override
 	public String toString() {
-		return classe.toString();
+		return "ObjTopWar [time=" + time + ", nomeJogador=" + nomeJogador
+				+ ", pontoAvatar=" + pontoAvatar + ", angulo=" + angulo
+				+ ", tempoUtlAtaque=" + tempoUtlAtaque + ", vida=" + vida
+				+ ", velocidade=" + velocidade + ", arma=" + arma
+				+ ", rangeUtlDisparo=" + rangeUtlDisparo + ", invencivel="
+				+ invencivel + ", classe=" + classe + "]";
 	}
 
 	public String toUpperCase() {
