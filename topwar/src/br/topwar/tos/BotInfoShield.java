@@ -54,30 +54,31 @@ public class BotInfoShield extends BotInfoAbstract {
 	 */
 	protected boolean seguirAtacarInimigo(List<ObjTopWar> avatarTopWarsCopia,
 			boolean executouAcaoAtaque) {
-		List<ObjTopWar> avataresOrdenadosDistancia = ordenaDistanciaAvatarCampoVisaoTiro(
-				avatarTopWarsCopia, avatarTopWar, jogoServidor);
-		for (Iterator iterator2 = avataresOrdenadosDistancia.iterator(); iterator2
-				.hasNext();) {
-			ObjTopWar avatarTopWarCopia = (ObjTopWar) iterator2.next();
-			List<Point> line = GeoUtil.drawBresenhamLine(
-					avatarTopWar.getPontoAvatar(),
-					avatarTopWarCopia.getPontoAvatar());
-			if (!BotInfoShield.ATACANDO.equals(getEstado())) {
-				setPontoDestino(avatarTopWarCopia.getPontoAvatar());
-			} else if (line.size() < Util.intervalo(10, 30)) {
-				executouAcaoAtaque = atacaComFaca(avatarTopWarCopia);
-			} else {
-				if (avatarTopWar.getArma() == ConstantesTopWar.ARMA_FACA)
-					jogoServidor.alternarFaca(avatarTopWar);
-				avatarTopWar.setAngulo(GeoUtil.calculaAngulo(
-						avatarTopWar.getPontoAvatar(),
-						avatarTopWarCopia.getPontoAvatar(), 90));
-				setPontoDestino(avatarTopWarCopia.getPontoAvatar());
-			}
-			setEstado(BotInfoShield.ATACANDO);
-			break;
-		}
-		return executouAcaoAtaque;
+//		List<ObjTopWar> avataresOrdenadosDistancia = processaAvataresVisiveis(
+//				avatarTopWarsCopia, avatarTopWar, jogoServidor);
+//		for (Iterator iterator2 = avataresOrdenadosDistancia.iterator(); iterator2
+//				.hasNext();) {
+//			ObjTopWar avatarTopWarCopia = (ObjTopWar) iterator2.next();
+//			List<Point> line = GeoUtil.drawBresenhamLine(
+//					avatarTopWar.getPontoAvatar(),
+//					avatarTopWarCopia.getPontoAvatar());
+//			if (!BotInfoShield.ATACANDO.equals(getEstado())) {
+//				setPontoDestino(avatarTopWarCopia.getPontoAvatar());
+//			} else if (line.size() < Util.intervalo(10, 30)) {
+//				executouAcaoAtaque = atacaComFaca(avatarTopWarCopia);
+//			} else {
+//				if (avatarTopWar.getArma() == ConstantesTopWar.ARMA_FACA)
+//					jogoServidor.alternarFaca(avatarTopWar);
+//				avatarTopWar.setAngulo(GeoUtil.calculaAngulo(
+//						avatarTopWar.getPontoAvatar(),
+//						avatarTopWarCopia.getPontoAvatar(), 90));
+//				setPontoDestino(avatarTopWarCopia.getPontoAvatar());
+//			}
+//			setEstado(BotInfoShield.ATACANDO);
+//			break;
+//		}
+//		return executouAcaoAtaque;
+		return false;
 	}
 
 	protected boolean seguindo() {
