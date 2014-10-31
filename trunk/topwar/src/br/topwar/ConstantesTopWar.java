@@ -65,7 +65,6 @@ public class ConstantesTopWar {
 
 	public static final int HEADSHOT = 0;
 	public static final int LIMITE_VISAO = 450;
-	public static final long ATRASO_REDE_PADRAO_BOTS = (long) (ATRASO_REDE_PADRAO * 1.5);
 
 	/*
 	 * ASSAULT

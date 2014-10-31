@@ -44,7 +44,7 @@ public class BotInfoShotGun extends BotInfoAbstract {
 					executouAcaoAtaque);
 		}
 		if (!executouAcaoAtaque) {
-			moverBot();
+			moverDestino();
 		}
 
 	}

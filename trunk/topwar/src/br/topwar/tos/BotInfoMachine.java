@@ -44,7 +44,7 @@ public class BotInfoMachine extends BotInfoAbstract {
 					executouAcaoAtaque);
 		}
 		if (!executouAcaoAtaque) {
-			moverBot();
+			moverDestino();
 		}
 
 	}

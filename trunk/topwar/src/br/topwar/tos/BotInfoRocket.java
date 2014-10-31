@@ -44,7 +44,7 @@ public class BotInfoRocket extends BotInfoAbstract {
 					executouAcaoAtaque);
 		}
 		if (!executouAcaoAtaque) {
-			moverBot();
+			moverDestino();
 		}
 
 	}

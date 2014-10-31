@@ -24,6 +24,7 @@ public abstract class BotInfoAbstract {
 	protected List<ObjTopWar> avataresVisiveis = new ArrayList<ObjTopWar>();
 	protected JogoServidor jogoServidor;
 	protected Point pontoDestino;
+	protected Point pontoSeguindo;
 	protected int contPatrulha;
 	private int contGuia;
 	private int desvio;
@@ -31,7 +32,6 @@ public abstract class BotInfoAbstract {
 	protected Point ptAtual;
 	protected int contPtAtual;
 	protected int vidaUltAlvo;
-	protected String estado;
 	private long tempoProcessaAcaoBot = 0;
 
 	public long getTempoProcessaAcaoBot() {
@@ -70,14 +70,6 @@ public abstract class BotInfoAbstract {
 
 	public ObjTopWar getAvatarTopWar() {
 		return avatarTopWar;
-	}
-
-	public String getEstado() {
-		return estado;
-	}
-
-	public void setEstado(String estado) {
-		this.estado = estado;
 	}
 
 	public void setAvatarTopWar(ObjTopWar avatarTopWar) {
@@ -222,30 +214,32 @@ public abstract class BotInfoAbstract {
 		return null;
 	}
 
-	private void segueAvatar() {
-		setPontoDestino(null);
-		setSeguindo(null);
-		setEstado(null);
-		ObjTopWar avatarSeguir = avatarMesmoTimeSeguir(avatarTopWar);
-		Logger.logar("avatarSeguir " + avatarSeguir);
+	protected void segueAvatar() {
+		ObjTopWar avatarSeguir = getSeguindo();
+		if (avatarSeguir == null) {
+			avatarSeguir = avatarMesmoTimeSeguir(avatarTopWar);
+		}
 		if (avatarSeguir != null) {
+			if (getPontoSeguindo() == avatarSeguir.getPontoAvatar()) {
+				setPontoDestino(null);
+				return;
+			}
 			int distaciaEntrePontos = GeoUtil.distaciaEntrePontos(
 					avatarTopWar.getPontoAvatar(),
 					avatarSeguir.getPontoAvatar());
-			if (distaciaEntrePontos < 50) {
+			if (distaciaEntrePontos > ConstantesTopWar.LIMITE_VISAO) {
+				setSeguindo(null);
+				setPontoDestino(null);
+				return;
+			}
+			if (distaciaEntrePontos < Util.intervalo(50, 100)) {
+				setPontoDestino(null);
 				return;
 			}
 			setPontoDestino(avatarSeguir.getPontoAvatar());
 			setSeguindo(avatarSeguir);
-			setEstado(SEGUINDO);
-			System.out.println("SEGUINDO " + avatarSeguir.getNomeJogador());
-		} 
-		
-//		else {
-//			setPontoDestino(null);
-//			setSeguindo(null);
-//			setEstado(null);
-//		}
+			setPontoSeguindo(avatarSeguir.getPontoAvatar());
+		}
 	}
 
 	public void botVaiPontoAleatorio() {
@@ -281,27 +275,17 @@ public abstract class BotInfoAbstract {
 		return true;
 	}
 
-	protected void seguir() {
-		segueAvatar();
-		// if (!seguindo()) {
-		// } else {
-		// setPontoDestino(null);
-		// setSeguindo(null);
-		// setEstado(null);
-		// }
-	}
-
 	/**
 	 * Patrulhando
 	 */
 	protected void patrulhar() {
-		if (getPontoDestino() != null) {
+		if(getPontoDestino()!=null){
 			return;
 		}
 		if (vaiGuia()) {
 			List<ObjetoMapa> objetoMapaList = jogoServidor.getMapaTopWar()
 					.getObjetoMapaList();
-			ArrayList<Point> canidatos = new ArrayList<Point>();
+			ArrayList<Point> possiveisDestinos = new ArrayList<Point>();
 			for (Iterator iterator2 = objetoMapaList.iterator(); iterator2
 					.hasNext();) {
 				ObjetoMapa objetoMapa = (ObjetoMapa) iterator2.next();
@@ -320,14 +304,14 @@ public abstract class BotInfoAbstract {
 					if (getUltimaGuia() == null
 							|| jogoServidor.campoVisao(drawBresenhamLine,
 									avatarTopWar, true)) {
-						canidatos.add(analizar);
+						possiveisDestinos.add(analizar);
 					}
 				}
 			}
-			if (!canidatos.isEmpty()) {
-				Collections.shuffle(canidatos);
-				Point point = canidatos.get(Util.intervalo(0,
-						canidatos.size() - 1));
+			if (!possiveisDestinos.isEmpty()) {
+				Collections.shuffle(possiveisDestinos);
+				Point point = possiveisDestinos.get(Util.intervalo(0,
+						possiveisDestinos.size() - 1));
 				setPontoDestino(point);
 				setUltimaGuia(point);
 			} else {
@@ -344,13 +328,6 @@ public abstract class BotInfoAbstract {
 		} else {
 			botVaiPontoAleatorio();
 		}
-		setEstado(BotInfoAssault.PATRULHANDO);
-	}
-
-	protected boolean seguindo() {
-		return (seguindo != null && seguindo.getVida() > 0 && (GeoUtil
-				.distaciaEntrePontos(avatarTopWar.getPontoAvatar(),
-						seguindo.getPontoAvatar()) > ConstantesTopWar.LIMITE_VISAO));
 	}
 
 	protected boolean atacaComFaca(ObjTopWar avatarTopWarCopia) {
@@ -376,20 +353,17 @@ public abstract class BotInfoAbstract {
 		return executouAcaoAtaque;
 	}
 
-	protected void moverBot() {
+	protected void moverDestino() {
 		if (avatarTopWar.getPontoAvatar() == null) {
-			Logger.logar("moverBot()  avatarTopWar.getPontoAvatar() == null");
 			return;
 		}
 		if (getPontoDestino() == null) {
-			Logger.logar("moverBot()  getPontoDestino() == null");
 			return;
 		}
 		List<Point> lineMove = GeoUtil.drawBresenhamLine(
 				avatarTopWar.getPontoAvatar(), getPontoDestino());
 		if (lineMove.size() < avatarTopWar.getVelocidade()) {
 			setPontoDestino(null);
-			setEstado(null);
 		} else {
 			Point dstMover = lineMove.get(avatarTopWar.getVelocidade() - 1);
 			DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
@@ -405,5 +379,14 @@ public abstract class BotInfoAbstract {
 			}
 		}
 	}
+
+	public Point getPontoSeguindo() {
+		return pontoSeguindo;
+	}
+
+	public void setPontoSeguindo(Point pontoSeguindo) {
+		this.pontoSeguindo = pontoSeguindo;
+	}
+	
 
 }
