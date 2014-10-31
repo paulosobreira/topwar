@@ -44,7 +44,7 @@ public class BotInfoShield extends BotInfoAbstract {
 					executouAcaoAtaque);
 		}
 		if (!executouAcaoAtaque) {
-			moverBot();
+			moverDestino();
 		}
 
 	}

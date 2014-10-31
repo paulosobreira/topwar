@@ -39,9 +39,9 @@ public class ThreadBot implements Runnable {
 			}
 			long fim = (System.currentTimeMillis() - ini);
 			try {
-				long sleep = (ConstantesTopWar.ATRASO_REDE_PADRAO_BOTS) - fim;
-				if (sleep < 25) {
-					sleep = 25;
+				long sleep = (ConstantesTopWar.ATRASO_REDE_PADRAO) - fim;
+				if (sleep < 15) {
+					sleep = 15;
 				}
 				Thread.sleep(sleep);
 			} catch (InterruptedException e) {

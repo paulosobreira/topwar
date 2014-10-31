@@ -1,17 +1,14 @@
 package br.topwar.servidor;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import br.nnpe.Logger;
 import br.nnpe.NameGenerator;
 import br.nnpe.Util;
 import br.topwar.ConstantesTopWar;
 import br.topwar.local.ServidorLocal;
-import br.topwar.tos.ObjTopWar;
-import br.topwar.tos.BotInfoAssault;
 import br.topwar.tos.DadosJogoTopWar;
+import br.topwar.tos.ObjTopWar;
 
 public class ControleBots {
 
@@ -52,6 +49,7 @@ public class ControleBots {
 					&& numBots > 99) {
 				numBots = 99;
 			}
+			numBots = 3;
 			for (int i = 0; i < numBots; i++) {
 				String nome = "Bot " + i;
 				// while (nome == null)
