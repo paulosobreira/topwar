@@ -71,7 +71,6 @@ public class BotInfoAssault extends BotInfoAbstract {
 	private void tentarAtacar() {
 		if (contaInimigosVisiveis() > 0) {
 			System.out.println(avatarTopWar + " tentarAtacar()");
-			setSeguindo(null);
 			seguirAtacarInimigo();
 		}
 
@@ -85,6 +84,7 @@ public class BotInfoAssault extends BotInfoAbstract {
 	 * Seguir/Atacar avatar inimigo
 	 */
 	protected void seguirAtacarInimigo() {
+		setSeguindo(null);
 		setExecutouAcaoAtaque(false);
 		for (Iterator iterator2 = avataresVisiveis.iterator(); iterator2
 				.hasNext();) {
