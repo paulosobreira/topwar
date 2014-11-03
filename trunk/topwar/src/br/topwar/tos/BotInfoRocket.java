@@ -40,8 +40,8 @@ public class BotInfoRocket extends BotInfoAbstract {
 				.getAvatarTopWarsCopia();
 		boolean executouAcaoAtaque = false;
 		if (contPtAtual < 50) {
-			executouAcaoAtaque = seguirAtacarInimigo(avatarTopWarsCopia,
-					executouAcaoAtaque);
+//			executouAcaoAtaque = seguirAtacarInimigo(avatarTopWarsCopia,
+//					executouAcaoAtaque);
 		}
 		if (!executouAcaoAtaque) {
 			moverDestino();
@@ -52,8 +52,7 @@ public class BotInfoRocket extends BotInfoAbstract {
 	/**
 	 * Seguir/Atacar avatar inimigo
 	 */
-	protected boolean seguirAtacarInimigo(List<ObjTopWar> avatarTopWarsCopia,
-			boolean executouAcaoAtaque) {
+	protected void seguirAtacarInimigo() {
 
 //		List<ObjTopWar> avataresOrdenadosDistancia = processaAvataresVisiveis(
 //				avatarTopWarsCopia, avatarTopWar, jogoServidor);
@@ -102,7 +101,6 @@ public class BotInfoRocket extends BotInfoAbstract {
 //		}
 //
 //		return executouAcaoAtaque;
-		return false;
 	}
 
 	@Override
