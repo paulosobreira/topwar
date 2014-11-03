@@ -40,8 +40,8 @@ public class BotInfoSniper extends BotInfoAbstract {
 				.getAvatarTopWarsCopia();
 		boolean executouAcaoAtaque = false;
 		if (contPtAtual < 50) {
-			executouAcaoAtaque = seguirAtacarInimigo(avatarTopWarsCopia,
-					executouAcaoAtaque);
+//			executouAcaoAtaque = seguirAtacarInimigo(avatarTopWarsCopia,
+//					executouAcaoAtaque);
 		}
 		if (!executouAcaoAtaque) {
 			moverDestino();
@@ -52,8 +52,7 @@ public class BotInfoSniper extends BotInfoAbstract {
 	/**
 	 * Seguir/Atacar avatar inimigo
 	 */
-	protected boolean seguirAtacarInimigo(List<ObjTopWar> avatarTopWarsCopia,
-			boolean executouAcaoAtaque) {
+	protected void seguirAtacarInimigo() {
 //		for (Iterator iterator2 = avatarTopWarsCopia.iterator(); iterator2
 //				.hasNext();) {
 //			ObjTopWar avatarTopWarCopia = (ObjTopWar) iterator2.next();
@@ -113,7 +112,7 @@ public class BotInfoSniper extends BotInfoAbstract {
 //			}
 //
 //		}
-		return executouAcaoAtaque;
+//		return executouAcaoAtaque;
 	}
 
 	@Override
