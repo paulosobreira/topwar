@@ -52,7 +52,7 @@ public class BotInfoShotGun extends BotInfoAbstract {
 	/**
 	 * Seguir/Atacar avatar inimigo
 	 */
-	protected void seguirAtacarInimigo() {
+	protected void atacarInimigo() {
 
 //		List<ObjTopWar> avataresOrdenadosDistancia = processaAvataresVisiveis(
 //				avatarTopWarsCopia, avatarTopWar, jogoServidor);

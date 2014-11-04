@@ -595,7 +595,7 @@ public class JogoServidor {
 	}
 
 	public boolean verificaFinalizado() {
-		if(!finalizado && (System.currentTimeMillis()-fimJogoMilis)<10000){
+		if (!finalizado && (System.currentTimeMillis() - fimJogoMilis) < 10000) {
 			return false;
 		}
 		if (tempoRestanteJogo() <= 0) {
@@ -627,9 +627,10 @@ public class JogoServidor {
 	}
 
 	public Object atacar(ObjTopWar avatarAtacando, double angulo, int range) {
-//		if (!"TopWar".equals(avatarAtacando.getNomeJogador())) {
-//			return null;
-//		}
+		if (ConstantesTopWar.JOGADOR_INVENCIVEL
+				&& !"TopWar".equals(avatarAtacando.getNomeJogador())) {
+			return null;
+		}
 		if (!(ConstantesTopWar.ARMA_FACA == avatarAtacando.getArma() || ConstantesTopWar.ARMA_SHOTGUN == avatarAtacando
 				.getArma()))
 			avatarAtacando.setPontoDestinoMover(null);
