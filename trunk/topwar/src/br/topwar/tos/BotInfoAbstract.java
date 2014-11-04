@@ -7,7 +7,10 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
+import sun.util.logging.resources.logging;
+
 import br.nnpe.GeoUtil;
+import br.nnpe.Logger;
 import br.nnpe.Util;
 import br.topwar.ConstantesTopWar;
 import br.topwar.serial.ObjetoMapa;
@@ -50,7 +53,7 @@ public abstract class BotInfoAbstract {
 
 	public abstract void gerarDesvioBot();
 
-	protected abstract void seguirAtacarInimigo();
+	protected abstract void atacarInimigo();
 
 	public int getDesvio() {
 		return desvio;
@@ -404,6 +407,41 @@ public abstract class BotInfoAbstract {
 
 	public int contaInimigosVisiveis() {
 		return avataresTimeOposto.size();
+	}
+
+	public void procurarAbrigo() {
+		Logger.logar(avatarTopWar.getNomeJogador() + "  procurarAbrigo()");
+		int cont = 0;
+		while (cont < 100) {
+			botVaiPontoAleatorio();
+			if (verificaDestinoSeguroDosInimigos()) {
+				break;
+			}
+			cont++;
+		}
+	}
+
+	public boolean verificaDestinoSeguroDosInimigos() {
+		for (Iterator iterator = avataresTimeOposto.iterator(); iterator
+				.hasNext();) {
+			ObjTopWar objTopWarInimigo = (ObjTopWar) iterator.next();
+			if (!verificaPontoDestinoSeguro(objTopWarInimigo.getPontoAvatar())) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private boolean verificaPontoDestinoSeguro(Point inimigo) {
+		List<Point> linhaFuga = GeoUtil
+				.drawBresenhamLine(inimigo, pontoDestino);
+		for (Iterator iterator2 = linhaFuga.iterator(); iterator2.hasNext();) {
+			Point point = (Point) iterator2.next();
+			if (jogoServidor.verificaColisao(point)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

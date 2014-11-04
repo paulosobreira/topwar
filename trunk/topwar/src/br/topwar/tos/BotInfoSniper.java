@@ -52,7 +52,7 @@ public class BotInfoSniper extends BotInfoAbstract {
 	/**
 	 * Seguir/Atacar avatar inimigo
 	 */
-	protected void seguirAtacarInimigo() {
+	protected void atacarInimigo() {
 //		for (Iterator iterator2 = avatarTopWarsCopia.iterator(); iterator2
 //				.hasNext();) {
 //			ObjTopWar avatarTopWarCopia = (ObjTopWar) iterator2.next();

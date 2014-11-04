@@ -26,11 +26,13 @@ public class BotInfoAssault extends BotInfoAbstract {
 		if (avatarTopWar.getVida() <= 0) {
 			return;
 		}
+		setExecutouAcaoAtaque(false);
 		processaAvataresVisiveis(avatarTopWar, jogoServidor);
 		int contaInimigosVisiveis = contaInimigosVisiveis();
 		int contaAmigosVisiveis = contaAmigosVisiveis();
 
-		if (contaAmigosVisiveis < contaInimigosVisiveis) {
+		if (contaAmigosVisiveis < contaInimigosVisiveis
+				&& !verificaDestinoSeguroDosInimigos()) {
 			procurarAbrigo();
 		} else {
 			tentarAtacar();
@@ -44,53 +46,25 @@ public class BotInfoAssault extends BotInfoAbstract {
 			moverDestino();
 		}
 
-		// Point pontoAvatar = avatarTopWar.getPontoAvatar();
-		// if (pontoAvatar.equals(ptAtual)) {
-		// contPtAtual++;
-		// } else {
-		// contPtAtual = 0;
-		// }
-		// ptAtual = pontoAvatar;
-		// List<ObjTopWar> avatarTopWarsCopia = jogoServidor
-		// .getAvatarTopWarsCopia();
-		// boolean executouAcaoAtaque = false;
-		// if (contPtAtual < 50) {
-		// executouAcaoAtaque = seguirAtacarInimigo(avatarTopWarsCopia,
-		// executouAcaoAtaque);
-		// }
-		// if (!executouAcaoAtaque) {
-		// seguir();
-		// if (!SEGUINDO.equals(getEstado())) {
-		// patrulhar();
-		// }
-		// moverBot();
-		// }
-
 	}
 
 	private void tentarAtacar() {
 		if (contaInimigosVisiveis() > 0) {
-			System.out.println(avatarTopWar + " tentarAtacar()");
-			seguirAtacarInimigo();
+			atacarInimigo();
 		}
 
 	}
 
-	private void procurarAbrigo() {
-		System.out.println(avatarTopWar + " procurarAbrigo()");
-	}
-
 	/**
-	 * Seguir/Atacar avatar inimigo
+	 * Atacar avatar inimigo
 	 */
-	protected void seguirAtacarInimigo() {
+	protected void atacarInimigo() {
 		setSeguindo(null);
 		setExecutouAcaoAtaque(false);
-		for (Iterator iterator2 = avataresVisiveis.iterator(); iterator2
+		for (Iterator iterator2 = avataresTimeOposto.iterator(); iterator2
 				.hasNext();) {
 			ObjTopWar avatarTopWarCopia = (ObjTopWar) iterator2.next();
-			if (avatarTopWar.getTime().equals(avatarTopWarCopia.getTime())
-					|| avatarTopWarCopia.getVida() <= 0) {
+			if (avatarTopWarCopia.getVida() <= 0) {
 				continue;
 			}
 			if (ConstantesTopWar.OBJ_ROCKET == avatarTopWarCopia.getArma()) {
@@ -119,20 +93,30 @@ public class BotInfoAssault extends BotInfoAbstract {
 							avatarTopWar.getPontoAvatar(),
 							avatarTopWarCopia.getPontoAvatar(), 90));
 					vidaUltAlvo = avatarTopWar.getVida();
-					jogoServidor.atacar(avatarTopWar, avatarTopWar.getAngulo()
-							+ getDesvio(), Util.inte(line.size() * 1.5));
+					jogoServidor.atacar(avatarTopWar, avatarTopWar.getAngulo(),
+							Util.inte(line.size() * 1.5));
 					if (vidaUltAlvo != avatarTopWar.getVida()) {
 						executouAcaoAtaque = true;
-					} else {
-						setPontoDestino(avatarTopWarCopia.getPontoAvatar());
 					}
 				}
-			} else {
-				setPontoDestino(avatarTopWarCopia.getPontoAvatar());
 			}
 			break;
 		}
 		setExecutouAcaoAtaque(true);
+	}
+
+	protected void seguirInimigo() {
+		setSeguindo(null);
+		for (Iterator iterator2 = avataresTimeOposto.iterator(); iterator2
+				.hasNext();) {
+			ObjTopWar avatarTopWarCopia = (ObjTopWar) iterator2.next();
+			if (ConstantesTopWar.OBJ_ROCKET == avatarTopWarCopia.getArma()) {
+				continue;
+			}
+			setPontoDestino(avatarTopWarCopia.getPontoAvatar());
+			setSeguindo(avatarTopWarCopia);
+			break;
+		}
 	}
 
 	@Override
