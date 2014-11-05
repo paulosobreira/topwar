@@ -37,6 +37,7 @@ public abstract class BotInfoAbstract {
 	protected int contPtAtual;
 	protected int vidaUltAlvo;
 	private long tempoProcessaAcaoBot = 0;
+	private int seguindoParado;
 
 	public long getTempoProcessaAcaoBot() {
 		return tempoProcessaAcaoBot;
@@ -225,6 +226,12 @@ public abstract class BotInfoAbstract {
 		}
 		if (avatarSeguir != null) {
 			if (getPontoSeguindo() == avatarSeguir.getPontoAvatar()) {
+				seguindoParado++;
+			} else {
+				seguindoParado = 0;
+			}
+			if (seguindoParado > 100) {
+				setSeguindo(null);
 				return;
 			}
 			int distaciaEntrePontos = GeoUtil.distaciaEntrePontos(
