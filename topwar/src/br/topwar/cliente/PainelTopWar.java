@@ -41,7 +41,7 @@ import br.topwar.tos.RadioMsg;
 public class PainelTopWar {
 	private static final int FADE_MINIS = 100;
 	public final static Color transpPreto = new Color(0, 0, 0, 50);
-	public final static Color transpBranco = new Color(255, 255, 255, 150);
+	public final static Color transpBranco = ConstantesTopWar.lightWhite;
 	public final static Color transpVerde = new Color(0, 255, 0, 150);
 	public final static Color verdeEscuro = new Color(0, 155, 0);
 	private BufferedImage backGround;
@@ -121,11 +121,19 @@ public class PainelTopWar {
 			10);
 	private RoundRectangle2D voltaMenuPrincipalRect = new RoundRectangle2D.Double(
 			0, 0, 1, 1, 10, 10);
+
+	private RoundRectangle2D ajuda = new RoundRectangle2D.Double(0, 0, 1, 1,
+			10, 10);
 	private Rectangle limitesViewPort;
 	protected boolean cursor;
 	private int contMostraLag;
 	private AffineTransform translateObjetos;
 	private int contMostraFPS;
+	private boolean verControles = true;
+
+	public void setVerControles(boolean verControles) {
+		this.verControles = verControles;
+	}
 
 	public PainelTopWar(JogoCliente jogoCliente) {
 
@@ -183,7 +191,11 @@ public class PainelTopWar {
 
 	}
 
-	public boolean verificaComandoMudarClasse(Point p) {
+	public boolean verificaComando(Point p) {
+		if (ajuda.contains(p)) {
+			verControles = !verControles;
+			return true;
+		}
 		if (assautRect.contains(p)) {
 			jogoCliente.mudarClasse(ConstantesTopWar.ASSAULT);
 			return true;
@@ -212,6 +224,9 @@ public class PainelTopWar {
 	}
 
 	private void desenhaControleMudarClasse(Graphics2D graphics2d) {
+		if (!isVerControles()) {
+			return;
+		}
 		Rectangle limitesViewPort = (Rectangle) limitesViewPort();
 		Point o = new Point(limitesViewPort.x + 10, limitesViewPort.y
 				+ limitesViewPort.height - 80);
@@ -518,23 +533,45 @@ public class PainelTopWar {
 			desenhaObjetosDebug(graphics2d);
 			desenhaClicou(graphics2d);
 			desenhaVaiPara(graphics2d);
-			desenhaControleMudarClasse(graphics2d);
 			desenhaLag(graphics2d);
 			desenhaChat(graphics2d);
 			desenhaFPS(graphics2d);
+			desenhaAjuda(graphics2d);
+			desenhaControleMudarClasse(graphics2d);
 			desenhaVoltarMenuPrincipal(graphics2d);
+			desenhaInfoControles(graphics2d);
 		} catch (Exception e) {
 			Logger.logarExept(e);
 		}
 	}
 
+	private void desenhaAjuda(Graphics2D g2d) {
+		String msg = " ? ";
+		g2d.setColor(ConstantesTopWar.lightWhite);
+		int x = limitesViewPort.x + (limitesViewPort.width) - 50;
+		int y = limitesViewPort.y + 50;
+		ajuda.setFrame(x, y, 35, 35);
+		if (verControles) {
+			g2d.setColor(OcilaCor.geraOcila("desenhaAjuda",
+					ConstantesTopWar.lightYellow));
+		} else {
+			g2d.setColor(ConstantesTopWar.lightWhite);
+		}
+		g2d.fill(ajuda);
+		Font fontOri = g2d.getFont();
+		g2d.setFont(new Font(fontOri.getName(), Font.BOLD, 28));
+		g2d.setColor(Color.BLACK);
+		g2d.drawString(msg, x + 2, y + 26);
+		g2d.setFont(fontOri);
+	}
+
 	private void desenhaVoltarMenuPrincipal(Graphics2D g2d) {
-		if (jogoCliente.isJogoEmAndamento()) {
+		if (jogoCliente.isJogoEmAndamento() && !isVerControles()) {
 			voltaMenuPrincipalRect.setFrame(0, 0, 1, 1);
 			return;
 		}
 		int x = limitesViewPort.x + (int) (limitesViewPort.getWidth() / 2);
-		int y = limitesViewPort.y + (int) (limitesViewPort.getHeight()) - 50;
+		int y = limitesViewPort.y + (int) (limitesViewPort.getHeight()) - 200;
 		Font fontOri = g2d.getFont();
 		g2d.setFont(new Font(fontOri.getName(), Font.BOLD, 28));
 		g2d.setColor(transpBranco);
@@ -1292,7 +1329,6 @@ public class PainelTopWar {
 
 	protected void desenhaInfoJogo(Graphics2D g2d) {
 		desenhaInfoCima(g2d);
-		desenhaInfoControles(g2d);
 		desenhaInfoBaixo(g2d);
 		desenhaPlacar(g2d);
 		desenhaEventos(g2d);
@@ -1520,11 +1556,18 @@ public class PainelTopWar {
 
 	}
 
+	public boolean isVerControles() {
+		return verControles;
+	}
+
 	private void desenhaInfoControles(Graphics2D g2d) {
+		if (!isVerControles()) {
+			return;
+		}
 		Shape limitesViewPort = limitesViewPort();
 		int x = limitesViewPort.getBounds().x
 				+ (limitesViewPort.getBounds().width - 10);
-		int y = limitesViewPort.getBounds().y + 70;
+		int y = limitesViewPort.getBounds().y + 130;
 		Font fontOri = g2d.getFont();
 		g2d.setFont(new Font(fontOri.getName(), fontOri.getStyle(), 14));
 		g2d.setColor(ConstantesTopWar.lightWhite);
@@ -2054,6 +2097,12 @@ public class PainelTopWar {
 							.createTransformedShape(avatarCliente
 									.gerarCorpoSuave()));
 				}
+				graphics2d.setColor(transpBranco);
+				int meioLimite = (int) (avatarCliente.getLimiteVisao());
+				int limiteVisao = (int) avatarCliente.getLimiteVisao() * 2;
+				graphics2d.drawOval(pontoAvatar.x - meioLimite
+						- descontoCentraliza.x, pontoAvatar.y - meioLimite
+						- descontoCentraliza.y, limiteVisao, limiteVisao);
 			}
 			/**
 			 * Barra de Vida e Nome
@@ -2190,7 +2239,7 @@ public class PainelTopWar {
 		}
 		contMostraFPS++;
 		Point pointDesenhaFPS = new Point(limitesViewPort.x
-				+ (limitesViewPort.width) - 70, Util.inte(limitesViewPort.y
+				+ (limitesViewPort.width) - 75, Util.inte(limitesViewPort.y
 				+ limitesViewPort.getHeight() - 100));
 		g2d.setColor(transpBranco);
 		fps.setFrame(pointDesenhaFPS.x, pointDesenhaFPS.y, 65, 35);
@@ -2293,11 +2342,7 @@ public class PainelTopWar {
 			Graphics2D graphics2d, MapaTopWar mapaTopWar,
 			Ellipse2D ellipse2dCostas, AvatarCliente avatarCliente) {
 		List drawCircle = new ArrayList();
-		double limiteVisao = ConstantesTopWar.LIMITE_VISAO;
-		if (ConstantesTopWar.ARMA_SNIPER == avatarCliente.getArma()) {
-			limiteVisao = ConstantesTopWar.LIMITE_VISAO_SNIPER;
-		}
-
+		double limiteVisao = avatarCliente.getLimiteVisao();
 		for (double i = 0; i < 360; i += 10) {
 			drawCircle.add(GeoUtil.calculaPonto(i, (int) limiteVisao, desenha));
 		}

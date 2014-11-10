@@ -314,7 +314,7 @@ public class JogoCliente {
 					return;
 				}
 
-				if (painelTopWar.verificaComandoMudarClasse(e.getPoint())) {
+				if (painelTopWar.verificaComando(e.getPoint())) {
 					return;
 				}
 
@@ -430,7 +430,8 @@ public class JogoCliente {
 						while (controleCliente.verificaDelay()) {
 							Thread.sleep(deleyAtacar);
 						}
-						angulo = GeoUtil.calculaAngulo(pontoAvatar, pontoMouseMovendo, 90);
+						angulo = GeoUtil.calculaAngulo(pontoAvatar,
+								pontoMouseMovendo, 90);
 						controleCliente.atacar();
 					}
 				} catch (Exception e) {
@@ -464,7 +465,8 @@ public class JogoCliente {
 		threadAtacarAlvoMirando = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				mirouAvatarAdversario = mirouAvatarAdversario(pontoMouseMovendo, arma);
+				mirouAvatarAdversario = mirouAvatarAdversario(
+						pontoMouseMovendo, arma);
 				while (mirouAvatarAdversario) {
 					if (mirouAvatarAdversario
 							&& arma == ConstantesTopWar.ARMA_SHOTGUN) {
@@ -482,7 +484,8 @@ public class JogoCliente {
 							&& arma == ConstantesTopWar.ARMA_FACA) {
 						atacar(50);
 					}
-					mirouAvatarAdversario = mirouAvatarAdversario(pontoMouseMovendo, arma);
+					mirouAvatarAdversario = mirouAvatarAdversario(
+							pontoMouseMovendo, arma);
 				}
 			}
 		});
@@ -490,7 +493,7 @@ public class JogoCliente {
 	}
 
 	private void atualizarAngulo() {
-		if(seguirMouse){
+		if (seguirMouse) {
 			return;
 		}
 		if (threadAtualizaAngulo != null && threadAtualizaAngulo.isAlive()) {
@@ -498,7 +501,7 @@ public class JogoCliente {
 		}
 		if (pontoAvatar != null)
 			angulo = GeoUtil.calculaAngulo(pontoAvatar, pontoMouseMovendo, 90);
-		
+
 		threadAtualizaAngulo = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -744,6 +747,11 @@ public class JogoCliente {
 			@Override
 			public void keyPressed(final KeyEvent e) {
 				int keyCode = e.getKeyCode();
+				if (keyCode == KeyEvent.VK_ESCAPE) {
+					painelTopWar
+							.setVerControles(!painelTopWar.isVerControles());
+				}
+
 				if (keyCode == KeyEvent.VK_ENTER) {
 					modoTexto = !modoTexto;
 					if (!modoTexto) {

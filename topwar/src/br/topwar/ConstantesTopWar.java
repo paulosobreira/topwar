@@ -55,6 +55,7 @@ public class ConstantesTopWar {
 	public final static Color lightWhite = new Color(255, 255, 255, 150);
 	public final static Color lightBlu = new Color(180, 180, 255, 150);
 	public final static Color lightRed = new Color(255, 180, 180, 150);
+	public final static Color lightYellow = new Color(255, 255, 0, 150);
 	public static final String ATUALIZA_ANGULO = "ATUALIZA_ANGULO";
 	public static final String RECARREGAR = "R";
 	public static final long ATRASO_REDE_PADRAO = 120;
@@ -64,7 +65,7 @@ public class ConstantesTopWar {
 	public static final String ANGULO = "ANGULO";
 
 	public static final int HEADSHOT = 0;
-	public static final int LIMITE_VISAO = 450;
+	public static final int LIMITE_VISAO = 230;
 
 	/*
 	 * ASSAULT
@@ -96,7 +97,7 @@ public class ConstantesTopWar {
 	public static final int DESVIO_SNIPER = 0;
 	public static final int TEMPO_RECARGA_SNIPER = 3500;
 	public static final int VELOCIDADE_SNIPER = 6;
-	public static final double LIMITE_VISAO_SNIPER = LIMITE_VISAO * 1.2;
+	public static final double LIMITE_VISAO_SNIPER = LIMITE_VISAO * 1.3;
 	public static final int SNIPER_MAX_RANGE = 2000;
 	/*
 	 * MACHINEGUN
