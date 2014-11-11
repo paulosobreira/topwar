@@ -49,11 +49,9 @@ public class ControleBots {
 					&& numBots > 99) {
 				numBots = 99;
 			}
-			numBots = 6;
+			//numBots = 6;
 			for (int i = 0; i < numBots; i++) {
 				String nome = "Bot " + i;
-				// while (nome == null)
-				// nome = nameGenerator.compose(Util.intervalo(2, 3));
 				DadosJogoTopWar dadosJogoTopWar = new DadosJogoTopWar();
 				int botNumClass = Util.intervalo(0, 5);
 
