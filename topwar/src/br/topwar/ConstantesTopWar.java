@@ -65,7 +65,7 @@ public class ConstantesTopWar {
 	public static final String ANGULO = "ANGULO";
 
 	public static final int HEADSHOT = 0;
-	public static final int LIMITE_VISAO = 230;
+	public static final int LIMITE_VISAO = 250;
 
 	/*
 	 * ASSAULT

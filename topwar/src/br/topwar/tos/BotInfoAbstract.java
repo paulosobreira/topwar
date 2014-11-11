@@ -394,6 +394,9 @@ public abstract class BotInfoAbstract {
 					dstMover)) {
 				String mover = (String) jogoServidor.moverPontoAvatar(
 						avatarTopWar, acaoClienteTopWar);
+				if (avatarTopWar.getPontoAvatar().equals(getPontoSeguindo())) {
+					setPontoSeguindo(null);
+				}
 			} else {
 				setPontoDestino(null);
 			}
@@ -419,7 +422,7 @@ public abstract class BotInfoAbstract {
 	public void procurarAbrigo() {
 		Logger.logar(avatarTopWar.getNomeJogador() + "  procurarAbrigo()");
 		int cont = 0;
-		while (cont < 100) {
+		while (cont < 20) {
 			botVaiPontoAleatorio();
 			if (verificaDestinoSeguroDosInimigos()) {
 				break;
