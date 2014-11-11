@@ -699,7 +699,7 @@ public class PainelTopWar {
 	}
 
 	private void desenhaClicou(Graphics2D graphics2d) {
-		Point p = jogoCliente.getPontoMouseClicado();
+		Point p = jogoCliente.getPontoMouseClicadoDireito();
 		if (p != null
 				&& !jogoCliente.isSeguirMouse()
 				&& GeoUtil.distaciaEntrePontos(jogoCliente.getPontoAvatar(), p) > 10) {
@@ -868,7 +868,7 @@ public class PainelTopWar {
 				graphics2d.drawString("Velocidade " + velocidade,
 						limitesViewPort.x + 10, limitesViewPort.y + 70);
 				Point pontoAvatarLocal = jogoCliente.getPontoAvatar();
-				Point pontoMouseClicado = jogoCliente.getPontoMouseClicado();
+				Point pontoMouseClicado = jogoCliente.getPontoMouseClicadoDireito();
 				if (pontoMouseClicado != null && pontoAvatarLocal != null) {
 					graphics2d.drawLine(pontoAvatarLocal.x
 							- descontoCentraliza.x, pontoAvatarLocal.y
