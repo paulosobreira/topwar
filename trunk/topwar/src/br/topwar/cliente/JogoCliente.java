@@ -173,46 +173,27 @@ public class JogoCliente {
 						while (controleCliente.verificaDelay()) {
 							Thread.sleep(5);
 						}
-						if (pontoAvatar != null && pontoMouseMovendo != null) {
-							double calculaAngulo = GeoUtil.calculaAngulo(
-									pontoAvatar, pontoMouseMovendo, 90);
-							if (angulo != calculaAngulo) {
-								controleCliente.atualizaAngulo();
-								angulo = calculaAngulo;
+						if (atualizaAngulo()) {
+							continue;
+						}
+						Object atacar = null;
+						if (atacando) {
+							pararMovimentoMouse();
+							atacar = atacar();
+							if (ConstantesTopWar.OK.equals(atacar)) {
 								continue;
 							}
-						}
-						if (atacando) {
-							atacar();
-							continue;
 						}
 
 						mirouAvatarAdversario = mirouAvatarAdversario(
 								pontoMouseMovendo, arma);
 						while (mirouAvatarAdversario) {
-							if (mirouAvatarAdversario
-									&& arma == ConstantesTopWar.ARMA_SHOTGUN) {
-								Thread.sleep(200);
-								atacar();
-							}
-							if (mirouAvatarAdversario
-									&& arma == ConstantesTopWar.ARMA_ASSAULT) {
-								Thread.sleep(60);
-								atacar();
-							}
-							if (mirouAvatarAdversario
-									&& arma == ConstantesTopWar.ARMA_MACHINEGUN) {
-								Thread.sleep(80);
-								atacar();
-							}
-							if (mirouAvatarAdversario
-									&& arma == ConstantesTopWar.ARMA_FACA) {
-								Thread.sleep(50);
-								atacar();
-							}
-							mirouAvatarAdversario = mirouAvatarAdversario(
-									pontoMouseMovendo, arma);
+							pararMovimentoMouse();
+							atacar = atacar();
 							System.out.println("mirouAvatarAdversario");
+						}
+						if (ConstantesTopWar.OK.equals(atacar)
+								|| mirouAvatarAdversario) {
 							continue;
 						}
 
@@ -240,6 +221,19 @@ public class JogoCliente {
 		});
 		threadMouse.start();
 
+	}
+
+	protected boolean atualizaAngulo() {
+		if (pontoAvatar != null && pontoMouseMovendo != null) {
+			double calculaAngulo = GeoUtil.calculaAngulo(pontoAvatar,
+					pontoMouseMovendo, 90);
+			if (angulo != calculaAngulo) {
+				controleCliente.atualizaAngulo();
+				angulo = calculaAngulo;
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public Point getPontoMouseClicadoEsquerdo() {
@@ -445,18 +439,27 @@ public class JogoCliente {
 		return false;
 	}
 
-	protected void atacar() {
+	protected Object atacar() {
 		if (avatarClientes == null) {
-			return;
+			return null;
 		}
 		if (ConstantesTopWar.ARMA_FACA != arma && balas <= 0
 				&& arma != ConstantesTopWar.ARMA_SHIELD) {
 			recarregar();
 			atacando = false;
-			return;
+			return null;
 		}
-		controleCliente.atacar();
-		atacando = false;
+		Object atacar = controleCliente.atacar();
+		if (ConstantesTopWar.OK.equals(atacar)) {
+			atacando = false;
+			pararMovimentoMouse();
+		}
+		return atacar;
+	}
+
+	private void pararMovimentoMouse() {
+		pontoMouseClicadoDireito = null;
+		seguirMouse = false;
 	}
 
 	private void setarPontoMouseMover(MouseEvent e) {
@@ -664,6 +667,7 @@ public class JogoCliente {
 			public void keyPressed(final KeyEvent e) {
 				int keyCode = e.getKeyCode();
 				seguirMouse = false;
+				pontoMouseClicadoDireito = null;
 				if (keyCode == KeyEvent.VK_ESCAPE) {
 					painelTopWar
 							.setVerControles(!painelTopWar.isVerControles());
