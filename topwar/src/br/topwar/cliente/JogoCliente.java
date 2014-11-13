@@ -187,7 +187,7 @@ public class JogoCliente {
 
 						mirouAvatarAdversario = mirouAvatarAdversario(
 								pontoMouseMovendo, arma);
-						while (mirouAvatarAdversario) {
+						if (mirouAvatarAdversario) {
 							pararMovimentoMouse();
 							atacar = atacar();
 							System.out.println("mirouAvatarAdversario");
