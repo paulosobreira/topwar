@@ -460,6 +460,7 @@ public class JogoCliente {
 	private void pararMovimentoMouse() {
 		pontoMouseClicadoDireito = null;
 		seguirMouse = false;
+		Object moverPonto = controleCliente.moverPonto(null);
 	}
 
 	private void setarPontoMouseMover(MouseEvent e) {
