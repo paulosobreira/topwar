@@ -188,12 +188,12 @@ public class JogoCliente {
 						mirouAvatarAdversario = mirouAvatarAdversario(
 								pontoMouseMovendo, arma);
 						if (mirouAvatarAdversario) {
-							pararMovimentoMouse();
 							atacar = atacar();
 							System.out.println("mirouAvatarAdversario");
 						}
 						if (ConstantesTopWar.OK.equals(atacar)
 								|| mirouAvatarAdversario) {
+							pararMovimentoMouse();
 							continue;
 						}
 
