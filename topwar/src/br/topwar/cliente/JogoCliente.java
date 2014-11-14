@@ -173,6 +173,7 @@ public class JogoCliente {
 						while (controleCliente.verificaDelay()) {
 							Thread.sleep(5);
 						}
+						Thread.sleep(atulaizaAvatarSleep);
 						if (atualizaAngulo()) {
 							continue;
 						}
@@ -189,11 +190,11 @@ public class JogoCliente {
 								pontoMouseMovendo, arma);
 						if (mirouAvatarAdversario) {
 							atacar = atacar();
-							System.out.println("mirouAvatarAdversario");
 						}
 						if (ConstantesTopWar.OK.equals(atacar)
 								|| mirouAvatarAdversario) {
 							pararMovimentoMouse();
+							controleCliente.moverPonto(null);
 							continue;
 						}
 
@@ -211,7 +212,7 @@ public class JogoCliente {
 							}
 							continue;
 						}
-						Thread.sleep(atulaizaAvatarSleep);
+
 					} catch (InterruptedException e) {
 						interrupt = true;
 						e.printStackTrace();
@@ -452,7 +453,6 @@ public class JogoCliente {
 		Object atacar = controleCliente.atacar();
 		if (ConstantesTopWar.OK.equals(atacar)) {
 			atacando = false;
-			pararMovimentoMouse();
 		}
 		return atacar;
 	}
@@ -460,7 +460,6 @@ public class JogoCliente {
 	private void pararMovimentoMouse() {
 		pontoMouseClicadoDireito = null;
 		seguirMouse = false;
-		Object moverPonto = controleCliente.moverPonto(null);
 	}
 
 	private void setarPontoMouseMover(MouseEvent e) {
