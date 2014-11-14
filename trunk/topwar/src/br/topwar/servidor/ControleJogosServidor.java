@@ -199,8 +199,12 @@ public class ControleJogosServidor {
 		if (avatarTopWar == null) {
 			return null;
 		}
-		return jogoServidor.atacar(avatarTopWar, acaoClienteTopWar.getAngulo(),
+		Object atacar = jogoServidor.atacar(avatarTopWar, acaoClienteTopWar.getAngulo(),
 				acaoClienteTopWar.getRange());
+		if(ConstantesTopWar.OK.equals(atacar)){
+			avatarTopWar.setPontoDestinoMover(null);
+		}
+		return atacar;
 	}
 
 	public Object atualizaAngulo(NnpeTO nnpeTO) {
