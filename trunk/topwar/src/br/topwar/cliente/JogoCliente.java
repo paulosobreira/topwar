@@ -170,10 +170,11 @@ public class JogoCliente {
 				boolean interrupt = false;
 				while (jogoEmAndamento && !interrupt) {
 					try {
-						while (controleCliente.verificaDelay()) {
+						if (controleCliente.verificaDelay()) {
 							Thread.sleep(5);
+						} else {
+							Thread.sleep(atulaizaAvatarSleep);
 						}
-						Thread.sleep(atulaizaAvatarSleep);
 						if (atualizaAngulo()) {
 							continue;
 						}
@@ -451,9 +452,7 @@ public class JogoCliente {
 			return null;
 		}
 		Object atacar = controleCliente.atacar();
-		if (ConstantesTopWar.OK.equals(atacar)) {
-			atacando = false;
-		}
+		atacando = false;
 		return atacar;
 	}
 

@@ -443,6 +443,9 @@ public abstract class BotInfoAbstract {
 	}
 
 	private boolean verificaPontoDestinoSeguro(Point inimigo) {
+		if(inimigo==null || pontoDestino==null){
+			return false;
+		}
 		List<Point> linhaFuga = GeoUtil
 				.drawBresenhamLine(inimigo, pontoDestino);
 		for (Iterator iterator2 = linhaFuga.iterator(); iterator2.hasNext();) {
