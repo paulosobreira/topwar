@@ -2047,8 +2047,8 @@ public class PainelTopWar {
 					&& !avatarCliente.isLocal()) {
 				int distancia = (int) GeoUtil.distaciaEntrePontos(
 						jogoCliente.getPontoAvatar(), pontoAvatar);
-				if (distancia > 250) {
-					transp = (510 - (distancia - 200)) / 2;
+				if (distancia > 100) {
+					transp = (510 - distancia) / 2;
 					if (transp > 255) {
 						transp = 255;
 					}
