@@ -196,6 +196,11 @@ public class JogoCliente {
 								|| mirouAvatarAdversario) {
 							pararMovimentoMouse();
 							controleCliente.moverPonto(null);
+							if (ConstantesTopWar.ARMA_ASSAULT == arma) {
+								Thread.sleep(150);
+							} else {
+								Thread.sleep(1000);
+							}
 							continue;
 						}
 
@@ -397,6 +402,9 @@ public class JogoCliente {
 					return;
 				}
 				if (painelTopWar.verificaComando(e.getPoint())) {
+					return;
+				}
+				if(!isJogoEmAndamento()){
 					return;
 				}
 				if (MouseEvent.BUTTON1 == e.getButton()) {
