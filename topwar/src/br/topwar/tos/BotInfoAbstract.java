@@ -230,7 +230,7 @@ public abstract class BotInfoAbstract {
 			} else {
 				seguindoParado = 0;
 			}
-			if (seguindoParado > 100) {
+			if (seguindoParado > 30) {
 				setSeguindo(null);
 				return;
 			}
