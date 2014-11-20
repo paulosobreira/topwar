@@ -175,9 +175,6 @@ public class JogoCliente {
 						} else {
 							Thread.sleep(atulaizaAvatarSleep);
 						}
-						if (atualizaAngulo()) {
-							continue;
-						}
 						Object atacar = null;
 						if (atacando) {
 							pararMovimentoMouse();
@@ -189,6 +186,14 @@ public class JogoCliente {
 
 						mirouAvatarAdversario = mirouAvatarAdversario(
 								pontoMouseMovendo, arma);
+						if (ConstantesTopWar.ARMA_SHOTGUN == arma) {
+							int distaciaEntrePontos = GeoUtil
+									.distaciaEntrePontos(pontoAvatar,
+											pontoMouseMovendo);
+							if (distaciaEntrePontos > 100) {
+								mirouAvatarAdversario = false;
+							}
+						}
 						if (mirouAvatarAdversario) {
 							atacar = atacar();
 						}
@@ -204,6 +209,9 @@ public class JogoCliente {
 							continue;
 						}
 
+						if (atualizaAngulo()) {
+							continue;
+						}
 						if (seguirMouse) {
 							pontoMouseClicadoDireito = pontoMouseMovendo;
 						}
@@ -226,6 +234,7 @@ public class JogoCliente {
 				}
 			}
 		});
+		threadMouse.setPriority(Thread.MIN_PRIORITY);
 		threadMouse.start();
 
 	}
@@ -353,6 +362,9 @@ public class JogoCliente {
 				while (controleCliente.isComunicacaoServer() && jogoEmAndamento
 						&& !interrupt) {
 					try {
+						if (controleCliente.verificaDelay()) {
+							Thread.sleep(5);
+						}
 						synchronized (avatarClientes) {
 							atualizaListaAvatares();
 						}
@@ -396,7 +408,6 @@ public class JogoCliente {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				seguirMouse = false;
-				frameTopWar.requestFocus();
 				if (painelTopWar.verificaVoltaMenuPrincipal(e.getPoint())) {
 					controleCliente.voltaMenuPrincipal();
 					return;
@@ -404,7 +415,7 @@ public class JogoCliente {
 				if (painelTopWar.verificaComando(e.getPoint())) {
 					return;
 				}
-				if(!isJogoEmAndamento()){
+				if (!isJogoEmAndamento()) {
 					return;
 				}
 				if (MouseEvent.BUTTON1 == e.getButton()) {
@@ -417,6 +428,10 @@ public class JogoCliente {
 				if (e.getClickCount() > 1
 						&& MouseEvent.BUTTON3 == e.getButton()) {
 					seguirMouse = true;
+				} else {
+					System.out.println("seguirMouse = false;");
+					seguirMouse = false;
+					controleCliente.moverPonto(null);
 				}
 				super.mouseClicked(e);
 			}

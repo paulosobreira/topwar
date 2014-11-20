@@ -375,7 +375,7 @@ public class ControleCliente extends NnpeChatCliente {
 		if (sessaoCliente == null) {
 			return null;
 		}
-		if (verificaDelay()) {
+		if (verificaDelay() && p != null) {
 			return ConstantesTopWar.ESPERE;
 		}
 		DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
