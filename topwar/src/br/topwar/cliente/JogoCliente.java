@@ -408,6 +408,7 @@ public class JogoCliente {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				seguirMouse = false;
+				atacando = false;
 				if (painelTopWar.verificaVoltaMenuPrincipal(e.getPoint())) {
 					controleCliente.voltaMenuPrincipal();
 					return;
@@ -416,6 +417,9 @@ public class JogoCliente {
 					return;
 				}
 				if (!isJogoEmAndamento()) {
+					return;
+				}
+				if (avatarLocal.getVida() <= 0) {
 					return;
 				}
 				if (MouseEvent.BUTTON1 == e.getButton()) {
@@ -428,10 +432,6 @@ public class JogoCliente {
 				if (e.getClickCount() > 1
 						&& MouseEvent.BUTTON3 == e.getButton()) {
 					seguirMouse = true;
-				} else {
-					System.out.println("seguirMouse = false;");
-					seguirMouse = false;
-					controleCliente.moverPonto(null);
 				}
 				super.mouseClicked(e);
 			}
@@ -455,9 +455,7 @@ public class JogoCliente {
 			}
 			double distaciaEntrePontos = GeoUtil.distaciaEntrePontos(p,
 					avatarCliente.getPontoAvatar());
-			if (ConstantesTopWar.ARMA_FACA == arma && distaciaEntrePontos > 50) {
-				return false;
-			} else if (distaciaEntrePontos < 50) {
+			if (ConstantesTopWar.ARMA_FACA == arma && distaciaEntrePontos < 50) {
 				return true;
 			}
 		}
