@@ -123,6 +123,7 @@ public class PainelMenu {
 	public BufferedImage rocket;
 	public BufferedImage rocket_launcher;
 	private BufferedImage riot_shield;
+	private Thread renderThread = null;
 
 	{
 		assault = CarregadorRecursos.carregaBufferedImageTransparecia(
@@ -218,14 +219,17 @@ public class PainelMenu {
 
 	public void inicializar() {
 		MENU = MENU_PRINCIPAL;
-		renderThreadAlive = true;
+		renderThreadAlive = false;
+		if(renderThread!=null){
+			renderThread.interrupt();
+		}
 		mainFrame.getFrameTopWar().addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				processaClick(e);
 				super.mouseClicked(e);
 			}
 		});
-		Thread renderThread = new Thread(new Runnable() {
+		renderThread = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				int frames = 0;
@@ -259,6 +263,7 @@ public class PainelMenu {
 			}
 		});
 		iniciaRecursos();
+		renderThreadAlive = true;
 		renderThread.start();
 		desenhaCarregando = false;
 	}
