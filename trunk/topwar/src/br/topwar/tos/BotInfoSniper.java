@@ -40,8 +40,8 @@ public class BotInfoSniper extends BotInfoAbstract {
 				.getAvatarTopWarsCopia();
 		boolean executouAcaoAtaque = false;
 		if (contPtAtual < 50) {
-//			executouAcaoAtaque = seguirAtacarInimigo(avatarTopWarsCopia,
-//					executouAcaoAtaque);
+			// executouAcaoAtaque = seguirAtacarInimigo(avatarTopWarsCopia,
+			// executouAcaoAtaque);
 		}
 		if (!executouAcaoAtaque) {
 			moverDestino();
@@ -53,66 +53,50 @@ public class BotInfoSniper extends BotInfoAbstract {
 	 * Seguir/Atacar avatar inimigo
 	 */
 	protected void atacarInimigo() {
-//		for (Iterator iterator2 = avatarTopWarsCopia.iterator(); iterator2
-//				.hasNext();) {
-//			ObjTopWar avatarTopWarCopia = (ObjTopWar) iterator2.next();
-//			if (avatarTopWar.getTime().equals(avatarTopWarCopia.getTime())
-//					|| avatarTopWarCopia.getVida() <= 0) {
-//				continue;
-//			}
-//			if (ConstantesTopWar.OBJ_ROCKET == avatarTopWarCopia.getArma()) {
-//				continue;
-//			}
-//			if (GeoUtil.distaciaEntrePontos(avatarTopWar.getPontoAvatar(),
-//					avatarTopWarCopia.getPontoAvatar()) > ConstantesTopWar.LIMITE_VISAO_SNIPER) {
-//				continue;
-//			}
-//			List<Point> line = GeoUtil.drawBresenhamLine(
-//					avatarTopWar.getPontoAvatar(),
-//					avatarTopWarCopia.getPontoAvatar());
-//			if (jogoServidor.campoVisao(line, avatarTopWar, true)) {
-//				if (!BotInfoSniper.ATACANDO.equals(getEstado())) {
-//					setPontoDestino(avatarTopWarCopia.getPontoAvatar());
-//				} else if ((avatarTopWar.getBalas() != 0 || avatarTopWar
-//						.getCartuchos() != 0)
-//						&& avatarTopWar.getArma() == ConstantesTopWar.ARMA_FACA) {
-//					jogoServidor.alternarFaca(avatarTopWar);
-//					executouAcaoAtaque = true;
-//				} else if (line.size() < Util.intervalo(10, 30)) {
-//					executouAcaoAtaque = atacaComFaca(avatarTopWarCopia);
-//				} else if (avatarTopWar.getArma() != ConstantesTopWar.ARMA_FACA) {
-//					if (avatarTopWar.getBalas() == 0) {
-//						if (avatarTopWar.getCartuchos() == 0) {
-//							jogoServidor.alternarFaca(avatarTopWar);
-//							executouAcaoAtaque = true;
-//						} else {
-//							jogoServidor.recarregar(avatarTopWar);
-//							executouAcaoAtaque = true;
-//						}
-//					} else {
-//						avatarTopWar.setAngulo(GeoUtil.calculaAngulo(
-//								avatarTopWar.getPontoAvatar(),
-//								avatarTopWarCopia.getPontoAvatar(), 90));
-//
-//						vidaUltAlvo = avatarTopWar.getVida();
-//						jogoServidor.atacar(avatarTopWar,
-//								avatarTopWar.getAngulo() + getDesvio(),
-//								Util.inte(line.size() * 1.5));
-//						if (vidaUltAlvo != avatarTopWar.getVida()) {
-//							executouAcaoAtaque = true;
-//						} else {
-//							setPontoDestino(avatarTopWarCopia.getPontoAvatar());
-//						}
-//					}
-//				} else {
-//					setPontoDestino(avatarTopWarCopia.getPontoAvatar());
-//				}
-//				setEstado(BotInfoSniper.ATACANDO);
-//				break;
-//			}
-//
-//		}
-//		return executouAcaoAtaque;
+		setSeguindo(null);
+		setExecutouAcaoAtaque(false);
+		for (Iterator iterator2 = avataresTimeOposto.iterator(); iterator2
+				.hasNext();) {
+			ObjTopWar avatarTopWarCopia = (ObjTopWar) iterator2.next();
+			if (avatarTopWarCopia.getVida() <= 0) {
+				continue;
+			}
+			if (ConstantesTopWar.OBJ_ROCKET == avatarTopWarCopia.getArma()) {
+				continue;
+			}
+			List<Point> line = GeoUtil.drawBresenhamLine(
+					avatarTopWar.getPontoAvatar(),
+					avatarTopWarCopia.getPontoAvatar());
+			if ((avatarTopWar.getBalas() != 0 || avatarTopWar.getCartuchos() != 0)
+					&& avatarTopWar.getArma() == ConstantesTopWar.ARMA_FACA) {
+				jogoServidor.alternarFaca(avatarTopWar);
+				executouAcaoAtaque = true;
+			} else if (line.size() < Util.intervalo(15, 25)) {
+				executouAcaoAtaque = atacaComFaca(avatarTopWarCopia);
+			} else if (avatarTopWar.getArma() != ConstantesTopWar.ARMA_FACA) {
+				if (avatarTopWar.getBalas() == 0) {
+					if (avatarTopWar.getCartuchos() == 0) {
+						jogoServidor.alternarFaca(avatarTopWar);
+						executouAcaoAtaque = true;
+					} else {
+						jogoServidor.recarregar(avatarTopWar);
+						executouAcaoAtaque = true;
+					}
+				} else {
+					avatarTopWar.setAngulo(GeoUtil.calculaAngulo(
+							avatarTopWar.getPontoAvatar(),
+							avatarTopWarCopia.getPontoAvatar(), 90));
+					vidaUltAlvo = avatarTopWar.getVida();
+					jogoServidor.atacar(avatarTopWar, avatarTopWar.getAngulo(),
+							Util.inte(line.size() * 1.5));
+					if (vidaUltAlvo != avatarTopWar.getVida()) {
+						executouAcaoAtaque = true;
+					}
+				}
+			}
+			break;
+		}
+		setExecutouAcaoAtaque(true);
 	}
 
 	@Override

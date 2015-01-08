@@ -208,13 +208,12 @@ public abstract class BotInfoAbstract {
 			if (objTopWar.getBotInfo() == null) {
 				return objTopWar;
 			}
-			// if (avatarTopWar.getBotInfo() == null
-			// || ConstantesTopWar.ASSAULT.equals(objTopWar.getClasse())
-			// || (ConstantesTopWar.SHOTGUN.equals(objTopWar.getClasse()) ||
-			// ConstantesTopWar.SHIELD
-			// .equals(objTopWar.getClasse()))) {
-			// return objTopWar;
-			// }
+
+			if (!avatarTopWar.equals(objTopWar.getBotInfo().getSeguindo())
+					&& (ConstantesTopWar.SHIELD.equals(objTopWar.getClasse()) || (ConstantesTopWar.SHOTGUN
+							.equals(objTopWar.getClasse())))) {
+				return objTopWar;
+			}
 		}
 		return null;
 	}
@@ -443,7 +442,7 @@ public abstract class BotInfoAbstract {
 	}
 
 	private boolean verificaPontoDestinoSeguro(Point inimigo) {
-		if(inimigo==null || pontoDestino==null){
+		if (inimigo == null || pontoDestino == null) {
 			return false;
 		}
 		List<Point> linhaFuga = GeoUtil
