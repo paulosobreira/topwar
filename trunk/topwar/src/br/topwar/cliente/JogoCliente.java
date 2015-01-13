@@ -186,6 +186,9 @@ public class JogoCliente {
 
 						mirouAvatarAdversario = mirouAvatarAdversario(
 								pontoMouseMovendo, arma);
+						if (mirouAvatarAdversario) {
+							System.out.println("mirouAvatarAdversario");
+						}
 						if (ConstantesTopWar.ARMA_SHOTGUN == arma) {
 							int distaciaEntrePontos = GeoUtil
 									.distaciaEntrePontos(pontoAvatar,
@@ -204,7 +207,7 @@ public class JogoCliente {
 							if (ConstantesTopWar.ARMA_ASSAULT == arma) {
 								Thread.sleep(150);
 							} else {
-								Thread.sleep(1000);
+								Thread.sleep(200);
 							}
 							continue;
 						}
@@ -453,9 +456,12 @@ public class JogoCliente {
 			if (avatarCliente.getVida() <= 0) {
 				continue;
 			}
+			if (avatarCliente.equals(avatarLocal)) {
+				continue;
+			}
 			double distaciaEntrePontos = GeoUtil.distaciaEntrePontos(p,
 					avatarCliente.getPontoAvatar());
-			if (ConstantesTopWar.ARMA_FACA == arma && distaciaEntrePontos < 50) {
+			if (distaciaEntrePontos < 50) {
 				return true;
 			}
 		}
@@ -466,11 +472,21 @@ public class JogoCliente {
 		if (avatarClientes == null) {
 			return null;
 		}
+		if(pontoAvatar ==null){
+			return null;
+		}
 		if (ConstantesTopWar.ARMA_FACA != arma && balas <= 0
 				&& arma != ConstantesTopWar.ARMA_SHIELD) {
 			recarregar();
 			atacando = false;
 			return null;
+		}
+		if (pontoAvatar != null && pontoMouseMovendo != null) {
+			double calculaAngulo = GeoUtil.calculaAngulo(pontoAvatar,
+					pontoMouseMovendo, 90);
+			if (angulo != calculaAngulo) {
+				angulo = calculaAngulo;
+			}
 		}
 		Object atacar = controleCliente.atacar();
 		atacando = false;

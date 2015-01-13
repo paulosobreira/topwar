@@ -54,17 +54,17 @@ public class ControleBots {
 				String nome = "Bot " + i;
 				DadosJogoTopWar dadosJogoTopWar = new DadosJogoTopWar();
 				int botNumClass = Util.intervalo(0, 5);
-
-				botNumClass = 5;
 				switch (botNumClass) {
 				case 0:
 					dadosJogoTopWar.setClasse(ConstantesTopWar.MACHINEGUN);
 					break;
 				case 1:
-					dadosJogoTopWar.setClasse(ConstantesTopWar.SHOTGUN);
+					//dadosJogoTopWar.setClasse(ConstantesTopWar.SHOTGUN);
+					dadosJogoTopWar.setClasse(ConstantesTopWar.ASSAULT);
 					break;
 				case 2:
-					dadosJogoTopWar.setClasse(ConstantesTopWar.SHIELD);
+					//dadosJogoTopWar.setClasse(ConstantesTopWar.SHIELD);
+					dadosJogoTopWar.setClasse(ConstantesTopWar.ASSAULT);
 					break;
 				case 3:
 					dadosJogoTopWar.setClasse(ConstantesTopWar.SNIPER);

@@ -48,12 +48,6 @@ public class BotInfoAssault extends BotInfoAbstract {
 
 	}
 
-	private void tentarAtacar() {
-		if (contaInimigosVisiveis() > 0) {
-			atacarInimigo();
-		}
-
-	}
 
 	/**
 	 * Atacar avatar inimigo
