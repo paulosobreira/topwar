@@ -132,6 +132,6 @@ public class ConstantesTopWar {
 	public static final String RADIO_TIME = "RADIO_TIME";
 	public static final String RADIO_TODOS = "RADIO_TODOS";
 	public static final int NUMERO_JOGOS = 1;
-	public static final boolean JOGADOR_INVENCIVEL = false;
+	public static final boolean JOGADOR_INVENCIVEL = true;
 
 }

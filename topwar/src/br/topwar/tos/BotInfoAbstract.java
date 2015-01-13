@@ -456,4 +456,10 @@ public abstract class BotInfoAbstract {
 		return false;
 	}
 
+	protected void tentarAtacar() {
+		if (contaInimigosVisiveis() > 0) {
+			atacarInimigo();
+		}
+	}
+
 }
