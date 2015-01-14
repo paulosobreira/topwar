@@ -690,25 +690,28 @@ public class PainelTopWar {
 	private void desenhaVaiPara(Graphics2D graphics2d) {
 		Point p = jogoCliente.getPontoMouseMovendo();
 		if (jogoCliente.getPontoMouseMovendo() != null
-				&& jogoCliente.isSeguirMouse()) {
+				&& jogoCliente.isSeguirMouse()
+				&& GeoUtil.distaciaEntrePontos(p, avatarLocal.getPontoAvatar()) > 10) {
 			graphics2d.drawImage(ImageUtil.geraResize(
 					OcilaCor.geraOcila("vaiaqui", vaiAqui), 1.5), p.x
 					- descontoCentraliza.x, p.y - descontoCentraliza.y - 12,
 					null);
+		} else {
+			p = jogoCliente.getPontoMouseClicadoDireito();
+			if (p != null
+					&& GeoUtil.distaciaEntrePontos(p,
+							avatarLocal.getPontoAvatar()) > 10) {
+				graphics2d.drawImage(
+						ImageUtil.geraResize(
+								OcilaCor.geraOcila("vaiaqui", vaiAqui), 1.5),
+						p.x - descontoCentraliza.x, p.y - descontoCentraliza.y
+								- 12, null);
+			}
 		}
+
 	}
 
 	private void desenhaClicou(Graphics2D graphics2d) {
-		Point p = jogoCliente.getPontoMouseClicadoDireito();
-		if (p != null
-				&& !jogoCliente.isSeguirMouse()
-				&& GeoUtil.distaciaEntrePontos(jogoCliente.getPontoAvatar(), p) > 10) {
-			graphics2d.drawImage(ImageUtil.geraResize(
-					OcilaCor.geraOcila("vaiaqui", vaiAqui), 1.5), p.x
-					- descontoCentraliza.x - 12, p.y - descontoCentraliza.y
-					- 12, null);
-		}
-
 	}
 
 	private void desenhaBackGround(Graphics2D g2d) {
@@ -868,7 +871,8 @@ public class PainelTopWar {
 				graphics2d.drawString("Velocidade " + velocidade,
 						limitesViewPort.x + 10, limitesViewPort.y + 70);
 				Point pontoAvatarLocal = jogoCliente.getPontoAvatar();
-				Point pontoMouseClicado = jogoCliente.getPontoMouseClicadoDireito();
+				Point pontoMouseClicado = jogoCliente
+						.getPontoMouseClicadoDireito();
 				if (pontoMouseClicado != null && pontoAvatarLocal != null) {
 					graphics2d.drawLine(pontoAvatarLocal.x
 							- descontoCentraliza.x, pontoAvatarLocal.y

@@ -5,30 +5,22 @@ import java.awt.Container;
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
 
 import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JRootPane;
+import javax.swing.WindowConstants;
 
-import br.nnpe.ImageUtil;
 import br.nnpe.Logger;
 import br.topwar.ProxyComandos;
 import br.topwar.cliente.JogoCliente;
 import br.topwar.cliente.TopWarAppletLocal;
-import br.topwar.recursos.CarregadorRecursos;
 import br.topwar.recursos.idiomas.Lang;
 
 public class MainFrame {
@@ -65,13 +57,25 @@ public class MainFrame {
 		frameTopWar.setVisible(visivel);
 		painelMenu = new PainelMenu(this);
 		frameTopWar.setSize(800, 600);
+		frameTopWar.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		WindowListener[] listeners = frameTopWar.getWindowListeners();
+		for (int i = 0; i < listeners.length; i++) {
+			frameTopWar.removeWindowListener(listeners[i]);
+		}
 		frameTopWar.addWindowListener(new WindowAdapter() {
 			@Override
-			public void windowClosed(WindowEvent e) {
+			public void windowClosing(WindowEvent e) {
+				int ret = JOptionPane.showConfirmDialog(frameTopWar,
+						Lang.msg("confirmaSair"), Lang.msg("sair"),
+						JOptionPane.YES_NO_OPTION);
+				if (ret == JOptionPane.NO_OPTION) {
+					return;
+				}
 				clienteLocal.sairJogo();
 				clienteLocal.getJogoCliente().matarTodasThreads();
 				servidorLocal.finalizaJogosServidor();
-				super.windowClosed(e);
+				super.windowClosing(e);
+				System.exit(0);
 			}
 		});
 	}
