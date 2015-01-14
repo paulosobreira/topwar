@@ -183,21 +183,11 @@ public class JogoCliente {
 								continue;
 							}
 						}
-
 						mirouAvatarAdversario = mirouAvatarAdversario(
 								pontoMouseMovendo, arma);
-						if (mirouAvatarAdversario) {
-							System.out.println("mirouAvatarAdversario");
-						}
-						if (ConstantesTopWar.ARMA_SHOTGUN == arma) {
-							int distaciaEntrePontos = GeoUtil
-									.distaciaEntrePontos(pontoAvatar,
-											pontoMouseMovendo);
-							if (distaciaEntrePontos > 100) {
-								mirouAvatarAdversario = false;
-							}
-						}
-						if (mirouAvatarAdversario) {
+						if (mirouAvatarAdversario
+								&& ConstantesTopWar.ARMA_ROCKET != arma
+								&& ConstantesTopWar.ARMA_SNIPER != arma) {
 							atacar = atacar();
 						}
 						if (ConstantesTopWar.OK.equals(atacar)
@@ -211,7 +201,6 @@ public class JogoCliente {
 							}
 							continue;
 						}
-
 						if (atualizaAngulo()) {
 							continue;
 						}
@@ -223,10 +212,6 @@ public class JogoCliente {
 										.equals(pontoAvatar)) {
 							Object moverPonto = controleCliente
 									.moverPonto(pontoMouseClicadoDireito);
-							if (ConstantesTopWar.ESPERE.equals(moverPonto)
-									|| moverPonto == null) {
-								pontoMouseClicadoDireito = null;
-							}
 							continue;
 						}
 
@@ -461,6 +446,14 @@ public class JogoCliente {
 			}
 			double distaciaEntrePontos = GeoUtil.distaciaEntrePontos(p,
 					avatarCliente.getPontoAvatar());
+			if (ConstantesTopWar.ARMA_SHOTGUN == arma
+					&& distaciaEntrePontos > 100) {
+				return false;
+			}
+			if (ConstantesTopWar.ARMA_FACA == arma && distaciaEntrePontos > 50) {
+				return false;
+			}
+
 			if (distaciaEntrePontos < 50) {
 				return true;
 			}
@@ -472,7 +465,7 @@ public class JogoCliente {
 		if (avatarClientes == null) {
 			return null;
 		}
-		if(pontoAvatar ==null){
+		if (pontoAvatar == null) {
 			return null;
 		}
 		if (ConstantesTopWar.ARMA_FACA != arma && balas <= 0
