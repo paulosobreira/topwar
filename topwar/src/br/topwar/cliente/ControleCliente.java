@@ -263,8 +263,7 @@ public class ControleCliente extends NnpeChatCliente {
 
 	public String getNomeJogador() {
 		if (sessaoCliente == null) {
-			logar();
-			return "Sem Sessao";
+			return null;
 		}
 		return sessaoCliente.getNomeJogador();
 	}

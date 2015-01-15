@@ -39,6 +39,7 @@ import br.nnpe.Util;
 import br.nnpe.cliente.NnpeApplet;
 import br.nnpe.tos.NnpeTO;
 import br.topwar.ConstantesTopWar;
+import br.topwar.local.ClienteLocal;
 import br.topwar.recursos.CarregadorRecursos;
 import br.topwar.recursos.idiomas.Lang;
 import br.topwar.serial.MapaTopWar;
@@ -161,6 +162,27 @@ public class JogoCliente {
 		iniciaThreadAtualizaDadosServidor();
 		iniciaThreadAtualizaPosAvatar();
 		iniciaThreadMouse();
+		iniciaTimerMostarAjuda();
+	}
+
+	private void iniciaTimerMostarAjuda() {
+		Thread thread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(5000);
+					System.out.println("iniciaTimerMostarAjuda");
+					if (!painelTopWar.isEscondeuControles()) {
+						painelTopWar.setVerControles(false);
+					}
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+
+			}
+		});
+		thread.start();
+
 	}
 
 	private void iniciaThreadMouse() {
@@ -588,9 +610,11 @@ public class JogoCliente {
 		frameTopWar.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				jogoEmAndamento = false;
-				controleCliente.sairJogo();
-				matarTodasThreads();
+				if (!(controleCliente instanceof ClienteLocal)) {
+					jogoEmAndamento = false;
+					controleCliente.sairJogo();
+					matarTodasThreads();
+				}
 				super.windowClosing(e);
 			}
 		});
@@ -832,8 +856,9 @@ public class JogoCliente {
 					avatarCliente.setPontoAvatarOld(avatarCliente
 							.getPontoAvatar());
 					avatarCliente.setAvatarTopWar(avatarTopWar);
-					if (controleCliente.getNomeJogador().equals(
-							avatarTopWar.getNomeJogador())) {
+					if (controleCliente.getNomeJogador() != null
+							&& controleCliente.getNomeJogador().equals(
+									avatarTopWar.getNomeJogador())) {
 						avatarCliente.setLocal(true);
 						anguloServidor = avatarCliente.getAngulo();
 						time = avatarCliente.getTime();
