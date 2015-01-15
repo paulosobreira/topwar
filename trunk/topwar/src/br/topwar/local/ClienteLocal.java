@@ -57,4 +57,9 @@ public class ClienteLocal extends ControleCliente {
 		}
 		return retorno;
 	}
+	
+	@Override
+	public String getNomeJogador() {
+		return "TopWar";
+	}
 }

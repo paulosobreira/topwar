@@ -130,9 +130,21 @@ public class PainelTopWar {
 	private AffineTransform translateObjetos;
 	private int contMostraFPS;
 	private boolean verControles = true;
+	private boolean escondeuControles = false;
 
 	public void setVerControles(boolean verControles) {
+		if (!verControles) {
+			escondeuControles = true;
+		}
 		this.verControles = verControles;
+	}
+
+	public boolean isEscondeuControles() {
+		return escondeuControles;
+	}
+
+	public void setEscondeuControles(boolean escondeuControles) {
+		this.escondeuControles = escondeuControles;
 	}
 
 	public PainelTopWar(JogoCliente jogoCliente) {

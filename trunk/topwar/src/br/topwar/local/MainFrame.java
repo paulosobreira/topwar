@@ -58,10 +58,6 @@ public class MainFrame {
 		painelMenu = new PainelMenu(this);
 		frameTopWar.setSize(800, 600);
 		frameTopWar.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-		WindowListener[] listeners = frameTopWar.getWindowListeners();
-		for (int i = 0; i < listeners.length; i++) {
-			frameTopWar.removeWindowListener(listeners[i]);
-		}
 		frameTopWar.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -74,8 +70,8 @@ public class MainFrame {
 				clienteLocal.sairJogo();
 				clienteLocal.getJogoCliente().matarTodasThreads();
 				servidorLocal.finalizaJogosServidor();
-				super.windowClosing(e);
 				System.exit(0);
+				super.windowClosing(e);
 			}
 		});
 	}

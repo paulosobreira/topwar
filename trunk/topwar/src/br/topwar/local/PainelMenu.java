@@ -219,10 +219,7 @@ public class PainelMenu {
 
 	public void inicializar() {
 		MENU = MENU_PRINCIPAL;
-		renderThreadAlive = false;
-		if(renderThread!=null){
-			renderThread.interrupt();
-		}
+		matarThreadRender();
 		mainFrame.getFrameTopWar().addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				processaClick(e);
@@ -266,6 +263,13 @@ public class PainelMenu {
 		renderThreadAlive = true;
 		renderThread.start();
 		desenhaCarregando = false;
+	}
+
+	private void matarThreadRender() {
+		renderThreadAlive = false;
+		if(renderThread!=null){
+			renderThread.interrupt();
+		}
 	}
 
 	protected void processaClick(MouseEvent e) {
@@ -560,6 +564,7 @@ public class PainelMenu {
 		if (MENU.equals(MENU_ENFRENTAMENTO)) {
 			mainFrame.criarJogoLocal(this);
 			MENU = CARREAGANDO;
+			matarThreadRender();
 			return;
 		}
 		if (MENU.equals(MENU_SOBRE)) {
