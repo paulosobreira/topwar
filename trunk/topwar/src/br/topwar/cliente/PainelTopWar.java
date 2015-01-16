@@ -1448,15 +1448,16 @@ public class PainelTopWar {
 	// Set desenhaImprime = new HashSet();
 
 	private void desenhaPlacar(Graphics2D g2d) {
-		if (tabCont <= 0) {
-			return;
-		}
-		if (jogoCliente.isJogoEmAndamento())
+		if (jogoCliente.isJogoEmAndamento()){
+			if (tabCont <= 0) {
+				return;
+			}
 			tabCont--;
+		}
 		Shape limitesViewPort = limitesViewPort();
 		int meio = limitesViewPort.getBounds().x
 				+ limitesViewPort.getBounds().width / 2;
-		int y = limitesViewPort.getBounds().y + 100;
+		int y = limitesViewPort.getBounds().y + 125;
 
 		/**
 		 * Blues
