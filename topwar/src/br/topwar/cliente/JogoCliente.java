@@ -171,7 +171,6 @@ public class JogoCliente {
 			public void run() {
 				try {
 					Thread.sleep(5000);
-					System.out.println("iniciaTimerMostarAjuda");
 					if (!painelTopWar.isEscondeuControles()) {
 						painelTopWar.setVerControles(false);
 					}
@@ -207,9 +206,7 @@ public class JogoCliente {
 						}
 						mirouAvatarAdversario = mirouAvatarAdversario(
 								pontoMouseMovendo, arma);
-						if (mirouAvatarAdversario
-								&& ConstantesTopWar.ARMA_ROCKET != arma
-								&& ConstantesTopWar.ARMA_SNIPER != arma) {
+						if (mirouAvatarAdversario) {
 							atacar = atacar();
 						}
 						if (ConstantesTopWar.OK.equals(atacar)
@@ -469,13 +466,26 @@ public class JogoCliente {
 			double distaciaEntrePontos = GeoUtil.distaciaEntrePontos(p,
 					avatarCliente.getPontoAvatar());
 			if (ConstantesTopWar.ARMA_SHOTGUN == arma
-					&& distaciaEntrePontos > 100) {
+					&& distaciaEntrePontos < 100) {
+				int distaciaEntreAvatares = GeoUtil.distaciaEntrePontos(
+						avatarCliente.getPontoAvatar(),
+						avatarLocal.getPontoAvatar());
+				if (distaciaEntreAvatares > 100) {
+					return false;
+				}
+			}
+			if (ConstantesTopWar.ARMA_FACA == arma && distaciaEntrePontos < 30) {
+				int distaciaEntreAvatares = GeoUtil.distaciaEntrePontos(
+						avatarCliente.getPontoAvatar(),
+						avatarLocal.getPontoAvatar());
+				if (distaciaEntreAvatares > 30) {
+					return false;
+				}
+			}
+			if (ConstantesTopWar.ARMA_SNIPER == arma
+					&& distaciaEntrePontos > 10) {
 				return false;
 			}
-			if (ConstantesTopWar.ARMA_FACA == arma && distaciaEntrePontos > 50) {
-				return false;
-			}
-
 			if (distaciaEntrePontos < 50) {
 				return true;
 			}
@@ -568,7 +578,7 @@ public class JogoCliente {
 				NnpeTO nnpeTO = (NnpeTO) controleCliente.obterPlacar();
 				if (nnpeTO != null) {
 					placar = (List<PlacarTopWar>) nnpeTO.getData();
-					painelTopWar.setTabCont(100);
+					painelTopWar.setTabCont(500);
 					painelTopWar.atualiza();
 				}
 			}
@@ -765,7 +775,7 @@ public class JogoCliente {
 					}
 					NnpeTO nnpeTO = (NnpeTO) controleCliente.obterPlacar();
 					placar = (List<PlacarTopWar>) nnpeTO.getData();
-					painelTopWar.setTabCont(100);
+					painelTopWar.setTabCont(500);
 				}
 
 				if (keyCode == KeyEvent.VK_F11) {
