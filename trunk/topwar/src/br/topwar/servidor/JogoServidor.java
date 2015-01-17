@@ -59,6 +59,7 @@ public class JogoServidor {
 		controleBots = new ControleBots(this, controleJogosServidor);
 		carregarMapa(dadosJogoTopWar);
 		incluirAvatarCriadorJogo(dadosJogoTopWar);
+//		iniciarContadorTempoJogo(1);
 		iniciarContadorTempoJogo(dadosJogoTopWar.getTempoJogo());
 		iniciaMonitorDeJogo();
 		controleBots.adicionarBots();

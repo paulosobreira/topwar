@@ -386,6 +386,15 @@ public class JogoCliente {
 						Thread.sleep(sleep);
 						if (tempoRestanteJogo <= 0) {
 							jogoEmAndamento = false;
+						} else if (tempoRestanteJogo < 500
+								&& painelTopWar.getTabCont() <= 0) {
+							NnpeTO nnpeTO = (NnpeTO) controleCliente
+									.obterPlacar();
+							if (nnpeTO != null) {
+								placar = (List<PlacarTopWar>) nnpeTO.getData();
+								painelTopWar.setTabCont(Integer.MAX_VALUE);
+								painelTopWar.atualiza();
+							}
 						}
 					} catch (InterruptedException e) {
 						interrupt = true;
@@ -574,12 +583,6 @@ public class JogoCliente {
 						frames = 0;
 						delta = 0;
 					}
-				}
-				NnpeTO nnpeTO = (NnpeTO) controleCliente.obterPlacar();
-				if (nnpeTO != null) {
-					placar = (List<PlacarTopWar>) nnpeTO.getData();
-					painelTopWar.setTabCont(500);
-					painelTopWar.atualiza();
 				}
 			}
 		});
