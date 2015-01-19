@@ -2,11 +2,12 @@ package br.topwar.cliente;
 
 import java.awt.GridLayout;
 import java.awt.Point;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JApplet;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -28,7 +29,7 @@ public class ControleCliente extends NnpeChatCliente {
 
 	private JogoCliente jogoCliente;
 	private PainelMenu painelMenu;
-	protected long ultAcao;
+	protected Map<String, Long> ultAcaoMapa = new HashMap<String, Long>();
 	private boolean local;
 
 	public JogoCliente getJogoCliente() {
@@ -37,14 +38,6 @@ public class ControleCliente extends NnpeChatCliente {
 
 	public void setJogoCliente(JogoCliente jogoCliente) {
 		this.jogoCliente = jogoCliente;
-	}
-
-	public long getUltAcao() {
-		return ultAcao;
-	}
-
-	public void setUltAcao(long ultAcao) {
-		this.ultAcao = ultAcao;
 	}
 
 	public ControleCliente(NnpeApplet topWarApplet) {
@@ -272,9 +265,10 @@ public class ControleCliente extends NnpeChatCliente {
 		if (!Util.isNullOrEmpty(jogoCliente.getKillCam())) {
 			return null;
 		}
-		if (verificaDelay()) {
+		if (verificaDelay(ConstantesTopWar.MOVER)) {
 			return null;
 		}
+		ultAcaoMapa.put(ConstantesTopWar.MOVER, System.currentTimeMillis());
 		DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
 		acaoClienteTopWar.setNomeCliente(sessaoCliente.getNomeJogador());
 		acaoClienteTopWar.setAngulo(jogoCliente.getAngulo());
@@ -286,11 +280,25 @@ public class ControleCliente extends NnpeChatCliente {
 		return ret;
 	}
 
-	public boolean verificaDelay() {
+	public boolean verificaDelay(String chave) {
+		Long delay = new Long(getLatenciaMinima());
+		if (ConstantesTopWar.ATACAR.equals(chave)) {
+			delay = 100l;
+		}
+		if (ConstantesTopWar.RADIO_JOGO.equals(chave)) {
+			delay = 1000l;
+		}
+		if (ConstantesTopWar.ALTERNA_FACA.equals(chave)) {
+			delay = 1000l;
+		}
 		if (jogoCliente.verificaLag()) {
 			return true;
 		}
-		return ((System.currentTimeMillis() - ultAcao) < getLatenciaMinima());
+		Long ultAcao = ultAcaoMapa.get(chave);
+		if (ultAcao == null) {
+			ultAcao = 0l;
+		}
+		return ((System.currentTimeMillis() - ultAcao) < delay);
 	}
 
 	public Object moverEsquerda() {
@@ -316,6 +324,10 @@ public class ControleCliente extends NnpeChatCliente {
 		if (sessaoCliente == null) {
 			return null;
 		}
+		if (verificaDelay(ConstantesTopWar.ATACAR)) {
+			return null;
+		}
+		ultAcaoMapa.put(ConstantesTopWar.ATACAR, System.currentTimeMillis());
 		DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
 		acaoClienteTopWar.setNomeCliente(sessaoCliente.getNomeJogador());
 		acaoClienteTopWar.setAngulo(jogoCliente.getAngulo());
@@ -328,7 +340,6 @@ public class ControleCliente extends NnpeChatCliente {
 		nnpeTO.setComando(ConstantesTopWar.ATACAR);
 		nnpeTO.setData(acaoClienteTopWar);
 		Object ret = enviarObjeto(nnpeTO);
-		ultAcao = System.currentTimeMillis();
 		return ret;
 	}
 
@@ -339,6 +350,11 @@ public class ControleCliente extends NnpeChatCliente {
 		if (jogoCliente == null || !jogoCliente.isJogoEmAndamento()) {
 			return;
 		}
+		if (verificaDelay(ConstantesTopWar.ATUALIZA_ANGULO)) {
+			return;
+		}
+		ultAcaoMapa.put(ConstantesTopWar.ATUALIZA_ANGULO,
+				System.currentTimeMillis());
 		DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
 		acaoClienteTopWar.setNomeCliente(sessaoCliente.getNomeJogador());
 		acaoClienteTopWar.setAngulo(jogoCliente.getAngulo());
@@ -346,23 +362,23 @@ public class ControleCliente extends NnpeChatCliente {
 		nnpeTO.setComando(ConstantesTopWar.ATUALIZA_ANGULO);
 		nnpeTO.setData(acaoClienteTopWar);
 		Object ret = enviarObjeto(nnpeTO);
-		ultAcao = System.currentTimeMillis();
 	}
 
 	public Object recarregar() {
 		if (!Util.isNullOrEmpty(jogoCliente.getKillCam())) {
 			return null;
 		}
-		if (verificaDelay()) {
+		if (verificaDelay(ConstantesTopWar.RECARREGAR)) {
 			return null;
 		}
+		ultAcaoMapa
+				.put(ConstantesTopWar.RECARREGAR, System.currentTimeMillis());
 		DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
 		acaoClienteTopWar.setNomeCliente(sessaoCliente.getNomeJogador());
 		NnpeTO nnpeTO = new NnpeTO();
 		nnpeTO.setComando(ConstantesTopWar.RECARREGAR);
 		nnpeTO.setData(acaoClienteTopWar);
 		Object ret = enviarObjeto(nnpeTO);
-		ultAcao = System.currentTimeMillis();
 		return ret;
 
 	}
@@ -374,9 +390,11 @@ public class ControleCliente extends NnpeChatCliente {
 		if (sessaoCliente == null) {
 			return null;
 		}
-		if (verificaDelay() && p != null) {
+		if (verificaDelay(ConstantesTopWar.MOVER_PONTO) && p != null) {
 			return ConstantesTopWar.ESPERE;
 		}
+		ultAcaoMapa.put(ConstantesTopWar.MOVER_PONTO,
+				System.currentTimeMillis());
 		DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
 		acaoClienteTopWar.setNomeCliente(sessaoCliente.getNomeJogador());
 		acaoClienteTopWar.setPonto(p);
@@ -392,6 +410,11 @@ public class ControleCliente extends NnpeChatCliente {
 		if (!Util.isNullOrEmpty(jogoCliente.getKillCam())) {
 			return null;
 		}
+		if (verificaDelay(ConstantesTopWar.ALTERNA_FACA)) {
+			return null;
+		}
+		ultAcaoMapa.put(ConstantesTopWar.ALTERNA_FACA,
+				System.currentTimeMillis());
 		DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
 		acaoClienteTopWar.setNomeCliente(sessaoCliente.getNomeJogador());
 		acaoClienteTopWar.setAngulo(jogoCliente.getAngulo());
@@ -399,7 +422,6 @@ public class ControleCliente extends NnpeChatCliente {
 		nnpeTO.setComando(ConstantesTopWar.ALTERNA_FACA);
 		nnpeTO.setData(acaoClienteTopWar);
 		Object ret = enviarObjeto(nnpeTO);
-		ultAcao = System.currentTimeMillis();
 		return ret;
 	}
 
@@ -434,7 +456,7 @@ public class ControleCliente extends NnpeChatCliente {
 	}
 
 	public void enviaTextoRadio(String text, boolean somenteTime) {
-		if (verificaDelay()) {
+		if (verificaDelay(ConstantesTopWar.RADIO_JOGO)) {
 			return;
 		}
 		NnpeTO nnpeTO = new NnpeTO();
@@ -447,7 +469,8 @@ public class ControleCliente extends NnpeChatCliente {
 		DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
 		nnpeTO.setData(text);
 		Object ret = enviarObjeto(nnpeTO);
-		ultAcao = System.currentTimeMillis();
+		ultAcaoMapa
+				.put(ConstantesTopWar.RADIO_JOGO, System.currentTimeMillis());
 	}
 
 	public JApplet getApplet() {

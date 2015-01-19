@@ -36,11 +36,11 @@ public abstract class NnpeApplet extends JApplet {
 	protected Properties properties;
 	protected String urlSufix;
 
-	protected int latenciaMinima = 120;
-	protected int latenciaReal;
 
-	public static final int LATENCIA_MAX = 240;
-	public static final int LATENCIA_MIN = 120;
+	public static final int LATENCIA_MAX = 250;
+	public static final int LATENCIA_MIN = 100;
+	protected int latenciaMinima = LATENCIA_MIN;
+	protected int latenciaReal;
 
 	public abstract NnpeChatCliente getNnpeChatCliente();
 

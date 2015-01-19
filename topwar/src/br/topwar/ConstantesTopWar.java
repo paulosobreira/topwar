@@ -72,7 +72,7 @@ public class ConstantesTopWar {
 	 */
 	public static final String ASSAULT = "assault";
 	public static final int BALAS_ASSALT = 50;
-	public static final int CARTUCHOS_ASSALT = 15;
+	public static final int CARTUCHOS_ASSALT = 5;
 	public static final int VIDA_COMPLETA_ASSALT = 100;
 	public static final int VELOCIDADE_ASSAUT = 7;
 	public static final int DESVIO_ASSAULT = 2;
@@ -103,11 +103,11 @@ public class ConstantesTopWar {
 	 * MACHINEGUN
 	 */
 	public static final String MACHINEGUN = "machinegun";
-	public static final int BALAS_MACHINEGUN = 300;
-	public static final int CARTUCHOS_MACHINEGUN = 6;
+	public static final int BALAS_MACHINEGUN = 150;
+	public static final int CARTUCHOS_MACHINEGUN = 5;
 	public static final int VIDA_COMPLETA_MACHINEGUN = 200;
 	public static final int DESVIO_MACHINEGUN = 4;
-	public static final int TEMPO_RECARGA_MACHINEGUN = 3000;
+	public static final int TEMPO_RECARGA_MACHINEGUN = 4000;
 	public static final int VELOCIDADE_MACHINEGUN = 5;
 	public static final int MACHINEGUN_MAX_RANGE = (int) (ASSALT_MAX_RANGE * 0.8);
 	/*
