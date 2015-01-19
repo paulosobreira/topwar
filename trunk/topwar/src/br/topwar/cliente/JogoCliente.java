@@ -191,11 +191,7 @@ public class JogoCliente {
 				boolean interrupt = false;
 				while (jogoEmAndamento && !interrupt) {
 					try {
-						if (controleCliente.verificaDelay()) {
-							Thread.sleep(5);
-						} else {
-							Thread.sleep(atulaizaAvatarSleep);
-						}
+						Thread.sleep(atulaizaAvatarSleep);
 						Object atacar = null;
 						if (atacando) {
 							pararMovimentoMouse();
@@ -213,11 +209,6 @@ public class JogoCliente {
 								|| mirouAvatarAdversario) {
 							pararMovimentoMouse();
 							controleCliente.moverPonto(null);
-							if (ConstantesTopWar.ARMA_ASSAULT == arma) {
-								Thread.sleep(150);
-							} else {
-								Thread.sleep(200);
-							}
 							continue;
 						}
 						if (atualizaAngulo()) {
@@ -369,9 +360,6 @@ public class JogoCliente {
 				while (controleCliente.isComunicacaoServer() && jogoEmAndamento
 						&& !interrupt) {
 					try {
-						if (controleCliente.verificaDelay()) {
-							Thread.sleep(5);
-						}
 						synchronized (avatarClientes) {
 							atualizaListaAvatares();
 						}
@@ -379,10 +367,6 @@ public class JogoCliente {
 						if (controleCliente.getLatenciaReal() > ConstantesTopWar.ATRASO_REDE_PADRAO) {
 							sleep = ConstantesTopWar.DUPLO_ATRASO_REDE_PADRAO;
 						}
-						// if (controleCliente.getLatenciaReal() >
-						// ConstantesTopWar.DUPLO_ATRASO_REDE_PADRAO) {
-						// sleep = controleCliente.getLatenciaReal();
-						// }
 						Thread.sleep(sleep);
 						if (tempoRestanteJogo <= 0) {
 							jogoEmAndamento = false;
@@ -1032,6 +1016,14 @@ public class JogoCliente {
 		threadAlternaFaca = new Thread(new Runnable() {
 			@Override
 			public void run() {
+				while (controleCliente
+						.verificaDelay(ConstantesTopWar.ALTERNA_FACA)) {
+					try {
+						Thread.sleep(5);
+					} catch (InterruptedException e) {
+						Logger.logarExept(e);
+					}
+				}
 				controleCliente.alternaFaca();
 			}
 		});
@@ -1046,7 +1038,8 @@ public class JogoCliente {
 		threadRecarregar = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				while (controleCliente.verificaDelay()) {
+				while (controleCliente
+						.verificaDelay(ConstantesTopWar.RECARREGAR)) {
 					try {
 						Thread.sleep(5);
 					} catch (InterruptedException e) {
@@ -1066,13 +1059,6 @@ public class JogoCliente {
 		threadMudarClasse = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				while (controleCliente.verificaDelay()) {
-					try {
-						Thread.sleep(5);
-					} catch (InterruptedException e) {
-						Logger.logarExept(e);
-					}
-				}
 				controleCliente.mudarClasse(classe);
 			}
 		});
