@@ -170,9 +170,11 @@ public class JogoCliente {
 			@Override
 			public void run() {
 				try {
+					atualizarPLacar();
 					Thread.sleep(5000);
 					if (!painelTopWar.isEscondeuControles()) {
 						painelTopWar.setVerControles(false);
+						painelTopWar.setTabCont(0);
 					}
 				} catch (InterruptedException e) {
 					e.printStackTrace();
@@ -372,13 +374,7 @@ public class JogoCliente {
 							jogoEmAndamento = false;
 						} else if (tempoRestanteJogo < 500
 								&& painelTopWar.getTabCont() <= 0) {
-							NnpeTO nnpeTO = (NnpeTO) controleCliente
-									.obterPlacar();
-							if (nnpeTO != null) {
-								placar = (List<PlacarTopWar>) nnpeTO.getData();
-								painelTopWar.setTabCont(Integer.MAX_VALUE);
-								painelTopWar.atualiza();
-							}
+							atualizarPLacar();
 						}
 					} catch (InterruptedException e) {
 						interrupt = true;
@@ -386,9 +382,19 @@ public class JogoCliente {
 					}
 				}
 			}
+
 		});
 		threadDadosSrv.start();
 
+	}
+
+	private void atualizarPLacar() {
+		NnpeTO nnpeTO = (NnpeTO) controleCliente.obterPlacar();
+		if (nnpeTO != null) {
+			placar = (List<PlacarTopWar>) nnpeTO.getData();
+			painelTopWar.setTabCont(Integer.MAX_VALUE);
+			painelTopWar.atualiza();
+		}
 	}
 
 	private void iniciaMouseListener() {

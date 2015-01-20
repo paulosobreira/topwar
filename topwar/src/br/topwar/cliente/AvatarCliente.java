@@ -309,11 +309,7 @@ public class AvatarCliente {
 	}
 
 	public double getLimiteVisao() {
-		double limiteVisao = ConstantesTopWar.LIMITE_VISAO;
-		if (ConstantesTopWar.ARMA_SNIPER == getArma()) {
-			limiteVisao = ConstantesTopWar.LIMITE_VISAO_SNIPER;
-		}
-		return limiteVisao;
+		return avatarTopWar.getLimiteVisao();
 	}
 
 }

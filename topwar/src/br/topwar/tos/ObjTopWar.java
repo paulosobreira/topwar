@@ -3,7 +3,9 @@ package br.topwar.tos;
 import java.awt.Point;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.persistence.Transient;
 
@@ -34,6 +36,7 @@ public class ObjTopWar {
 	private transient BotInfoAbstract botInfo;
 	private transient String proxClasse;
 	private transient Point pontoDestinoMover;
+	private transient Map<String, Long> ultAcaoMapa = new HashMap<String, Long>();
 
 	public double getDistanciaDeUmAvatar() {
 		return distanciaDeUmAvatar;
@@ -583,6 +586,18 @@ public class ObjTopWar {
 			break;
 		}
 
+	}
+
+	public Map<String, Long> getUltAcaoMapa() {
+		return ultAcaoMapa;
+	}
+
+	public double getLimiteVisao() {
+		double limiteVisao = ConstantesTopWar.LIMITE_VISAO;
+		if (ConstantesTopWar.ARMA_SNIPER == getArma()) {
+			limiteVisao = ConstantesTopWar.LIMITE_VISAO_SNIPER;
+		}
+		return limiteVisao;
 	}
 
 }

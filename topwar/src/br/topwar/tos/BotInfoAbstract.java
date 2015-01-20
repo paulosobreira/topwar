@@ -236,6 +236,14 @@ public abstract class BotInfoAbstract {
 			int distaciaEntrePontos = GeoUtil.distaciaEntrePontos(
 					avatarTopWar.getPontoAvatar(),
 					avatarSeguir.getPontoAvatar());
+			double limiteEscapar = (avatarTopWar.getLimiteVisao() * 0.75);
+			if (distaciaEntrePontos > limiteEscapar) {
+				jogoServidor.alternarFaca(avatarTopWar);
+			}
+			if (distaciaEntrePontos < limiteEscapar
+					&& avatarTopWar.getArma() == ConstantesTopWar.ARMA_FACA) {
+				jogoServidor.alternarFaca(avatarTopWar);
+			}
 			if (distaciaEntrePontos > ConstantesTopWar.LIMITE_VISAO) {
 				setSeguindo(null);
 				setPontoDestino(null);

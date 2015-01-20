@@ -57,7 +57,8 @@ public class MainFrame {
 		frameTopWar.setVisible(visivel);
 		painelMenu = new PainelMenu(this);
 		frameTopWar.setSize(800, 600);
-		frameTopWar.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		frameTopWar
+				.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		frameTopWar.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -67,9 +68,13 @@ public class MainFrame {
 				if (ret == JOptionPane.NO_OPTION) {
 					return;
 				}
-				clienteLocal.sairJogo();
-				clienteLocal.getJogoCliente().matarTodasThreads();
-				servidorLocal.finalizaJogosServidor();
+				if (clienteLocal != null) {
+					clienteLocal.sairJogo();
+					clienteLocal.getJogoCliente().matarTodasThreads();
+				}
+				if(servidorLocal!=null){
+					servidorLocal.finalizaJogosServidor();
+				}
 				System.exit(0);
 				super.windowClosing(e);
 			}

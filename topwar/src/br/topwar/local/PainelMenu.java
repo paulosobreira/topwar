@@ -800,7 +800,7 @@ public class PainelMenu {
 		x += 20;
 
 		String tempoStr = (df3.format(tempoJogoSelecionado) + " " + Lang
-				.msg("tempo jogo")).toUpperCase();
+				.msg("tempojogo")).toUpperCase();
 		int tamTempo = Util.calculaLarguraText(tempoStr, g2d);
 		g2d.setColor(lightWhite);
 		g2d.fillRoundRect(x - 15, y - 12, tamTempo + 10, 32, 10, 10);
