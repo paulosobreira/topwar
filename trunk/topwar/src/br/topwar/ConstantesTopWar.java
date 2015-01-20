@@ -2,7 +2,12 @@ package br.topwar;
 
 import java.awt.Color;
 
+import br.nnpe.cliente.NnpeApplet;
+
 public class ConstantesTopWar {
+
+	public static final int LATENCIA_MAX = 250;
+	public static final int LATENCIA_MIN = 100;
 	/**
 	 * Rede
 	 */
@@ -71,7 +76,7 @@ public class ConstantesTopWar {
 	 * ASSAULT
 	 */
 	public static final String ASSAULT = "assault";
-	public static final int BALAS_ASSALT = 50;
+	public static final int BALAS_ASSALT = 30;
 	public static final int CARTUCHOS_ASSALT = 5;
 	public static final int VIDA_COMPLETA_ASSALT = 100;
 	public static final int VELOCIDADE_ASSAUT = 7;
@@ -133,5 +138,19 @@ public class ConstantesTopWar {
 	public static final String RADIO_TODOS = "RADIO_TODOS";
 	public static final int NUMERO_JOGOS = 1;
 	public static final boolean JOGADOR_INVENCIVEL = false;
+
+	public static Long delayPadrao(String chave) {
+		Long delay = new Long(LATENCIA_MIN);
+		if (ConstantesTopWar.ATACAR.equals(chave)) {
+			delay = 100l;
+		}
+		if (ConstantesTopWar.RADIO_JOGO.equals(chave)) {
+			delay = 1000l;
+		}
+		if (ConstantesTopWar.ALTERNA_FACA.equals(chave)) {
+			delay = 2000l;
+		}
+		return delay;
+	}
 
 }

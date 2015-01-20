@@ -558,11 +558,16 @@ public class PainelTopWar {
 	}
 
 	private void desenhaAjuda(Graphics2D g2d) {
-		String msg = " ? ";
+		String msg = " ESC ";
 		g2d.setColor(ConstantesTopWar.lightWhite);
 		int x = limitesViewPort.x + (limitesViewPort.width) - 50;
 		int y = limitesViewPort.y + 50;
-		ajuda.setFrame(x, y, 35, 35);
+
+		Font fontOri = g2d.getFont();
+		g2d.setFont(new Font(fontOri.getName(), Font.BOLD, 28));
+		int larguraTexto = Util.larguraTexto(msg.toUpperCase(), g2d);
+		int desl = larguraTexto / 2;
+		ajuda.setFrame(x - desl, y, larguraTexto, 30);
 		if (verControles) {
 			g2d.setColor(OcilaCor.geraOcila("desenhaAjuda",
 					ConstantesTopWar.lightYellow));
@@ -570,10 +575,8 @@ public class PainelTopWar {
 			g2d.setColor(ConstantesTopWar.lightWhite);
 		}
 		g2d.fill(ajuda);
-		Font fontOri = g2d.getFont();
-		g2d.setFont(new Font(fontOri.getName(), Font.BOLD, 28));
 		g2d.setColor(Color.BLACK);
-		g2d.drawString(msg, x + 2, y + 26);
+		g2d.drawString(msg, x - desl, y + 26);
 		g2d.setFont(fontOri);
 	}
 
@@ -582,19 +585,19 @@ public class PainelTopWar {
 			voltaMenuPrincipalRect.setFrame(0, 0, 1, 1);
 			return;
 		}
-		int x = limitesViewPort.x + (int) (limitesViewPort.getWidth() / 2);
-		int y = limitesViewPort.y + (int) (limitesViewPort.getHeight()) - 200;
+		int x = limitesViewPort.x + (limitesViewPort.width) - 140;
+		int y = limitesViewPort.y + 50;
+
 		Font fontOri = g2d.getFont();
 		g2d.setFont(new Font(fontOri.getName(), Font.BOLD, 28));
 		g2d.setColor(transpBranco);
 		String txt = Lang.msg("voltarMenuPrincipal").toUpperCase();
 		int larguraTexto = Util.larguraTexto(txt, g2d);
 		int desl = larguraTexto / 2;
-		voltaMenuPrincipalRect
-				.setFrame(x - desl, y - 25, larguraTexto + 10, 30);
+		voltaMenuPrincipalRect.setFrame(x - desl, y, larguraTexto + 10, 30);
 		g2d.fill(voltaMenuPrincipalRect);
 		g2d.setColor(Color.BLACK);
-		g2d.drawString(txt, x - desl + 5, y);
+		g2d.drawString(txt, x - desl + 5, y + 26);
 		g2d.setFont(fontOri);
 
 	}
@@ -704,20 +707,24 @@ public class PainelTopWar {
 		if (jogoCliente.getPontoMouseMovendo() != null
 				&& jogoCliente.isSeguirMouse()
 				&& GeoUtil.distaciaEntrePontos(p, avatarLocal.getPontoAvatar()) > 10) {
+			Point desenha = new Point(p.x - (vaiAqui.getWidth() / 2), p.y
+					- (vaiAqui.getHeight() / 2));
 			graphics2d.drawImage(ImageUtil.geraResize(
-					OcilaCor.geraOcila("vaiaqui", vaiAqui), 1.5), p.x
-					- descontoCentraliza.x, p.y - descontoCentraliza.y - 12,
+					OcilaCor.geraOcila("vaiaqui", vaiAqui), 1.5), desenha.x
+					- descontoCentraliza.x, desenha.y - descontoCentraliza.y,
 					null);
 		} else {
 			p = jogoCliente.getPontoMouseClicadoDireito();
 			if (p != null
 					&& GeoUtil.distaciaEntrePontos(p,
 							avatarLocal.getPontoAvatar()) > 10) {
+				Point desenha = new Point(p.x - (vaiAqui.getWidth() / 2), p.y
+						- (vaiAqui.getHeight() / 2));
 				graphics2d.drawImage(
 						ImageUtil.geraResize(
 								OcilaCor.geraOcila("vaiaqui", vaiAqui), 1.5),
-						p.x - descontoCentraliza.x, p.y - descontoCentraliza.y
-								- 12, null);
+						desenha.x - descontoCentraliza.x, desenha.y
+								- descontoCentraliza.y, null);
 			}
 		}
 
@@ -1448,12 +1455,13 @@ public class PainelTopWar {
 	// Set desenhaImprime = new HashSet();
 
 	private void desenhaPlacar(Graphics2D g2d) {
-		if (jogoCliente.isJogoEmAndamento()){
+		if (jogoCliente.isJogoEmAndamento() && !isVerControles()) {
 			if (tabCont <= 0) {
 				return;
 			}
 			tabCont--;
 		}
+
 		Shape limitesViewPort = limitesViewPort();
 		int meio = limitesViewPort.getBounds().x
 				+ limitesViewPort.getBounds().width / 2;

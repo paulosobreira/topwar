@@ -18,6 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import br.nnpe.GeoUtil;
 import br.nnpe.Logger;
 import br.nnpe.Util;
+import br.nnpe.cliente.NnpeApplet;
 import br.nnpe.tos.NnpeTO;
 import br.topwar.ConstantesTopWar;
 import br.topwar.ProxyComandos;
@@ -59,8 +60,8 @@ public class JogoServidor {
 		controleBots = new ControleBots(this, controleJogosServidor);
 		carregarMapa(dadosJogoTopWar);
 		incluirAvatarCriadorJogo(dadosJogoTopWar);
-//		iniciarContadorTempoJogo(1);
-		iniciarContadorTempoJogo(dadosJogoTopWar.getTempoJogo());
+		iniciarContadorTempoJogo(5);
+		// iniciarContadorTempoJogo(dadosJogoTopWar.getTempoJogo());
 		iniciaMonitorDeJogo();
 		controleBots.adicionarBots();
 	}
@@ -1239,6 +1240,12 @@ public class JogoServidor {
 		if (avatarTopWar.getVida() <= 0) {
 			return null;
 		}
+		if (verificaDelay(ConstantesTopWar.ALTERNA_FACA, avatarTopWar)) {
+			return null;
+		}
+		avatarTopWar.getUltAcaoMapa().put(ConstantesTopWar.ALTERNA_FACA,
+				System.currentTimeMillis());
+
 		if (avatarTopWar.getArma() == ConstantesTopWar.ARMA_FACA) {
 			if (ConstantesTopWar.SHOTGUN.equals(avatarTopWar.getClasse())) {
 				avatarTopWar.setArma(ConstantesTopWar.ARMA_SHOTGUN);
@@ -1345,5 +1352,14 @@ public class JogoServidor {
 			Logger.logar(radioMsg.toString());
 		}
 		return ConstantesTopWar.OK;
+	}
+
+	public boolean verificaDelay(String chave, ObjTopWar avatarTopWar) {
+		Long delay = ConstantesTopWar.delayPadrao(chave);
+		Long ultAcao = avatarTopWar.getUltAcaoMapa().get(chave);
+		if (ultAcao == null) {
+			ultAcao = 0l;
+		}
+		return ((System.currentTimeMillis() - ultAcao) < delay);
 	}
 }

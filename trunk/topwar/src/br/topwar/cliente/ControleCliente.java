@@ -281,16 +281,7 @@ public class ControleCliente extends NnpeChatCliente {
 	}
 
 	public boolean verificaDelay(String chave) {
-		Long delay = new Long(getLatenciaMinima());
-		if (ConstantesTopWar.ATACAR.equals(chave)) {
-			delay = 100l;
-		}
-		if (ConstantesTopWar.RADIO_JOGO.equals(chave)) {
-			delay = 1000l;
-		}
-		if (ConstantesTopWar.ALTERNA_FACA.equals(chave)) {
-			delay = 1000l;
-		}
+		Long delay = ConstantesTopWar.delayPadrao(chave);
 		if (jogoCliente.verificaLag()) {
 			return true;
 		}
