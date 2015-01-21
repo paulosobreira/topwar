@@ -29,56 +29,87 @@ public class BotInfoShield extends BotInfoAbstract {
 		if (avatarTopWar.getVida() <= 0) {
 			return;
 		}
-		Point pontoAvatar = avatarTopWar.getPontoAvatar();
-		if (pontoAvatar.equals(ptAtual)) {
-			contPtAtual++;
-		} else {
-			contPtAtual = 0;
+		setExecutouAcaoAtaque(false);
+		processaAvataresVisiveis(avatarTopWar, jogoServidor);
+		int contaInimigosVisiveis = contaInimigosVisiveis();
+		int contaAmigosVisiveis = contaAmigosVisiveis();
+
+		if (getSeguindo() == null || getSeguindo().getVida() < 0) {
+			if (contaAmigosVisiveis < contaInimigosVisiveis
+					&& !verificaDestinoSeguroDosInimigos()) {
+				procurarAbrigo();
+			} else {
+				tentarAtacar();
+			}
 		}
-		ptAtual = pontoAvatar;
-		List<ObjTopWar> avatarTopWarsCopia = jogoServidor
-				.getAvatarTopWarsCopia();
-		boolean executouAcaoAtaque = false;
-		if (contPtAtual < 50) {
-//			executouAcaoAtaque = seguirAtacarInimigo(avatarTopWarsCopia,
-//					executouAcaoAtaque);
-		}
-		if (!executouAcaoAtaque) {
+
+		if (!isExecutouAcaoAtaque()) {
+			segueAvatar();
+			if (getPontoDestino() == null) {
+				patrulhar();
+			}
+			if (contaInimigosVisiveis > 0) {
+				protegeAvatarSeguindoSeguindo();
+			}
 			moverDestino();
 		}
 
+	}
+
+	private void protegeAvatarSeguindoSeguindo() {
+		if (getSeguindo() == null) {
+			return;
+		}
+		ObjTopWar avatarMaisProximoInimigo = null;
+		int distancia = Integer.MAX_VALUE;
+		for (Iterator iterator = avataresTimeOposto.iterator(); iterator
+				.hasNext();) {
+			ObjTopWar objTopWar = (ObjTopWar) iterator.next();
+			if (objTopWar.getArma() == ConstantesTopWar.ARMA_SHOTGUN) {
+				continue;
+			}
+			int distaciaEntrePontos = GeoUtil.distaciaEntrePontos(getSeguindo()
+					.getPontoAvatar(), objTopWar.getPontoAvatar());
+			if (distaciaEntrePontos < distancia) {
+				distancia = distaciaEntrePontos;
+				avatarMaisProximoInimigo = objTopWar;
+			}
+		}
+		List<Point> drawBresenhamLine = GeoUtil.drawBresenhamLine(getSeguindo()
+				.getPontoAvatar(), avatarMaisProximoInimigo.getPontoAvatar());
+		setPontoDestino(drawBresenhamLine.get(Util.inte(drawBresenhamLine
+				.size() * 0.1)));
+		avatarTopWar.setAngulo(GeoUtil.calculaAngulo(
+				avatarTopWar.getPontoAvatar(),
+				avatarMaisProximoInimigo.getPontoAvatar(), 90));
 	}
 
 	/**
 	 * Seguir/Atacar avatar inimigo
 	 */
 	protected void atacarInimigo() {
-		// List<ObjTopWar> avataresOrdenadosDistancia =
-		// processaAvataresVisiveis(
-		// avatarTopWarsCopia, avatarTopWar, jogoServidor);
-		// for (Iterator iterator2 = avataresOrdenadosDistancia.iterator();
-		// iterator2
-		// .hasNext();) {
-		// ObjTopWar avatarTopWarCopia = (ObjTopWar) iterator2.next();
-		// List<Point> line = GeoUtil.drawBresenhamLine(
-		// avatarTopWar.getPontoAvatar(),
-		// avatarTopWarCopia.getPontoAvatar());
-		// if (!BotInfoShield.ATACANDO.equals(getEstado())) {
-		// setPontoDestino(avatarTopWarCopia.getPontoAvatar());
-		// } else if (line.size() < Util.intervalo(10, 30)) {
-		// executouAcaoAtaque = atacaComFaca(avatarTopWarCopia);
-		// } else {
-		// if (avatarTopWar.getArma() == ConstantesTopWar.ARMA_FACA)
-		// jogoServidor.alternarFaca(avatarTopWar);
-		// avatarTopWar.setAngulo(GeoUtil.calculaAngulo(
-		// avatarTopWar.getPontoAvatar(),
-		// avatarTopWarCopia.getPontoAvatar(), 90));
-		// setPontoDestino(avatarTopWarCopia.getPontoAvatar());
-		// }
-		// setEstado(BotInfoShield.ATACANDO);
-		// break;
-		// }
-		// return executouAcaoAtaque;
+		setSeguindo(null);
+		setExecutouAcaoAtaque(false);
+		for (Iterator iterator2 = avataresTimeOposto.iterator(); iterator2
+				.hasNext();) {
+			ObjTopWar avatarTopWarCopia = (ObjTopWar) iterator2.next();
+			if (avatarTopWarCopia.getVida() <= 0) {
+				continue;
+			}
+			if (ConstantesTopWar.OBJ_ROCKET == avatarTopWarCopia.getArma()) {
+				continue;
+			}
+			List<Point> line = GeoUtil.drawBresenhamLine(
+					avatarTopWar.getPontoAvatar(),
+					avatarTopWarCopia.getPontoAvatar());
+			if (line.size() > 25) {
+				continue;
+			}
+			executouAcaoAtaque = true;
+			executouAcaoAtaque = atacaComFaca(avatarTopWarCopia);
+			break;
+		}
+		setExecutouAcaoAtaque(true);
 	}
 
 	protected boolean seguindo() {

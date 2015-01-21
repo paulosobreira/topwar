@@ -450,6 +450,8 @@ public class ControleCliente extends NnpeChatCliente {
 		if (verificaDelay(ConstantesTopWar.RADIO_JOGO)) {
 			return;
 		}
+		ultAcaoMapa
+				.put(ConstantesTopWar.RADIO_JOGO, System.currentTimeMillis());
 		NnpeTO nnpeTO = new NnpeTO();
 		nnpeTO.setSessaoCliente(sessaoCliente);
 		if (somenteTime) {
@@ -460,8 +462,6 @@ public class ControleCliente extends NnpeChatCliente {
 		DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
 		nnpeTO.setData(text);
 		Object ret = enviarObjeto(nnpeTO);
-		ultAcaoMapa
-				.put(ConstantesTopWar.RADIO_JOGO, System.currentTimeMillis());
 	}
 
 	public JApplet getApplet() {
