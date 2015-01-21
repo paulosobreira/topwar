@@ -63,8 +63,7 @@ public class ControleBots {
 					dadosJogoTopWar.setClasse(ConstantesTopWar.ASSAULT);
 					break;
 				case 2:
-					//dadosJogoTopWar.setClasse(ConstantesTopWar.SHIELD);
-					dadosJogoTopWar.setClasse(ConstantesTopWar.ASSAULT);
+					dadosJogoTopWar.setClasse(ConstantesTopWar.SHIELD);
 					break;
 				case 3:
 					dadosJogoTopWar.setClasse(ConstantesTopWar.SNIPER);

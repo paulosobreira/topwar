@@ -468,6 +468,11 @@ public class JogoServidor {
 
 	public String moverAvatar(ObjTopWar avatarTopWar,
 			DadosAcaoClienteTopWar acaoClienteTopWar) {
+		if (verificaDelay(ConstantesTopWar.MOVER, avatarTopWar)) {
+			return null;
+		}
+		avatarTopWar.getUltAcaoMapa().put(ConstantesTopWar.MOVER,
+				System.currentTimeMillis());
 		if (avatarTopWar.getVida() <= 0) {
 			return null;
 		}
@@ -633,6 +638,11 @@ public class JogoServidor {
 				&& !"TopWar".equals(avatarAtacando.getNomeJogador())) {
 			return null;
 		}
+		if (verificaDelay(ConstantesTopWar.ATACAR, avatarAtacando)) {
+			return null;
+		}
+		avatarAtacando.getUltAcaoMapa().put(ConstantesTopWar.ATACAR,
+				System.currentTimeMillis());
 		if (!(ConstantesTopWar.ARMA_FACA == avatarAtacando.getArma() || ConstantesTopWar.ARMA_SHOTGUN == avatarAtacando
 				.getArma()))
 			avatarAtacando.setPontoDestinoMover(null);
@@ -1198,6 +1208,11 @@ public class JogoServidor {
 		if (avatarTopWar.getVida() <= 0) {
 			return null;
 		}
+		if (verificaDelay(ConstantesTopWar.ATUALIZA_ANGULO, avatarTopWar)) {
+			return null;
+		}
+		avatarTopWar.getUltAcaoMapa().put(ConstantesTopWar.ATUALIZA_ANGULO,
+				System.currentTimeMillis());
 		avatarTopWar.setAngulo(angulo);
 		return ConstantesTopWar.OK;
 	}
@@ -1231,6 +1246,11 @@ public class JogoServidor {
 		if (avatarTopWar.getVida() <= 0) {
 			return null;
 		}
+		if (verificaDelay(ConstantesTopWar.MOVER_PONTO, avatarTopWar)) {
+			return null;
+		}
+		avatarTopWar.getUltAcaoMapa().put(ConstantesTopWar.MOVER_PONTO,
+				System.currentTimeMillis());
 		avatarTopWar.setPontoDestinoMover(acaoClienteTopWar.getPonto());
 		avatarTopWar.setAngulo(acaoClienteTopWar.getAngulo());
 		return ConstantesTopWar.OK;
@@ -1339,6 +1359,11 @@ public class JogoServidor {
 	}
 
 	public Object radio(ObjTopWar avatarTopWar, String msg, boolean somenteTime) {
+		if (verificaDelay(ConstantesTopWar.RADIO_JOGO, avatarTopWar)) {
+			return null;
+		}
+		avatarTopWar.getUltAcaoMapa().put(ConstantesTopWar.RADIO_JOGO,
+				System.currentTimeMillis());
 		synchronized (radio) {
 			RadioMsg radioMsg = new RadioMsg();
 			radioMsg.setAvatar(avatarTopWar.getNomeJogador());
