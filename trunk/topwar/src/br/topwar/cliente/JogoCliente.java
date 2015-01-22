@@ -473,11 +473,11 @@ public class JogoCliente {
 					return false;
 				}
 			}
-			if (ConstantesTopWar.ARMA_FACA == arma && distaciaEntrePontos < 30) {
+			if (ConstantesTopWar.ARMA_FACA == arma && distaciaEntrePontos < 10) {
 				int distaciaEntreAvatares = GeoUtil.distaciaEntrePontos(
 						avatarCliente.getPontoAvatar(),
 						avatarLocal.getPontoAvatar());
-				if (distaciaEntreAvatares > 30) {
+				if (distaciaEntreAvatares > 10) {
 					return false;
 				}
 			}
