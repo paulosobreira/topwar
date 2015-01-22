@@ -478,6 +478,18 @@ public class JogoServidor {
 		}
 		Point novoPonto = new Point(avatarTopWar.getPontoAvatar().x,
 				avatarTopWar.getPontoAvatar().y);
+		List<ObjTopWar> avatarTopWarsCopia = getAvatarTopWarsCopia();
+		for (Iterator iterator = avatarTopWarsCopia.iterator(); iterator
+				.hasNext();) {
+			ObjTopWar objTopWar = (ObjTopWar) iterator.next();
+			if (objTopWar.equals(avatarTopWar)) {
+				continue;
+			}
+			if (new AvatarCliente(objTopWar).gerarCorpo().contains(novoPonto)) {
+				return null;
+			}
+		}
+
 		if (ConstantesTopWar.ESQUERDA.equals(acaoClienteTopWar.getMoverPara())) {
 			novoPonto.x = novoPonto.x - (avatarTopWar.getVelocidade());
 		}
