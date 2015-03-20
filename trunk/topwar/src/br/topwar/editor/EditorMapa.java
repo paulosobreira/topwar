@@ -375,7 +375,7 @@ public class EditorMapa {
 			return;
 		}
 		Rectangle limitesViewPort = (Rectangle) limitesViewPort();
-		// g2d.drawImage(backGround, 0, 0, null);
+		g2d.drawImage(backGround, 0, 0, null);
 		if (pontosNovoObj != null) {
 			Point ptAnt = null;
 			for (Iterator iterator = pontosNovoObj.iterator(); iterator
