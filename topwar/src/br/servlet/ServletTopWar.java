@@ -30,6 +30,8 @@ import br.topwar.ProxyComandos;
  */
 public class ServletTopWar extends NnpeServlet {
 
+	private static final long serialVersionUID = 1L;
+
 	public void init() throws ServletException {
 		super.init();
 		proxyComandos = new ProxyComandos(webDir, webInfDir);
