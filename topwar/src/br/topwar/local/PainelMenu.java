@@ -185,7 +185,7 @@ public class PainelMenu {
 
 	private String mapaSelecionado = MAPA_DESERTO;
 
-	private int numBotsSelecionado = 9;
+	private int numBotsSelecionado = 29;
 
 	private int tempoJogoSelecionado = 10;
 
@@ -667,7 +667,7 @@ public class PainelMenu {
 		g2d.setColor(Color.BLACK);
 		g2d.drawString(txt, centerX + 5, centerY);
 
-		centerX += 250;
+		centerX += 280;
 		centerY += 70;
 
 		g2d.setFont(new Font(fontOri.getName(), Font.BOLD, 28));

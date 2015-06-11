@@ -539,6 +539,7 @@ public class PainelTopWar {
 			}
 			loopDesenhaAvatares(graphics2d);
 			loopDesenhaDisparoAvatares(graphics2d);
+			desenhaInfoControles(graphics2d);
 			desenhaInfoJogo(graphics2d);
 			desenhaMira(graphics2d);
 			desenhaExplosao(graphics2d);
@@ -551,7 +552,6 @@ public class PainelTopWar {
 			desenhaAjuda(graphics2d);
 			desenhaControleMudarClasse(graphics2d);
 			desenhaVoltarMenuPrincipal(graphics2d);
-			desenhaInfoControles(graphics2d);
 		} catch (Exception e) {
 			Logger.logarExept(e);
 		}
@@ -1353,9 +1353,8 @@ public class PainelTopWar {
 	protected void desenhaInfoJogo(Graphics2D g2d) {
 		desenhaInfoCima(g2d);
 		desenhaInfoBaixo(g2d);
-		desenhaPlacar(g2d);
 		desenhaEventos(g2d);
-
+		desenhaPlacar(g2d);
 	}
 
 	private void desenhaEventos(Graphics2D g2d) {
@@ -1455,7 +1454,7 @@ public class PainelTopWar {
 	// Set desenhaImprime = new HashSet();
 
 	private void desenhaPlacar(Graphics2D g2d) {
-		if (jogoCliente.isJogoEmAndamento() && !isVerControles()) {
+		if (jogoCliente.isJogoEmAndamento()) {
 			if (tabCont <= 0) {
 				return;
 			}
@@ -1589,6 +1588,9 @@ public class PainelTopWar {
 		if (!isVerControles()) {
 			return;
 		}
+		if (tabCont > 0) {
+			return;
+		}
 		Shape limitesViewPort = limitesViewPort();
 		int x = limitesViewPort.getBounds().x
 				+ (limitesViewPort.getBounds().width - 10);
@@ -1613,13 +1615,13 @@ public class PainelTopWar {
 
 		y += 40;
 
+		
 		g2d.setColor(ConstantesTopWar.lightWhite);
-
-		largura = Util.calculaLarguraText(Lang.msg("asdOuSetas"), g2d) + 20;
+		largura = Util.calculaLarguraText(Lang.msg("espaco"), g2d) + 20;
 		g2d.fillRoundRect(x - largura, y - 20, largura, 35, 10, 10);
 		g2d.setColor(Color.BLACK);
-		g2d.drawString(Lang.msg("asdOuSetas"), x - largura + 10, y);
-
+		g2d.drawString(Lang.msg("espaco"), x - largura + 10, y);
+		
 		y += 40;
 
 		g2d.setColor(ConstantesTopWar.lightWhite);
@@ -1627,24 +1629,6 @@ public class PainelTopWar {
 		g2d.fillRoundRect(x - largura, y - 20, largura, 35, 10, 10);
 		g2d.setColor(Color.BLACK);
 		g2d.drawString(Lang.msg("teclaControl"), x - largura + 10, y);
-
-		y += 40;
-
-		g2d.setColor(ConstantesTopWar.lightWhite);
-		largura = Util.calculaLarguraText(Lang.msg("espaco"), g2d) + 20;
-		g2d.fillRoundRect(x - largura, y - 20, largura, 35, 10, 10);
-		g2d.setColor(Color.BLACK);
-		g2d.drawString(Lang.msg("espaco"), x - largura + 10, y);
-
-		y += 40;
-
-		g2d.setColor(ConstantesTopWar.lightWhite);
-
-		largura = Util.calculaLarguraText(Lang.msg("r"), g2d) + 20;
-
-		g2d.fillRoundRect(x - largura, y - 20, largura, 35, 10, 10);
-		g2d.setColor(Color.BLACK);
-		g2d.drawString(Lang.msg("r"), x - largura + 10, y);
 
 		y += 40;
 

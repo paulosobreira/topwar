@@ -1003,11 +1003,8 @@ public class JogoCliente {
 			controleCliente.moverCima();
 			seguirMouse = false;
 		}
-		if (keyCode == KeyEvent.VK_SPACE) {
-			atacar();
-			seguirMouse = false;
-		}
-		if (keyCode == KeyEvent.VK_R) {
+
+		if (keyCode == KeyEvent.VK_R || keyCode == KeyEvent.VK_SPACE) {
 			recarregar();
 		}
 		if (keyCode == KeyEvent.VK_CONTROL) {

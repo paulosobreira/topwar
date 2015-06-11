@@ -75,6 +75,9 @@ public class BotInfoShield extends BotInfoAbstract {
 				avatarMaisProximoInimigo = objTopWar;
 			}
 		}
+		if(avatarMaisProximoInimigo==null){
+			return;
+		}
 		List<Point> drawBresenhamLine = GeoUtil.drawBresenhamLine(getSeguindo()
 				.getPontoAvatar(), avatarMaisProximoInimigo.getPontoAvatar());
 		setPontoDestino(drawBresenhamLine.get(Util.inte(drawBresenhamLine

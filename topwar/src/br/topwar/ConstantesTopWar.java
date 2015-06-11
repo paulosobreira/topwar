@@ -57,7 +57,7 @@ public class ConstantesTopWar {
 	public static final String OK = "K";
 	public static final String TIME_AZUL = "azul";
 	public static final String TIME_VERMELHO = "vermelho";
-	public final static Color lightWhite = new Color(255, 255, 255, 150);
+	public final static Color lightWhite = new Color(255, 255, 255, 120);
 	public final static Color lightBlu = new Color(180, 180, 255, 150);
 	public final static Color lightRed = new Color(255, 180, 180, 150);
 	public final static Color lightYellow = new Color(255, 255, 0, 150);
@@ -138,6 +138,9 @@ public class ConstantesTopWar {
 	public static final String RADIO_TODOS = "RADIO_TODOS";
 	public static final int NUMERO_JOGOS = 1;
 	public static final boolean JOGADOR_INVENCIVEL = false;
+	public static final int CICLOS_DESISTIR_SEGUIR_BOT = 20;
+	public static final int PTS_MIN_SEGUIR_BOT = 25;
+	public static final int PTS_MAX_SEGUIR_BOT = 75;
 
 	public static Long delayPadrao(String chave) {
 		Long delay = new Long(LATENCIA_MIN);

@@ -229,7 +229,7 @@ public abstract class BotInfoAbstract {
 			} else {
 				seguindoParado = 0;
 			}
-			if (seguindoParado > 30) {
+			if (seguindoParado > ConstantesTopWar.CICLOS_DESISTIR_SEGUIR_BOT) {
 				setSeguindo(null);
 				return;
 			}
@@ -249,7 +249,9 @@ public abstract class BotInfoAbstract {
 				setPontoDestino(null);
 				return;
 			}
-			if (distaciaEntrePontos < Util.intervalo(50, 100)) {
+			if (distaciaEntrePontos < Util.intervalo(
+					ConstantesTopWar.PTS_MIN_SEGUIR_BOT,
+					ConstantesTopWar.PTS_MAX_SEGUIR_BOT)) {
 				return;
 			}
 			setPontoDestino(avatarSeguir.getPontoAvatar());
