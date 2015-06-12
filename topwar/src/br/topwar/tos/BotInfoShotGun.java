@@ -29,24 +29,25 @@ public class BotInfoShotGun extends BotInfoAbstract {
 		if (avatarTopWar.getVida() <= 0) {
 			return;
 		}
-		Point pontoAvatar = avatarTopWar.getPontoAvatar();
-		if (pontoAvatar.equals(ptAtual)) {
-			contPtAtual++;
+		setExecutouAcaoAtaque(false);
+		processaAvataresVisiveis(avatarTopWar, jogoServidor);
+		int contaInimigosVisiveis = contaInimigosVisiveis();
+		int contaAmigosVisiveis = contaAmigosVisiveis();
+
+		if (contaAmigosVisiveis < contaInimigosVisiveis
+				&& !verificaDestinoSeguroDosInimigos()) {
+			procurarAbrigo();
 		} else {
-			contPtAtual = 0;
-		}
-		ptAtual = pontoAvatar;
-		List<ObjTopWar> avatarTopWarsCopia = jogoServidor
-				.getAvatarTopWarsCopia();
-		boolean executouAcaoAtaque = false;
-		if (contPtAtual < 25) {
-			// executouAcaoAtaque = seguirAtacarInimigo(avatarTopWarsCopia,
-			// executouAcaoAtaque);
-		}
-		if (!executouAcaoAtaque) {
-			moverDestino();
+			tentarAtacar();
 		}
 
+		if (!isExecutouAcaoAtaque()) {
+			segueAvatar();
+			if (getPontoDestino() == null) {
+				patrulhar();
+			}
+			moverDestino();
+		}		
 	}
 
 	/**

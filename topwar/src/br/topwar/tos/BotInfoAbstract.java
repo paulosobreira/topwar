@@ -205,10 +205,21 @@ public abstract class BotInfoAbstract {
 		for (Iterator iterator = avataresMesmoTime.iterator(); iterator
 				.hasNext();) {
 			ObjTopWar objTopWar = (ObjTopWar) iterator.next();
+			/**
+			 * Não é boot, segue jogador
+			 */
 			if (objTopWar.getBotInfo() == null) {
 				return objTopWar;
 			}
-
+			/**
+			 * Evita seguir um bot seguidor.
+			 */
+			if (avatarTopWar.equals(objTopWar.getBotInfo().getSeguindo())) {
+				continue;
+			}
+			/**
+			 * prefere seguir Shield ou Shotgun
+			 */
 			if (!avatarTopWar.equals(objTopWar.getBotInfo().getSeguindo())
 					&& (ConstantesTopWar.SHIELD.equals(objTopWar.getClasse()) || (ConstantesTopWar.SHOTGUN
 							.equals(objTopWar.getClasse())))) {
