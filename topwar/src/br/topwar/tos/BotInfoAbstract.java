@@ -411,7 +411,7 @@ public abstract class BotInfoAbstract {
 			acaoClienteTopWar.setAngulo(GeoUtil.calculaAngulo(
 					avatarTopWar.getPontoAvatar(), dstMover, 90));
 			if (jogoServidor.verificaAndavel(avatarTopWar.getPontoAvatar(),
-					dstMover)) {
+					dstMover,avatarTopWar)) {
 				String mover = (String) jogoServidor.moverPontoAvatar(
 						avatarTopWar, acaoClienteTopWar);
 				if (avatarTopWar.getPontoAvatar().equals(getPontoSeguindo())) {

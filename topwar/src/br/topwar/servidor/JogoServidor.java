@@ -571,6 +571,19 @@ public class JogoServidor {
 			}
 		}
 
+		Point ponto = new Point(avatarTopWar.getPontoAvatar().x,
+				avatarTopWar.getPontoAvatar().y);
+		while (!verificaAndavel(ponto, ponto, avatarTopWar)) {
+			ponto = new Point(avatarTopWar.getPontoAvatar().x
+					+ Util.intervalo(-20, 20), avatarTopWar.getPontoAvatar().y
+					+ Util.intervalo(-20, 20));
+			avatarTopWar.setPontoAvatar(ponto);
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 		avatarTopWar.setNomeJogador(dadosJogoTopWar.getNomeJogador());
 		avatarTopWars.put(avatarTopWar.getNomeJogador(), avatarTopWar);
 		return avatarTopWar;
@@ -1322,7 +1335,8 @@ public class JogoServidor {
 		return nnpeTO;
 	}
 
-	public boolean verificaAndavel(Point pontoAvatar, Point calculaPonto) {
+	public boolean verificaAndavel(Point pontoAvatar, Point calculaPonto,
+			ObjTopWar avatarTopWar) {
 		if (calculaPonto.x <= 0) {
 			return false;
 		}
@@ -1335,8 +1349,13 @@ public class JogoServidor {
 		if (calculaPonto.y >= mapaTopWar.getAltura()) {
 			return false;
 		}
-		List<Point> linha = GeoUtil
-				.drawBresenhamLine(pontoAvatar, calculaPonto);
+		List<Point> linha = null;
+		if (pontoAvatar.equals(calculaPonto)) {
+			linha = new ArrayList<Point>();
+			linha.add(pontoAvatar);
+		} else {
+			linha = GeoUtil.drawBresenhamLine(pontoAvatar, calculaPonto);
+		}
 		List<ObjetoMapa> objetoMapaList = mapaTopWar.getObjetoMapaList();
 		for (int i = 0; i < linha.size(); i++) {
 			Point point = (Point) linha.get(i);
@@ -1349,8 +1368,28 @@ public class JogoServidor {
 					return false;
 				}
 			}
+			if (avatarTopWar != null) {
+				List<ObjTopWar> avatarTopWarsCopia = getAvatarTopWarsCopia();
+				for (Iterator iterator = avatarTopWarsCopia.iterator(); iterator
+						.hasNext();) {
+					ObjTopWar objTopWar = (ObjTopWar) iterator.next();
+					if (avatarTopWar.equals(objTopWar)) {
+						continue;
+					}
+					AvatarCliente alvo = new AvatarCliente(objTopWar);
+					AvatarCliente origem = new AvatarCliente(avatarTopWar);
+					if (alvo.gerarCorpo().intersects(
+							origem.gerarCorpo().getBounds2D())) {
+						return false;
+					}
+				}
+			}
 		}
 		return true;
+	}
+
+	public boolean verificaAndavel(Point pontoAvatar, Point calculaPonto) {
+		return verificaAndavel(pontoAvatar, calculaPonto, null);
 	}
 
 	public void sairJogo(String nomeJogador) {
@@ -1399,4 +1438,5 @@ public class JogoServidor {
 		}
 		return ((System.currentTimeMillis() - ultAcao) < delay);
 	}
+
 }
