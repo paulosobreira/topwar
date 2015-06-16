@@ -54,7 +54,6 @@ public class BotInfoMachine extends BotInfoAbstract {
 	 * Seguir/Atacar avatar inimigo
 	 */
 	protected void atacarInimigo() {
-
 		setSeguindo(null);
 		setExecutouAcaoAtaque(false);
 		for (Iterator iterator2 = avataresTimeOposto.iterator(); iterator2

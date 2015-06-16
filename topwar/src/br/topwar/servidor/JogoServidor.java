@@ -176,7 +176,8 @@ public class JogoServidor {
 					index = line.size() - 1;
 				}
 				Point ponto = line.get(index);
-				if (verificaAndavel(avatarTopWar.getPontoAvatar(), ponto)) {
+				if (verificaAndavel(avatarTopWar.getPontoAvatar(), ponto,
+						avatarTopWar)) {
 					avatarTopWar.setPontoAvatar(ponto);
 				} else {
 					avatarTopWar.setPontoAvatar(obterPontoAleatorioAndavel(
@@ -571,18 +572,14 @@ public class JogoServidor {
 			}
 		}
 
-		Point ponto = new Point(avatarTopWar.getPontoAvatar().x,
-				avatarTopWar.getPontoAvatar().y);
+		Point ponto = new Point(avatarTopWar.getPontoAvatar().x
+				+ Util.intervalo(-40, 40), avatarTopWar.getPontoAvatar().y
+				+ Util.intervalo(-40, 40));
 		while (!verificaAndavel(ponto, ponto, avatarTopWar)) {
 			ponto = new Point(avatarTopWar.getPontoAvatar().x
-					+ Util.intervalo(-20, 20), avatarTopWar.getPontoAvatar().y
-					+ Util.intervalo(-20, 20));
+					+ Util.intervalo(-40, 40), avatarTopWar.getPontoAvatar().y
+					+ Util.intervalo(-40, 40));
 			avatarTopWar.setPontoAvatar(ponto);
-			try {
-				Thread.sleep(2000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
 		}
 		avatarTopWar.setNomeJogador(dadosJogoTopWar.getNomeJogador());
 		avatarTopWars.put(avatarTopWar.getNomeJogador(), avatarTopWar);
@@ -1368,20 +1365,20 @@ public class JogoServidor {
 					return false;
 				}
 			}
-			if (avatarTopWar != null) {
-				List<ObjTopWar> avatarTopWarsCopia = getAvatarTopWarsCopia();
-				for (Iterator iterator = avatarTopWarsCopia.iterator(); iterator
-						.hasNext();) {
-					ObjTopWar objTopWar = (ObjTopWar) iterator.next();
-					if (avatarTopWar.equals(objTopWar)) {
-						continue;
-					}
-					AvatarCliente alvo = new AvatarCliente(objTopWar);
-					AvatarCliente origem = new AvatarCliente(avatarTopWar);
-					if (alvo.gerarCorpo().intersects(
-							origem.gerarCorpo().getBounds2D())) {
-						return false;
-					}
+		}
+		if (avatarTopWar != null) {
+			List<ObjTopWar> avatarTopWarsCopia = getAvatarTopWarsCopia();
+			for (Iterator iterator = avatarTopWarsCopia.iterator(); iterator
+					.hasNext();) {
+				ObjTopWar objTopWar = (ObjTopWar) iterator.next();
+				if (avatarTopWar.equals(objTopWar)) {
+					continue;
+				}
+				AvatarCliente alvo = new AvatarCliente(objTopWar);
+				AvatarCliente origem = new AvatarCliente(avatarTopWar);
+				if (alvo.gerarCorpo().intersects(
+						origem.gerarCorpo().getBounds2D())) {
+					return false;
 				}
 			}
 		}
