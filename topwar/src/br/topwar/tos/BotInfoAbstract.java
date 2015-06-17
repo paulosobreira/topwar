@@ -218,13 +218,19 @@ public abstract class BotInfoAbstract {
 				continue;
 			}
 			/**
+			 * Shield ou Shotgun não segue bot
+			 */
+			if ((ConstantesTopWar.SHIELD.equals(avatarTopWar.getClasse()) || (ConstantesTopWar.SHOTGUN
+					.equals(avatarTopWar.getClasse())))) {
+				continue;
+			}
+			/**
 			 * prefere seguir Shield ou Shotgun
 			 */
-			// if ((ConstantesTopWar.SHIELD.equals(objTopWar.getClasse()) ||
-			// (ConstantesTopWar.SHOTGUN
-			// .equals(objTopWar.getClasse())))) {
-			// return objTopWar;
-			// }
+			if ((ConstantesTopWar.SHIELD.equals(objTopWar.getClasse()) || (ConstantesTopWar.SHOTGUN
+					.equals(objTopWar.getClasse())))) {
+				return objTopWar;
+			}
 		}
 		return null;
 	}
@@ -274,11 +280,16 @@ public abstract class BotInfoAbstract {
 	public void botVaiPontoAleatorio() {
 		Point calculaPonto = GeoUtil.calculaPonto(Util.intervalo(0, 360),
 				Util.intervalo(100, 300), avatarTopWar.getPontoAvatar());
+		int count = 0;
 		while (!jogoServidor.verificaFinalizado()
 				&& !jogoServidor.verificaAndavel(avatarTopWar.getPontoAvatar(),
 						calculaPonto)) {
 			calculaPonto = GeoUtil.calculaPonto(Util.intervalo(0, 360),
 					Util.intervalo(100, 300), avatarTopWar.getPontoAvatar());
+			count++;
+			if (count > 20) {
+				return;
+			}
 		}
 		setPontoDestino(calculaPonto);
 	}
@@ -410,15 +421,20 @@ public abstract class BotInfoAbstract {
 			acaoClienteTopWar.setPonto(dstMover);
 			acaoClienteTopWar.setAngulo(GeoUtil.calculaAngulo(
 					avatarTopWar.getPontoAvatar(), dstMover, 90));
+			int cont = 0;
 			while (!jogoServidor.verificaAndavel(avatarTopWar.getPontoAvatar(),
 					dstMover)) {
 				dstMover = new Point(dstMover.x + Util.intervalo(-20, 20),
 						dstMover.y + Util.intervalo(-20, 20));
+				cont++;
+				if (cont > 20) {
+					return;
+				}
 			}
 			String mover = (String) jogoServidor.moverPontoAvatar(avatarTopWar,
 					acaoClienteTopWar);
-			lineMove = GeoUtil.drawBresenhamLine(
-					avatarTopWar.getPontoAvatar(), getPontoDestino());
+			lineMove = GeoUtil.drawBresenhamLine(avatarTopWar.getPontoAvatar(),
+					getPontoDestino());
 			if (lineMove.size() < avatarTopWar.getVelocidade()) {
 				setPontoDestino(null);
 			}
