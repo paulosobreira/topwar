@@ -17,6 +17,8 @@ public class DadosJogoTopWar implements Serializable {
 	private Integer tempoJogo;
 
 	private boolean botsVsHumans;
+	
+	private boolean demo;
 
 	public Integer getTempoJogo() {
 		return tempoJogo;
@@ -72,6 +74,14 @@ public class DadosJogoTopWar implements Serializable {
 
 	public void setNomeMapa(String nomeMapa) {
 		this.nomeMapa = nomeMapa;
+	}
+
+	public boolean isDemo() {
+		return demo;
+	}
+
+	public void setDemo(boolean demo) {
+		this.demo = demo;
 	}
 
 }

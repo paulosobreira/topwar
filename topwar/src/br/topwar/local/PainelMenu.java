@@ -40,7 +40,9 @@ public class PainelMenu {
 
 	public static String MENU_PRINCIPAL = "MENU_PRINCIPAL";
 
-	public static String MENU_ENFRENTAMENTO = "MENU_ENFRENTAMENTO";
+	public static String MENU_DEMO = "MENU_DEMO";
+
+	public static String MENU_JOGAR = "MENU_JOGAR";
 
 	public static String MAPA_DESERTO = "mapa9";
 
@@ -72,6 +74,9 @@ public class PainelMenu {
 			1, 10, 10);
 
 	private RoundRectangle2D menuMatarRect = new RoundRectangle2D.Double(0, 0,
+			1, 1, 10, 10);
+
+	private RoundRectangle2D menuDemoRect = new RoundRectangle2D.Double(0, 0,
 			1, 1, 10, 10);
 
 	private RoundRectangle2D proximoMenuRect = new RoundRectangle2D.Double(0,
@@ -196,6 +201,8 @@ public class PainelMenu {
 	private int fps = 0;
 	protected double fpsLimite = 60D;
 
+	private boolean demo;
+
 	public String getMapaSelecionado() {
 		return mapaSelecionado;
 	}
@@ -267,14 +274,18 @@ public class PainelMenu {
 
 	private void matarThreadRender() {
 		renderThreadAlive = false;
-		if(renderThread!=null){
+		if (renderThread != null) {
 			renderThread.interrupt();
 		}
 	}
 
 	protected void processaClick(MouseEvent e) {
 		if (MENU.equals(MENU_PRINCIPAL) && menuMatarRect.contains(e.getPoint())) {
-			MENU = MENU_ENFRENTAMENTO;
+			MENU = MENU_JOGAR;
+			return;
+		}
+		if (MENU.equals(MENU_PRINCIPAL) && menuDemoRect.contains(e.getPoint())) {
+			MENU = MENU_DEMO;
 			return;
 		}
 		if (sobreRect.contains(e.getPoint())) {
@@ -409,7 +420,8 @@ public class PainelMenu {
 				return;
 			}
 			desenhaMenuPrincipalSelecao(g2d);
-			desenhaMenuEnfretamento(g2d);
+			desenhaMenuJogar(g2d);
+			desenhaMenuDemo(g2d);
 			desenhaMenuSobre(g2d);
 			desenhaFPS(g2d, getWidth() - 70, getHeight() - 50);
 		} catch (Exception e) {
@@ -419,8 +431,24 @@ public class PainelMenu {
 
 	}
 
-	private void desenhaMenuEnfretamento(Graphics2D g2d) {
-		if (!MENU.equals(MENU_ENFRENTAMENTO)) {
+	private void desenhaMenuDemo(Graphics2D g2d) {
+		if (!MENU.equals(MENU_DEMO)) {
+			return;
+		}
+		int x = (int) (getWidth() / 2);
+		int y = (int) (getHeight() / 2);
+
+		desenhaMapas(x - 150, y - 100, g2d);
+
+		desenhaSeletorNumeroBots(x - 150, y - 40, g2d);
+
+		desenhaSeletorTempoJogo(x - 150, y + 20, g2d);
+
+		desenhaAnteriroProximo(g2d, x - 140, y + 215);
+	}
+
+	private void desenhaMenuJogar(Graphics2D g2d) {
+		if (!MENU.equals(MENU_JOGAR)) {
 			return;
 		}
 		int x = (int) (getWidth() / 2);
@@ -561,7 +589,15 @@ public class PainelMenu {
 	}
 
 	private void proximoMenu() {
-		if (MENU.equals(MENU_ENFRENTAMENTO)) {
+		if (MENU.equals(MENU_JOGAR)) {
+			demo = false;
+			mainFrame.criarJogoLocal(this);
+			MENU = CARREAGANDO;
+			matarThreadRender();
+			return;
+		}
+		if (MENU.equals(MENU_DEMO)) {
+			demo = true;
 			mainFrame.criarJogoLocal(this);
 			MENU = CARREAGANDO;
 			matarThreadRender();
@@ -574,7 +610,7 @@ public class PainelMenu {
 	}
 
 	private void anteriorMenu() {
-		if (MENU.equals(MENU_ENFRENTAMENTO)) {
+		if (MENU.equals(MENU_JOGAR)) {
 			MENU = MENU_PRINCIPAL;
 			return;
 		}
@@ -677,6 +713,16 @@ public class PainelMenu {
 		larguraTexto = Util.larguraTexto(txt, g2d);
 		menuMatarRect.setFrame(centerX, centerY - 25, larguraTexto + 10, 30);
 		g2d.fill(menuMatarRect);
+		g2d.setColor(Color.BLACK);
+		g2d.drawString(txt, centerX + 5, centerY);
+
+		centerY += 40;
+
+		g2d.setColor(lightWhite);
+		txt = Lang.msg("demo").toUpperCase();
+		larguraTexto = Util.larguraTexto(txt, g2d);
+		menuDemoRect.setFrame(centerX, centerY - 25, larguraTexto + 10, 30);
+		g2d.fill(menuDemoRect);
 		g2d.setColor(Color.BLACK);
 		g2d.drawString(txt, centerX + 5, centerY);
 
@@ -934,6 +980,14 @@ public class PainelMenu {
 		graphics2d.drawString(Lang.msg("escolherclasse"), centerXAssaut + 30,
 				y - 15);
 
+	}
+
+	public boolean isDemo() {
+		return demo;
+	}
+
+	public void setDemo(boolean demo) {
+		this.demo = demo;
 	}
 
 }

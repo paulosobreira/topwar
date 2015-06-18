@@ -22,6 +22,7 @@ public class ObjTopWar {
 	private int arma = ConstantesTopWar.ARMA_FACA;
 	private int rangeUtlDisparo;
 	private boolean invencivel;
+	private boolean espectador;
 	private String classe;
 	private transient Point pontoUtlDisparo;
 	private transient ObjTopWar mortoPor;
@@ -37,6 +38,14 @@ public class ObjTopWar {
 	private transient String proxClasse;
 	private transient Point pontoDestinoMover;
 	private transient Map<String, Long> ultAcaoMapa = new HashMap<String, Long>();
+
+	public boolean isEspectador() {
+		return espectador;
+	}
+
+	public void setEspectador(boolean espectador) {
+		this.espectador = espectador;
+	}
 
 	public double getDistanciaDeUmAvatar() {
 		return distanciaDeUmAvatar;

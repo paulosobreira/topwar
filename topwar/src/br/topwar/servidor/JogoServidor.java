@@ -117,6 +117,9 @@ public class JogoServidor {
 			avatarTopWar.setPontoAvatar(mapaTopWar.getPontoTimeVermelho());
 
 		avatarTopWar.setNomeJogador(dadosJogoTopWar.getNomeJogador());
+		if (dadosJogoTopWar.isDemo()) {
+			avatarTopWar.setEspectador(true);
+		}
 		avatarTopWars.put(avatarTopWar.getNomeJogador(), avatarTopWar);
 	}
 
@@ -267,6 +270,9 @@ public class JogoServidor {
 		List<ObjTopWar> avataresCopy = new ArrayList<ObjTopWar>();
 		while (!verificaFinalizado() && avataresCopy.isEmpty()) {
 			try {
+				if (avatarTopWars.isEmpty()) {
+					break;
+				}
 				for (Iterator iterator = avatarTopWars.keySet().iterator(); iterator
 						.hasNext();) {
 					String nmAv = (String) iterator.next();
@@ -283,19 +289,24 @@ public class JogoServidor {
 	public Object atualizaListaAvatares(NnpeTO nnpeTO) {
 		ObjTopWar avatarTopWarJog = obterAvatarTopWarCopia(nnpeTO
 				.getSessaoCliente().getNomeJogador());
-		if (avatarTopWarJog == null)
-			return null;
 		Set<ObjTopWar> ret = new HashSet<ObjTopWar>();
+		if (avatarTopWarJog == null) {
+			return null;
+		}
 		synchronized (avatarTopWars) {
 			for (Iterator iterator = avatarTopWars.keySet().iterator(); iterator
 					.hasNext();) {
 				String nmAvatar = (String) iterator.next();
 				ObjTopWar avatarTopWar = (ObjTopWar) avatarTopWars
 						.get(nmAvatar);
-				if (avatarTopWar.equals(avatarTopWarJog)) {
+				if ((avatarTopWarJog.isEspectador())
+						|| avatarTopWar.equals(avatarTopWarJog)) {
 					avatarTopWar
 							.setUltimaRequisicao(System.currentTimeMillis());
 					ret.add(avatarTopWar);
+					continue;
+				}
+				if (avatarTopWarJog.isEspectador()) {
 					continue;
 				}
 				double distacia = GeoUtil.distaciaEntrePontos(
@@ -338,19 +349,22 @@ public class JogoServidor {
 		Map retorno = new HashMap();
 		retorno.put(ConstantesTopWar.LISTA_AVATARES,
 				DadosAvatar.empacotaLista(ret));
-		retorno.put(ConstantesTopWar.BALAS, avatarTopWarJog.getBalas());
-		retorno.put(ConstantesTopWar.CARTUCHO, avatarTopWarJog.getCartuchos());
-		retorno.put(ConstantesTopWar.RECARREGAR,
-				verificaRecarregando(avatarTopWarJog));
 		retorno.put(ConstantesTopWar.PTS_VERMELHO, getPtsVermelho());
 		retorno.put(ConstantesTopWar.PTS_AZUL, getPtsAzul());
 		retorno.put(ConstantesTopWar.TEMPO_JOGO_RESTANTE, tempoRestanteJogo());
-		retorno.put(ConstantesTopWar.MUDAR_CLASSE,
-				avatarTopWarJog.getProxClasse());
-		if (avatarTopWarJog.getMortoPor() != null)
-			retorno.put(ConstantesTopWar.KILL_CAM, avatarTopWarJog
-					.getMortoPor().getNomeJogador());
 
+		if (avatarTopWarJog != null) {
+			retorno.put(ConstantesTopWar.BALAS, avatarTopWarJog.getBalas());
+			retorno.put(ConstantesTopWar.CARTUCHO,
+					avatarTopWarJog.getCartuchos());
+			retorno.put(ConstantesTopWar.RECARREGAR,
+					verificaRecarregando(avatarTopWarJog));
+			retorno.put(ConstantesTopWar.MUDAR_CLASSE,
+					avatarTopWarJog.getProxClasse());
+			if (avatarTopWarJog.getMortoPor() != null)
+				retorno.put(ConstantesTopWar.KILL_CAM, avatarTopWarJog
+						.getMortoPor().getNomeJogador());
+		}
 		String data = (String) nnpeTO.getData();
 		String[] split = data.split("&");
 		Long utlEvento = new Long(0);
@@ -650,6 +664,7 @@ public class JogoServidor {
 						.getUltimaRequisicao());
 				if (diff > 30000) {
 					iterator.remove();
+					Logger.logar("removerClientesInativos");
 				}
 			}
 		}
@@ -1434,6 +1449,14 @@ public class JogoServidor {
 			ultAcao = 0l;
 		}
 		return ((System.currentTimeMillis() - ultAcao) < delay);
+	}
+
+	public boolean isDemo() {
+		return dadosJogoTopWar.isDemo();
+	}
+
+	public void setDemo(boolean demo) {
+		this.dadosJogoTopWar.setDemo(demo);
 	}
 
 }

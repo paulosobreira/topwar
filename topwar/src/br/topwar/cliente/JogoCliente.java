@@ -823,10 +823,18 @@ public class JogoCliente {
 		if (retorno == null) {
 			return;
 		}
-		balas = (Integer) retorno.get(ConstantesTopWar.BALAS);
-		cartuchos = (Integer) retorno.get(ConstantesTopWar.CARTUCHO);
-		recarregando = (Boolean) retorno.get(ConstantesTopWar.RECARREGAR);
-		proxClasse = (String) retorno.get(ConstantesTopWar.MUDAR_CLASSE);
+		if (retorno.get(ConstantesTopWar.BALAS) != null) {
+			balas = (Integer) retorno.get(ConstantesTopWar.BALAS);
+		}
+		if (retorno.get(ConstantesTopWar.CARTUCHO) != null) {
+			cartuchos = (Integer) retorno.get(ConstantesTopWar.CARTUCHO);
+		}
+		if (retorno.get(ConstantesTopWar.RECARREGAR) != null) {
+			recarregando = (Boolean) retorno.get(ConstantesTopWar.RECARREGAR);
+		}
+		if (retorno.get(ConstantesTopWar.MUDAR_CLASSE) != null) {
+			proxClasse = (String) retorno.get(ConstantesTopWar.MUDAR_CLASSE);
+		}
 		ptsAzul = (Integer) retorno.get(ConstantesTopWar.PTS_AZUL);
 		ptsVermelho = (Integer) retorno.get(ConstantesTopWar.PTS_VERMELHO);
 		tempoRestanteJogo = (Long) retorno

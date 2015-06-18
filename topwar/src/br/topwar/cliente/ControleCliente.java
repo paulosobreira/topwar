@@ -170,6 +170,7 @@ public class ControleCliente extends NnpeChatCliente {
 		DadosJogoTopWar dadosJogoTopWar = new DadosJogoTopWar();
 		dadosJogoTopWar.setNomeJogador(getNomeJogador());
 		dadosJogoTopWar.setNomeMapa(painelMenu.getMapaSelecionado());
+		dadosJogoTopWar.setDemo(painelMenu.isDemo());
 		String classe = painelMenu.getClasseSelecionada();
 		dadosJogoTopWar.setClasse(classe);
 		Integer numBots = painelMenu.getNumBotsSelecionado();
