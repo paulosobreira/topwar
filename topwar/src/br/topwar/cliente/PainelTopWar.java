@@ -984,6 +984,9 @@ public class PainelTopWar {
 		}
 		for (Iterator iterator = avatarClientes.iterator(); iterator.hasNext();) {
 			AvatarCliente avatarCliente = (AvatarCliente) iterator.next();
+			if (avatarCliente.isLocal() && jogoCliente.isDemo()) {
+				continue;
+			}
 			if (ConstantesTopWar.OBJ_ROCKET == avatarCliente.getArma()) {
 				desenhaRocket(graphics2d, avatarCliente);
 				continue;
@@ -1615,13 +1618,12 @@ public class PainelTopWar {
 
 		y += 40;
 
-		
 		g2d.setColor(ConstantesTopWar.lightWhite);
 		largura = Util.calculaLarguraText(Lang.msg("espaco"), g2d) + 20;
 		g2d.fillRoundRect(x - largura, y - 20, largura, 35, 10, 10);
 		g2d.setColor(Color.BLACK);
 		g2d.drawString(Lang.msg("espaco"), x - largura + 10, y);
-		
+
 		y += 40;
 
 		g2d.setColor(ConstantesTopWar.lightWhite);
@@ -2052,7 +2054,7 @@ public class PainelTopWar {
 			 * Avatar Fade
 			 */
 			int transp = 255;
-			if (jogoCliente.getPontoAvatar() != null
+			if (jogoCliente.getPontoAvatar() != null && !jogoCliente.isDemo()
 					&& !avatarCliente.isLocal()) {
 				int distancia = (int) GeoUtil.distaciaEntrePontos(
 						jogoCliente.getPontoAvatar(), pontoAvatar);
@@ -2269,6 +2271,11 @@ public class PainelTopWar {
 		}
 		for (Iterator iterator = avatarClientes.iterator(); iterator.hasNext();) {
 			AvatarCliente avatarCliente = (AvatarCliente) iterator.next();
+			if (jogoCliente.isDemo() && !avatarCliente.isLocal()
+					&& avatarCliente.getVida() > 0) {
+				contralizaPontoNoAvatar(avatarCliente);
+				break;
+			}
 			if (avatarCliente.isLocal() && avatarCliente.getVida() > 0) {
 				avatarLocal = avatarCliente;
 				contralizaPontoNoAvatar(avatarCliente);

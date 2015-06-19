@@ -266,6 +266,9 @@ public class ControleCliente extends NnpeChatCliente {
 		if (!Util.isNullOrEmpty(jogoCliente.getKillCam())) {
 			return null;
 		}
+		if (jogoCliente.isDemo()) {
+			return null;
+		}
 		if (verificaDelay(ConstantesTopWar.MOVER)) {
 			return null;
 		}
@@ -313,6 +316,9 @@ public class ControleCliente extends NnpeChatCliente {
 		if (!Util.isNullOrEmpty(jogoCliente.getKillCam())) {
 			return null;
 		}
+		if (jogoCliente.isDemo()) {
+			return null;
+		}
 		if (sessaoCliente == null) {
 			return null;
 		}
@@ -339,6 +345,9 @@ public class ControleCliente extends NnpeChatCliente {
 		if (!Util.isNullOrEmpty(jogoCliente.getKillCam())) {
 			return;
 		}
+		if (jogoCliente.isDemo()) {
+			return;
+		}
 		if (jogoCliente == null || !jogoCliente.isJogoEmAndamento()) {
 			return;
 		}
@@ -360,6 +369,9 @@ public class ControleCliente extends NnpeChatCliente {
 		if (!Util.isNullOrEmpty(jogoCliente.getKillCam())) {
 			return null;
 		}
+		if (jogoCliente.isDemo()) {
+			return null;
+		}
 		if (verificaDelay(ConstantesTopWar.RECARREGAR)) {
 			return null;
 		}
@@ -377,6 +389,9 @@ public class ControleCliente extends NnpeChatCliente {
 
 	public Object moverPonto(Point p) {
 		if (!Util.isNullOrEmpty(jogoCliente.getKillCam())) {
+			return null;
+		}
+		if (jogoCliente.isDemo()) {
 			return null;
 		}
 		if (sessaoCliente == null) {
@@ -400,6 +415,9 @@ public class ControleCliente extends NnpeChatCliente {
 
 	public Object alternaFaca() {
 		if (!Util.isNullOrEmpty(jogoCliente.getKillCam())) {
+			return null;
+		}
+		if (jogoCliente.isDemo()) {
 			return null;
 		}
 		if (verificaDelay(ConstantesTopWar.ALTERNA_FACA)) {

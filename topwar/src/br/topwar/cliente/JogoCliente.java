@@ -415,6 +415,9 @@ public class JogoCliente {
 			public void mouseClicked(MouseEvent e) {
 				seguirMouse = false;
 				atacando = false;
+				if(avatarLocal==null){
+					return;
+				}
 				if (painelTopWar.verificaVoltaMenuPrincipal(e.getPoint())) {
 					controleCliente.voltaMenuPrincipal();
 					return;
@@ -1158,5 +1161,9 @@ public class JogoCliente {
 			fpsLimite = 60D;
 		}
 
+	}
+
+	public boolean isDemo() {
+		return dadosJogoTopWar.isDemo();
 	}
 }
