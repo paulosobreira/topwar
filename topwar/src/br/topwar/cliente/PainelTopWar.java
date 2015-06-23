@@ -18,6 +18,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -131,6 +132,7 @@ public class PainelTopWar {
 	private int contMostraFPS;
 	private boolean verControles = true;
 	private boolean escondeuControles = false;
+	private AvatarCliente avatarDemo;
 
 	public void setVerControles(boolean verControles) {
 		if (!verControles) {
@@ -1355,7 +1357,11 @@ public class PainelTopWar {
 
 	protected void desenhaInfoJogo(Graphics2D g2d) {
 		desenhaInfoCima(g2d);
-		desenhaInfoBaixo(g2d);
+		if (jogoCliente.isDemo()) {
+			desenhaInfoArmaDemo(g2d);
+		} else {
+			desenhaInfoArmaAvatar(g2d);
+		}
 		desenhaEventos(g2d);
 		desenhaPlacar(g2d);
 	}
@@ -1643,7 +1649,59 @@ public class PainelTopWar {
 		g2d.setFont(fontOri);
 	}
 
-	private void desenhaInfoBaixo(Graphics2D g2d) {
+	private void desenhaInfoArmaDemo(Graphics2D g2d) {
+		if (avatarDemo == null) {
+			return;
+		}
+		Shape limitesViewPort = limitesViewPort();
+		int x = limitesViewPort.getBounds().x
+				+ (limitesViewPort.getBounds().width - 80);
+		int y = limitesViewPort.getBounds().y
+				+ (limitesViewPort.getBounds().height - 20);
+		Font fontOri = g2d.getFont();
+		g2d.setFont(new Font(fontOri.getName(), fontOri.getStyle(), 32));
+
+		BufferedImage arma = null;
+		if (avatarDemo.getClasse() == ConstantesTopWar.ASSAULT) {
+			arma = assault;
+		} else if (avatarDemo.getClasse() == ConstantesTopWar.SHOTGUN) {
+			arma = shotgun;
+		} else if (avatarDemo.getClasse() == ConstantesTopWar.MACHINEGUN) {
+			arma = machinegun;
+		} else if (avatarDemo.getClasse() == ConstantesTopWar.SNIPER) {
+			arma = sniper;
+		} else if (avatarDemo.getClasse() == ConstantesTopWar.ROCKET) {
+			arma = rocket_launcher;
+		} else if (avatarDemo.getClasse() == ConstantesTopWar.SHIELD) {
+			arma = riot_shield;
+		}
+		if (arma == null) {
+			g2d.setFont(fontOri);
+			return;
+		}
+
+		int xArma = x - (arma.getWidth() + 150);
+
+		g2d.setColor(ConstantesTopWar.lightWhite);
+		g2d.fillRoundRect(xArma - 10, y - (arma.getHeight() + 5),
+				arma.getWidth() + 20, arma.getHeight() + 5, 10, 10);
+		if (desenhaImagens)
+			g2d.drawImage(arma, xArma - 10, y - (arma.getHeight()), null);
+
+		y -= 5;
+		x += 30;
+
+		String nome = avatarDemo.getNomeJogador();
+		g2d.setColor(ConstantesTopWar.lightWhite);
+		g2d.fillRoundRect(x - 160, y - 30,
+				Util.calculaLarguraText(nome, g2d) + 20, 35, 10, 10);
+		g2d.setColor(Color.BLACK);
+		g2d.drawString(nome, x - 150, y);
+
+		g2d.setFont(fontOri);
+	}
+
+	private void desenhaInfoArmaAvatar(Graphics2D g2d) {
 		Shape limitesViewPort = limitesViewPort();
 		int x = limitesViewPort.getBounds().x
 				+ (limitesViewPort.getBounds().width - 140);
@@ -1974,6 +2032,21 @@ public class PainelTopWar {
 		if (pontoAvatar == null) {
 			pontoAvatar = avatarCliente.getPontoAvatar();
 		}
+
+		if (avatarCliente.equals(avatarDemo)) {
+			Rectangle ar = avatarCliente.obeterAreaAvatarSuave().getBounds();
+			if (ConstantesTopWar.TIME_AZUL.equals(avatarCliente.getTime())) {
+				graphics2d.setColor(OcilaCor.geraOcila("INVENC_AZUL",
+						new Color(150, 150, 255)));
+			}
+			if (ConstantesTopWar.TIME_VERMELHO.equals(avatarCliente.getTime())) {
+				graphics2d.setColor(OcilaCor.geraOcila("INVENC_VERMELHO",
+						new Color(255, 150, 150)));
+			}
+			graphics2d.fillOval(ar.x - descontoCentraliza.x, ar.y
+					- descontoCentraliza.y + ar.height - 7, ar.width,
+					ar.height / 4);
+		}
 		int anim = avatarCliente.getQuadroAnimacao();
 		int aniMorte = avatarCliente.getQuadroAnimacaoMorte();
 		String time = avatarCliente.getTime();
@@ -2179,7 +2252,6 @@ public class PainelTopWar {
 		/**
 		 * Aurea Invunerabilidade
 		 */
-
 		if (avatarCliente.isInvencivel()) {
 			Rectangle ar = avatarCliente.obeterAreaAvatarSuave().getBounds();
 			if (ConstantesTopWar.TIME_AZUL.equals(avatarCliente.getTime())) {
@@ -2264,24 +2336,28 @@ public class PainelTopWar {
 	}
 
 	public void atualiza() {
-		Collection<AvatarCliente> avatarClientes = jogoCliente
-				.getAvatarClientesCopia();
-		if (avatarClientes == null) {
+		List<AvatarCliente> avatarClientes = new LinkedList<AvatarCliente>(
+				jogoCliente.getAvatarClientesCopia());
+		if (avatarClientes.isEmpty()) {
 			return;
 		}
-		for (Iterator iterator = avatarClientes.iterator(); iterator.hasNext();) {
-			AvatarCliente avatarCliente = (AvatarCliente) iterator.next();
+		for (int i = 0; i < avatarClientes.size(); i++) {
+			AvatarCliente avatarCliente = avatarClientes.get(i);
 			if (jogoCliente.isDemo() && !avatarCliente.isLocal()
-					&& avatarCliente.getVida() > 0) {
+					&& avatarCliente.getVida() > 0
+					&& i == jogoCliente.getIndiceAvatarAssistindo()) {
+				avatarDemo = avatarCliente;
 				contralizaPontoNoAvatar(avatarCliente);
 				break;
 			}
-			if (avatarCliente.isLocal() && avatarCliente.getVida() > 0) {
+			if (!jogoCliente.isDemo() && avatarCliente.isLocal()
+					&& avatarCliente.getVida() > 0) {
 				avatarLocal = avatarCliente;
 				contralizaPontoNoAvatar(avatarCliente);
 				break;
 			}
-			if (!Util.isNullOrEmpty(jogoCliente.getKillCam())
+			if (!jogoCliente.isDemo()
+					&& !Util.isNullOrEmpty(jogoCliente.getKillCam())
 					&& avatarCliente.getNomeJogador().equals(
 							jogoCliente.getKillCam())) {
 				contralizaPontoNoAvatar(avatarCliente);

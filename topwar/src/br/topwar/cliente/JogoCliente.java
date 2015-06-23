@@ -101,6 +101,7 @@ public class JogoCliente {
 	protected double fpsLimite = 60D;
 	private boolean atacando;
 	private boolean mirouAvatarAdversario;
+	private int indiceAvatarAssistindo;
 
 	public PainelTopWar getPainelTopWar() {
 		return painelTopWar;
@@ -999,6 +1000,10 @@ public class JogoCliente {
 	private void processaComandosTeclado(int keyCode) {
 
 		if (keyCode == KeyEvent.VK_A || keyCode == KeyEvent.VK_LEFT) {
+			indiceAvatarAssistindo--;
+			if (indiceAvatarAssistindo < 0) {
+				indiceAvatarAssistindo = 0;
+			}
 			controleCliente.moverEsquerda();
 			seguirMouse = false;
 		}
@@ -1007,9 +1012,15 @@ public class JogoCliente {
 			seguirMouse = false;
 		}
 		if (keyCode == KeyEvent.VK_D || keyCode == KeyEvent.VK_RIGHT) {
+			indiceAvatarAssistindo++;
+			Collection<AvatarCliente> avatarClientesCopia = getAvatarClientesCopia();
+			if (indiceAvatarAssistindo >= avatarClientesCopia.size()) {
+				indiceAvatarAssistindo = avatarClientesCopia.size() - 1;
+			}
 			controleCliente.moverDireita();
 			seguirMouse = false;
 		}
+		Logger.logar("indiceAvatarAssistindo "+indiceAvatarAssistindo);
 		if (keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_UP) {
 			controleCliente.moverCima();
 			seguirMouse = false;
@@ -1021,6 +1032,12 @@ public class JogoCliente {
 		if (keyCode == KeyEvent.VK_CONTROL) {
 			alternaFaca();
 		}
+	}
+	
+	
+
+	public int getIndiceAvatarAssistindo() {
+		return indiceAvatarAssistindo;
 	}
 
 	private void alternaFaca() {
