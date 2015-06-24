@@ -254,7 +254,7 @@ public abstract class BotInfoAbstract {
 		}
 		int distaciaEntrePontos = GeoUtil.distaciaEntrePontos(
 				avatarTopWar.getPontoAvatar(), avatarSeguir.getPontoAvatar());
-		double limiteEscapar = (avatarTopWar.getLimiteVisao() * 0.75);
+		double limiteEscapar = (avatarTopWar.getLimiteVisao() * 0.5);
 		if (distaciaEntrePontos > limiteEscapar) {
 			jogoServidor.alternarFaca(avatarTopWar);
 		}
@@ -428,10 +428,11 @@ public abstract class BotInfoAbstract {
 						dstMover.y + Util.intervalo(-20, 20));
 				cont++;
 				if (cont > 20) {
+					setPontoDestino(null);
 					return;
 				}
 			}
-			String mover = (String) jogoServidor.moverPontoAvatar(avatarTopWar,
+			jogoServidor.moverPontoAvatar(avatarTopWar,
 					acaoClienteTopWar);
 			lineMove = GeoUtil.drawBresenhamLine(avatarTopWar.getPontoAvatar(),
 					getPontoDestino());

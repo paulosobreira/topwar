@@ -1004,6 +1004,7 @@ public class JogoCliente {
 			if (indiceAvatarAssistindo < 0) {
 				indiceAvatarAssistindo = 0;
 			}
+			controleCliente.avatarDemo(indiceAvatarAssistindo);
 			controleCliente.moverEsquerda();
 			seguirMouse = false;
 		}
@@ -1017,10 +1018,10 @@ public class JogoCliente {
 			if (indiceAvatarAssistindo >= avatarClientesCopia.size()) {
 				indiceAvatarAssistindo = avatarClientesCopia.size() - 1;
 			}
+			controleCliente.avatarDemo(indiceAvatarAssistindo);
 			controleCliente.moverDireita();
 			seguirMouse = false;
 		}
-		Logger.logar("indiceAvatarAssistindo "+indiceAvatarAssistindo);
 		if (keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_UP) {
 			controleCliente.moverCima();
 			seguirMouse = false;

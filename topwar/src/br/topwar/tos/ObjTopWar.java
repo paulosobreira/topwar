@@ -37,6 +37,7 @@ public class ObjTopWar {
 	private transient BotInfoAbstract botInfo;
 	private transient String proxClasse;
 	private transient Point pontoDestinoMover;
+	private transient String nomeAvatarAssistindo;
 	private transient Map<String, Long> ultAcaoMapa = new HashMap<String, Long>();
 
 	public boolean isEspectador() {
@@ -57,6 +58,14 @@ public class ObjTopWar {
 
 	public void setPontoDestinoMover(Point destinoMover) {
 		this.pontoDestinoMover = destinoMover;
+	}
+
+	public String getNomeAvatarAssistindo() {
+		return nomeAvatarAssistindo;
+	}
+
+	public void setNomeAvatarAssistindo(String nomeAvatarAssistindo) {
+		this.nomeAvatarAssistindo = nomeAvatarAssistindo;
 	}
 
 	public String getProxClasse() {

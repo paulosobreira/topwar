@@ -199,10 +199,11 @@ public class ControleJogosServidor {
 		if (avatarTopWar == null) {
 			return null;
 		}
-		jogoServidor.atualizaAngulo(avatarTopWar, acaoClienteTopWar.getAngulo());
-		Object atacar = jogoServidor.atacar(avatarTopWar, acaoClienteTopWar.getAngulo(),
-				acaoClienteTopWar.getRange());
-		if(ConstantesTopWar.OK.equals(atacar)){
+		jogoServidor
+				.atualizaAngulo(avatarTopWar, acaoClienteTopWar.getAngulo());
+		Object atacar = jogoServidor.atacar(avatarTopWar,
+				acaoClienteTopWar.getAngulo(), acaoClienteTopWar.getRange());
+		if (ConstantesTopWar.OK.equals(atacar)) {
 			avatarTopWar.setPontoDestinoMover(null);
 		}
 		return atacar;
@@ -221,8 +222,8 @@ public class ControleJogosServidor {
 		if (avatarTopWar == null) {
 			return null;
 		}
-		return jogoServidor.atualizaAngulo(avatarTopWar, acaoClienteTopWar
-				.getAngulo());
+		return jogoServidor.atualizaAngulo(avatarTopWar,
+				acaoClienteTopWar.getAngulo());
 	}
 
 	public Object recarregar(NnpeTO nnpeTO) {
@@ -342,6 +343,19 @@ public class ControleJogosServidor {
 				Logger.logar("jogosAndamento.size() " + jogosAndamento.size());
 			}
 		}
+	}
+
+	public Object obsCam(NnpeTO nnpeTO) {
+		JogoServidor jogoServidor = obterJogoCliente(nnpeTO.getSessaoCliente()
+				.getNomeJogador());
+		if (jogoServidor == null) {
+			return null;
+		}
+		ObjTopWar avatarTopWar = obterAvatarTopWarClienteCopia(nnpeTO
+				.getSessaoCliente().getNomeJogador());
+		if (avatarTopWar != null)
+			avatarTopWar.setNomeAvatarAssistindo(nnpeTO.getData().toString());
+		return ConstantesTopWar.OK;
 	}
 
 }

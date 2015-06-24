@@ -293,6 +293,7 @@ public class JogoServidor {
 		if (avatarTopWarJog == null) {
 			return null;
 		}
+		ObjTopWar avatarEspectador = null;
 		synchronized (avatarTopWars) {
 			for (Iterator iterator = avatarTopWars.keySet().iterator(); iterator
 					.hasNext();) {
@@ -301,12 +302,12 @@ public class JogoServidor {
 						.get(nmAvatar);
 				if ((avatarTopWarJog.isEspectador())
 						|| avatarTopWar.equals(avatarTopWarJog)) {
+					if(nmAvatar.equals(avatarTopWarJog.getNomeAvatarAssistindo())){
+						avatarEspectador = avatarTopWar;
+					}
 					avatarTopWar
 							.setUltimaRequisicao(System.currentTimeMillis());
 					ret.add(avatarTopWar);
-					continue;
-				}
-				if (avatarTopWarJog.isEspectador()) {
 					continue;
 				}
 				double distacia = GeoUtil.distaciaEntrePontos(
@@ -353,7 +354,13 @@ public class JogoServidor {
 		retorno.put(ConstantesTopWar.PTS_AZUL, getPtsAzul());
 		retorno.put(ConstantesTopWar.TEMPO_JOGO_RESTANTE, tempoRestanteJogo());
 
-		if (avatarTopWarJog != null) {
+		if (avatarEspectador != null) {
+			retorno.put(ConstantesTopWar.BALAS, avatarEspectador.getBalas());
+			retorno.put(ConstantesTopWar.CARTUCHO,
+					avatarEspectador.getCartuchos());
+			retorno.put(ConstantesTopWar.RECARREGAR,
+					verificaRecarregando(avatarEspectador));
+		} else {
 			retorno.put(ConstantesTopWar.BALAS, avatarTopWarJog.getBalas());
 			retorno.put(ConstantesTopWar.CARTUCHO,
 					avatarTopWarJog.getCartuchos());

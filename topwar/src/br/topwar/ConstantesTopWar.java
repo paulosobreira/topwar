@@ -30,6 +30,7 @@ public class ConstantesTopWar {
 	public static final int OBJ_ROCKET = 8;
 	public static final String ATACAR = "A";
 	public static final String KILL_CAM = "K_C";
+	public static final String OBS_CAM = "O_C";
 	public static final String OBTER_PLCAR = "O_P";
 	public static final String EVENTO_JOGO = "E_J";
 	public static final String RADIO_JOGO = "R_J";
@@ -139,8 +140,8 @@ public class ConstantesTopWar {
 	public static final int NUMERO_JOGOS = 1;
 	public static final boolean JOGADOR_INVENCIVEL = false;
 	public static final int CICLOS_DESISTIR_SEGUIR_BOT = 20;
-	public static final int PTS_MIN_SEGUIR_BOT = 25;
-	public static final int PTS_MAX_SEGUIR_BOT = 75;
+	public static final int PTS_MIN_SEGUIR_BOT = 50;
+	public static final int PTS_MAX_SEGUIR_BOT = 100;
 
 	public static Long delayPadrao(String chave) {
 		Long delay = new Long(LATENCIA_MIN);

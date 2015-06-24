@@ -2,7 +2,9 @@ package br.topwar.cliente;
 
 import java.awt.GridLayout;
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.JApplet;
@@ -498,6 +500,29 @@ public class ControleCliente extends NnpeChatCliente {
 	public void voltaMenuPrincipal() {
 		sair();
 		painelMenu.inicializar();
+	}
+
+	public void avatarDemo(int indiceAvatarAssistindo) {
+		if (!jogoCliente.isDemo()) {
+			return;
+		}
+		if (verificaDelay(ConstantesTopWar.OBS_CAM)) {
+			return;
+		}
+		ultAcaoMapa.put(ConstantesTopWar.OBS_CAM, System.currentTimeMillis());
+		NnpeTO nnpeTO = new NnpeTO();
+		nnpeTO.setComando(ConstantesTopWar.OBS_CAM);
+		nnpeTO.setSessaoCliente(sessaoCliente);
+		List<AvatarCliente> avatarClientesCopia = new ArrayList<AvatarCliente>(
+				jogoCliente.getAvatarClientesCopia());
+		if (indiceAvatarAssistindo < 0
+				|| indiceAvatarAssistindo >= avatarClientesCopia.size()) {
+			return;
+		}
+		String nome = avatarClientesCopia.get(indiceAvatarAssistindo)
+				.getNomeJogador();
+		nnpeTO.setData(nome);
+		enviarObjeto(nnpeTO);
 	}
 
 }

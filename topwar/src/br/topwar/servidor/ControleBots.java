@@ -77,7 +77,6 @@ public class ControleBots {
 				default:
 					break;
 				}
-
 				dadosJogoTopWar.setNomeJogador(nome);
 				String time = ConstantesTopWar.TIME_VERMELHO;
 				if (!botsVsHumans) {

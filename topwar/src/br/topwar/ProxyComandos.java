@@ -19,7 +19,8 @@ public class ProxyComandos extends NnpeProxyComandos {
 		this.removeInativos = false;
 	}
 
-	public void setControleJogosServidor(ControleJogosServidor controleJogosServidor) {
+	public void setControleJogosServidor(
+			ControleJogosServidor controleJogosServidor) {
 		this.controleJogosServidor = controleJogosServidor;
 	}
 
@@ -60,9 +61,15 @@ public class ProxyComandos extends NnpeProxyComandos {
 			return criarJogo(nnpeTO);
 		} else if (ConstantesTopWar.OBTER_PLCAR.equals(nnpeTO.getComando())) {
 			return obterPlacarJogo(nnpeTO);
+		} else if (ConstantesTopWar.OBS_CAM.equals(nnpeTO.getComando())) {
+			return obsCam(nnpeTO);
 		} else {
 			return super.processarObjeto(object);
 		}
+	}
+
+	private Object obsCam(NnpeTO nnpeTO) {
+		return controleJogosServidor.obsCam(nnpeTO);
 	}
 
 	private Object radioTime(NnpeTO nnpeTO) {
