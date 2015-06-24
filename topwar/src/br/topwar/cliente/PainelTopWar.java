@@ -49,8 +49,8 @@ public class PainelTopWar {
 	private Thread threadCarregarBkg;
 	private JogoCliente jogoCliente;
 	private MapaTopWar mapaTopWar;
-	public static boolean desenhaObjetos = true;
-	public static boolean desenhaImagens = false;
+	public static boolean desenhaObjetos = false;
+	public static boolean desenhaImagens = true;
 	public static boolean desenhaNada = false;
 	private Map<Point, Integer> mapaExplosoes = new ConcurrentHashMap<Point, Integer>();
 	private int tabCont = 0;
@@ -1655,7 +1655,7 @@ public class PainelTopWar {
 		}
 		Shape limitesViewPort = limitesViewPort();
 		int x = limitesViewPort.getBounds().x
-				+ (limitesViewPort.getBounds().width - 80);
+				+ (limitesViewPort.getBounds().width - 100);
 		int y = limitesViewPort.getBounds().y
 				+ (limitesViewPort.getBounds().height - 20);
 		Font fontOri = g2d.getFont();
@@ -1697,6 +1697,21 @@ public class PainelTopWar {
 				Util.calculaLarguraText(nome, g2d) + 20, 35, 10, 10);
 		g2d.setColor(Color.BLACK);
 		g2d.drawString(nome, x - 150, y);
+		
+		
+		y -= 45;
+		
+		x -= 150;
+		g2d.setColor(ConstantesTopWar.lightWhite);
+		g2d.fillRoundRect(x - 10, y - 30,
+				Util.calculaLarguraText("888", g2d) + 20, 35, 10, 10);
+		g2d.setColor(Color.BLACK);
+		g2d.drawString("" + jogoCliente.getBalas(), x, y);
+		x += 80;
+		g2d.setColor(ConstantesTopWar.lightWhite);
+		g2d.fillRoundRect(x - 10, y - 30, 60, 35, 10, 10);
+		g2d.setColor(Color.BLACK);
+		g2d.drawString("" + jogoCliente.getCartuchos(), x, y);
 
 		g2d.setFont(fontOri);
 	}

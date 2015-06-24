@@ -1020,7 +1020,6 @@ public class JogoCliente {
 			controleCliente.moverDireita();
 			seguirMouse = false;
 		}
-		Logger.logar("indiceAvatarAssistindo "+indiceAvatarAssistindo);
 		if (keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_UP) {
 			controleCliente.moverCima();
 			seguirMouse = false;

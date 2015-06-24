@@ -364,6 +364,8 @@ public class JogoServidor {
 			if (avatarTopWarJog.getMortoPor() != null)
 				retorno.put(ConstantesTopWar.KILL_CAM, avatarTopWarJog
 						.getMortoPor().getNomeJogador());
+		}else {
+			//TODO OBS_CAM
 		}
 		String data = (String) nnpeTO.getData();
 		String[] split = data.split("&");
