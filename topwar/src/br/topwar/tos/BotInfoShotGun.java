@@ -34,7 +34,7 @@ public class BotInfoShotGun extends BotInfoAbstract {
 		int contaInimigosVisiveis = contaInimigosVisiveis();
 		int contaAmigosVisiveis = contaAmigosVisiveis();
 
-		if (contaAmigosVisiveis < contaInimigosVisiveis
+		if (contaAmigosVisiveis + 2 < contaInimigosVisiveis
 				&& !verificaDestinoSeguroDosInimigos()) {
 			procurarAbrigo();
 		} else {
@@ -47,7 +47,7 @@ public class BotInfoShotGun extends BotInfoAbstract {
 				patrulhar();
 			}
 			moverDestino();
-		}		
+		}
 	}
 
 	/**
@@ -56,6 +56,8 @@ public class BotInfoShotGun extends BotInfoAbstract {
 	protected void atacarInimigo() {
 		setSeguindo(null);
 		setExecutouAcaoAtaque(false);
+		Integer menorDistancia = null;
+		ObjTopWar inimigoMaisProximo = null;
 		for (Iterator iterator2 = avataresTimeOposto.iterator(); iterator2
 				.hasNext();) {
 			ObjTopWar avatarTopWarCopia = (ObjTopWar) iterator2.next();
@@ -68,6 +70,10 @@ public class BotInfoShotGun extends BotInfoAbstract {
 			List<Point> line = GeoUtil.drawBresenhamLine(
 					avatarTopWar.getPontoAvatar(),
 					avatarTopWarCopia.getPontoAvatar());
+			if (menorDistancia == null || line.size() < menorDistancia) {
+				menorDistancia = line.size();
+				inimigoMaisProximo = avatarTopWarCopia;
+			}
 			if ((avatarTopWar.getBalas() != 0 || avatarTopWar.getCartuchos() != 0)
 					&& avatarTopWar.getArma() == ConstantesTopWar.ARMA_FACA) {
 				jogoServidor.alternarFaca(avatarTopWar);
@@ -97,6 +103,10 @@ public class BotInfoShotGun extends BotInfoAbstract {
 				}
 			}
 			break;
+		}
+		if (!executouAcaoAtaque && inimigoMaisProximo != null) {
+			setPontoDestino(inimigoMaisProximo.getPontoAvatar());
+			return;
 		}
 		setExecutouAcaoAtaque(true);
 	}
