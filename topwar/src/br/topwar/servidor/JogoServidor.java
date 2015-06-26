@@ -1006,6 +1006,7 @@ public class JogoServidor {
 			}
 			if (ConstantesTopWar.ARMA_FACA == avatarAtacando.getArma()) {
 				if (processaDanoCombateCorpoCorpo(avatarAtacando, avatarAlvo)) {
+					avatarAtacando.setTempoUtlAtaque(System.currentTimeMillis());
 					return true;
 				}
 			}

@@ -32,16 +32,9 @@ public class BotInfoShield extends BotInfoAbstract {
 		setExecutouAcaoAtaque(false);
 		processaAvataresVisiveis(avatarTopWar, jogoServidor);
 		int contaInimigosVisiveis = contaInimigosVisiveis();
-		int contaAmigosVisiveis = contaAmigosVisiveis();
+		//int contaAmigosVisiveis = contaAmigosVisiveis();
 
-		if (getSeguindo() == null || getSeguindo().getVida() < 0) {
-			if (contaAmigosVisiveis < contaInimigosVisiveis
-					&& !verificaDestinoSeguroDosInimigos()) {
-				procurarAbrigo();
-			} else {
-				tentarAtacar();
-			}
-		}
+		tentarAtacar();
 
 		if (!isExecutouAcaoAtaque()) {
 			segueAvatar();
@@ -75,7 +68,7 @@ public class BotInfoShield extends BotInfoAbstract {
 				avatarMaisProximoInimigo = objTopWar;
 			}
 		}
-		if(avatarMaisProximoInimigo==null){
+		if (avatarMaisProximoInimigo == null) {
 			return;
 		}
 		List<Point> drawBresenhamLine = GeoUtil.drawBresenhamLine(getSeguindo()
@@ -93,6 +86,8 @@ public class BotInfoShield extends BotInfoAbstract {
 	protected void atacarInimigo() {
 		setSeguindo(null);
 		setExecutouAcaoAtaque(false);
+		Integer menorDistancia = null;
+		ObjTopWar inimigoMaisProximo = null;
 		for (Iterator iterator2 = avataresTimeOposto.iterator(); iterator2
 				.hasNext();) {
 			ObjTopWar avatarTopWarCopia = (ObjTopWar) iterator2.next();
@@ -105,12 +100,20 @@ public class BotInfoShield extends BotInfoAbstract {
 			List<Point> line = GeoUtil.drawBresenhamLine(
 					avatarTopWar.getPontoAvatar(),
 					avatarTopWarCopia.getPontoAvatar());
+			if (menorDistancia == null || line.size() < menorDistancia) {
+				menorDistancia = line.size();
+				inimigoMaisProximo = avatarTopWarCopia;
+			}
 			if (line.size() > 25) {
 				continue;
 			}
-			executouAcaoAtaque = true;
 			executouAcaoAtaque = atacaComFaca(avatarTopWarCopia);
+			executouAcaoAtaque = true;
 			break;
+		}
+		if (!executouAcaoAtaque && inimigoMaisProximo != null) {
+			setPontoDestino(inimigoMaisProximo.getPontoAvatar());
+			return;
 		}
 		setExecutouAcaoAtaque(true);
 	}

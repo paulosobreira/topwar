@@ -31,7 +31,7 @@ public class BotInfoAssault extends BotInfoAbstract {
 		int contaInimigosVisiveis = contaInimigosVisiveis();
 		int contaAmigosVisiveis = contaAmigosVisiveis();
 
-		if (contaAmigosVisiveis < contaInimigosVisiveis
+		if (contaAmigosVisiveis + 1 < contaInimigosVisiveis
 				&& !verificaDestinoSeguroDosInimigos()) {
 			procurarAbrigo();
 		} else {

@@ -34,7 +34,7 @@ public class BotInfoMachine extends BotInfoAbstract {
 		int contaInimigosVisiveis = contaInimigosVisiveis();
 		int contaAmigosVisiveis = contaAmigosVisiveis();
 
-		if (contaAmigosVisiveis < contaInimigosVisiveis
+		if (contaAmigosVisiveis + 2 < contaInimigosVisiveis
 				&& !verificaDestinoSeguroDosInimigos()) {
 			procurarAbrigo();
 		} else {

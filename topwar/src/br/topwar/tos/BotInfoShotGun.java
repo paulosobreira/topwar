@@ -34,7 +34,7 @@ public class BotInfoShotGun extends BotInfoAbstract {
 		int contaInimigosVisiveis = contaInimigosVisiveis();
 		int contaAmigosVisiveis = contaAmigosVisiveis();
 
-		if (contaAmigosVisiveis + 2 < contaInimigosVisiveis
+		if (contaAmigosVisiveis + 3 < contaInimigosVisiveis
 				&& !verificaDestinoSeguroDosInimigos()) {
 			procurarAbrigo();
 		} else {

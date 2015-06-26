@@ -1331,7 +1331,8 @@ public class PainelTopWar {
 		}
 		long millisSrv = jogoCliente.getMillisSrv();
 		long tempoUtlDisparo = avatarCliente.getTempoUtlAtaque();
-		if ((millisSrv - tempoUtlDisparo) > 150) {
+		
+		if ((millisSrv - tempoUtlDisparo) > 200) {
 			return;
 		}
 
