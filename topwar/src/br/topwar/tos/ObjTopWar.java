@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.persistence.Transient;
 
 import br.topwar.ConstantesTopWar;
+import br.topwar.bots.BotInfoAbstract;
 
 public class ObjTopWar {
 	private String time;

@@ -302,7 +302,8 @@ public class JogoServidor {
 						.get(nmAvatar);
 				if ((avatarTopWarJog.isEspectador())
 						|| avatarTopWar.equals(avatarTopWarJog)) {
-					if(nmAvatar.equals(avatarTopWarJog.getNomeAvatarAssistindo())){
+					if (nmAvatar.equals(avatarTopWarJog
+							.getNomeAvatarAssistindo())) {
 						avatarEspectador = avatarTopWar;
 					}
 					avatarTopWar
@@ -611,6 +612,9 @@ public class JogoServidor {
 		int cont = 0;
 		List<ObjTopWar> avatarTopWarsCopia = getAvatarTopWarsCopia();
 		for (int i = 0; i < avatarTopWarsCopia.size(); i++) {
+			if (avatarTopWarsCopia.get(i).isEspectador()) {
+				continue;
+			}
 			if (time.equals(avatarTopWarsCopia.get(i).getTime())) {
 				cont++;
 			}
@@ -1006,7 +1010,8 @@ public class JogoServidor {
 			}
 			if (ConstantesTopWar.ARMA_FACA == avatarAtacando.getArma()) {
 				if (processaDanoCombateCorpoCorpo(avatarAtacando, avatarAlvo)) {
-					avatarAtacando.setTempoUtlAtaque(System.currentTimeMillis());
+					avatarAtacando
+							.setTempoUtlAtaque(System.currentTimeMillis());
 					return true;
 				}
 			}
@@ -1339,6 +1344,9 @@ public class JogoServidor {
 		for (Iterator iterator = avatarTopWarsCopia.iterator(); iterator
 				.hasNext();) {
 			ObjTopWar avatarTopWar = (ObjTopWar) iterator.next();
+			if(avatarTopWar.isEspectador()){
+				continue;
+			}
 			if (avatarTopWar.verificaObj()) {
 				continue;
 			}

@@ -49,9 +49,9 @@ public class ControleBots {
 					&& numBots > 99) {
 				numBots = 99;
 			}
-			//numBots = 0;
+			// numBots = 0;
 			for (int i = 0; i < numBots; i++) {
-				String nome = "Bot " + i;
+				String nome = "Bot " + (i + 1);
 				DadosJogoTopWar dadosJogoTopWar = new DadosJogoTopWar();
 				int botNumClass = Util.intervalo(0, 5);
 				switch (botNumClass) {
@@ -77,7 +77,7 @@ public class ControleBots {
 				default:
 					break;
 				}
-				//dadosJogoTopWar.setClasse(ConstantesTopWar.SHIELD);
+				// dadosJogoTopWar.setClasse(ConstantesTopWar.SHIELD);
 				dadosJogoTopWar.setNomeJogador(nome);
 				String time = ConstantesTopWar.TIME_VERMELHO;
 				if (!botsVsHumans) {

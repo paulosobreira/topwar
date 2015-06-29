@@ -1,4 +1,4 @@
-package br.topwar.tos;
+package br.topwar.bots;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -11,10 +11,11 @@ import br.nnpe.Util;
 import br.topwar.ConstantesTopWar;
 import br.topwar.serial.ObjetoMapa;
 import br.topwar.servidor.JogoServidor;
+import br.topwar.tos.ObjTopWar;
 
-public class BotInfoMachine extends BotInfoAbstract {
+public class BotInfoSniper extends BotInfoAbstract {
 
-	public BotInfoMachine(ObjTopWar bot, JogoServidor jogoServidor) {
+	public BotInfoSniper(ObjTopWar bot, JogoServidor jogoServidor) {
 		this.avatarTopWar = bot;
 		this.jogoServidor = jogoServidor;
 	}
@@ -34,7 +35,7 @@ public class BotInfoMachine extends BotInfoAbstract {
 		int contaInimigosVisiveis = contaInimigosVisiveis();
 		int contaAmigosVisiveis = contaAmigosVisiveis();
 
-		if (contaAmigosVisiveis + 2 < contaInimigosVisiveis
+		if (contaAmigosVisiveis < contaInimigosVisiveis
 				&& !verificaDestinoSeguroDosInimigos()) {
 			procurarAbrigo();
 		} else {
@@ -102,8 +103,7 @@ public class BotInfoMachine extends BotInfoAbstract {
 
 	@Override
 	public void gerarDesvioBot() {
-		setDesvio(Util.intervalo(-4, 4));
+		setDesvio(Util.intervalo(-2, 2));
 
 	}
-
 }

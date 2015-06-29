@@ -1,4 +1,4 @@
-package br.topwar.tos;
+package br.topwar.bots;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -11,10 +11,11 @@ import br.nnpe.Util;
 import br.topwar.ConstantesTopWar;
 import br.topwar.serial.ObjetoMapa;
 import br.topwar.servidor.JogoServidor;
+import br.topwar.tos.ObjTopWar;
 
-public class BotInfoShotGun extends BotInfoAbstract {
+public class BotInfoShield extends BotInfoAbstract {
 
-	public BotInfoShotGun(ObjTopWar bot, JogoServidor jogoServidor) {
+	public BotInfoShield(ObjTopWar bot, JogoServidor jogoServidor) {
 		this.avatarTopWar = bot;
 		this.jogoServidor = jogoServidor;
 	}
@@ -32,22 +33,52 @@ public class BotInfoShotGun extends BotInfoAbstract {
 		setExecutouAcaoAtaque(false);
 		processaAvataresVisiveis(avatarTopWar, jogoServidor);
 		int contaInimigosVisiveis = contaInimigosVisiveis();
-		int contaAmigosVisiveis = contaAmigosVisiveis();
+		//int contaAmigosVisiveis = contaAmigosVisiveis();
 
-		if (contaAmigosVisiveis + 3 < contaInimigosVisiveis
-				&& !verificaDestinoSeguroDosInimigos()) {
-			procurarAbrigo();
-		} else {
-			tentarAtacar();
-		}
+		tentarAtacar();
 
 		if (!isExecutouAcaoAtaque()) {
 			segueAvatar();
 			if (getPontoDestino() == null) {
 				patrulhar();
 			}
+			if (contaInimigosVisiveis > 0) {
+				protegeAvatarSeguindoSeguindo();
+			}
 			moverDestino();
 		}
+
+	}
+
+	private void protegeAvatarSeguindoSeguindo() {
+		if (getSeguindo() == null) {
+			return;
+		}
+		ObjTopWar avatarMaisProximoInimigo = null;
+		int distancia = Integer.MAX_VALUE;
+		for (Iterator iterator = avataresTimeOposto.iterator(); iterator
+				.hasNext();) {
+			ObjTopWar objTopWar = (ObjTopWar) iterator.next();
+			if (objTopWar.getArma() == ConstantesTopWar.ARMA_SHOTGUN) {
+				continue;
+			}
+			int distaciaEntrePontos = GeoUtil.distaciaEntrePontos(getSeguindo()
+					.getPontoAvatar(), objTopWar.getPontoAvatar());
+			if (distaciaEntrePontos < distancia) {
+				distancia = distaciaEntrePontos;
+				avatarMaisProximoInimigo = objTopWar;
+			}
+		}
+		if (avatarMaisProximoInimigo == null) {
+			return;
+		}
+		List<Point> drawBresenhamLine = GeoUtil.drawBresenhamLine(getSeguindo()
+				.getPontoAvatar(), avatarMaisProximoInimigo.getPontoAvatar());
+		setPontoDestino(drawBresenhamLine.get(Util.inte(drawBresenhamLine
+				.size() * 0.1)));
+		avatarTopWar.setAngulo(GeoUtil.calculaAngulo(
+				avatarTopWar.getPontoAvatar(),
+				avatarMaisProximoInimigo.getPontoAvatar(), 90));
 	}
 
 	/**
@@ -74,34 +105,11 @@ public class BotInfoShotGun extends BotInfoAbstract {
 				menorDistancia = line.size();
 				inimigoMaisProximo = avatarTopWarCopia;
 			}
-			if ((avatarTopWar.getBalas() != 0 || avatarTopWar.getCartuchos() != 0)
-					&& avatarTopWar.getArma() == ConstantesTopWar.ARMA_FACA) {
-				jogoServidor.alternarFaca(avatarTopWar);
-				executouAcaoAtaque = true;
-			} else if (line.size() < Util.intervalo(15, 25)) {
-				executouAcaoAtaque = atacaComFaca(avatarTopWarCopia);
-			} else if (avatarTopWar.getArma() != ConstantesTopWar.ARMA_FACA
-					&& line.size() <= 100) {
-				if (avatarTopWar.getBalas() == 0) {
-					if (avatarTopWar.getCartuchos() == 0) {
-						jogoServidor.alternarFaca(avatarTopWar);
-						executouAcaoAtaque = true;
-					} else {
-						jogoServidor.recarregar(avatarTopWar);
-						executouAcaoAtaque = true;
-					}
-				} else {
-					avatarTopWar.setAngulo(GeoUtil.calculaAngulo(
-							avatarTopWar.getPontoAvatar(),
-							avatarTopWarCopia.getPontoAvatar(), 90));
-					vidaUltAlvo = avatarTopWar.getVida();
-					jogoServidor.atacar(avatarTopWar, avatarTopWar.getAngulo(),
-							Util.inte(line.size() * 1.5));
-					if (vidaUltAlvo != avatarTopWar.getVida()) {
-						executouAcaoAtaque = true;
-					}
-				}
+			if (line.size() > 25) {
+				continue;
 			}
+			executouAcaoAtaque = atacaComFaca(avatarTopWarCopia);
+			executouAcaoAtaque = true;
 			break;
 		}
 		if (!executouAcaoAtaque && inimigoMaisProximo != null) {

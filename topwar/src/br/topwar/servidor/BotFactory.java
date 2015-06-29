@@ -2,13 +2,13 @@ package br.topwar.servidor;
 
 import br.nnpe.Logger;
 import br.topwar.ConstantesTopWar;
-import br.topwar.tos.BotInfoAbstract;
-import br.topwar.tos.BotInfoAssault;
-import br.topwar.tos.BotInfoMachine;
-import br.topwar.tos.BotInfoRocket;
-import br.topwar.tos.BotInfoShield;
-import br.topwar.tos.BotInfoShotGun;
-import br.topwar.tos.BotInfoSniper;
+import br.topwar.bots.BotInfoAbstract;
+import br.topwar.bots.BotInfoAssault;
+import br.topwar.bots.BotInfoMachine;
+import br.topwar.bots.BotInfoRocket;
+import br.topwar.bots.BotInfoShield;
+import br.topwar.bots.BotInfoShotGun;
+import br.topwar.bots.BotInfoSniper;
 import br.topwar.tos.ObjTopWar;
 
 public class BotFactory {

@@ -6,9 +6,9 @@ import java.util.List;
 
 import br.nnpe.Logger;
 import br.topwar.ConstantesTopWar;
-import br.topwar.tos.BotInfoAbstract;
+import br.topwar.bots.BotInfoAbstract;
+import br.topwar.bots.BotInfoAssault;
 import br.topwar.tos.ObjTopWar;
-import br.topwar.tos.BotInfoAssault;
 
 public class ThreadBot implements Runnable {
 	private JogoServidor jogoServidor;

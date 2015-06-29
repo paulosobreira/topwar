@@ -1,4 +1,4 @@
-package br.topwar.tos;
+package br.topwar.bots;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -8,13 +8,14 @@ import java.util.Iterator;
 import java.util.List;
 
 import sun.util.logging.resources.logging;
-
 import br.nnpe.GeoUtil;
 import br.nnpe.Logger;
 import br.nnpe.Util;
 import br.topwar.ConstantesTopWar;
 import br.topwar.serial.ObjetoMapa;
 import br.topwar.servidor.JogoServidor;
+import br.topwar.tos.DadosAcaoClienteTopWar;
+import br.topwar.tos.ObjTopWar;
 
 public abstract class BotInfoAbstract {
 	boolean executouAcaoAtaque = false;

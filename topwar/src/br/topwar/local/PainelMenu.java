@@ -190,7 +190,7 @@ public class PainelMenu {
 
 	private String mapaSelecionado = MAPA_DESERTO;
 
-	private int numBotsSelecionado = 29;
+	private int numBotsSelecionado = 0;
 
 	private int tempoJogoSelecionado = 10;
 
@@ -281,10 +281,12 @@ public class PainelMenu {
 
 	protected void processaClick(MouseEvent e) {
 		if (MENU.equals(MENU_PRINCIPAL) && menuMatarRect.contains(e.getPoint())) {
+			numBotsSelecionado = 29;
 			MENU = MENU_JOGAR;
 			return;
 		}
 		if (MENU.equals(MENU_PRINCIPAL) && menuDemoRect.contains(e.getPoint())) {
+			numBotsSelecionado = 30;
 			MENU = MENU_DEMO;
 			return;
 		}

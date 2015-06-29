@@ -1,4 +1,4 @@
-package br.topwar.tos;
+package br.topwar.bots;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -11,10 +11,11 @@ import br.nnpe.Util;
 import br.topwar.ConstantesTopWar;
 import br.topwar.serial.ObjetoMapa;
 import br.topwar.servidor.JogoServidor;
+import br.topwar.tos.ObjTopWar;
 
-public class BotInfoRocket extends BotInfoAbstract {
+public class BotInfoShotGun extends BotInfoAbstract {
 
-	public BotInfoRocket(ObjTopWar bot, JogoServidor jogoServidor) {
+	public BotInfoShotGun(ObjTopWar bot, JogoServidor jogoServidor) {
 		this.avatarTopWar = bot;
 		this.jogoServidor = jogoServidor;
 	}
@@ -34,7 +35,7 @@ public class BotInfoRocket extends BotInfoAbstract {
 		int contaInimigosVisiveis = contaInimigosVisiveis();
 		int contaAmigosVisiveis = contaAmigosVisiveis();
 
-		if (contaAmigosVisiveis + 2 < contaInimigosVisiveis
+		if (contaAmigosVisiveis + 3 < contaInimigosVisiveis
 				&& !verificaDestinoSeguroDosInimigos()) {
 			procurarAbrigo();
 		} else {
@@ -56,6 +57,8 @@ public class BotInfoRocket extends BotInfoAbstract {
 	protected void atacarInimigo() {
 		setSeguindo(null);
 		setExecutouAcaoAtaque(false);
+		Integer menorDistancia = null;
+		ObjTopWar inimigoMaisProximo = null;
 		for (Iterator iterator2 = avataresTimeOposto.iterator(); iterator2
 				.hasNext();) {
 			ObjTopWar avatarTopWarCopia = (ObjTopWar) iterator2.next();
@@ -68,13 +71,18 @@ public class BotInfoRocket extends BotInfoAbstract {
 			List<Point> line = GeoUtil.drawBresenhamLine(
 					avatarTopWar.getPontoAvatar(),
 					avatarTopWarCopia.getPontoAvatar());
+			if (menorDistancia == null || line.size() < menorDistancia) {
+				menorDistancia = line.size();
+				inimigoMaisProximo = avatarTopWarCopia;
+			}
 			if ((avatarTopWar.getBalas() != 0 || avatarTopWar.getCartuchos() != 0)
 					&& avatarTopWar.getArma() == ConstantesTopWar.ARMA_FACA) {
 				jogoServidor.alternarFaca(avatarTopWar);
 				executouAcaoAtaque = true;
 			} else if (line.size() < Util.intervalo(15, 25)) {
 				executouAcaoAtaque = atacaComFaca(avatarTopWarCopia);
-			} else if (avatarTopWar.getArma() != ConstantesTopWar.ARMA_FACA) {
+			} else if (avatarTopWar.getArma() != ConstantesTopWar.ARMA_FACA
+					&& line.size() <= 100) {
 				if (avatarTopWar.getBalas() == 0) {
 					if (avatarTopWar.getCartuchos() == 0) {
 						jogoServidor.alternarFaca(avatarTopWar);
@@ -97,12 +105,20 @@ public class BotInfoRocket extends BotInfoAbstract {
 			}
 			break;
 		}
+		if (!executouAcaoAtaque && inimigoMaisProximo != null) {
+			setPontoDestino(inimigoMaisProximo.getPontoAvatar());
+			return;
+		}
 		setExecutouAcaoAtaque(true);
+	}
+
+	protected boolean seguindo() {
+		return false;
 	}
 
 	@Override
 	public void gerarDesvioBot() {
-		setDesvio(Util.intervalo(-2, 2));
+		setDesvio(0);
 
 	}
 }

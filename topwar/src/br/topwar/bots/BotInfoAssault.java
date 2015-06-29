@@ -1,20 +1,18 @@
-package br.topwar.tos;
+package br.topwar.bots;
 
 import java.awt.Point;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 import br.nnpe.GeoUtil;
 import br.nnpe.Util;
 import br.topwar.ConstantesTopWar;
-import br.topwar.serial.ObjetoMapa;
 import br.topwar.servidor.JogoServidor;
+import br.topwar.tos.ObjTopWar;
 
-public class BotInfoSniper extends BotInfoAbstract {
+public class BotInfoAssault extends BotInfoAbstract {
 
-	public BotInfoSniper(ObjTopWar bot, JogoServidor jogoServidor) {
+	public BotInfoAssault(ObjTopWar bot, JogoServidor jogoServidor) {
 		this.avatarTopWar = bot;
 		this.jogoServidor = jogoServidor;
 	}
@@ -34,7 +32,7 @@ public class BotInfoSniper extends BotInfoAbstract {
 		int contaInimigosVisiveis = contaInimigosVisiveis();
 		int contaAmigosVisiveis = contaAmigosVisiveis();
 
-		if (contaAmigosVisiveis < contaInimigosVisiveis
+		if (contaAmigosVisiveis + 1 < contaInimigosVisiveis
 				&& !verificaDestinoSeguroDosInimigos()) {
 			procurarAbrigo();
 		} else {
@@ -48,10 +46,12 @@ public class BotInfoSniper extends BotInfoAbstract {
 			}
 			moverDestino();
 		}
+
 	}
 
+
 	/**
-	 * Seguir/Atacar avatar inimigo
+	 * Atacar avatar inimigo
 	 */
 	protected void atacarInimigo() {
 		setSeguindo(null);
@@ -100,9 +100,23 @@ public class BotInfoSniper extends BotInfoAbstract {
 		setExecutouAcaoAtaque(true);
 	}
 
+	protected void seguirInimigo() {
+		setSeguindo(null);
+		for (Iterator iterator2 = avataresTimeOposto.iterator(); iterator2
+				.hasNext();) {
+			ObjTopWar avatarTopWarCopia = (ObjTopWar) iterator2.next();
+			if (ConstantesTopWar.OBJ_ROCKET == avatarTopWarCopia.getArma()) {
+				continue;
+			}
+			setPontoDestino(avatarTopWarCopia.getPontoAvatar());
+			setSeguindo(avatarTopWarCopia);
+			break;
+		}
+	}
+
 	@Override
 	public void gerarDesvioBot() {
-		setDesvio(Util.intervalo(-2, 2));
-
+		setDesvio(Util.intervalo(-3, 3));
 	}
+
 }
