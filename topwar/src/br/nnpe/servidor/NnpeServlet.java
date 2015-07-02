@@ -100,11 +100,13 @@ public class NnpeServlet extends HttpServlet {
 
 	private String obterHost() throws UnknownHostException {
 		String host = "";
+		int port = 80;
 		try {
 			Properties properties = new Properties();
 			properties.load(this.getClass().getResourceAsStream(
 					"server.properties"));
 			host = properties.getProperty("host");
+			port = Integer.parseInt(properties.getProperty("port"));
 			if (!Util.isNullOrEmpty(host)) {
 				return host;
 			}
@@ -113,25 +115,6 @@ public class NnpeServlet extends HttpServlet {
 		}
 
 		String ip = Inet4Address.getLocalHost().getHostAddress();
-		int port = 80;
-		try {
-			// Connector[] connectors = ServerFactory.getServer()
-			// .findService("Catalina").findConnectors();
-			MBeanServer mBeanServer = MBeanServerFactory.findMBeanServer(null)
-					.get(0);
-			ObjectName name = new ObjectName("Catalina", "type", "Server");
-			Server server = (Server) mBeanServer.getAttribute(name,
-					"managedResource");
-			Connector[] connectors = server.findService("Catalina")
-					.findConnectors();
-			for (int i = 0; i < connectors.length; i++) {
-				if ("HTTP/1.1".equals(connectors[i].getProtocol())) {
-					port = connectors[i].getPort();
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 		host = ip + ":" + port;
 		return host;
 	}

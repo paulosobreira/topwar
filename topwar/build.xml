@@ -10,9 +10,9 @@
      ====================================================================== -->
 <project name="topwar" default="targetPadrao">
 
-	<property environment="env" />
+	<property name="TOMCAT_HOME"       value="C:\apache-tomcat-7.0.53"/>
 	<path id="classpath.compilacao">
-		<fileset dir="${env.TOMCAT_HOME}/lib">
+		<fileset dir="${TOMCAT_HOME}/lib">
 			<include name="*.jar" />
 		</fileset>
 		<fileset dir="WebContent/WEB-INF/lib">
@@ -92,10 +92,11 @@
 			</fileset>
 		</copy>
 	</target>
-
+	
+	<!-- 
 	<target name="criarWar" depends="">
-		<delete dir="${env.TOMCAT_HOME}/webapps/topwar" />
-		<war compress="on" destfile="${env.TOMCAT_HOME}/webapps/topwar.war">
+		<delete dir="${TOMCAT_HOME}/webapps/topwar" />
+		<war compress="on" destfile="${TOMCAT_HOME}/webapps/topwar.war">
 			<fileset dir="WebContent">
 				<exclude name="**/*.jar" />
 			</fileset>
@@ -107,4 +108,14 @@
 		</war>
 		<delete dir="WebContent/br" />
 	</target>
+	-->
+	
+	<target name="criarWar">
+		<delete dir="${TOMCAT_HOME}/webapps/topwar" />
+		<war compress="on" destfile="${TOMCAT_HOME}/webapps/topwar.war">
+			<fileset dir="WebContent" />
+		</war>
+		<delete dir="WebContent/br" />
+	</target>
+	
 </project>
