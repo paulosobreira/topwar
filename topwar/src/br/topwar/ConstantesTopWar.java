@@ -97,7 +97,7 @@ public class ConstantesTopWar {
 	 * SNIPER
 	 */
 	public static final String SNIPER = "sniper";
-	public static final int BALAS_SNIPER = 1;
+	public static final int BALAS_SNIPER = 2;
 	public static final int CARTUCHOS_SNIPER = 16;
 	public static final int VIDA_COMPLETA_SNIPER = 60;
 	public static final int DESVIO_SNIPER = 0;
@@ -125,7 +125,7 @@ public class ConstantesTopWar {
 	public static final int VIDA_COMPLETA_ROCKET = 120;
 	public static final int VELOCIDADE_ROCKET = 4;
 	public static final int TEMPO_RECARGA_ROCKET = 4000;
-	public static final int DESVIO_ROCKET = 0;
+	public static final int DESVIO_ROCKET = 5;
 	/*
 	 * SHIELD
 	 */

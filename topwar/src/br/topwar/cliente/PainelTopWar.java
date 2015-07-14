@@ -133,6 +133,8 @@ public class PainelTopWar {
 	private boolean verControles = true;
 	private boolean escondeuControles = false;
 	private AvatarCliente avatarDemo;
+	private Shape visao;
+	private long ultimoDesenhoVisao;
 
 	public void setVerControles(boolean verControles) {
 		if (!verControles) {
@@ -257,7 +259,9 @@ public class PainelTopWar {
 			graphics2d.setColor(Color.BLACK);
 		}
 		graphics2d.draw(assautRect);
-		graphics2d.drawImage(lifeBarAssalt, null, x, y);
+		if (desenhaImagens) {
+			graphics2d.drawImage(lifeBarAssalt, null, x, y);
+		}
 
 		x += 110;
 
@@ -271,8 +275,9 @@ public class PainelTopWar {
 			graphics2d.setColor(Color.BLACK);
 		}
 		graphics2d.draw(sniperRect);
-		graphics2d.drawImage(lifeBarSniper, null, x, y);
-
+		if (desenhaImagens) {
+			graphics2d.drawImage(lifeBarSniper, null, x, y);
+		}
 		x += 110;
 
 		machineRect.setFrame(x, y, lifeBarMachineGun.getWidth(),
@@ -285,8 +290,9 @@ public class PainelTopWar {
 			graphics2d.setColor(Color.BLACK);
 		}
 		graphics2d.draw(machineRect);
-		graphics2d.drawImage(lifeBarMachineGun, null, x, y);
-
+		if (desenhaImagens) {
+			graphics2d.drawImage(lifeBarMachineGun, null, x, y);
+		}
 		x = o.x;
 		y += 30;
 		shotgunRect.setFrame(x, y, lifeBarShotgun.getWidth(),
@@ -299,8 +305,9 @@ public class PainelTopWar {
 			graphics2d.setColor(Color.BLACK);
 		}
 		graphics2d.draw(shotgunRect);
+		if (desenhaImagens) {
 		graphics2d.drawImage(lifeBarShotgun, null, x, y);
-
+		}
 		x += 110;
 		rocketRect.setFrame(x, y, lifeBarRocket.getWidth(),
 				lifeBarRocket.getHeight());
@@ -312,8 +319,9 @@ public class PainelTopWar {
 			graphics2d.setColor(Color.BLACK);
 		}
 		graphics2d.draw(rocketRect);
+		if (desenhaImagens) {
 		graphics2d.drawImage(lifeBarRocket, null, x, y);
-
+		}
 		x += 110;
 		shieldRect.setFrame(x, y, lifeBarShield.getWidth(),
 				lifeBarShield.getHeight());
@@ -323,8 +331,9 @@ public class PainelTopWar {
 			graphics2d.setColor(Color.BLACK);
 		}
 		graphics2d.draw(shieldRect);
+		if (desenhaImagens) {
 		graphics2d.drawImage(lifeBarShield, null, x, y);
-
+		}
 		int centerXAssaut = (int) assautRect.getCenterX();
 
 		int centerXMachine = (int) machineRect.getCenterX();
@@ -1331,7 +1340,7 @@ public class PainelTopWar {
 		}
 		long millisSrv = jogoCliente.getMillisSrv();
 		long tempoUtlDisparo = avatarCliente.getTempoUtlAtaque();
-		
+
 		if ((millisSrv - tempoUtlDisparo) > 200) {
 			return;
 		}
@@ -1435,7 +1444,9 @@ public class PainelTopWar {
 			g2d.setColor(ConstantesTopWar.lightWhite);
 			g2d.fillRoundRect(xArma - 10, yTemp - (arma.getHeight() + 5),
 					arma.getWidth() + 20, arma.getHeight() + 5, 10, 10);
-			g2d.drawImage(arma, xArma - 10, yTemp - (arma.getHeight()), null);
+			if (desenhaImagens)
+				g2d.drawImage(arma, xArma - 10, yTemp - (arma.getHeight()),
+						null);
 
 			xJogador = xArma + arma.getWidth() + 20;
 
@@ -1698,10 +1709,9 @@ public class PainelTopWar {
 				Util.calculaLarguraText(nome, g2d) + 20, 35, 10, 10);
 		g2d.setColor(Color.BLACK);
 		g2d.drawString(nome, x - 150, y);
-		
-		
+
 		y -= 45;
-		
+
 		x -= 150;
 		g2d.setColor(ConstantesTopWar.lightWhite);
 		g2d.fillRoundRect(x - 10, y - 30,
@@ -1805,8 +1815,9 @@ public class PainelTopWar {
 		g2d.setColor(ConstantesTopWar.lightBlu);
 		g2d.fillRoundRect(xleft - 10, y - 30, blueFlag.getWidth() + 20,
 				blueFlag.getHeight() + 5, 10, 10);
-		g2d.drawImage(blueFlag, xleft - 5, y - 25, null);
-
+		if (desenhaImagens) {
+			g2d.drawImage(blueFlag, xleft - 5, y - 25, null);
+		}
 		g2d.setColor(ConstantesTopWar.lightWhite);
 		g2d.fillRoundRect(x - 10, y - 30, larguraTimer, 35, 10, 10);
 
@@ -1826,7 +1837,9 @@ public class PainelTopWar {
 		g2d.setColor(ConstantesTopWar.lightRed);
 		g2d.fillRoundRect(x - 10, y - 30, redFlag.getWidth() + 20,
 				redFlag.getHeight() + 5, 10, 10);
-		g2d.drawImage(redFlag, x - 5, y - 25, null);
+		if (desenhaImagens) {
+			g2d.drawImage(redFlag, x - 5, y - 25, null);
+		}
 		g2d.setFont(fontOri);
 	}
 
@@ -2036,7 +2049,9 @@ public class PainelTopWar {
 		Rectangle area = new Rectangle(p.x, p.y, larg, larg);
 		rotBuffer = processaSobreposicoesAvatar(rotBuffer, p, area, mapaTopWar);
 		rotBuffer = processaGrade(rotBuffer, desenha, area, mapaTopWar);
-		graphics2d.drawImage(rotBuffer, p.x, p.y, null);
+		if (desenhaImagens) {
+			graphics2d.drawImage(rotBuffer, p.x, p.y, null);
+		}
 	}
 
 	protected void desenhaAvatares(Graphics2D graphics2d,
@@ -2226,34 +2241,36 @@ public class PainelTopWar {
 				}
 				graphics2d.fillRoundRect(desenha.x - 20, desenha.y - 20,
 						avatarCliente.calculaProcetagemVidaAvatar(), 20, 5, 5);
-
-				if (ConstantesTopWar.ARMA_ASSAULT == avatarCliente.getArma()) {
-					graphics2d.drawImage(lifeBarAssalt, desenha.x - 20,
-							desenha.y - 20, null);
-				} else if (ConstantesTopWar.ARMA_MACHINEGUN == avatarCliente
-						.getArma()) {
-					graphics2d.drawImage(lifeBarMachineGun, desenha.x - 20,
-							desenha.y - 20, null);
-				} else if (ConstantesTopWar.ARMA_FACA == avatarCliente
-						.getArma()) {
-					graphics2d.drawImage(lifeBarKnife, desenha.x - 20,
-							desenha.y - 20, null);
-				} else if (ConstantesTopWar.ARMA_SHOTGUN == avatarCliente
-						.getArma()) {
-					graphics2d.drawImage(lifeBarShotgun, desenha.x - 20,
-							desenha.y - 20, null);
-				} else if (ConstantesTopWar.ARMA_SNIPER == avatarCliente
-						.getArma()) {
-					graphics2d.drawImage(lifeBarSniper, desenha.x - 20,
-							desenha.y - 20, null);
-				} else if (ConstantesTopWar.ARMA_ROCKET == avatarCliente
-						.getArma()) {
-					graphics2d.drawImage(lifeBarRocket, desenha.x - 20,
-							desenha.y - 20, null);
-				} else if (ConstantesTopWar.ARMA_SHIELD == avatarCliente
-						.getArma()) {
-					graphics2d.drawImage(lifeBarShield, desenha.x - 20,
-							desenha.y - 20, null);
+				if (desenhaImagens) {
+					if (ConstantesTopWar.ARMA_ASSAULT == avatarCliente
+							.getArma()) {
+						graphics2d.drawImage(lifeBarAssalt, desenha.x - 20,
+								desenha.y - 20, null);
+					} else if (ConstantesTopWar.ARMA_MACHINEGUN == avatarCliente
+							.getArma()) {
+						graphics2d.drawImage(lifeBarMachineGun, desenha.x - 20,
+								desenha.y - 20, null);
+					} else if (ConstantesTopWar.ARMA_FACA == avatarCliente
+							.getArma()) {
+						graphics2d.drawImage(lifeBarKnife, desenha.x - 20,
+								desenha.y - 20, null);
+					} else if (ConstantesTopWar.ARMA_SHOTGUN == avatarCliente
+							.getArma()) {
+						graphics2d.drawImage(lifeBarShotgun, desenha.x - 20,
+								desenha.y - 20, null);
+					} else if (ConstantesTopWar.ARMA_SNIPER == avatarCliente
+							.getArma()) {
+						graphics2d.drawImage(lifeBarSniper, desenha.x - 20,
+								desenha.y - 20, null);
+					} else if (ConstantesTopWar.ARMA_ROCKET == avatarCliente
+							.getArma()) {
+						graphics2d.drawImage(lifeBarRocket, desenha.x - 20,
+								desenha.y - 20, null);
+					} else if (ConstantesTopWar.ARMA_SHIELD == avatarCliente
+							.getArma()) {
+						graphics2d.drawImage(lifeBarShield, desenha.x - 20,
+								desenha.y - 20, null);
+					}
 				}
 				if (ConstantesTopWar.TIME_AZUL.equals(avatarCliente.getTime())) {
 					graphics2d.setColor(Color.WHITE);
@@ -2286,23 +2303,25 @@ public class PainelTopWar {
 
 	private void desenhaCampoVisao(Graphics2D graphics2d,
 			AvatarCliente avatarCliente, Point desenha) {
-		/**
-		 * Refacnt Codigo extremamente lento.
-		 */
-		if (true) {
+		Ellipse2D ellipse2dCostas = null;
+		if (ultimoDesenhoVisao == 0
+				|| 100 < System.currentTimeMillis() - ultimoDesenhoVisao) {
+			ultimoDesenhoVisao = System.currentTimeMillis();
+			Point back = new Point(avatarCliente.getPontoAvatarSuave().x
+					- descontoCentraliza.x, avatarCliente.getPontoAvatarSuave().y
+					- descontoCentraliza.y);
+			back = GeoUtil.calculaPonto(avatarCliente.getAngulo() + 180, 30, back);
+			ellipse2dCostas = new Ellipse2D.Double(back.x - 25, back.y - 25, 50, 50);
+			visao = processaAreaCampoVisao(new Point(desenha.x
+					+ ConstantesTopWar.LARGURA_AREA_AVATAR, desenha.y
+					+ ConstantesTopWar.ALTURA_AREA_AVATAR), graphics2d, mapaTopWar,
+					ellipse2dCostas, avatarCliente);
+		}
+
+		if (visao == null) {
 			return;
 		}
-		Ellipse2D ellipse2dCostas = null;
-		Point back = new Point(avatarCliente.getPontoAvatarSuave().x
-				- descontoCentraliza.x, avatarCliente.getPontoAvatarSuave().y
-				- descontoCentraliza.y);
-		back = GeoUtil.calculaPonto(avatarCliente.getAngulo() + 180, 30, back);
-		ellipse2dCostas = new Ellipse2D.Double(back.x - 25, back.y - 25, 50, 50);
 		Shape limitesViewPort = limitesViewPort();
-		Shape visao = processaAreaCampoVisao(new Point(desenha.x
-				+ ConstantesTopWar.LARGURA_AREA_AVATAR, desenha.y
-				+ ConstantesTopWar.ALTURA_AREA_AVATAR), graphics2d, mapaTopWar,
-				ellipse2dCostas, avatarCliente);
 		BufferedImage bufferedImage = new BufferedImage(
 				limitesViewPort.getBounds().width,
 				limitesViewPort.getBounds().height, BufferedImage.TYPE_INT_ARGB);
@@ -2446,6 +2465,7 @@ public class PainelTopWar {
 		return imgJog;
 	}
 
+
 	protected Shape processaAreaCampoVisao(Point desenha,
 			Graphics2D graphics2d, MapaTopWar mapaTopWar,
 			Ellipse2D ellipse2dCostas, AvatarCliente avatarCliente) {
@@ -2464,7 +2484,7 @@ public class PainelTopWar {
 					p);
 			boolean acertouCircle = false;
 
-			for (int j = 0; j < drawBresenhamLine.size(); j += 5) {
+			for (int j = 0; j < drawBresenhamLine.size(); j += 10) {
 				if (acertouCircle) {
 					break;
 				}
@@ -2485,8 +2505,6 @@ public class PainelTopWar {
 				for (Iterator iterator = objetoMapaList.iterator(); iterator
 						.hasNext();) {
 					ObjetoMapa objetoMapa = (ObjetoMapa) iterator.next();
-					Shape transformedShape = translateObjetos
-							.createTransformedShape(objetoMapa.getForma());
 					if (ConstantesTopWar.BOT_GUIA
 							.equals(objetoMapa.getEfeito())
 							|| ConstantesTopWar.GRADE.equals(objetoMapa
@@ -2494,6 +2512,9 @@ public class PainelTopWar {
 							|| objetoMapa.getTransparencia() < 100) {
 						continue;
 					}
+					Shape transformedShape = translateObjetos
+							.createTransformedShape(objetoMapa.getForma());
+
 					if (transformedShape.contains(point)) {
 						if (!iniciado) {
 							generalPath.moveTo(point.x, point.y);

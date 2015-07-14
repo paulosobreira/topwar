@@ -206,13 +206,8 @@ public class JogoCliente {
 						mirouAvatarAdversario = mirouAvatarAdversario(
 								pontoMouseMovendo, arma);
 						if (mirouAvatarAdversario) {
-							atacar = atacar();
-						}
-						if (ConstantesTopWar.OK.equals(atacar)
-								|| mirouAvatarAdversario) {
 							pararMovimentoMouse();
-							controleCliente.moverPonto(null);
-							continue;
+							atacar = atacar();
 						}
 						if (atualizaAngulo()) {
 							continue;
@@ -486,7 +481,7 @@ public class JogoCliente {
 				}
 			}
 			if (ConstantesTopWar.ARMA_SNIPER == arma
-					&& distaciaEntrePontos > 10) {
+					&& distaciaEntrePontos > 5) {
 				return false;
 			}
 			if (distaciaEntrePontos < 50) {

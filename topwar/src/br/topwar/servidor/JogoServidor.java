@@ -843,7 +843,7 @@ public class JogoServidor {
 								.distaciaEntrePontos(
 										avatarAlvo.getPontoAvatar(), explo);
 						avatarAlvo.setVida(Util.inte(avatarAlvo.getVida()
-								- (500 * (distaciaEntreAvExplo / 100.0))));
+								- (250 * (distaciaEntreAvExplo / 100.0))));
 						if (ConstantesTopWar.TIME_AZUL.equals(avatarAlvo
 								.getTime())) {
 							ptsVermelho++;
@@ -1181,7 +1181,7 @@ public class JogoServidor {
 			} else {
 				if (ConstantesTopWar.ARMA_SNIPER == avatarAtirador.getArma()) {
 					avatarAlvo.setVida(avatarAlvo.getVida()
-							- Util.intervalo(120, 130));
+							- Util.intervalo(100, 150));
 				} else {
 					avatarAlvo.setVida(avatarAlvo.getVida()
 							- (balas * Util.intervalo(3, 5)));
