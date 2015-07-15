@@ -135,6 +135,7 @@ public class PainelTopWar {
 	private AvatarCliente avatarDemo;
 	private Shape visao;
 	private long ultimoDesenhoVisao;
+	private long latenciaCampoVisao = 10;;
 
 	public void setVerControles(boolean verControles) {
 		if (!verControles) {
@@ -306,7 +307,7 @@ public class PainelTopWar {
 		}
 		graphics2d.draw(shotgunRect);
 		if (desenhaImagens) {
-		graphics2d.drawImage(lifeBarShotgun, null, x, y);
+			graphics2d.drawImage(lifeBarShotgun, null, x, y);
 		}
 		x += 110;
 		rocketRect.setFrame(x, y, lifeBarRocket.getWidth(),
@@ -320,7 +321,7 @@ public class PainelTopWar {
 		}
 		graphics2d.draw(rocketRect);
 		if (desenhaImagens) {
-		graphics2d.drawImage(lifeBarRocket, null, x, y);
+			graphics2d.drawImage(lifeBarRocket, null, x, y);
 		}
 		x += 110;
 		shieldRect.setFrame(x, y, lifeBarShield.getWidth(),
@@ -332,7 +333,7 @@ public class PainelTopWar {
 		}
 		graphics2d.draw(shieldRect);
 		if (desenhaImagens) {
-		graphics2d.drawImage(lifeBarShield, null, x, y);
+			graphics2d.drawImage(lifeBarShield, null, x, y);
 		}
 		int centerXAssaut = (int) assautRect.getCenterX();
 
@@ -2303,19 +2304,32 @@ public class PainelTopWar {
 
 	private void desenhaCampoVisao(Graphics2D graphics2d,
 			AvatarCliente avatarCliente, Point desenha) {
+		if (jogoCliente.getFps() < 60) {
+			latenciaCampoVisao++;
+		} else {
+			latenciaCampoVisao--;
+		}
+		if (latenciaCampoVisao < 1) {
+			latenciaCampoVisao = 1;
+		}
 		Ellipse2D ellipse2dCostas = null;
+
 		if (ultimoDesenhoVisao == 0
-				|| 100 < System.currentTimeMillis() - ultimoDesenhoVisao) {
+				|| latenciaCampoVisao < System.currentTimeMillis()
+						- ultimoDesenhoVisao) {
 			ultimoDesenhoVisao = System.currentTimeMillis();
 			Point back = new Point(avatarCliente.getPontoAvatarSuave().x
-					- descontoCentraliza.x, avatarCliente.getPontoAvatarSuave().y
-					- descontoCentraliza.y);
-			back = GeoUtil.calculaPonto(avatarCliente.getAngulo() + 180, 30, back);
-			ellipse2dCostas = new Ellipse2D.Double(back.x - 25, back.y - 25, 50, 50);
+					- descontoCentraliza.x,
+					avatarCliente.getPontoAvatarSuave().y
+							- descontoCentraliza.y);
+			back = GeoUtil.calculaPonto(avatarCliente.getAngulo() + 180, 30,
+					back);
+			ellipse2dCostas = new Ellipse2D.Double(back.x - 25, back.y - 25,
+					50, 50);
 			visao = processaAreaCampoVisao(new Point(desenha.x
 					+ ConstantesTopWar.LARGURA_AREA_AVATAR, desenha.y
-					+ ConstantesTopWar.ALTURA_AREA_AVATAR), graphics2d, mapaTopWar,
-					ellipse2dCostas, avatarCliente);
+					+ ConstantesTopWar.ALTURA_AREA_AVATAR), graphics2d,
+					mapaTopWar, ellipse2dCostas, avatarCliente);
 		}
 
 		if (visao == null) {
@@ -2465,7 +2479,6 @@ public class PainelTopWar {
 		return imgJog;
 	}
 
-
 	protected Shape processaAreaCampoVisao(Point desenha,
 			Graphics2D graphics2d, MapaTopWar mapaTopWar,
 			Ellipse2D ellipse2dCostas, AvatarCliente avatarCliente) {
@@ -2484,7 +2497,7 @@ public class PainelTopWar {
 					p);
 			boolean acertouCircle = false;
 
-			for (int j = 0; j < drawBresenhamLine.size(); j += 10) {
+			for (int j = 0; j < drawBresenhamLine.size(); j += 20) {
 				if (acertouCircle) {
 					break;
 				}

@@ -78,9 +78,9 @@ public class ConstantesTopWar {
 	 */
 	public static final String ASSAULT = "assault";
 	public static final int BALAS_ASSALT = 30;
-	public static final int CARTUCHOS_ASSALT = 5;
+	public static final int CARTUCHOS_ASSALT = 15;
 	public static final int VIDA_COMPLETA_ASSALT = 100;
-	public static final int VELOCIDADE_ASSAUT = 7;
+	public static final int VELOCIDADE_ASSAUT = 8;
 	public static final int DESVIO_ASSAULT = 2;
 	public static final int TEMPO_RECARGA_ASSAUT = 1000;
 	public static final int ASSALT_MAX_RANGE = 1000;
@@ -121,7 +121,7 @@ public class ConstantesTopWar {
 	 */
 	public static final String ROCKET = "rocket";
 	public static final int BALAS_ROCKET = 1;
-	public static final int CARTUCHOS_ROCKET = 10;
+	public static final int CARTUCHOS_ROCKET = 15;
 	public static final int VIDA_COMPLETA_ROCKET = 120;
 	public static final int VELOCIDADE_ROCKET = 4;
 	public static final int TEMPO_RECARGA_ROCKET = 4000;

@@ -843,7 +843,7 @@ public class JogoServidor {
 								.distaciaEntrePontos(
 										avatarAlvo.getPontoAvatar(), explo);
 						avatarAlvo.setVida(Util.inte(avatarAlvo.getVida()
-								- (250 * (distaciaEntreAvExplo / 100.0))));
+								- (200 * (distaciaEntreAvExplo / 100.0))));
 						if (ConstantesTopWar.TIME_AZUL.equals(avatarAlvo
 								.getTime())) {
 							ptsVermelho++;
