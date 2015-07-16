@@ -209,6 +209,9 @@ public class PainelTopWar {
 	}
 
 	public boolean verificaComando(Point p) {
+		if(!verControles){
+			return false;
+		}
 		if (ajuda.contains(p)) {
 			verControles = !verControles;
 			return true;
@@ -979,7 +982,7 @@ public class PainelTopWar {
 		Point pontoMouse = jogoCliente.getPontoMouseMovendo();
 		if (pontoMouse != null
 				&& jogoCliente.mirouAvatarAdversario(pontoMouse,
-						ConstantesTopWar.ARMA_ASSAULT)) {
+						avatarLocal.getArma())) {
 			Point desenha = new Point(
 					pontoMouse.x - (crosshair.getWidth() / 2), pontoMouse.y
 							- (crosshair.getHeight() / 2));
@@ -2304,6 +2307,9 @@ public class PainelTopWar {
 
 	private void desenhaCampoVisao(Graphics2D graphics2d,
 			AvatarCliente avatarCliente, Point desenha) {
+		if (avatarCliente.getVida() <= 0) {
+			return;
+		}
 		if (jogoCliente.getFps() < 60) {
 			latenciaCampoVisao++;
 		} else {

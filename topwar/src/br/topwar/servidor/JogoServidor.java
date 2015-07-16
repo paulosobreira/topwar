@@ -1095,8 +1095,6 @@ public class JogoServidor {
 						&& avatarCliente.gerarEscudo().contains(point)
 						&& avatarCliente.getVida() > 0) {
 					avatarAtacando.setPontoUtlDisparo(point);
-					consomeBalasArma(avatarAtacando);
-					return false;
 				}
 
 				if (processaAcertoDanoTiro(avatarAtacando, point, avatarAlvo,
@@ -1179,12 +1177,16 @@ public class JogoServidor {
 			if (avatarAtirador.getTime().equals(avatarAlvo.getTime())) {
 				return true;
 			} else {
-				if (ConstantesTopWar.ARMA_SNIPER == avatarAtirador.getArma()) {
+				if (ConstantesTopWar.ARMA_SHIELD == avatarAlvo.getArma()) {
+					avatarAlvo.setVida(avatarAlvo.getVida()
+							- Util.intervalo(1, 5));
+				} else if (ConstantesTopWar.ARMA_SNIPER == avatarAtirador
+						.getArma()) {
 					avatarAlvo.setVida(avatarAlvo.getVida()
 							- Util.intervalo(100, 150));
 				} else {
 					avatarAlvo.setVida(avatarAlvo.getVida()
-							- (balas * Util.intervalo(3, 5)));
+							- (balas * Util.intervalo(5, 15)));
 				}
 				if (avatarAlvo.getVida() < 1) {
 					if (ConstantesTopWar.TIME_AZUL.equals(avatarAlvo.getTime())) {
@@ -1344,7 +1346,7 @@ public class JogoServidor {
 		for (Iterator iterator = avatarTopWarsCopia.iterator(); iterator
 				.hasNext();) {
 			ObjTopWar avatarTopWar = (ObjTopWar) iterator.next();
-			if(avatarTopWar.isEspectador()){
+			if (avatarTopWar.isEspectador()) {
 				continue;
 			}
 			if (avatarTopWar.verificaObj()) {

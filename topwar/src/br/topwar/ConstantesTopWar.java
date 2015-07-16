@@ -103,7 +103,7 @@ public class ConstantesTopWar {
 	public static final int DESVIO_SNIPER = 0;
 	public static final int TEMPO_RECARGA_SNIPER = 3500;
 	public static final int VELOCIDADE_SNIPER = 6;
-	public static final double LIMITE_VISAO_SNIPER = LIMITE_VISAO * 1.3;
+	public static final double LIMITE_VISAO_SNIPER = LIMITE_VISAO * 1.4;
 	public static final int SNIPER_MAX_RANGE = 2000;
 	/*
 	 * MACHINEGUN
@@ -121,10 +121,10 @@ public class ConstantesTopWar {
 	 */
 	public static final String ROCKET = "rocket";
 	public static final int BALAS_ROCKET = 1;
-	public static final int CARTUCHOS_ROCKET = 15;
+	public static final int CARTUCHOS_ROCKET = 20;
 	public static final int VIDA_COMPLETA_ROCKET = 120;
 	public static final int VELOCIDADE_ROCKET = 4;
-	public static final int TEMPO_RECARGA_ROCKET = 4000;
+	public static final int TEMPO_RECARGA_ROCKET = 3500;
 	public static final int DESVIO_ROCKET = 5;
 	/*
 	 * SHIELD

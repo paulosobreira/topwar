@@ -99,7 +99,6 @@ public class JogoCliente {
 	protected boolean modoTextoSomenteTime;
 	private int fps = 0;
 	protected double fpsLimite = 60D;
-	private boolean atacando;
 	private boolean mirouAvatarAdversario;
 	private int indiceAvatarAssistindo;
 
@@ -196,18 +195,14 @@ public class JogoCliente {
 					try {
 						Thread.sleep(atulaizaAvatarSleep);
 						Object atacar = null;
-						if (atacando) {
-							pararMovimentoMouse();
-							atacar = atacar();
-							if (ConstantesTopWar.OK.equals(atacar)) {
-								continue;
-							}
-						}
 						mirouAvatarAdversario = mirouAvatarAdversario(
 								pontoMouseMovendo, arma);
 						if (mirouAvatarAdversario) {
-							pararMovimentoMouse();
 							atacar = atacar();
+							if (ConstantesTopWar.OK.equals(atacar)) {
+								pararMovimentoMouse();
+								continue;
+							}
 						}
 						if (atualizaAngulo()) {
 							continue;
@@ -218,7 +213,7 @@ public class JogoCliente {
 						if (pontoMouseClicadoDireito != null
 								&& !pontoMouseClicadoDireito
 										.equals(pontoAvatar)) {
-							Object moverPonto = controleCliente
+							controleCliente
 									.moverPonto(pontoMouseClicadoDireito);
 							continue;
 						}
@@ -410,8 +405,7 @@ public class JogoCliente {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				seguirMouse = false;
-				atacando = false;
-				if(avatarLocal==null){
+				if (avatarLocal == null) {
 					return;
 				}
 				if (painelTopWar.verificaVoltaMenuPrincipal(e.getPoint())) {
@@ -429,7 +423,10 @@ public class JogoCliente {
 				}
 				if (MouseEvent.BUTTON1 == e.getButton()) {
 					pontoMouseClicadoEsquerdo = setarPontoMouseClicado(e);
-					atacando = true;
+					Object atacar = atacar();
+					if (ConstantesTopWar.OK.equals(atacar)) {
+						pararMovimentoMouse();
+					}
 				}
 				if (MouseEvent.BUTTON3 == e.getButton()) {
 					pontoMouseClicadoDireito = setarPontoMouseClicado(e);
@@ -472,16 +469,16 @@ public class JogoCliente {
 					return false;
 				}
 			}
-			if (ConstantesTopWar.ARMA_FACA == arma && distaciaEntrePontos < 10) {
+			if ((ConstantesTopWar.ARMA_FACA == arma || ConstantesTopWar.ARMA_SHIELD == arma)
+					&& distaciaEntrePontos < 50) {
 				int distaciaEntreAvatares = GeoUtil.distaciaEntrePontos(
 						avatarCliente.getPontoAvatar(),
 						avatarLocal.getPontoAvatar());
-				if (distaciaEntreAvatares > 10) {
+				if (distaciaEntreAvatares > 50) {
 					return false;
 				}
 			}
-			if (ConstantesTopWar.ARMA_SNIPER == arma
-					&& distaciaEntrePontos > 5) {
+			if (ConstantesTopWar.ARMA_SNIPER == arma && distaciaEntrePontos > 5) {
 				return false;
 			}
 			if (distaciaEntrePontos < 50) {
@@ -498,10 +495,13 @@ public class JogoCliente {
 		if (pontoAvatar == null) {
 			return null;
 		}
-		if (ConstantesTopWar.ARMA_FACA != arma && balas <= 0
-				&& arma != ConstantesTopWar.ARMA_SHIELD) {
+		if (ConstantesTopWar.ARMA_FACA != arma
+				&& arma != ConstantesTopWar.ARMA_SHIELD && balas <= 0) {
 			recarregar();
-			atacando = false;
+			return null;
+		}
+		if (arma == ConstantesTopWar.ARMA_SHIELD) {
+			controleCliente.alternaFaca();
 			return null;
 		}
 		if (pontoAvatar != null && pontoMouseMovendo != null) {
@@ -512,7 +512,6 @@ public class JogoCliente {
 			}
 		}
 		Object atacar = controleCliente.atacar();
-		atacando = false;
 		return atacar;
 	}
 
@@ -1029,8 +1028,6 @@ public class JogoCliente {
 			alternaFaca();
 		}
 	}
-	
-	
 
 	public int getIndiceAvatarAssistindo() {
 		return indiceAvatarAssistindo;
