@@ -11,6 +11,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferStrategy;
+import java.io.File;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -38,7 +39,18 @@ public class MainFrame {
 	}
 
 	public static void main(String[] args) {
-		MainFrame mainFrame = new MainFrame(null);
+		String codeBase = File.separator + "WebContent" + File.separator;
+		TopWarAppletLocal appletLocal = null;
+		if (args != null && args.length > 0) {
+			codeBase = args[0];
+			appletLocal = new TopWarAppletLocal(codeBase);
+
+		}
+		if (args != null && args.length > 1) {
+			Lang.mudarIdioma(args[1]);
+		}
+
+		MainFrame mainFrame = new MainFrame(appletLocal);
 		mainFrame.iniciar(true);
 
 	}
@@ -72,7 +84,7 @@ public class MainFrame {
 					clienteLocal.sairJogo();
 					clienteLocal.getJogoCliente().matarTodasThreads();
 				}
-				if(servidorLocal!=null){
+				if (servidorLocal != null) {
 					servidorLocal.finalizaJogosServidor();
 				}
 				System.exit(0);

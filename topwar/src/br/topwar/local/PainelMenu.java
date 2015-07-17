@@ -503,17 +503,17 @@ public class PainelMenu {
 
 		x += (tam + 30);
 
-		String praiaTxt = Lang.msg("praia").toUpperCase();
-		tam = Util.calculaLarguraText(praiaTxt, g2d);
-		praiaRct.setFrame(x - 15, y - 12, tam + 10, 32);
-		g2d.setColor(lightWhite);
-		g2d.fill(praiaRct);
-		if (MAPA_PRAIA.equals(mapaSelecionado)) {
-			// g2d.setColor(yel);
-			// g2d.draw(praiaRct);
-		}
-		g2d.setColor(Color.BLACK);
-		g2d.drawString(praiaTxt, x - 10, y + 15);
+//		String praiaTxt = Lang.msg("praia").toUpperCase();
+//		tam = Util.calculaLarguraText(praiaTxt, g2d);
+//		praiaRct.setFrame(x - 15, y - 12, tam + 10, 32);
+//		g2d.setColor(lightWhite);
+//		g2d.fill(praiaRct);
+//		if (MAPA_PRAIA.equals(mapaSelecionado)) {
+//			 g2d.setColor(yel);
+//			 g2d.draw(praiaRct);
+//		}
+//		g2d.setColor(Color.BLACK);
+//		g2d.drawString(praiaTxt, x - 10, y + 15);
 		g2d.setFont(fontOri);
 
 	}

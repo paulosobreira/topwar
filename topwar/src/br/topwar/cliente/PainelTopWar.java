@@ -2307,7 +2307,7 @@ public class PainelTopWar {
 
 	private void desenhaCampoVisao(Graphics2D graphics2d,
 			AvatarCliente avatarCliente, Point desenha) {
-		if (avatarCliente.getVida() <= 0) {
+		if (avatarCliente.getVida() <= 0 || avatarCliente.isInvencivel()) {
 			return;
 		}
 		if (jogoCliente.getFps() < 60) {

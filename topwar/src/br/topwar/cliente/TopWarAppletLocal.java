@@ -3,6 +3,8 @@ package br.topwar.cliente;
 import java.awt.Component;
 import java.awt.Frame;
 import java.awt.GridLayout;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import br.nnpe.cliente.NnpeApplet;
 import br.nnpe.cliente.NnpeChatCliente;
@@ -11,10 +13,26 @@ import br.topwar.local.MainFrame;
 public class TopWarAppletLocal extends NnpeApplet {
 
 	MainFrame frameTopWar;
+	private String codeBase;
+
+	public TopWarAppletLocal(String codeBase) {
+		this.codeBase = codeBase;
+	}
+
+	public TopWarAppletLocal() {
+	}
+
+	public URL getCodeBase() {
+		try {
+			return new URL(codeBase);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	@Override
 	public void init() {
-		frameTopWar = new MainFrame(this);
 		Component parent = this;
 		while (parent.getParent() != null)
 			parent = parent.getParent();
@@ -24,7 +42,6 @@ public class TopWarAppletLocal extends NnpeApplet {
 				((Frame) parent).setLayout(new GridLayout());
 			}
 		}
-		frameTopWar.iniciar();
 	}
 
 	@Override

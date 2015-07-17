@@ -294,59 +294,61 @@ public class JogoServidor {
 			return null;
 		}
 		ObjTopWar avatarEspectador = null;
-		synchronized (avatarTopWars) {
-			for (Iterator iterator = avatarTopWars.keySet().iterator(); iterator
-					.hasNext();) {
-				String nmAvatar = (String) iterator.next();
-				ObjTopWar avatarTopWar = (ObjTopWar) avatarTopWars
-						.get(nmAvatar);
-				if ((avatarTopWarJog.isEspectador())
-						|| avatarTopWar.equals(avatarTopWarJog)) {
-					if (nmAvatar.equals(avatarTopWarJog
-							.getNomeAvatarAssistindo())) {
-						avatarEspectador = avatarTopWar;
-					}
-					avatarTopWar
-							.setUltimaRequisicao(System.currentTimeMillis());
-					ret.add(avatarTopWar);
-					continue;
-				}
-				double distacia = GeoUtil.distaciaEntrePontos(
-						avatarTopWarJog.getPontoAvatar(),
-						avatarTopWar.getPontoAvatar());
-				double limite = ConstantesTopWar.LIMITE_VISAO;
-				if (ConstantesTopWar.ARMA_SNIPER == avatarTopWar.getArma()) {
-					limite = ConstantesTopWar.LIMITE_VISAO_SNIPER;
-				}
-				if (distacia > limite && !avatarTopWar.verificaObj()) {
-					continue;
-				}
-				List<Point> line = GeoUtil.drawBresenhamLine(
-						avatarTopWarJog.getPontoAvatar(),
-						avatarTopWar.getPontoAvatar());
-				if (campoVisao(line, avatarTopWarJog, false)) {
-					ret.add(avatarTopWar);
-				}
-				/**
-				 * Campo Audição Tiro 360
-				 */
-				Point pontoTiro = avatarTopWar.getPontoUtlDisparo();
-				if (pontoTiro != null
-						&& (System.currentTimeMillis() - avatarTopWar
-								.getTempoUtlAtaque()) < 300) {
-					line = GeoUtil.drawBresenhamLine(
-							avatarTopWarJog.getPontoAvatar(), pontoTiro);
-					if (campoVisao(line, null, true)) {
-						ret.add(avatarTopWar);
-					}
-				}
-				if (avatarTopWarJog.getVida() <= 0
-						&& avatarTopWarJog.getMortoPor() != null
-						&& avatarTopWarJog.getMortoPor().equals(avatarTopWar)) {
-					ret.add(avatarTopWar);
-				}
 
+		List<ObjTopWar> avatarTopWarsCopia = getAvatarTopWarsCopia();
+		for (Iterator iterator = avatarTopWarsCopia.iterator(); iterator
+				.hasNext();) {
+			ObjTopWar avatarTopWar = (ObjTopWar) iterator.next();
+			String nmAvatar = avatarTopWar.getNomeJogador();
+			if ((avatarTopWarJog.isEspectador())
+					|| avatarTopWar.equals(avatarTopWarJog)) {
+				if (nmAvatar.equals(avatarTopWarJog.getNomeAvatarAssistindo())) {
+					avatarEspectador = avatarTopWar;
+				}
+				ObjTopWar obterAvatarTopWarReal = obterAvatarTopWarReal(avatarTopWar
+						.getNomeJogador());
+				if (obterAvatarTopWarReal != null) {
+					obterAvatarTopWarReal.setUltimaRequisicao(System
+							.currentTimeMillis());
+				}
+				ret.add(avatarTopWar);
+				continue;
 			}
+			double distacia = GeoUtil.distaciaEntrePontos(
+					avatarTopWarJog.getPontoAvatar(),
+					avatarTopWar.getPontoAvatar());
+			double limite = ConstantesTopWar.LIMITE_VISAO;
+			if (ConstantesTopWar.ARMA_SNIPER == avatarTopWar.getArma()) {
+				limite = ConstantesTopWar.LIMITE_VISAO_SNIPER;
+			}
+			if (distacia > limite && !avatarTopWar.verificaObj()) {
+				continue;
+			}
+			List<Point> line = GeoUtil.drawBresenhamLine(
+					avatarTopWarJog.getPontoAvatar(),
+					avatarTopWar.getPontoAvatar());
+			if (campoVisao(line, avatarTopWarJog, false)) {
+				ret.add(avatarTopWar);
+			}
+			/**
+			 * Campo Audição Tiro 360
+			 */
+			Point pontoTiro = avatarTopWar.getPontoUtlDisparo();
+			if (pontoTiro != null
+					&& (System.currentTimeMillis() - avatarTopWar
+							.getTempoUtlAtaque()) < 300) {
+				line = GeoUtil.drawBresenhamLine(
+						avatarTopWarJog.getPontoAvatar(), pontoTiro);
+				if (campoVisao(line, null, true)) {
+					ret.add(avatarTopWar);
+				}
+			}
+			if (avatarTopWarJog.getVida() <= 0
+					&& avatarTopWarJog.getMortoPor() != null
+					&& avatarTopWarJog.getMortoPor().equals(avatarTopWar)) {
+				ret.add(avatarTopWar);
+			}
+
 		}
 		Map retorno = new HashMap();
 		retorno.put(ConstantesTopWar.LISTA_AVATARES,

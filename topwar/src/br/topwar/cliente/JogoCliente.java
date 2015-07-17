@@ -599,8 +599,6 @@ public class JogoCliente {
 
 	public void iniciaJFrame() {
 		if (frameTopWar != null && frameTopWar.isVisible()) {
-			if (mapaTopWar != null)
-				frameTopWar.setTitle(mapaTopWar.getNome());
 			frameTopWar.getContentPane().removeAll();
 			return;
 		}
@@ -622,13 +620,12 @@ public class JogoCliente {
 		Cursor crossHair = new Cursor(Cursor.CROSSHAIR_CURSOR);
 		if (mapaTopWar != null) {
 			frameTopWar.setCursor(crossHair);
-			frameTopWar.setTitle(mapaTopWar.getNome());
 		}
 		if (controleCliente.isLocal()) {
 			frameTopWar.getContentPane().validate();
 			frameTopWar.requestFocus();
 		} else {
-			frameTopWar.setSize(1024, 768);
+			frameTopWar.setSize(1280, 720);
 			frameTopWar.setVisible(true);
 		}
 	}
