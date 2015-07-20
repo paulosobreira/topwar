@@ -33,9 +33,14 @@ public class MainFrame {
 	private TopWarAppletLocal topWarApplet;
 	protected boolean jogoIniciado;
 	private PainelMenu painelMenu;
+	private String codeBase;
 
 	public MainFrame(TopWarAppletLocal topWarApplet) {
 		this.topWarApplet = topWarApplet;
+	}
+
+	public MainFrame(String codeBase) {
+		this.codeBase = codeBase;
 	}
 
 	public static void main(String[] args) {
@@ -43,16 +48,13 @@ public class MainFrame {
 		TopWarAppletLocal appletLocal = null;
 		if (args != null && args.length > 0) {
 			codeBase = args[0];
-			appletLocal = new TopWarAppletLocal(codeBase);
-
 		}
 		if (args != null && args.length > 1) {
 			Lang.mudarIdioma(args[1]);
 		}
 
-		MainFrame mainFrame = new MainFrame(appletLocal);
+		MainFrame mainFrame = new MainFrame(codeBase);
 		mainFrame.iniciar(true);
-
 	}
 
 	public ClienteLocal getClienteLocal() {
@@ -63,7 +65,7 @@ public class MainFrame {
 		proxyComandos = new ProxyComandos();
 		servidorLocal = new ServidorLocal(proxyComandos);
 		proxyComandos.setControleJogosServidor(servidorLocal);
-		gerarJframeApplet();
+		gerarJFrameApplet();
 		String versao = topWarApplet.getVersao();
 		frameTopWar.setTitle(Lang.msg("topawrsolo") + " Ver. " + versao);
 		frameTopWar.setVisible(visivel);
@@ -112,12 +114,13 @@ public class MainFrame {
 		return (Graphics2D) strategy.getDrawGraphics();
 	}
 
-	public void gerarJframeApplet() {
+	public void gerarJFrameApplet() {
 		if (topWarApplet == null) {
 			frameTopWar = new JFrame();
-			topWarApplet = new TopWarAppletLocal();
+			topWarApplet = new TopWarAppletLocal(codeBase);
 			return;
 		}
+		topWarApplet.init();
 		frameTopWar = new JFrame() {
 			@Override
 			public Container getContentPane() {

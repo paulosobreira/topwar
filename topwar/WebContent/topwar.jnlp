@@ -14,17 +14,15 @@
 		<jar href="topwar.jar" />
 		<jar href="topwarRecursos.jar" />	
 		<jar href="commons-collections-3.1.jar" />
+        <jar href="commons-beanutils-1.8.2.jar" />		
 		<jar href="commons-logging-1.1.1.jar" />
 		<jar href="hibernate-core.jar" />	
 		<jar href="jcaptcha-1.0-all.jar" />		
     </resources>
     
-    <applet-desc 
-	      documentBase="http://{host}/topwar" 
-	      name="TopWar" 
-	      main-class="br.topwar.cliente.TopWarAppletLocal" 
-	      width="850" 
-	      height="500"> 
-	  </applet-desc>
+	<application-desc
+		main-class="br.topwar.local.MainFrame" >
+		<argument>http://{host}/topwar/</argument>
+	</application-desc>  	  
 
 </jnlp>

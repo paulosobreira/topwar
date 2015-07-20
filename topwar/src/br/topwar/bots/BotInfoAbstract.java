@@ -448,7 +448,6 @@ public abstract class BotInfoAbstract {
 	}
 
 	public void procurarAbrigo() {
-		Logger.logar(avatarTopWar.getNomeJogador() + "  procurarAbrigo()");
 		int cont = 0;
 		while (cont < 20) {
 			botVaiPontoAleatorio();

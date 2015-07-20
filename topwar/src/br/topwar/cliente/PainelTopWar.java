@@ -980,6 +980,9 @@ public class PainelTopWar {
 
 	private void desenhaMira(Graphics2D graphics2d) {
 		Point pontoMouse = jogoCliente.getPontoMouseMovendo();
+		if(avatarLocal==null){
+			return;
+		}
 		if (pontoMouse != null
 				&& jogoCliente.mirouAvatarAdversario(pontoMouse,
 						avatarLocal.getArma())) {
@@ -2568,7 +2571,6 @@ public class PainelTopWar {
 			}
 		}
 		if (!iniciado) {
-			Logger.logar("!iniciado");
 			Ellipse2D ellipse2d = new Ellipse2D.Double(desenha.x - 200,
 					desenha.y - 200, 400, 400);
 			return ellipse2d;

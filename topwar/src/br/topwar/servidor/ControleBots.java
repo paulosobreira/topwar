@@ -104,7 +104,6 @@ public class ControleBots {
 				} else {
 					thBot2.addBot(bot);
 				}
-				Logger.logar("Adicionou " + bot.getNomeJogador());
 			}
 			if (!thread1.isAlive()) {
 				thread1.start();

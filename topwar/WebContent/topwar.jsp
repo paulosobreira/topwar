@@ -177,10 +177,10 @@ img {
 				<h1 id="description">Guerra Estrategica</h1>
 			</span>
 			<a id="link" style="position: absolute; left: 150px; top: 10px;font-size: 16px;"
-				href="http://sowbra.com.br" style="text-align: right;"
+				href="https://b4116f288ced0da9ffafef28a149df8144e98bd7.googledrive.com/host/0B1bELj5XAV79flRUMkFyMFNFanl0Tlc4bHU5YzJQU0JYelN3VmpqYkxGUklOTjFYX1BlYzg/sowbragames/sowbra.html" style="text-align: right;"
 				target="_BLANK">Sowbra Games</a>
 			<a id="link" style="position: absolute; left: 320px; top: 10px;font-size: 16px;"
-				href="http://sowbreira.appspot.com/" style="text-align: right;"
+				href="https://b4116f288ced0da9ffafef28a149df8144e98bd7.googledrive.com/host/0B1bELj5XAV79flRUMkFyMFNFanl0Tlc4bHU5YzJQU0JYelN3VmpqYkxGUklOTjFYX1BlYzg/" style="text-align: right;"
 				target="_BLANK">Sowbreira</a>
 			<a id="link" style="position: absolute; left: 150px; top: 50px;font-size: 16px;"
 				style="text-align: right;" onclick="document.getElementById('pop').style.display='block';">

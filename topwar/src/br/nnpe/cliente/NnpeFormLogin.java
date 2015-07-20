@@ -32,8 +32,11 @@ public class NnpeFormLogin extends JPanel {
 	protected JComboBox comboIdiomas = new JComboBox(new String[] {
 			Lang.msg("pt"), Lang.msg("en") });
 	protected JTextField nomeLogar = new JTextField(20);
+	@Deprecated
 	protected JTextField capchaTexto = new JTextField(20);
+	@Deprecated
 	protected JTextField capchaTextoRecuperar = new JTextField(20);
+	@Deprecated
 	protected Map<String, String> chapchaChave = new HashMap<String, String>();
 	protected JTextField nomeRegistrar = new JTextField(20);
 	protected JTextField nomeRecuperar = new JTextField(20);
@@ -107,8 +110,8 @@ public class NnpeFormLogin extends JPanel {
 
 		JPanel newPanel = new JPanel(new BorderLayout());
 		newPanel.add(registrarPanel, BorderLayout.NORTH);
-		newPanel.add(gerarCapchaPanel(capchaTextoRecuperar,
-				Constantes.RECUPERAR), BorderLayout.CENTER);
+//		newPanel.add(gerarCapchaPanel(capchaTextoRecuperar,
+//				Constantes.RECUPERAR), BorderLayout.CENTER);
 		return newPanel;
 	}
 
@@ -177,11 +180,12 @@ public class NnpeFormLogin extends JPanel {
 		registrarPanel.add(email);
 		JPanel newPanel = new JPanel(new BorderLayout());
 		newPanel.add(registrarPanel, BorderLayout.NORTH);
-		newPanel.add(gerarCapchaPanel(capchaTexto, Constantes.REGISTRAR),
-				BorderLayout.CENTER);
+//		newPanel.add(gerarCapchaPanel(capchaTexto, Constantes.REGISTRAR),
+//				BorderLayout.CENTER);
 		return newPanel;
 	}
 
+	@Deprecated
 	private Component gerarCapchaPanel(JTextField capchaTexto,
 			final String cpachaChave) {
 		if (nnpeApplet == null) {
@@ -219,6 +223,7 @@ public class NnpeFormLogin extends JPanel {
 		return capchaPanel;
 	}
 
+	@Deprecated
 	protected String capchaReload(JLabel capchaImage) {
 		NnpeTO nnpeTO = new NnpeTO();
 		nnpeTO.setComando(Constantes.NOVO_CAPCHA);

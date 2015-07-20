@@ -108,11 +108,11 @@ public abstract class NnpeProxyComandos {
 	}
 
 	private Object recuperaSenha(NnpeCliente nnpeCliente) {
-		Boolean validateResponseForID = capcha.validateResponseForID(
-				nnpeCliente.getChaveCapcha(), nnpeCliente.getTextoCapcha());
-		if (!validateResponseForID) {
-			return new MsgSrv(Lang.msg("capchaInvalido"));
-		}
+//		Boolean validateResponseForID = capcha.validateResponseForID(
+//				nnpeCliente.getChaveCapcha(), nnpeCliente.getTextoCapcha());
+//		if (!validateResponseForID) {
+//			return new MsgSrv(Lang.msg("capchaInvalido"));
+//		}
 		NnpeUsuario usuario = new NnpeUsuario();
 		Session session = getSession();
 		List usuarios = session.createCriteria(NnpeUsuario.class)
@@ -165,16 +165,16 @@ public abstract class NnpeProxyComandos {
 
 	private Object cadastrarUsuario(NnpeCliente nnpeCliente) {
 		NnpeUsuario usuario = null;
-		try {
-			Boolean validateResponseForID = capcha.validateResponseForID(
-					nnpeCliente.getChaveCapcha(), nnpeCliente.getTextoCapcha());
-			if (!validateResponseForID) {
-				return new MsgSrv(Lang.msg("capchaInvalido"));
-			}
-		} catch (Exception e) {
-			Logger.logarExept(e);
-			return new MsgSrv(Lang.msg("capchaInvalido"));
-		}
+//		try {
+//			Boolean validateResponseForID = capcha.validateResponseForID(
+//					nnpeCliente.getChaveCapcha(), nnpeCliente.getTextoCapcha());
+//			if (!validateResponseForID) {
+//				return new MsgSrv(Lang.msg("capchaInvalido"));
+//			}
+//		} catch (Exception e) {
+//			Logger.logarExept(e);
+//			return new MsgSrv(Lang.msg("capchaInvalido"));
+//		}
 
 		Session session = getSession();
 		List usuarios = session.createCriteria(NnpeUsuario.class)
