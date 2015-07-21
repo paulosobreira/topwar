@@ -626,6 +626,7 @@ public class JogoCliente {
 			frameTopWar.requestFocus();
 		} else {
 			frameTopWar.setSize(1280, 720);
+			frameTopWar.setTitle("TopWar " + Lang.decodeTexto(dadosJogoTopWar.getNomeJogo()));
 			frameTopWar.setVisible(true);
 		}
 	}
