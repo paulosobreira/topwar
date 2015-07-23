@@ -15,7 +15,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -72,15 +71,20 @@ public class CarregadorRecursos {
 
 	public static BufferedImage carregaBackGround(String backGroundStr,
 			JPanel panel) {
-		ImageIcon icon = new ImageIcon(
-				CarregadorRecursos.class.getResource(backGroundStr));
-		BufferedImage backGround = ImageUtil.toBufferedImage(icon.getImage());
+		Logger.logar("inicio  carregaBackGround=" + backGroundStr);
+		BufferedImage backGround = null;
+		try {
+			backGround = ImageIO.read(CarregadorRecursos.class
+					.getResource(backGroundStr));
+		} catch (IOException e) {
+			Logger.logarExept(e);
+		}
 		if (panel != null)
 			panel.setSize(backGround.getWidth(), backGround.getHeight());
 		if (backGround == null) {
 			Logger.logar("backGround=" + backGround);
-			System.exit(1);
 		}
+		Logger.logar("fim  carregaBackGround=" + backGroundStr);
 		return backGround;
 	}
 
@@ -178,9 +182,7 @@ public class CarregadorRecursos {
 	}
 
 	public static BufferedImage carregaImgSemCache(String img) {
-		ImageIcon icon = new ImageIcon(
-				CarregadorRecursos.class.getResource(img));
-		return ImageUtil.toBufferedImage(icon.getImage());
+		return carregaImagem(img);
 	}
 
 	public static BufferedImage carregaImg(String img) {
@@ -188,9 +190,12 @@ public class CarregadorRecursos {
 		if (bufferedImage != null) {
 			return bufferedImage;
 		}
-		ImageIcon icon = new ImageIcon(
-				CarregadorRecursos.class.getResource(img));
-		bufferedImage = ImageUtil.toBufferedImage(icon.getImage());
+		try {
+			bufferedImage = ImageIO.read(CarregadorRecursos.class
+					.getResource(img));
+		} catch (IOException e) {
+			Logger.logarExept(e);
+		}
 		bufferImages.put(img, bufferedImage);
 		return bufferedImage;
 	}
@@ -266,7 +271,7 @@ public class CarregadorRecursos {
 		try {
 			return ImageIO.read(CarregadorRecursos.class.getResource(file));
 		} catch (IOException e) {
-			e.printStackTrace();
+			Logger.logar(e);
 		}
 		return null;
 	}

@@ -28,13 +28,10 @@ import br.nnpe.tos.NnpeTO;
 import br.nnpe.tos.SessaoCliente;
 import br.topwar.recursos.idiomas.Lang;
 
-import com.octo.captcha.service.image.DefaultManageableImageCaptchaService;
-
 public abstract class NnpeProxyComandos {
 	protected NnpeDados nnpeDados;
 	protected NnpeChatServidor nnpeChatServidor;
 	private NnpeMonitorAtividadeChat nnpeMonitorAtividadeChat;
-	protected DefaultManageableImageCaptchaService capcha = new DefaultManageableImageCaptchaService();
 
 	public abstract Session getSession();
 
@@ -108,11 +105,11 @@ public abstract class NnpeProxyComandos {
 	}
 
 	private Object recuperaSenha(NnpeCliente nnpeCliente) {
-//		Boolean validateResponseForID = capcha.validateResponseForID(
-//				nnpeCliente.getChaveCapcha(), nnpeCliente.getTextoCapcha());
-//		if (!validateResponseForID) {
-//			return new MsgSrv(Lang.msg("capchaInvalido"));
-//		}
+		// Boolean validateResponseForID = capcha.validateResponseForID(
+		// nnpeCliente.getChaveCapcha(), nnpeCliente.getTextoCapcha());
+		// if (!validateResponseForID) {
+		// return new MsgSrv(Lang.msg("capchaInvalido"));
+		// }
 		NnpeUsuario usuario = new NnpeUsuario();
 		Session session = getSession();
 		List usuarios = session.createCriteria(NnpeUsuario.class)
@@ -165,16 +162,16 @@ public abstract class NnpeProxyComandos {
 
 	private Object cadastrarUsuario(NnpeCliente nnpeCliente) {
 		NnpeUsuario usuario = null;
-//		try {
-//			Boolean validateResponseForID = capcha.validateResponseForID(
-//					nnpeCliente.getChaveCapcha(), nnpeCliente.getTextoCapcha());
-//			if (!validateResponseForID) {
-//				return new MsgSrv(Lang.msg("capchaInvalido"));
-//			}
-//		} catch (Exception e) {
-//			Logger.logarExept(e);
-//			return new MsgSrv(Lang.msg("capchaInvalido"));
-//		}
+		// try {
+		// Boolean validateResponseForID = capcha.validateResponseForID(
+		// nnpeCliente.getChaveCapcha(), nnpeCliente.getTextoCapcha());
+		// if (!validateResponseForID) {
+		// return new MsgSrv(Lang.msg("capchaInvalido"));
+		// }
+		// } catch (Exception e) {
+		// Logger.logarExept(e);
+		// return new MsgSrv(Lang.msg("capchaInvalido"));
+		// }
 
 		Session session = getSession();
 		List usuarios = session.createCriteria(NnpeUsuario.class)
@@ -292,21 +289,9 @@ public abstract class NnpeProxyComandos {
 		Logger.logar("Sessao criada para " + sessaoCliente.getNomeJogador());
 		return nnpeTO;
 	}
-
+	
+	@Deprecated
 	public Object novoCapcha() {
-		try {
-			ByteArrayOutputStream jpegstream = new ByteArrayOutputStream();
-			String chave = String.valueOf(System.currentTimeMillis());
-			BufferedImage challenge = capcha.getImageChallengeForID(chave);
-			ImageIO.write(challenge, "jpg", jpegstream);
-			NnpeTO nnpeTO = new NnpeTO();
-			nnpeTO.setComando(Constantes.NOVO_CAPCHA);
-			nnpeTO.setData(chave);
-			nnpeTO.setDataBytes(jpegstream.toByteArray());
-			return nnpeTO;
-		} catch (Exception e) {
-			Logger.logarExept(e);
-		}
 		return new ErroServ(Lang.msg("erroCapcha"));
 	}
 

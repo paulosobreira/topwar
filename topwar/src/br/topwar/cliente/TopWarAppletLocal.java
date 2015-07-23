@@ -12,6 +12,7 @@ import br.topwar.local.MainFrame;
 
 public class TopWarAppletLocal extends NnpeApplet {
 
+	private static final long serialVersionUID = 7350448978168350244L;
 	MainFrame frameTopWar;
 	private String codeBase;
 

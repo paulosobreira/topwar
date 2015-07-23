@@ -45,7 +45,6 @@ public class MainFrame {
 
 	public static void main(String[] args) {
 		String codeBase = File.separator + "WebContent" + File.separator;
-		TopWarAppletLocal appletLocal = null;
 		if (args != null && args.length > 0) {
 			codeBase = args[0];
 		}
@@ -68,9 +67,13 @@ public class MainFrame {
 		gerarJFrameApplet();
 		String versao = topWarApplet.getVersao();
 		frameTopWar.setTitle(Lang.msg("topawrsolo") + " Ver. " + versao);
+		Logger.logar("frameTopWar.setTitle(Lang.msg(versao);");
 		frameTopWar.setVisible(visivel);
+		Logger.logar("frameTopWar.setVisible(visivel);");
 		painelMenu = new PainelMenu(this);
+		Logger.logar("painelMenu = new PainelMenu(this);");
 		frameTopWar.setSize(800, 600);
+		Logger.logar("frameTopWar.setSize(800, 600);");
 		frameTopWar
 				.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		frameTopWar.addWindowListener(new WindowAdapter() {

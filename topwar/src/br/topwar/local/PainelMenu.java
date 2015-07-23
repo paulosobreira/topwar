@@ -227,12 +227,14 @@ public class PainelMenu {
 	public void inicializar() {
 		MENU = MENU_PRINCIPAL;
 		matarThreadRender();
+		Logger.logar("matarThreadRender();");
 		mainFrame.getFrameTopWar().addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				processaClick(e);
 				super.mouseClicked(e);
 			}
 		});
+		Logger.logar("mainFrame.getFrameTopWar().addMouseListener");
 		renderThread = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -266,9 +268,12 @@ public class PainelMenu {
 				}
 			}
 		});
+		Logger.logar("renderThread = new Thread(new Runnable() {");
 		iniciaRecursos();
+		Logger.logar("iniciaRecursos()");
 		renderThreadAlive = true;
 		renderThread.start();
+		Logger.logar("renderThread.start()");
 		desenhaCarregando = false;
 	}
 
@@ -379,10 +384,13 @@ public class PainelMenu {
 	private void iniciaRecursos() {
 		bg = ImageUtil.gerarFade(
 				CarregadorRecursos.carregaBackGround("mercs-chat.png"), 50);
-		creditos = new ArrayList<String>();
+		Logger.logar("bg = ImageUtil.gerarFade(	CarregadorRecursos.carregaBackGround(mercs-chat.png), 50);");
 
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
 				CarregadorRecursos.recursoComoStream("creditos.txt")));
+		Logger.logar("BufferedReader reader = new BufferedReader(new InputStreamReader(CarregadorRecursos.recursoComoStream(creditos.txt))");
+		
+		creditos = new ArrayList<String>();
 		try {
 			String linha = reader.readLine();
 			while (linha != null) {
@@ -503,17 +511,17 @@ public class PainelMenu {
 
 		x += (tam + 30);
 
-//		String praiaTxt = Lang.msg("praia").toUpperCase();
-//		tam = Util.calculaLarguraText(praiaTxt, g2d);
-//		praiaRct.setFrame(x - 15, y - 12, tam + 10, 32);
-//		g2d.setColor(lightWhite);
-//		g2d.fill(praiaRct);
-//		if (MAPA_PRAIA.equals(mapaSelecionado)) {
-//			 g2d.setColor(yel);
-//			 g2d.draw(praiaRct);
-//		}
-//		g2d.setColor(Color.BLACK);
-//		g2d.drawString(praiaTxt, x - 10, y + 15);
+		// String praiaTxt = Lang.msg("praia").toUpperCase();
+		// tam = Util.calculaLarguraText(praiaTxt, g2d);
+		// praiaRct.setFrame(x - 15, y - 12, tam + 10, 32);
+		// g2d.setColor(lightWhite);
+		// g2d.fill(praiaRct);
+		// if (MAPA_PRAIA.equals(mapaSelecionado)) {
+		// g2d.setColor(yel);
+		// g2d.draw(praiaRct);
+		// }
+		// g2d.setColor(Color.BLACK);
+		// g2d.drawString(praiaTxt, x - 10, y + 15);
 		g2d.setFont(fontOri);
 
 	}

@@ -21,6 +21,7 @@ import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 import java.net.URL;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JApplet;
 
@@ -96,7 +97,7 @@ public class ImageUtil {
 			bimage = gc.createCompatibleImage(image.getWidth(null),
 					image.getHeight(null), transparency);
 		} catch (HeadlessException e) {
-			// The system does not have a screen
+			Logger.logar(e);
 		}
 
 		if (bimage == null) {
@@ -288,7 +289,6 @@ public class ImageUtil {
 				destRaster.setPixel(i, j, argbArray);
 			}
 		}
-
 		return bufferedImageRetorno;
 	}
 
@@ -320,15 +320,8 @@ public class ImageUtil {
 			String caminho = applet.getCodeBase() + pathResouces + backGround;
 			Logger.logar("Caminho Carregar Bkg " + caminho);
 			url = new URL(caminho);
-			ImageIcon icon = new ImageIcon(url);
-			BufferedImage buff = ImageUtil.toBufferedImage(icon.getImage());
-			if (icon.getImageLoadStatus() != MediaTracker.COMPLETE) {
-				Logger.logar("Status " + icon.getImageLoadStatus()
-						+ " Nao Carregado " + url);
-				return null;
-			} else {
-				return buff;
-			}
+			BufferedImage buff = ImageIO.read(url.openStream());
+			return buff;
 		} catch (Exception e) {
 			Logger.logarExept(e);
 		}
