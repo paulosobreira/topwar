@@ -50,8 +50,6 @@ public abstract class NnpeProxyComandos {
 			return atualizarDadosVisao(nnpeTO);
 		} else if (Constantes.ENVIAR_TEXTO.equals(nnpeTO.getComando())) {
 			return receberTexto((NnpeCliente) nnpeTO.getData());
-		} else if (Constantes.NOVO_CAPCHA.equals(nnpeTO.getComando())) {
-			return novoCapcha();
 		} else if (Constantes.LOGAR.equals(nnpeTO.getComando())) {
 			return logar((NnpeCliente) nnpeTO.getData());
 		} else if (Constantes.NOVO_USUARIO.equals(nnpeTO.getComando())) {
@@ -156,17 +154,6 @@ public abstract class NnpeProxyComandos {
 
 	private Object cadastrarUsuario(NnpeCliente nnpeCliente) {
 		NnpeUsuario usuario = null;
-		// try {
-		// Boolean validateResponseForID = capcha.validateResponseForID(
-		// nnpeCliente.getChaveCapcha(), nnpeCliente.getTextoCapcha());
-		// if (!validateResponseForID) {
-		// return new MsgSrv(Lang.msg("capchaInvalido"));
-		// }
-		// } catch (Exception e) {
-		// Logger.logarExept(e);
-		// return new MsgSrv(Lang.msg("capchaInvalido"));
-		// }
-
 		Session session = getSession();
 		List usuarios = session.createCriteria(NnpeUsuario.class)
 				.add(Restrictions.eq("login", nnpeCliente.getNomeJogador()))
@@ -188,7 +175,7 @@ public abstract class NnpeProxyComandos {
 		usuario.setEmail(nnpeCliente.getEmailJogador());
 		String senha = null;
 		try {
-			geraSenha(usuario);
+			senha = geraSenha(usuario);
 		} catch (Exception e) {
 			return new ErroServ(e);
 		}
@@ -209,7 +196,7 @@ public abstract class NnpeProxyComandos {
 			return new ErroServ(e.getMessage());
 		}
 		Logger.logar("cadastrarUsuario " + usuario);
-		return criarSessao(usuario);
+		return criarSessao(usuario, senha);
 	}
 
 	private String geraSenha(NnpeUsuario usuario) throws Exception {
@@ -251,8 +238,11 @@ public abstract class NnpeProxyComandos {
 		}
 
 	}
-
 	private Object criarSessao(NnpeUsuario usuario) {
+		return criarSessao(usuario, null);
+	}
+
+	private Object criarSessao(NnpeUsuario usuario, String senha) {
 		SessaoCliente sessaoCliente = null;
 		Collection clientes = nnpeDados.getClientes();
 		for (Iterator iterator = clientes.iterator(); iterator.hasNext();) {
@@ -268,15 +258,11 @@ public abstract class NnpeProxyComandos {
 			nnpeDados.getClientes().add(sessaoCliente);
 		}
 		sessaoCliente.setUlimaAtividade(System.currentTimeMillis());
+		sessaoCliente.setSenhaCriada(senha);
 		NnpeTO nnpeTO = new NnpeTO();
 		nnpeTO.setData(sessaoCliente);
 		Logger.logar("Sessao criada para " + sessaoCliente.getNomeJogador());
 		return nnpeTO;
-	}
-
-	@Deprecated
-	public Object novoCapcha() {
-		return new ErroServ(Lang.msg("erroCapcha"));
 	}
 
 	private Object atualizarDadosVisao(NnpeTO nnpeTO) {

@@ -5,13 +5,8 @@ import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.FileNotFoundException;
-import java.util.HashMap;
-import java.util.Map;
 
-import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -22,10 +17,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
-import br.nnpe.Constantes;
 import br.nnpe.Logger;
 import br.nnpe.Util;
-import br.nnpe.tos.NnpeTO;
 import br.topwar.recursos.idiomas.Lang;
 
 public class NnpeFormLogin extends JPanel {
@@ -35,13 +28,17 @@ public class NnpeFormLogin extends JPanel {
 	protected JTextField nomeLogar = new JTextField(20);
 	protected JTextField nomeRegistrar = new JTextField(20);
 	protected JTextField email = new JTextField(20);
+	private JPasswordField senha = new JPasswordField(20);
+	private int conta1;
+	private int conta2;
+	private JTextField resultadorConta = new JTextField(20);
+	private JCheckBox lembrar = new JCheckBox();
 
 	private JLabel senhaLabel = new JLabel("Senha") {
 		public String getText() {
 			return Lang.msg("senha");
 		}
 	};
-	private JPasswordField senha = new JPasswordField(20);
 
 	public JCheckBox getLembrar() {
 		return lembrar;
@@ -53,9 +50,6 @@ public class NnpeFormLogin extends JPanel {
 
 	public NnpeFormLogin(NnpeApplet nnpeApplet) {
 		this.nnpeApplet = nnpeApplet;
-		if (nnpeApplet == null) {
-			return;
-		}
 		setLayout(new BorderLayout());
 		JTabbedPane jTabbedPane = new JTabbedPane();
 		JPanel abaEntrar = new JPanel(new BorderLayout(15, 15));
@@ -95,8 +89,6 @@ public class NnpeFormLogin extends JPanel {
 		});
 		return newPanel;
 	}
-
-	private JCheckBox lembrar = new JCheckBox();
 
 	private Component gerarLembrar() {
 		lembrar = new JCheckBox();
@@ -139,10 +131,7 @@ public class NnpeFormLogin extends JPanel {
 	}
 
 	private JPanel gerarRegistrar() {
-		if (nnpeApplet == null) {
-			return null;
-		}
-		JPanel registrarPanel = new JPanel(new GridLayout(4, 2));
+		JPanel registrarPanel = new JPanel(new GridLayout(6, 2));
 		registrarPanel.setBorder(new TitledBorder("Registrar") {
 			public String getTitle() {
 				return Lang.msg("registrar");
@@ -156,14 +145,21 @@ public class NnpeFormLogin extends JPanel {
 		registrarPanel.add(nomeRegistrar);
 		registrarPanel.add(new JLabel("Entre com seu e-mail") {
 			public String getText() {
-				return Lang.msg("entreEmail");
+				return Lang.msg("email");
 			}
 		});
 		registrarPanel.add(email);
+		conta1 = Util.intervalo(0, 10);
+		conta2 = Util.intervalo(0, 10);
+		registrarPanel.add(new JLabel("Conta Facil") {
+			public String getText() {
+				return Lang.msg("contaFacil",
+						new String[]{"" + conta1, "" + conta2});
+			}
+		});
+		registrarPanel.add(resultadorConta);
 		JPanel newPanel = new JPanel(new BorderLayout());
 		newPanel.add(registrarPanel, BorderLayout.NORTH);
-		// newPanel.add(gerarCapchaPanel(capchaTexto, Constantes.REGISTRAR),
-		// BorderLayout.CENTER);
 		return newPanel;
 	}
 
@@ -204,7 +200,6 @@ public class NnpeFormLogin extends JPanel {
 		return nomeRegistrar;
 	}
 
-
 	public static void main(String[] args) throws FileNotFoundException {
 		// FileOutputStream fileOutputStream = new
 		// FileOutputStream("teste.xml");
@@ -226,6 +221,5 @@ public class NnpeFormLogin extends JPanel {
 	public JTextField getEmail() {
 		return email;
 	}
-
 
 }

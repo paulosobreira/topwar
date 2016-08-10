@@ -94,8 +94,8 @@ public abstract class NnpeChatCliente {
 		try {
 			PersistenceService persistenceService = (PersistenceService) ServiceManager
 					.lookup("javax.jnlp.PersistenceService");
-			FileContents fileContents = persistenceService.get(nnpeApplet
-					.getCodeBase());
+			FileContents fileContents = persistenceService
+					.get(nnpeApplet.getCodeBase());
 			if (fileContents == null) {
 				Logger.logar(" fileContents == null  ");
 			}
@@ -120,40 +120,43 @@ public abstract class NnpeChatCliente {
 			logarRecuperarLembrar();
 			atualizaVisao();
 			if (nnpeFormLogin.getLembrar().isSelected()) {
-				try {
-					PersistenceService persistenceService = (PersistenceService) ServiceManager
-							.lookup("javax.jnlp.PersistenceService");
-					FileContents fileContents = null;
-					try {
-						fileContents = persistenceService.get(nnpeApplet
-								.getCodeBase());
-					} catch (Exception e) {
-						persistenceService.create(nnpeApplet.getCodeBase(),
-								1024);
-						fileContents = persistenceService.get(nnpeApplet
-								.getCodeBase());
-					}
-
-					if (fileContents == null) {
-						Logger.logar(" fileContents == null  ");
-
-					}
-
-					Map map = new HashMap();
-					map.put("login", nnpeFormLogin.getNomeLogar().getText());
-					map.put("pass", String.valueOf((nnpeFormLogin.getSenha()
-							.getPassword())));
-					ObjectOutputStream stream = new ObjectOutputStream(
-							fileContents.getOutputStream(true));
-					stream.writeObject(map);
-					stream.flush();
-
-				} catch (Exception e) {
-					Logger.logarExept(e);
-				}
+				String login = nnpeFormLogin.getNomeLogar().getText();
+				String pass = String
+						.valueOf((nnpeFormLogin.getSenha().getPassword()));
+				lembrarSenha(login, pass);
 			}
 		}
 
+	}
+
+	private void lembrarSenha(String login, String pass) {
+		try {
+			PersistenceService persistenceService = (PersistenceService) ServiceManager
+					.lookup("javax.jnlp.PersistenceService");
+			FileContents fileContents = null;
+			try {
+				fileContents = persistenceService.get(nnpeApplet.getCodeBase());
+			} catch (Exception e) {
+				persistenceService.create(nnpeApplet.getCodeBase(), 1024);
+				fileContents = persistenceService.get(nnpeApplet.getCodeBase());
+			}
+
+			if (fileContents == null) {
+				Logger.logar(" fileContents == null  ");
+
+			}
+
+			Map map = new HashMap();
+			map.put("login", login);
+			map.put("pass", pass);
+			ObjectOutputStream stream = new ObjectOutputStream(
+					fileContents.getOutputStream(true));
+			stream.writeObject(map);
+			stream.flush();
+
+		} catch (Exception e) {
+			Logger.logarExept(e);
+		}
 	}
 
 	private boolean logarRecuperarLembrar() {
@@ -163,8 +166,8 @@ public abstract class NnpeChatCliente {
 
 		if (!Util.isNullOrEmpty(nnpeFormLogin.getNomeRegistrar().getText())
 				&& !Util.isNullOrEmpty(nnpeFormLogin.getEmail().getText())) {
-			nnpeCliente.setNomeJogador(nnpeFormLogin.getNomeRegistrar()
-					.getText());
+			nnpeCliente
+					.setNomeJogador(nnpeFormLogin.getNomeRegistrar().getText());
 			nnpeCliente.setEmailJogador(nnpeFormLogin.getEmail().getText());
 			nnpeTO.setComando(Constantes.NOVO_USUARIO);
 			nnpeFormLogin.getNomeLogar().setText("");
@@ -173,8 +176,8 @@ public abstract class NnpeChatCliente {
 		if (!Util.isNullOrEmpty(nnpeFormLogin.getNomeLogar().getText())) {
 			nnpeCliente.setNomeJogador(nnpeFormLogin.getNomeLogar().getText());
 			try {
-				if (!Util.isNullOrEmpty(new String(nnpeFormLogin.getSenha()
-						.getPassword()))) {
+				if (!Util.isNullOrEmpty(
+						new String(nnpeFormLogin.getSenha().getPassword()))) {
 					nnpeCliente.setSenhaJogador(Util.md5(new String(
 							nnpeFormLogin.getSenha().getPassword())));
 				}
@@ -191,8 +194,8 @@ public abstract class NnpeChatCliente {
 					JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
-		Logger.logar("registrarUsuario nnpeTO.getComando() "
-				+ nnpeTO.getComando());
+		Logger.logar(
+				"registrarUsuario nnpeTO.getComando() " + nnpeTO.getComando());
 		Object ret = nnpeApplet.enviarObjeto(nnpeTO);
 		if (ret == null) {
 			return false;
@@ -200,6 +203,17 @@ public abstract class NnpeChatCliente {
 		if (ret instanceof NnpeTO) {
 			nnpeTO = (NnpeTO) ret;
 			SessaoCliente cliente = (SessaoCliente) nnpeTO.getData();
+			if (cliente.getSenhaCriada() != null) {
+				lembrarSenha(cliente.getNomeJogador(),
+						cliente.getSenhaCriada());
+				JOptionPane.showMessageDialog(nnpeApplet,
+						Lang.msg("senhaGerada",
+								new String[]{cliente.getNomeJogador(),
+										cliente.getSenhaCriada()}),
+						Lang.msg("guardeSenhaGerada"),
+						JOptionPane.INFORMATION_MESSAGE);
+
+			}
 			this.sessaoCliente = cliente;
 		}
 		return true;
