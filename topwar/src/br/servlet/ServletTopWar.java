@@ -36,8 +36,6 @@ public class ServletTopWar extends NnpeServlet {
 		super.init();
 		proxyComandos = new ProxyComandos(webDir, webInfDir);
 		try {
-			atualizarJnlp("topwarOnline.jnlp");
-			atualizarJnlp("topwar.jnlp");
 			copiaJars();
 		} catch (Exception e) {
 			Logger.logarExept(e);

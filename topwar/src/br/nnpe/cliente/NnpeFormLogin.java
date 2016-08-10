@@ -29,24 +29,12 @@ import br.nnpe.tos.NnpeTO;
 import br.topwar.recursos.idiomas.Lang;
 
 public class NnpeFormLogin extends JPanel {
-	protected JComboBox comboIdiomas = new JComboBox(new String[] {
-			Lang.msg("pt"), Lang.msg("en") });
-	protected JTextField nomeLogar = new JTextField(20);
-	@Deprecated
-	protected JTextField capchaTexto = new JTextField(20);
-	@Deprecated
-	protected JTextField capchaTextoRecuperar = new JTextField(20);
-	@Deprecated
-	protected Map<String, String> chapchaChave = new HashMap<String, String>();
-	protected JTextField nomeRegistrar = new JTextField(20);
-	protected JTextField nomeRecuperar = new JTextField(20);
+	protected JComboBox comboIdiomas = new JComboBox(
+			new String[]{Lang.msg("pt"), Lang.msg("en")});
 	protected NnpeApplet nnpeApplet;
+	protected JTextField nomeLogar = new JTextField(20);
+	protected JTextField nomeRegistrar = new JTextField(20);
 	protected JTextField email = new JTextField(20);
-	protected JTextField emailRecuperar = new JTextField(20);
-
-	public Map<String, String> getChapchaChave() {
-		return chapchaChave;
-	}
 
 	private JLabel senhaLabel = new JLabel("Senha") {
 		public String getText() {
@@ -75,7 +63,6 @@ public class NnpeFormLogin extends JPanel {
 		sulaba1.add(gerarLogin(), BorderLayout.CENTER);
 		sulaba1.add(gerarLembrar(), BorderLayout.SOUTH);
 		abaEntrar.add(sulaba1, BorderLayout.CENTER);
-		abaEntrar.add(gerarIdiomas(), BorderLayout.SOUTH);
 		jTabbedPane.addTab(Lang.msg("entrar"), abaEntrar);
 		JPanel abaResgistrar = new JPanel(new BorderLayout());
 		abaResgistrar.add(gerarRegistrar(), BorderLayout.CENTER);
@@ -84,34 +71,28 @@ public class NnpeFormLogin extends JPanel {
 		abaRecuperar.add(gerarRecuperar(), BorderLayout.CENTER);
 		jTabbedPane.addTab(Lang.msg("recuperarSenha"), abaRecuperar);
 		add(jTabbedPane, BorderLayout.CENTER);
+		add(gerarIdiomas(), BorderLayout.SOUTH);
 		setSize(300, 300);
 		setVisible(true);
 	}
 
 	private Component gerarRecuperar() {
-		JPanel registrarPanel = new JPanel(new GridLayout(4, 2));
-		registrarPanel.setBorder(new TitledBorder("Registrar") {
-			public String getTitle() {
-				return Lang.msg("recuperarSenha");
-			}
-		});
-		registrarPanel.add(new JLabel("Entre com seu Nome") {
+		JPanel newPanel = new JPanel(new GridLayout(3, 1));
+		newPanel.add(new JLabel("mensagemRecuperarSenha1") {
 			public String getText() {
-				return Lang.msg("nome");
+				return Lang.msg("mensagemRecuperarSenha1");
 			}
 		});
-		registrarPanel.add(nomeRecuperar);
-		registrarPanel.add(new JLabel("Entre com seu e-mail") {
+		newPanel.add(new JLabel("mensagemRecuperarSenha2") {
 			public String getText() {
-				return Lang.msg("ouEntreEmail");
+				return Lang.msg("mensagemRecuperarSenha2");
 			}
 		});
-		registrarPanel.add(emailRecuperar);
-
-		JPanel newPanel = new JPanel(new BorderLayout());
-		newPanel.add(registrarPanel, BorderLayout.NORTH);
-//		newPanel.add(gerarCapchaPanel(capchaTextoRecuperar,
-//				Constantes.RECUPERAR), BorderLayout.CENTER);
+		newPanel.add(new JLabel("mensagemRecuperarSenha3") {
+			public String getText() {
+				return Lang.msg("mensagemRecuperarSenha3");
+			}
+		});
 		return newPanel;
 	}
 
@@ -133,8 +114,8 @@ public class NnpeFormLogin extends JPanel {
 	private JPanel gerarIdiomas() {
 		comboIdiomas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Logger.logar(Lang
-						.key(comboIdiomas.getSelectedItem().toString()));
+				Logger.logar(
+						Lang.key(comboIdiomas.getSelectedItem().toString()));
 				String i = Lang.key(comboIdiomas.getSelectedItem().toString());
 				if (i != null && !"".equals(i)) {
 					Lang.mudarIdioma(i);
@@ -143,6 +124,7 @@ public class NnpeFormLogin extends JPanel {
 					comboIdiomas.addItem(Lang.msg("en"));
 				}
 				NnpeFormLogin.this.repaint();
+				comboIdiomas.setSelectedItem(Lang.msg(i));
 			}
 		});
 		JPanel langPanel = new JPanel(new BorderLayout());
@@ -180,61 +162,9 @@ public class NnpeFormLogin extends JPanel {
 		registrarPanel.add(email);
 		JPanel newPanel = new JPanel(new BorderLayout());
 		newPanel.add(registrarPanel, BorderLayout.NORTH);
-//		newPanel.add(gerarCapchaPanel(capchaTexto, Constantes.REGISTRAR),
-//				BorderLayout.CENTER);
+		// newPanel.add(gerarCapchaPanel(capchaTexto, Constantes.REGISTRAR),
+		// BorderLayout.CENTER);
 		return newPanel;
-	}
-
-	@Deprecated
-	private Component gerarCapchaPanel(JTextField capchaTexto,
-			final String cpachaChave) {
-		if (nnpeApplet == null) {
-			return null;
-		}
-		JPanel capchaPanel = new JPanel(new BorderLayout());
-		final JLabel capchaImage = new JLabel();
-		JPanel capchaImagePanel = new JPanel();
-		capchaImagePanel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				chapchaChave.put(cpachaChave, capchaReload(capchaImage));
-				Logger.logar("Reload de Capcha " + cpachaChave);
-				super.mouseClicked(e);
-			}
-		});
-		capchaImagePanel.setBorder(new TitledBorder("") {
-			@Override
-			public String getTitle() {
-				return Lang.msg("clickNovaImagem");
-			}
-		});
-		capchaImagePanel.add(capchaImage);
-		capchaPanel.add(capchaImagePanel, BorderLayout.CENTER);
-		JPanel sulPanel = new JPanel();
-		sulPanel.setBorder(new TitledBorder("") {
-			@Override
-			public String getTitle() {
-				return Lang.msg("digiteFrase");
-			}
-		});
-		sulPanel.add(capchaTexto);
-		capchaPanel.add(sulPanel, BorderLayout.SOUTH);
-		chapchaChave.put(cpachaChave, capchaReload(capchaImage));
-		return capchaPanel;
-	}
-
-	@Deprecated
-	protected String capchaReload(JLabel capchaImage) {
-		NnpeTO nnpeTO = new NnpeTO();
-		nnpeTO.setComando(Constantes.NOVO_CAPCHA);
-		Object ret = nnpeApplet.enviarObjeto(nnpeTO);
-		if (ret != null && ret instanceof NnpeTO) {
-			nnpeTO = (NnpeTO) ret;
-			capchaImage.setIcon(new ImageIcon(nnpeTO.getDataBytes()));
-			return (String) nnpeTO.getData();
-		}
-		return null;
-
 	}
 
 	private JPanel gerarLogin() {
@@ -274,9 +204,6 @@ public class NnpeFormLogin extends JPanel {
 		return nomeRegistrar;
 	}
 
-	public JTextField getNomeRecuperar() {
-		return nomeRecuperar;
-	}
 
 	public static void main(String[] args) throws FileNotFoundException {
 		// FileOutputStream fileOutputStream = new
@@ -288,8 +215,8 @@ public class NnpeFormLogin extends JPanel {
 		// encoder.close();
 		NnpeFormLogin formEntrada = new NnpeFormLogin(null);
 		formEntrada.setToolTipText(Lang.msg("formularioLogin"));
-		int result = JOptionPane.showConfirmDialog(null, formEntrada, Lang
-				.msg("formularioLogin"), JOptionPane.OK_CANCEL_OPTION);
+		int result = JOptionPane.showConfirmDialog(null, formEntrada,
+				Lang.msg("formularioLogin"), JOptionPane.OK_CANCEL_OPTION);
 
 		if (JOptionPane.OK_OPTION == result) {
 			Logger.logar("ok");
@@ -300,16 +227,5 @@ public class NnpeFormLogin extends JPanel {
 		return email;
 	}
 
-	public String getCapchaTexto() {
-		return capchaTexto.getText();
-	}
-
-	public String getCapchaTextoRecuperar() {
-		return capchaTextoRecuperar.getText();
-	}
-
-	public JTextField getEmailRecuperar() {
-		return emailRecuperar;
-	}
 
 }

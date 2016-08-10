@@ -81,7 +81,7 @@ public abstract class NnpeProxyComandos {
 					+ sessaoClienteRemover.getNomeJogador());
 			NnpeTO nnpeTO = new NnpeTO();
 			nnpeDados.setLinhaChat(Lang.msg("desconectou",
-					new String[] { sessaoClienteRemover.getNomeJogador() }));
+					new String[]{sessaoClienteRemover.getNomeJogador()}));
 			nnpeDados.setDataTime(System.currentTimeMillis());
 			nnpeTO.setData(nnpeDados);
 			ganchoMonitorAtividade();
@@ -117,17 +117,18 @@ public abstract class NnpeProxyComandos {
 				.list();
 		usuario = (NnpeUsuario) (usuarios.isEmpty() ? null : usuarios.get(0));
 		if (usuario == null) {
-			usuarios = session
-					.createCriteria(NnpeUsuario.class)
-					.add(Restrictions.eq("email", nnpeCliente.getEmailJogador()))
+			usuarios = session.createCriteria(NnpeUsuario.class).add(
+					Restrictions.eq("email", nnpeCliente.getEmailJogador()))
 					.list();
-			usuario = (NnpeUsuario) (usuarios.isEmpty() ? null : usuarios
-					.get(0));
+			usuario = (NnpeUsuario) (usuarios.isEmpty()
+					? null
+					: usuarios.get(0));
 		}
 		if (usuario == null) {
 			return new MsgSrv(Lang.msg("usuarioNaoEncontrado"));
 		}
-		if ((System.currentTimeMillis() - usuario.getUltimaRecuperacao()) < 300000) {
+		if ((System.currentTimeMillis()
+				- usuario.getUltimaRecuperacao()) < 300000) {
 			return new MsgSrv(Lang.msg("limiteTempo"));
 		}
 		String senha = null;
@@ -136,14 +137,10 @@ public abstract class NnpeProxyComandos {
 		} catch (Exception e) {
 			Logger.logarExept(e);
 		}
-		boolean erroMail = false;
 		try {
 			mandaMailSenha(usuario.getLogin(), usuario.getEmail(), senha);
 		} catch (Exception e1) {
 			Logger.logarExept(e1);
-			if (NnpeServlet.email != null)
-				Logger.logarExept(new Exception("srvEmailFora"));
-			erroMail = true;
 		}
 		String email = usuario.getEmail();
 		Transaction transaction = session.beginTransaction();
@@ -154,10 +151,7 @@ public abstract class NnpeProxyComandos {
 			transaction.rollback();
 			return new ErroServ(e);
 		}
-		if (erroMail) {
-			return new MsgSrv(Lang.msg("senhaGerada", new String[] { senha }));
-		}
-		return new MsgSrv(Lang.msg("senhaEnviada", new String[] { email }));
+		return new MsgSrv(Lang.msg("senhaEnviada", new String[]{email}));
 	}
 
 	private Object cadastrarUsuario(NnpeCliente nnpeCliente) {
@@ -198,14 +192,10 @@ public abstract class NnpeProxyComandos {
 		} catch (Exception e) {
 			return new ErroServ(e);
 		}
-		boolean erroMail = false;
 		try {
 			mandaMailSenha(usuario.getLogin(), usuario.getEmail(), senha);
 		} catch (Exception e1) {
 			Logger.logarExept(e1);
-			if (NnpeServlet.email != null)
-				Logger.logarExept(new Exception("srvEmailFora"));
-			erroMail = true;
 		}
 		Transaction transaction = session.beginTransaction();
 		try {
@@ -219,9 +209,6 @@ public abstract class NnpeProxyComandos {
 			return new ErroServ(e.getMessage());
 		}
 		Logger.logar("cadastrarUsuario " + usuario);
-		if (erroMail) {
-			Logger.logar("Senha para Usuario " + usuario + ":" + senha);
-		}
 		return criarSessao(usuario);
 	}
 
@@ -236,9 +223,6 @@ public abstract class NnpeProxyComandos {
 	private void mandaMailSenha(String nome, String email, String senha)
 			throws AddressException, MessagingException {
 		Logger.logar("Senha para  :" + nome + " : " + senha);
-		NnpeServlet.email.sendSimpleMail("Sowbra Game Password",
-				new String[] { email }, "Your game user:password is " + nome
-						+ ":" + senha, false);
 	}
 
 	public NnpeDados getNnpeDadosChat() {
@@ -249,12 +233,12 @@ public abstract class NnpeProxyComandos {
 		NnpeUsuario usuario = new NnpeUsuario();
 		Session session = getSession();
 		try {
-			List usuarios = session
-					.createCriteria(NnpeUsuario.class)
+			List usuarios = session.createCriteria(NnpeUsuario.class)
 					.add(Restrictions.eq("login", nnpeCliente.getNomeJogador()))
 					.list();
-			usuario = (NnpeUsuario) (usuarios.isEmpty() ? null : usuarios
-					.get(0));
+			usuario = (NnpeUsuario) (usuarios.isEmpty()
+					? null
+					: usuarios.get(0));
 			if (usuario == null) {
 				return new MsgSrv(Lang.msg("usuarioNaoEncontrado"));
 			}
@@ -289,7 +273,7 @@ public abstract class NnpeProxyComandos {
 		Logger.logar("Sessao criada para " + sessaoCliente.getNomeJogador());
 		return nnpeTO;
 	}
-	
+
 	@Deprecated
 	public Object novoCapcha() {
 		return new ErroServ(Lang.msg("erroCapcha"));

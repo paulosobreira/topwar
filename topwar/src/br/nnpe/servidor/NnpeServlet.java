@@ -58,7 +58,6 @@ public class NnpeServlet extends HttpServlet {
 	protected NnpeProxyComandos proxyComandos;
 
 	public static String mediaDir;
-	public static Email email;
 	protected static SimpleDateFormat dateFormat = new SimpleDateFormat(
 			"dd/MM/yyyy");
 
@@ -68,55 +67,6 @@ public class NnpeServlet extends HttpServlet {
 		webInfDir = webDir + "WEB-INF" + File.separator;
 		mediaDir = webDir + "midia" + File.separator;
 		Lang.setSrvgame(true);
-		try {
-			email = new Email(getServletContext().getRealPath("")
-					+ File.separator + "WEB-INF" + File.separator);
-		} catch (Exception e) {
-			Logger.logarExept(e);
-			email = null;
-		}
-	}
-
-	public void atualizarJnlp(String jnlp) throws IOException {
-		String file = webDir + File.separator + jnlp;
-		BufferedReader reader = new BufferedReader(new FileReader(file));
-		String host = obterHost();
-		String readLine = reader.readLine();
-		StringBuffer buffer = new StringBuffer();
-		while (readLine != null) {
-			if (readLine.contains("{host}")) {
-				buffer.append(readLine.replace(replaceHost, host));
-			} else {
-				buffer.append(readLine);
-			}
-			readLine = reader.readLine();
-		}
-		reader.close();
-		FileWriter fileWriter = new FileWriter(file);
-		fileWriter.write(buffer.toString());
-		fileWriter.close();
-
-	}
-
-	private String obterHost() throws UnknownHostException {
-		String host = "";
-		int port = 80;
-		try {
-			Properties properties = new Properties();
-			properties.load(this.getClass().getResourceAsStream(
-					"server.properties"));
-			host = properties.getProperty("host");
-			port = Integer.parseInt(properties.getProperty("port"));
-			if (!Util.isNullOrEmpty(host)) {
-				return host;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		String ip = Inet4Address.getLocalHost().getHostAddress();
-		host = ip + ":" + port;
-		return host;
 	}
 
 	public void destroy() {
@@ -192,9 +142,9 @@ public class NnpeServlet extends HttpServlet {
 			String basePath = getServletContext().getRealPath("")
 					+ File.separator + "WEB-INF" + File.separator + "dump"
 					+ File.separator;
-			FileOutputStream fileOutputStream = new FileOutputStream(basePath
-					+ escrever.getClass().getSimpleName() + "-"
-					+ System.currentTimeMillis() + ".txt");
+			FileOutputStream fileOutputStream = new FileOutputStream(
+					basePath + escrever.getClass().getSimpleName() + "-"
+							+ System.currentTimeMillis() + ".txt");
 			fileOutputStream.write(arrayOutputStream.toByteArray());
 			fileOutputStream.close();
 
@@ -290,8 +240,8 @@ public class NnpeServlet extends HttpServlet {
 			Set top = Logger.topExceptions.keySet();
 			for (Iterator iterator = top.iterator(); iterator.hasNext();) {
 				String exept = (String) iterator.next();
-				printWriter.write("Quantidade : "
-						+ Logger.topExceptions.get(exept));
+				printWriter.write(
+						"Quantidade : " + Logger.topExceptions.get(exept));
 				printWriter.write("<br>");
 				printWriter.write(exept);
 				printWriter.write("<br><hr>");
@@ -302,7 +252,7 @@ public class NnpeServlet extends HttpServlet {
 
 	private void updateSchema(AnnotationConfiguration cfg,
 			SessionFactory sessionFactory, PrintWriter printWriter)
-			throws SQLException {
+					throws SQLException {
 		Dialect dialect = Dialect.getDialect(cfg.getProperties());
 		Session session = sessionFactory.openSession();
 		DatabaseMetadata meta = new DatabaseMetadata(session.connection(),
@@ -332,7 +282,7 @@ public class NnpeServlet extends HttpServlet {
 
 	private void createSchema(AnnotationConfiguration cfg,
 			SessionFactory sessionFactory, PrintWriter printWriter)
-			throws HibernateException, SQLException {
+					throws HibernateException, SQLException {
 		Dialect dialect = Dialect.getDialect(cfg.getProperties());
 		String[] strings = cfg.generateSchemaCreationScript(dialect);
 		executeStatement(sessionFactory, strings, printWriter);

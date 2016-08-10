@@ -161,29 +161,11 @@ public abstract class NnpeChatCliente {
 		NnpeCliente nnpeCliente = new NnpeCliente();
 		nnpeTO.setData(nnpeCliente);
 
-		if (!Util.isNullOrEmpty(nnpeFormLogin.getNomeRecuperar().getText())
-				|| !Util.isNullOrEmpty(nnpeFormLogin.getEmailRecuperar()
-						.getText())) {
-			nnpeCliente.setNomeJogador(nnpeFormLogin.getNomeRecuperar()
-					.getText());
-			nnpeCliente.setEmailJogador(nnpeFormLogin.getEmailRecuperar()
-					.getText());
-			nnpeCliente.setChaveCapcha(nnpeFormLogin.getChapchaChave().get(
-					Constantes.RECUPERAR));
-			nnpeCliente.setTextoCapcha(nnpeFormLogin.getCapchaTextoRecuperar());
-			nnpeTO.setComando(Constantes.RECUPERA_SENHA);
-			nnpeFormLogin.getNomeRegistrar().setText("");
-			nnpeFormLogin.getEmail().setText("");
-			nnpeFormLogin.getNomeLogar().setText("");
-		}
 		if (!Util.isNullOrEmpty(nnpeFormLogin.getNomeRegistrar().getText())
 				&& !Util.isNullOrEmpty(nnpeFormLogin.getEmail().getText())) {
 			nnpeCliente.setNomeJogador(nnpeFormLogin.getNomeRegistrar()
 					.getText());
 			nnpeCliente.setEmailJogador(nnpeFormLogin.getEmail().getText());
-			nnpeCliente.setChaveCapcha(nnpeFormLogin.getChapchaChave().get(
-					Constantes.REGISTRAR));
-			nnpeCliente.setTextoCapcha(nnpeFormLogin.getCapchaTexto());
 			nnpeTO.setComando(Constantes.NOVO_USUARIO);
 			nnpeFormLogin.getNomeLogar().setText("");
 		}

@@ -10,7 +10,8 @@
      ====================================================================== -->
 <project name="topwar" default="targetPadrao">
 
-	<property name="TOMCAT_HOME"       value="C:\apache-tomcat-7.0.53"/>
+	<property name="TOMCAT_HOME"       value="C:\Java\apache-tomcat-8.0.28"/>
+	<property name="HOST" value="games-sowbreira.rhcloud.com" />
 	<path id="classpath.compilacao">
 		<fileset dir="${TOMCAT_HOME}/lib">
 			<include name="*.jar" />
@@ -21,7 +22,10 @@
 		<pathelement location="build" />
 	</path>
 
-	<target name="targetPadrao" depends="atualizaVersao,copiaRecursos,compilarClasses,criarJarRecursos,criarJar,atualizaLib,criarWar">
+	<target name="targetPadraoLocal" depends="atualizaVersao,copiaRecursos,compilarClasses,criarJarRecursos,criarJar,atualizaLib,atualizarLocalJnlp,criarWar">
+	</target>
+	
+	<target name="targetPadrao" depends="atualizaVersao,copiaRecursos,compilarClasses,criarJarRecursos,criarJar,atualizaLib,atualizarJnlp,criarWar">
 	</target>
 
 	<target name="atualizaVersao">
@@ -49,6 +53,9 @@
 				<exclude name="**/*.png" />
 				<exclude name="**/*.wav" />
 			</fileset>
+			<fileset dir="WebContent">
+				<include name="**/*.jnlp" />
+			</fileset>				
 		</copy>
 	</target>
 
@@ -113,9 +120,27 @@
 	<target name="criarWar">
 		<delete dir="${TOMCAT_HOME}/webapps/topwar" />
 		<war compress="on" destfile="${TOMCAT_HOME}/webapps/topwar.war">
-			<fileset dir="WebContent" />
+			<fileset dir="WebContent">
+				<exclude name="**/*.jnlp" />
+			</fileset>
+			<fileset dir="build">
+				<include name="**/*.jnlp" />
+			</fileset>
 		</war>
 		<delete dir="WebContent/br" />
 	</target>
+	
+	<target name="atualizarJnlp" description="Atualizar JNPL">
+		<replace dir="build" value="${HOST}" token="{host}">
+			<include name="*.jnlp" />
+		</replace>
+	</target>
+
+	<target name="atualizarLocalJnlp" description="Atualizar JNPL">
+		<replace dir="build" value="localhost:8080" token="{host}">
+			<include name="*.jnlp" />
+		</replace>
+	</target>
+
 	
 </project>
