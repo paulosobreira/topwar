@@ -48,8 +48,6 @@ public class PainelMenu {
 
 	public static String MAPA_CIDADE = "mapa16";
 
-	public static String MAPA_PRAIA = "mapa9";
-
 	private String MENU = MENU_PRINCIPAL;
 
 	private MainFrame mainFrame;
@@ -313,10 +311,6 @@ public class PainelMenu {
 			mapaSelecionado = MAPA_CIDADE;
 			return;
 		}
-		if (praiaRct.contains(e.getPoint())) {
-			mapaSelecionado = MAPA_PRAIA;
-			return;
-		}
 		if (maisBotsRect.contains(e.getPoint())) {
 			numBotsSelecionado++;
 			Logger.logar("numBotsSelecionado++;");
@@ -483,7 +477,7 @@ public class PainelMenu {
 
 		int xOri = x;
 
-		String desertoTxt = Lang.msg("deserto").toUpperCase();
+		String desertoTxt = Lang.msg(MAPA_DESERTO).toUpperCase();
 		int tam = Util.calculaLarguraText(desertoTxt, g2d);
 		desertoRct.setFrame(x - 15, y - 12, tam + 10, 32);
 		g2d.setColor(lightWhite);
@@ -497,7 +491,7 @@ public class PainelMenu {
 
 		x += (tam + 30);
 
-		String cidadeTxt = Lang.msg("cidade").toUpperCase();
+		String cidadeTxt = Lang.msg(MAPA_CIDADE).toUpperCase();
 		tam = Util.calculaLarguraText(cidadeTxt, g2d);
 		cidadeRct.setFrame(x - 15, y - 12, tam + 10, 32);
 		g2d.setColor(lightWhite);
