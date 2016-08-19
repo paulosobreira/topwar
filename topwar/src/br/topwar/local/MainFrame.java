@@ -92,7 +92,9 @@ public class MainFrame {
 				if (servidorLocal != null) {
 					servidorLocal.finalizaJogosServidor();
 				}
-				System.exit(0);
+				if (clienteLocal.isLocal()) {
+					System.exit(0);
+				}
 				super.windowClosing(e);
 			}
 		});
@@ -171,7 +173,8 @@ public class MainFrame {
 			}
 
 			@Override
-			public synchronized void addMouseWheelListener(MouseWheelListener l) {
+			public synchronized void addMouseWheelListener(
+					MouseWheelListener l) {
 				topWarApplet.addMouseWheelListener(l);
 			}
 

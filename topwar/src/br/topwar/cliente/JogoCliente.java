@@ -98,7 +98,7 @@ public class JogoCliente {
 	private StringBuffer textoEnviar = new StringBuffer();
 	protected boolean modoTextoSomenteTime;
 	private int fps = 0;
-	protected double fpsLimite = 60D;
+	protected double fpsLimite = 30D;
 	private boolean mirouAvatarAdversario;
 	private int indiceAvatarAssistindo;
 
@@ -626,7 +626,8 @@ public class JogoCliente {
 			frameTopWar.requestFocus();
 		} else {
 			frameTopWar.setSize(1280, 720);
-			frameTopWar.setTitle("TopWar " + Lang.decodeTexto(dadosJogoTopWar.getNomeJogo()));
+			String versao = controleCliente.getVersao();
+			frameTopWar.setTitle("TopWar Ver. " +versao+" - "+ Lang.decodeTexto(dadosJogoTopWar.getNomeJogo()));
 			frameTopWar.setVisible(true);
 		}
 	}

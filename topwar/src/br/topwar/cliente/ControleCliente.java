@@ -63,8 +63,8 @@ public class ControleCliente extends NnpeChatCliente {
 		this.local = local;
 		JPanel mapaPanel = new JPanel();
 		JComboBox mapaCombo = new JComboBox();
-		mapaCombo.addItem("mapa9");
-		mapaCombo.addItem("mapa16");
+		mapaCombo.addItem(Lang.msg("mapa9"));
+		mapaCombo.addItem(Lang.msg("mapa16"));
 		mapaPanel.setBorder(new TitledBorder("") {
 			@Override
 			public String getTitle() {
@@ -136,7 +136,8 @@ public class ControleCliente extends NnpeChatCliente {
 			nnpeTO.setSessaoCliente(sessaoCliente);
 			DadosJogoTopWar dadosJogoTopWar = new DadosJogoTopWar();
 			dadosJogoTopWar.setNomeJogador(getNomeJogador());
-			dadosJogoTopWar.setNomeMapa((String) mapaCombo.getSelectedItem());
+			dadosJogoTopWar.setNomeMapa(
+					Lang.key((String) mapaCombo.getSelectedItem()));
 			String classe = (String) classesCombo.getSelectedItem();
 			dadosJogoTopWar.setClasse(Lang.key(classe));
 			Integer numBots = (Integer) botCombo.getSelectedItem();
@@ -229,8 +230,7 @@ public class ControleCliente extends NnpeChatCliente {
 		String nomeJogoSelecionado = chatWindow.obterJogoSelecionado();
 
 		int result = JOptionPane.showConfirmDialog(
-				this.nnpeChatWindow.getMainPanel(),
-				classesPanel,
+				this.nnpeChatWindow.getMainPanel(), classesPanel,
 				Lang.msg("entrarJogo") + " "
 						+ Lang.decodeTexto(nomeJogoSelecionado),
 				JOptionPane.YES_NO_OPTION);
@@ -244,8 +244,8 @@ public class ControleCliente extends NnpeChatCliente {
 		DadosJogoTopWar dadosJogoTopWar = new DadosJogoTopWar();
 		dadosJogoTopWar.setNomeJogo(nomeJogoSelecionado);
 		dadosJogoTopWar.setNomeJogador(sessaoCliente.getNomeJogador());
-		dadosJogoTopWar.setClasse(Lang.key((String) classesCombo
-				.getSelectedItem()));
+		dadosJogoTopWar
+				.setClasse(Lang.key((String) classesCombo.getSelectedItem()));
 		nnpeTO.setData(dadosJogoTopWar);
 		Object ret = enviarObjeto(nnpeTO);
 		if (ret instanceof NnpeTO) {
@@ -377,8 +377,8 @@ public class ControleCliente extends NnpeChatCliente {
 		if (verificaDelay(ConstantesTopWar.RECARREGAR)) {
 			return null;
 		}
-		ultAcaoMapa
-				.put(ConstantesTopWar.RECARREGAR, System.currentTimeMillis());
+		ultAcaoMapa.put(ConstantesTopWar.RECARREGAR,
+				System.currentTimeMillis());
 		DadosAcaoClienteTopWar acaoClienteTopWar = new DadosAcaoClienteTopWar();
 		acaoClienteTopWar.setNomeCliente(sessaoCliente.getNomeJogador());
 		NnpeTO nnpeTO = new NnpeTO();
@@ -471,8 +471,8 @@ public class ControleCliente extends NnpeChatCliente {
 		if (verificaDelay(ConstantesTopWar.RADIO_JOGO)) {
 			return;
 		}
-		ultAcaoMapa
-				.put(ConstantesTopWar.RADIO_JOGO, System.currentTimeMillis());
+		ultAcaoMapa.put(ConstantesTopWar.RADIO_JOGO,
+				System.currentTimeMillis());
 		NnpeTO nnpeTO = new NnpeTO();
 		nnpeTO.setSessaoCliente(sessaoCliente);
 		if (somenteTime) {
@@ -498,8 +498,19 @@ public class ControleCliente extends NnpeChatCliente {
 	}
 
 	public void voltaMenuPrincipal() {
-		sair();
-		painelMenu.inicializar();
+		if (local) {
+			sair();
+			painelMenu.inicializar();
+		} else {
+			int ret = JOptionPane.showConfirmDialog(
+					jogoCliente.getFrameTopWar(), Lang.msg("confirmaSair"),
+					Lang.msg("sair"), JOptionPane.YES_NO_OPTION);
+			if (ret == JOptionPane.NO_OPTION) {
+				return;
+			}
+			sairJogo();
+			jogoCliente.getFrameTopWar().setVisible(false);
+		}
 	}
 
 	public void avatarDemo(int indiceAvatarAssistindo) {

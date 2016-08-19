@@ -189,7 +189,7 @@ img {
 					<img src="webstart.png" border="0">
 				</a>	
 			&nbsp;&nbsp;&nbsp;&nbsp;
-				<a id="link" href="https://b4116f288ced0da9ffafef28a149df8144e98bd7.googledrive.com/host/0B1bELj5XAV79flRUMkFyMFNFanl0Tlc4bHU5YzJQU0JYelN3VmpqYkxGUklOTjFYX1BlYzg/topwar/topwar.html" style="text-align: left;">
+				<a id="link" href="https://sowbreira-26fe1.firebaseapp.com/topwar/topwar.html" style="text-align: left;">
 					Single
 					<img src="webstart.png" border="0">
 				</a>				
@@ -200,7 +200,7 @@ img {
 			<table style="text-align: center;padding-left: 35px">
 			<tr>
 			<td  style="text-align: center;padding-top: 10px;">
-				<a id="link" href="../../mesa11" style="text-align: center;" target="_BLANK">
+				<a id="link" href="../../f1mane" style="text-align: center;" target="_BLANK">
 					F1-mane 
 				</a><br>
 				<a href="./../f1mane/fm1.jpg" style="padding: 5px" onclick="return hs.expand(this)"> 

@@ -123,6 +123,11 @@ public class OcilaCor {
 	}
 
 	public static Color porcentVerde100Vermelho0(int porcent) {
+		return porcentVerde100Vermelho0(porcent, 150);
+	}
+	
+	
+	public static Color porcentVerde100Vermelho0(int porcent,int transp) {
 		int r, g;
 		if (porcent < 1) {
 			porcent = 1;
@@ -137,7 +142,7 @@ public class OcilaCor {
 			g = 255 * (porcent + 25) / 100;
 			r = 255;
 		}
-		return new Color(r, g, 0, 150);
+		return new Color(r, g, 0, transp);
 	}
 
 	public static void main(String[] args) {
