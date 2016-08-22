@@ -35,30 +35,6 @@ public class ServletTopWar extends NnpeServlet {
 	public void init() throws ServletException {
 		super.init();
 		proxyComandos = new ProxyComandos(webDir, webInfDir);
-		try {
-			copiaJars();
-		} catch (Exception e) {
-			Logger.logarExept(e);
-		}
-	}
-
-	private void copiaJars() {
-		try {
-			String[] files = { "commons-collections-3.1.jar",
-					"commons-logging-1.1.1.jar", "jcaptcha-1.0-all.jar",
-					"hibernate-core.jar" };
-			for (int i = 0; i < files.length; i++) {
-				String file = files[i];
-				String oriPath = webDir.replace("webapps" + File.separator
-						+ "topwar", "lib")
-						+ file;
-				String dstPath = webDir + File.separator + file;
-				Util.copyFile(new File(oriPath), new File(dstPath));
-
-			}
-		} catch (IOException e) {
-			Logger.logarExept(e);
-		}
 	}
 
 	@Override

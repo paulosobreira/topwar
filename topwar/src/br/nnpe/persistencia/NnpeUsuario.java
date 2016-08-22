@@ -4,8 +4,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-@Entity
-@Table(name = "Usuario")
+@Entity(name = "usuario")
+@Table(name = "usuario")
 public class NnpeUsuario extends NnpeDados {
 
 	private static final long serialVersionUID = -8874515871422415044L;
