@@ -1134,7 +1134,7 @@ public class JogoCliente {
 		if (controleCliente == null) {
 			return false;
 		}
-		return controleCliente.getLatenciaReal() > NnpeApplet.LATENCIA_MAX;
+		return controleCliente.getLatenciaReal() > NnpeApplet.LATENCIA_MIN;
 	}
 
 	public int getLag() {

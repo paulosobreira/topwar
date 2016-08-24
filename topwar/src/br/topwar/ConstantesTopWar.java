@@ -6,8 +6,8 @@ import br.nnpe.cliente.NnpeApplet;
 
 public class ConstantesTopWar {
 
-	public static final int LATENCIA_MAX = 250;
-	public static final int LATENCIA_MIN = 100;
+	public static final int LATENCIA_MAX = 400;
+	public static final int LATENCIA_MIN = 200;
 	/**
 	 * Rede
 	 */

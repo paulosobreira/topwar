@@ -239,7 +239,7 @@ public class PainelMenu {
 				int frames = 0;
 				long startTime = System.currentTimeMillis();
 				long lastTime = System.nanoTime();
-				double nsPerTick = 1000000000D / 60D;
+				double nsPerTick = 1000000000D / 30D;
 				double delta = 0;
 				while (renderThreadAlive) {
 					long now = System.nanoTime();
