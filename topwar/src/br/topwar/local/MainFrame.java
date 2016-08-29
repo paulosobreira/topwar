@@ -92,7 +92,11 @@ public class MainFrame {
 				if (servidorLocal != null) {
 					servidorLocal.finalizaJogosServidor();
 				}
-				if (clienteLocal.isLocal()) {
+				if (clienteLocal!=null && clienteLocal.isLocal()) {
+					System.exit(0);
+				}
+				
+				if (clienteLocal==null) {
 					System.exit(0);
 				}
 				super.windowClosing(e);
