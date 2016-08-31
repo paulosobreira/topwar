@@ -41,7 +41,7 @@ import br.topwar.tos.RadioMsg;
 
 public class PainelTopWar {
 	private static final int FADE_MINIS = 100;
-	public final static Color transpPreto = new Color(0, 0, 0, 50);
+	public final static Color transpPreto = new Color(0, 0, 0, 25);
 	public final static Color transpBranco = ConstantesTopWar.lightWhite;
 	public final static Color transpVerde = new Color(0, 255, 0, 150);
 	public final static Color verdeEscuro = new Color(0, 155, 0);
@@ -354,7 +354,7 @@ public class PainelTopWar {
 				y - 20);
 		graphics2d.setColor(ConstantesTopWar.lightWhite);
 
-		graphics2d.fillRoundRect(centerXAssaut + 20, y - 27, 180, 15, 0,0);
+		graphics2d.fillRoundRect(centerXAssaut + 20, y - 27, 180, 15, 0, 0);
 		graphics2d.setColor(Color.BLACK);
 		graphics2d.drawString(Lang.msg("escolherProxClasse"),
 				centerXAssaut + 30, y - 15);
@@ -1445,8 +1445,8 @@ public class PainelTopWar {
 					.equals(eventoJogo.getTimeAtacante())) {
 				g2d.setColor(ConstantesTopWar.lightBlu);
 			}
-			g2d.fillRoundRect(xJogador - 5, yTemp - 20, larguraNmJogador, 20,
-					0, 0);
+			g2d.fillRoundRect(xJogador - 5, yTemp - 20, larguraNmJogador, 20, 0,
+					0);
 			g2d.setColor(Color.DARK_GRAY);
 			g2d.drawString("" + eventoJogo.getAtacante(), xJogador, yTemp - 5);
 
@@ -1471,8 +1471,8 @@ public class PainelTopWar {
 			if (ConstantesTopWar.PTS_AZUL.equals(eventoJogo.getTimeMorto())) {
 				g2d.setColor(ConstantesTopWar.lightBlu);
 			}
-			g2d.fillRoundRect(xJogador - 5, yTemp - 20, larguraNmJogador, 20,
-					0, 0);
+			g2d.fillRoundRect(xJogador - 5, yTemp - 20, larguraNmJogador, 20, 0,
+					0);
 			g2d.setColor(Color.DARK_GRAY);
 			g2d.drawString("" + eventoJogo.getMorto(), xJogador, yTemp - 5);
 
@@ -1518,8 +1518,7 @@ public class PainelTopWar {
 
 		g2d.setColor(ConstantesTopWar.lightBlu);
 		g2d.fillRoundRect(xKills - 5, yTemp - 15,
-				Util.calculaLarguraText(Lang.msg("kills"), g2d) + 10, 20, 0,
-				0);
+				Util.calculaLarguraText(Lang.msg("kills"), g2d) + 10, 20, 0, 0);
 		g2d.setColor(Color.BLACK);
 		g2d.drawString(Lang.msg("kills"), xKills, yTemp);
 
@@ -1574,8 +1573,7 @@ public class PainelTopWar {
 
 		g2d.setColor(ConstantesTopWar.lightRed);
 		g2d.fillRoundRect(xKills - 5, yTemp - 15,
-				Util.calculaLarguraText(Lang.msg("kills"), g2d) + 10, 20, 0,
-				0);
+				Util.calculaLarguraText(Lang.msg("kills"), g2d) + 10, 20, 0, 0);
 		g2d.setColor(Color.BLACK);
 		g2d.drawString(Lang.msg("kills"), xKills, yTemp);
 
@@ -1735,7 +1733,7 @@ public class PainelTopWar {
 		g2d.drawString("" + jogoCliente.getBalas(), x, y);
 		x += 80;
 		g2d.setColor(ConstantesTopWar.lightWhite);
-		g2d.fillRoundRect(x - 10, y - 30, 60, 35, 0,0);
+		g2d.fillRoundRect(x - 10, y - 30, 60, 35, 0, 0);
 		g2d.setColor(Color.BLACK);
 		g2d.drawString("" + jogoCliente.getCartuchos(), x, y);
 
@@ -2358,29 +2356,31 @@ public class PainelTopWar {
 			return;
 		}
 		graphics2d.setColor(Color.LIGHT_GRAY);
-		graphics2d.draw(visao);
-		// Shape limitesViewPort = limitesViewPort();
-		// BufferedImage bufferedImage = new BufferedImage(
-		// limitesViewPort.getBounds().width,
-		// limitesViewPort.getBounds().height, BufferedImage.TYPE_INT_ARGB);
-		// Graphics2D cg = bufferedImage.createGraphics();
-		// cg.setColor(PainelTopWar.transpPreto);
-		// cg.fill(new Rectangle(0, 0, limitesViewPort.getBounds().width,
-		// limitesViewPort.getBounds().height));
-		// AlphaComposite composite = AlphaComposite.getInstance(
-		// AlphaComposite.CLEAR, 1);
-		// cg.setComposite(composite);
-		// Rectangle bounds = visao.getBounds();
-		// GeneralPath generalPath = new GeneralPath(visao);
-		// affineTransform11.setToTranslation(
-		// -(bounds.x - (bounds.x - (limitesViewPort.getBounds().x))),
-		// -(bounds.y - (bounds.y - (limitesViewPort.getBounds().y))));
-		// Shape createTransformedShape = generalPath
-		// .createTransformedShape(affineTransform11);
-		// cg.fill(createTransformedShape);
-		// cg.dispose();
-		// graphics2d.drawImage(bufferedImage, limitesViewPort.getBounds().x,
-		// limitesViewPort.getBounds().y, null);
+		Shape limitesViewPort = limitesViewPort();
+		BufferedImage bufferedImage = new BufferedImage(
+				limitesViewPort.getBounds().width,
+				limitesViewPort.getBounds().height,
+				BufferedImage.TYPE_INT_ARGB);
+		Graphics2D cg = bufferedImage.createGraphics();
+		cg.setColor(PainelTopWar.transpPreto);
+		cg.fill(new Rectangle(0, 0, limitesViewPort.getBounds().width,
+				limitesViewPort.getBounds().height));
+		AlphaComposite composite = AlphaComposite
+				.getInstance(AlphaComposite.CLEAR, 1);
+		cg.setComposite(composite);
+		Rectangle bounds = visao.getBounds();
+		GeneralPath generalPath = new GeneralPath(visao);
+		affineTransform11
+				.setToTranslation(
+						-(bounds.x - (bounds.x
+								- (limitesViewPort.getBounds().x))),
+				-(bounds.y - (bounds.y - (limitesViewPort.getBounds().y))));
+		Shape createTransformedShape = generalPath
+				.createTransformedShape(affineTransform11);
+		cg.fill(createTransformedShape);
+		cg.dispose();
+		graphics2d.drawImage(bufferedImage, limitesViewPort.getBounds().x,
+				limitesViewPort.getBounds().y, null);
 	}
 
 	private void desenhaFPS(Graphics2D g2d) {

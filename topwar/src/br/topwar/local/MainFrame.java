@@ -92,11 +92,11 @@ public class MainFrame {
 				if (servidorLocal != null) {
 					servidorLocal.finalizaJogosServidor();
 				}
-				if (clienteLocal!=null && clienteLocal.isLocal()) {
+				if (clienteLocal != null && clienteLocal.isLocal()) {
 					System.exit(0);
 				}
-				
-				if (clienteLocal==null) {
+
+				if (clienteLocal == null) {
 					System.exit(0);
 				}
 				super.windowClosing(e);
@@ -224,7 +224,13 @@ public class MainFrame {
 	}
 
 	public void criarJogoLocal(PainelMenu painelMenu) {
-		servidorLocal.finalizaJogosServidor();
+		if (clienteLocal != null) {
+			clienteLocal.sairJogo();
+			clienteLocal.sair();
+		}
+		if (servidorLocal != null) {
+			servidorLocal.finalizaJogosServidor();
+		}
 		clienteLocal = new ClienteLocal(proxyComandos, topWarApplet);
 		if (clienteLocal.getJogoCliente() != null
 				&& clienteLocal.getJogoCliente().isJogoEmAndamento()) {

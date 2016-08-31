@@ -66,7 +66,6 @@ public class PainelMenu {
 	public final static Color blu = new Color(105, 105, 105, 40);
 	public final static Color bluQualy = new Color(105, 105, 205);
 
-	private static final String CARREAGANDO = "CARREAGANDO";
 
 	private RoundRectangle2D sobreRect = new RoundRectangle2D.Double(0, 0, 1,
 			1, 10, 10);
@@ -589,22 +588,44 @@ public class PainelMenu {
 		g2d.setColor(Color.BLACK);
 		g2d.drawString(txt, x - desl + 5, y);
 		g2d.setFont(fontOri);
-
+		resetaRects();
 	}
 
 	private void proximoMenu() {
 		if (MENU.equals(MENU_JOGAR)) {
 			demo = false;
-			mainFrame.criarJogoLocal(this);
-			MENU = CARREAGANDO;
-			matarThreadRender();
+			desenhaCarregando = true;
+			Thread run = new Thread(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						mainFrame.criarJogoLocal(PainelMenu.this);
+						renderThreadAlive = false;
+					} catch (Exception e) {
+						Logger.logarExept(e);
+					}
+
+				}
+			});
+			run.start();
 			return;
 		}
 		if (MENU.equals(MENU_DEMO)) {
 			demo = true;
-			mainFrame.criarJogoLocal(this);
-			MENU = CARREAGANDO;
-			matarThreadRender();
+			desenhaCarregando = true;
+			Thread run = new Thread(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						mainFrame.criarJogoLocal(PainelMenu.this);
+						renderThreadAlive = false;
+					} catch (Exception e) {
+						Logger.logarExept(e);
+					}
+
+				}
+			});
+			run.start();
 			return;
 		}
 		if (MENU.equals(MENU_SOBRE)) {
