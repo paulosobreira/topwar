@@ -498,6 +498,7 @@ public class ControleCliente extends NnpeChatCliente {
 	}
 
 	public void voltaMenuPrincipal() {
+		sairJogo();
 		if (local) {
 			sair();
 			painelMenu.inicializar();
@@ -508,7 +509,6 @@ public class ControleCliente extends NnpeChatCliente {
 			if (ret == JOptionPane.NO_OPTION) {
 				return;
 			}
-			sairJogo();
 			jogoCliente.getFrameTopWar().setVisible(false);
 		}
 	}

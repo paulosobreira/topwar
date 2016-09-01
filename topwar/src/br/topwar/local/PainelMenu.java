@@ -218,6 +218,12 @@ public class PainelMenu {
 
 	public PainelMenu(MainFrame mainFrame) {
 		this.mainFrame = mainFrame;
+		mainFrame.getFrameTopWar().addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				processaClick(e);
+				super.mouseClicked(e);
+			}
+		});
 		inicializar();
 	}
 
@@ -225,13 +231,6 @@ public class PainelMenu {
 		MENU = MENU_PRINCIPAL;
 		matarThreadRender();
 		Logger.logar("matarThreadRender();");
-		mainFrame.getFrameTopWar().addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
-				processaClick(e);
-				super.mouseClicked(e);
-			}
-		});
-		Logger.logar("mainFrame.getFrameTopWar().addMouseListener");
 		renderThread = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -636,6 +635,10 @@ public class PainelMenu {
 
 	private void anteriorMenu() {
 		if (MENU.equals(MENU_JOGAR)) {
+			MENU = MENU_PRINCIPAL;
+			return;
+		}
+		if (MENU.equals(MENU_DEMO)) {
 			MENU = MENU_PRINCIPAL;
 			return;
 		}

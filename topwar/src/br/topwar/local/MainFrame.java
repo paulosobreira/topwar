@@ -225,7 +225,6 @@ public class MainFrame {
 
 	public void criarJogoLocal(PainelMenu painelMenu) {
 		if (clienteLocal != null) {
-			clienteLocal.sairJogo();
 			clienteLocal.sair();
 		}
 		if (servidorLocal != null) {
