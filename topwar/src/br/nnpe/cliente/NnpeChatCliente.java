@@ -166,6 +166,24 @@ public abstract class NnpeChatCliente {
 
 		if (!Util.isNullOrEmpty(nnpeFormLogin.getNomeRegistrar().getText())
 				&& !Util.isNullOrEmpty(nnpeFormLogin.getEmail().getText())) {
+			int resultado = 0;
+			try {
+				resultado = Integer
+						.parseInt(nnpeFormLogin.getResultadorConta().getText());
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(nnpeChatWindow.getMainPanel(),
+						Lang.msg("resultadoContaErrado"), Lang.msg("erro"),
+						JOptionPane.ERROR_MESSAGE);
+				return false;
+			}
+			if ((nnpeFormLogin.getConta1()
+					+ nnpeFormLogin.getConta2()) != resultado) {
+				JOptionPane.showMessageDialog(nnpeChatWindow.getMainPanel(),
+						Lang.msg("resultadoContaErrado"), Lang.msg("erro"),
+						JOptionPane.ERROR_MESSAGE);
+				return false;
+
+			}
 			nnpeCliente
 					.setNomeJogador(nnpeFormLogin.getNomeRegistrar().getText());
 			nnpeCliente.setEmailJogador(nnpeFormLogin.getEmail().getText());

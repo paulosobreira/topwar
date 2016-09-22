@@ -222,4 +222,16 @@ public class NnpeFormLogin extends JPanel {
 		return email;
 	}
 
+	public int getConta1() {
+		return conta1;
+	}
+
+	public int getConta2() {
+		return conta2;
+	}
+
+	public JTextField getResultadorConta() {
+		return resultadorConta;
+	}
+
 }
