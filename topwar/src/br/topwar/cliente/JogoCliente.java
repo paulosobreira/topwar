@@ -156,10 +156,10 @@ public class JogoCliente {
 		carregaMapa();
 		iniciaJFrame();
 		painelTopWar = new PainelTopWar(this);
+		iniciaThreadAtualizaDadosServidor();
 		iniciaMouseListener();
 		iniciaListenerTeclado();
 		iniciaThreadAtualizaTela();
-		iniciaThreadAtualizaDadosServidor();
 		iniciaThreadAtualizaPosAvatar();
 		iniciaThreadMouse();
 		iniciaTimerMostarAjuda();

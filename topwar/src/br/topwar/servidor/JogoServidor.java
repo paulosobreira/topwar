@@ -60,8 +60,8 @@ public class JogoServidor {
 		controleBots = new ControleBots(this, controleJogosServidor);
 		carregarMapa(dadosJogoTopWar);
 		incluirAvatarCriadorJogo(dadosJogoTopWar);
-		iniciarContadorTempoJogo(5);
-		// iniciarContadorTempoJogo(dadosJogoTopWar.getTempoJogo());
+		//iniciarContadorTempoJogo(5);
+		iniciarContadorTempoJogo(dadosJogoTopWar.getTempoJogo());
 		iniciaMonitorDeJogo();
 		controleBots.adicionarBots();
 	}
@@ -331,7 +331,7 @@ public class JogoServidor {
 				ret.add(avatarTopWar);
 			}
 			/**
-			 * Campo Audição Tiro 360
+			 * Campo Audiï¿½ï¿½o Tiro 360
 			 */
 			Point pontoTiro = avatarTopWar.getPontoUtlDisparo();
 			if (pontoTiro != null

@@ -2675,7 +2675,7 @@ public class PainelTopWar {
 					limitesViewPort.getBounds().x
 							+ (limitesViewPort.getBounds().width) - 75,
 					Util.inte(limitesViewPort.getBounds().y
-							+ limitesViewPort.getBounds().getHeight() - 90));
+							+ limitesViewPort.getBounds().getHeight() - 150));
 			g2d.setColor(transpBranco);
 			g2d.fillRoundRect(pointDesenhaLag.x, pointDesenhaLag.y, 65, 35, 0,
 					0);

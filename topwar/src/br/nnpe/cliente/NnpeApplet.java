@@ -151,7 +151,7 @@ public abstract class NnpeApplet extends JApplet {
 					retorno = ois.readObject();
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				Logger.logarExept(e);
 				return null;
 			}
 			long retornoT = System.currentTimeMillis();

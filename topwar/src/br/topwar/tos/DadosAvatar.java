@@ -20,13 +20,13 @@ public class DadosAvatar {
 	private boolean invencivel;
 
 	public String encode() {
-		return time + "!" + nomeJogador + "!" + x + "!" + y + "!" + angulo
-				+ "!" + tempoUtlAtaque + "!" + vida + "!" + arma + "!" + classe
-				+ "!" + rangeUtlDisparo + "!" + (invencivel ? "1" : "0");
+		return time + "£" + nomeJogador + "£" + x + "£" + y + "£" + angulo
+				+ "£" + tempoUtlAtaque + "£" + vida + "£" + arma + "£" + classe
+				+ "£" + rangeUtlDisparo + "£" + (invencivel ? "1" : "0");
 	}
 
 	public void decode(String val) {
-		String[] sp = val.split("!");
+		String[] sp = val.split("£");
 		time = sp[0];
 		nomeJogador = sp[1];
 		x = parseInt(sp[2]);
@@ -82,14 +82,14 @@ public class DadosAvatar {
 			dadosAvatar.rangeUtlDisparo = avatarTopWar.getRangeUtlDisparo();
 			dadosAvatar.invencivel = avatarTopWar.isInvencivel();
 			dadosAvatar.classe = avatarTopWar.codClasse();
-			buffer.append(dadosAvatar.encode() + "@");
+			buffer.append(dadosAvatar.encode() + "§");
 		}
 		return buffer.toString();
 	}
 
 	public static HashSet<ObjTopWar> desEmpacotarLista(Object object) {
 		HashSet<ObjTopWar> avatarTopWars = new HashSet<ObjTopWar>();
-		String[] listStrs = object.toString().split("@");
+		String[] listStrs = object.toString().split("§");
 		for (int i = 0; i < listStrs.length; i++) {
 			DadosAvatar dadosAvatar = new DadosAvatar();
 			dadosAvatar.decode(listStrs[i]);
@@ -112,8 +112,8 @@ public class DadosAvatar {
 	}
 
 	public static void main(String[] args) {
-		String teste = "asd@ZXc@QWE@q";
-		String[] split = teste.split("@");
+		String teste = "asd§ZXc§QWE§q";
+		String[] split = teste.split("§");
 		for (int i = 0; i < split.length; i++) {
 			System.out.println(split[i].length());
 		}

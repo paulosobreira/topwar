@@ -56,10 +56,10 @@ public class ControleCliente extends NnpeChatCliente {
 			logar();
 			return;
 		}
-		criarJogoLogadoSwing(false);
+		criarJogoLogadoChatWindow(false);
 	}
 
-	public boolean criarJogoLogadoSwing(boolean local) {
+	public boolean criarJogoLogadoChatWindow(boolean local) {
 		this.local = local;
 		JPanel mapaPanel = new JPanel();
 		JComboBox mapaCombo = new JComboBox();

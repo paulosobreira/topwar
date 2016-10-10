@@ -75,7 +75,7 @@ public class ServletTopWar extends NnpeServlet {
 	private void topExceptions(HttpServletResponse res, PrintWriter printWriter)
 			throws IOException {
 
-		printWriter.write("<h2>TopWar Exceções</h2><br><hr>");
+		printWriter.write("<h2>TopWar Erros</h2><br><hr>");
 		synchronized (Logger.topExceptions) {
 			Set top = Logger.topExceptions.keySet();
 			for (Iterator iterator = top.iterator(); iterator.hasNext();) {

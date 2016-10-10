@@ -133,6 +133,7 @@ public class NnpeChatWindow {
 
 				JOptionPane.showMessageDialog(getMainPanel(), msg,
 						Lang.msg("autor"), JOptionPane.INFORMATION_MESSAGE);
+				verLogs();
 			}
 		});
 		sair.addActionListener(new ActionListener() {
@@ -277,6 +278,22 @@ public class NnpeChatWindow {
 		frame.pack();
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+	}
+	
+	protected void verLogs() {
+		JTextArea area = new JTextArea(20, 50);
+		Set top = Logger.topExceptions.keySet();
+		for (Iterator iterator = top.iterator(); iterator.hasNext();) {
+			String exept = (String) iterator.next();
+			area.append("Qtde : " + Logger.topExceptions.get(exept));
+			area.append("\n");
+			area.append(exept.replaceAll("<br>", "\n"));
+			area.append("\n");
+		}
+		area.setCaretPosition(0);
+		JOptionPane.showMessageDialog(getMainPanel(), new JScrollPane(area),
+				Lang.msg("listaDeErros"), JOptionPane.INFORMATION_MESSAGE);
+
 	}
 
 }
