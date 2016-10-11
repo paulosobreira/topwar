@@ -156,10 +156,10 @@ public class JogoCliente {
 		carregaMapa();
 		iniciaJFrame();
 		painelTopWar = new PainelTopWar(this);
-		iniciaThreadAtualizaDadosServidor();
 		iniciaMouseListener();
 		iniciaListenerTeclado();
 		iniciaThreadAtualizaTela();
+		iniciaThreadAtualizaDadosServidor();
 		iniciaThreadAtualizaPosAvatar();
 		iniciaThreadMouse();
 		iniciaTimerMostarAjuda();
@@ -170,7 +170,7 @@ public class JogoCliente {
 			@Override
 			public void run() {
 				try {
-					atualizarPLacar();
+					atualizarPlacar();
 					Thread.sleep(5000);
 					if (!painelTopWar.isEscondeuControles()) {
 						painelTopWar.setVerControles(false);
@@ -365,7 +365,7 @@ public class JogoCliente {
 							jogoEmAndamento = false;
 						} else if (tempoRestanteJogo < 500
 								&& painelTopWar.getTabCont() <= 0) {
-							atualizarPLacar();
+							atualizarPlacar();
 						}
 					} catch (InterruptedException e) {
 						interrupt = true;
@@ -379,7 +379,7 @@ public class JogoCliente {
 
 	}
 
-	private void atualizarPLacar() {
+	private void atualizarPlacar() {
 		NnpeTO nnpeTO = (NnpeTO) controleCliente.obterPlacar();
 		if (nnpeTO != null) {
 			placar = (List<PlacarTopWar>) nnpeTO.getData();
@@ -574,6 +574,7 @@ public class JogoCliente {
 				}
 			}
 		});
+		renderiza = true;
 		threadRepaint.start();
 	}
 

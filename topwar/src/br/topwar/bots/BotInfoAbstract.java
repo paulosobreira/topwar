@@ -205,7 +205,7 @@ public abstract class BotInfoAbstract {
 				.hasNext();) {
 			ObjTopWar objTopWar = (ObjTopWar) iterator.next();
 			/**
-			 * N„o È boot, segue jogador
+			 * N√£o √© boot, segue jogador
 			 */
 			if (objTopWar.getBotInfo() == null) {
 				return objTopWar;
@@ -217,7 +217,7 @@ public abstract class BotInfoAbstract {
 				continue;
 			}
 			/**
-			 * Shield ou Shotgun n„o segue bot
+			 * Shield ou Shotgun n√£o segue bot
 			 */
 			if ((ConstantesTopWar.SHIELD.equals(avatarTopWar.getClasse()) || (ConstantesTopWar.SHOTGUN
 					.equals(avatarTopWar.getClasse())))) {

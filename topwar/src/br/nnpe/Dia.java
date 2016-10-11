@@ -81,7 +81,7 @@ public class Dia implements Cloneable, Serializable {
 
 	/**
 	 * 
-	 * Se o valor for igual a 10 usar dd/MM/yyyy caso não, usar yyyy-MM-dd
+	 * Se o valor for igual a 10 usar dd/MM/yyyy caso nï¿½o, usar yyyy-MM-dd
 	 * HH:mm:ss.mmm
 	 */
 	public static Timestamp converteStringTimestamp(String valor)
@@ -381,7 +381,7 @@ public class Dia implements Cloneable, Serializable {
 		} else if (mes == 2) {
 			m = "FEVEREIRO";
 		} else if (mes == 3) {
-			m = "MARÇO";
+			m = "MARÃ‡O";
 		} else if (mes == 4) {
 			m = "ABRIL";
 		} else if (mes == 5) {
@@ -411,7 +411,7 @@ public class Dia implements Cloneable, Serializable {
 			m = 1;
 		} else if (desc.equalsIgnoreCase("FEVEREIRO")) {
 			m = 2;
-		} else if (desc.equalsIgnoreCase("MARÇO")) {
+		} else if (desc.equalsIgnoreCase("MARÃ‡O")) {
 			m = 3;
 		} else if (desc.equalsIgnoreCase("ABRIL")) {
 			m = 4;
@@ -504,11 +504,6 @@ public class Dia implements Cloneable, Serializable {
 		return df.format(day) + "/" + df.format(month) + "/" + year;
 	}
 
-	/**
-	 * Usar somente para pesquisa. Testado só no postgres.
-	 * 
-	 * @return
-	 */
 	public String getDataBanco() {
 		return "'" + year + "-" + prec2.format(month) + "-" + prec2.format(day)
 				+ "%'";

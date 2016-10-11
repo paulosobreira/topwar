@@ -18,7 +18,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import br.nnpe.GeoUtil;
 import br.nnpe.Logger;
 import br.nnpe.Util;
-import br.nnpe.cliente.NnpeApplet;
 import br.nnpe.tos.NnpeTO;
 import br.topwar.ConstantesTopWar;
 import br.topwar.ProxyComandos;
@@ -60,8 +59,8 @@ public class JogoServidor {
 		controleBots = new ControleBots(this, controleJogosServidor);
 		carregarMapa(dadosJogoTopWar);
 		incluirAvatarCriadorJogo(dadosJogoTopWar);
-		//iniciarContadorTempoJogo(5);
-		iniciarContadorTempoJogo(dadosJogoTopWar.getTempoJogo());
+		//iniciarContadorTempoJogo(dadosJogoTopWar.getTempoJogo());
+		iniciarContadorTempoJogo(10);
 		iniciaMonitorDeJogo();
 		controleBots.adicionarBots();
 	}
@@ -330,9 +329,6 @@ public class JogoServidor {
 			if (campoVisao(line, avatarTopWarJog, false)) {
 				ret.add(avatarTopWar);
 			}
-			/**
-			 * Campo Audi��o Tiro 360
-			 */
 			Point pontoTiro = avatarTopWar.getPontoUtlDisparo();
 			if (pontoTiro != null
 					&& (System.currentTimeMillis() - avatarTopWar
