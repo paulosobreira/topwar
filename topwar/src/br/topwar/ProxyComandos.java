@@ -2,6 +2,7 @@ package br.topwar;
 
 import org.hibernate.Session;
 
+import br.nnpe.Logger;
 import br.nnpe.Util;
 import br.nnpe.servidor.NnpeProxyComandos;
 import br.nnpe.tos.NnpeTO;

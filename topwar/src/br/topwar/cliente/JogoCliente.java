@@ -142,9 +142,8 @@ public class JogoCliente {
 		}
 		ObjectInputStream ois;
 		try {
-			ois = new ObjectInputStream(
-					CarregadorRecursos.recursoComoStream(dadosJogoTopWar
-							.getNomeMapa() + ".topwar"));
+			ois = new ObjectInputStream(CarregadorRecursos.recursoComoStream(
+					dadosJogoTopWar.getNomeMapa() + ".topwar"));
 			mapaTopWar = (MapaTopWar) ois.readObject();
 		} catch (Exception e1) {
 			Logger.logarExept(e1);
@@ -267,8 +266,8 @@ public class JogoCliente {
 					try {
 						int media = 0;
 						Collection<AvatarCliente> avatarClientesCopia = getAvatarClientesCopia();
-						for (Iterator iterator = avatarClientesCopia.iterator(); iterator
-								.hasNext();) {
+						for (Iterator iterator = avatarClientesCopia
+								.iterator(); iterator.hasNext();) {
 							AvatarCliente avatarCliente = (AvatarCliente) iterator
 									.next();
 							if (avatarCliente.getVida() <= 0) {
@@ -278,24 +277,25 @@ public class JogoCliente {
 								avatarLocal = avatarCliente;
 							}
 							if (avatarCliente.getPontoAvatarSuave() == null) {
-								avatarCliente.setPontoAvatarSuave(avatarCliente
-										.getPontoAvatar());
+								avatarCliente.setPontoAvatarSuave(
+										avatarCliente.getPontoAvatar());
 								continue;
 							}
 							if (avatarCliente.isInvencivel()
 									&& getMapaTopWar() != null
 									&& (GeoUtil.distaciaEntrePontos(
 											getMapaTopWar().getPontoTimeAzul(),
-											avatarCliente.getPontoAvatar()) < avatarCliente
-											.getVelocidade() || GeoUtil
-											.distaciaEntrePontos(
+											avatarCliente
+													.getPontoAvatar()) < avatarCliente
+															.getVelocidade()
+											|| GeoUtil.distaciaEntrePontos(
 													getMapaTopWar()
 															.getPontoTimeVermelho(),
 													avatarCliente
 															.getPontoAvatar()) < avatarCliente
-											.getVelocidade())) {
-								avatarCliente.setPontoAvatarSuave(avatarCliente
-										.getPontoAvatar());
+																	.getVelocidade())) {
+								avatarCliente.setPontoAvatarSuave(
+										avatarCliente.getPontoAvatar());
 								continue;
 							}
 							List<Point> linha = GeoUtil.drawBresenhamLine(
@@ -303,21 +303,20 @@ public class JogoCliente {
 									avatarCliente.getPontoAvatarSuave());
 							int noventaPorcento = (int) ((linha.size() * 0.8));
 							if (linha.size() > avatarCliente.getVelocidade()) {
-								avatarCliente.setPontoAvatarSuave(linha
-										.get(noventaPorcento));
+								avatarCliente.setPontoAvatarSuave(
+										linha.get(noventaPorcento));
 							} else if (linha.size() > 1) {
 								Point point = linha.get(linha.size() - 2);
 								avatarCliente.setPontoAvatarSuave(point);
 							} else {
-								avatarCliente.setPontoAvatarSuave(avatarCliente
-										.getPontoAvatar());
+								avatarCliente.setPontoAvatarSuave(
+										avatarCliente.getPontoAvatar());
 							}
 							if (avatarCliente.getPontoAvatarOld() != null
-									&& avatarCliente.getPontoAvatarOld()
-											.equals(avatarCliente
-													.getPontoAvatar())) {
-								avatarCliente.setPontoAvatarSuave(avatarCliente
-										.getPontoAvatar());
+									&& avatarCliente.getPontoAvatarOld().equals(
+											avatarCliente.getPontoAvatar())) {
+								avatarCliente.setPontoAvatarSuave(
+										avatarCliente.getPontoAvatar());
 							}
 							media += linha.size();
 						}
@@ -350,14 +349,14 @@ public class JogoCliente {
 			@Override
 			public void run() {
 				boolean interrupt = false;
-				while (controleCliente.isComunicacaoServer() && jogoEmAndamento
-						&& !interrupt) {
+				while (jogoEmAndamento && !interrupt) {
 					try {
 						synchronized (avatarClientes) {
 							atualizaListaAvatares();
 						}
 						long sleep = ConstantesTopWar.ATRASO_REDE_PADRAO;
-						if (controleCliente.getLatenciaReal() > ConstantesTopWar.ATRASO_REDE_PADRAO) {
+						if (controleCliente
+								.getLatenciaReal() > ConstantesTopWar.ATRASO_REDE_PADRAO) {
 							sleep = ConstantesTopWar.DUPLO_ATRASO_REDE_PADRAO;
 						}
 						Thread.sleep(sleep);
@@ -469,7 +468,8 @@ public class JogoCliente {
 					return false;
 				}
 			}
-			if ((ConstantesTopWar.ARMA_FACA == arma || ConstantesTopWar.ARMA_SHIELD == arma)
+			if ((ConstantesTopWar.ARMA_FACA == arma
+					|| ConstantesTopWar.ARMA_SHIELD == arma)
 					&& distaciaEntrePontos < 50) {
 				int distaciaEntreAvatares = GeoUtil.distaciaEntrePontos(
 						avatarCliente.getPontoAvatar(),
@@ -478,7 +478,8 @@ public class JogoCliente {
 					return false;
 				}
 			}
-			if (ConstantesTopWar.ARMA_SNIPER == arma && distaciaEntrePontos > 5) {
+			if (ConstantesTopWar.ARMA_SNIPER == arma
+					&& distaciaEntrePontos > 5) {
 				return false;
 			}
 			if (distaciaEntrePontos < 50) {
@@ -628,7 +629,8 @@ public class JogoCliente {
 		} else {
 			frameTopWar.setSize(1280, 720);
 			String versao = controleCliente.getVersao();
-			frameTopWar.setTitle("TopWar Ver. " +versao+" - "+ Lang.decodeTexto(dadosJogoTopWar.getNomeJogo()));
+			frameTopWar.setTitle("TopWar Ver. " + versao + " - "
+					+ Lang.decodeTexto(dadosJogoTopWar.getNomeJogo()));
 			frameTopWar.setVisible(true);
 		}
 	}
@@ -770,12 +772,12 @@ public class JogoCliente {
 				}
 
 				if (keyCode == KeyEvent.VK_F11) {
-					painelTopWar.setDesenhaImagens(!painelTopWar
-							.isDesenhaImagens());
+					painelTopWar.setDesenhaImagens(
+							!painelTopWar.isDesenhaImagens());
 				}
 				if (keyCode == KeyEvent.VK_F12) {
-					painelTopWar.setDesenhaObjetos(!painelTopWar
-							.isDesenhaObjetos());
+					painelTopWar.setDesenhaObjetos(
+							!painelTopWar.isDesenhaObjetos());
 				}
 				super.keyPressed(e);
 			}
@@ -808,8 +810,8 @@ public class JogoCliente {
 		NnpeTO nnpeTO = new NnpeTO();
 		nnpeTO.setComando(ConstantesTopWar.ATUALIZAR_LISTA_AVS);
 		nnpeTO.setSessaoCliente(controleCliente.getSessaoCliente());
-		nnpeTO.setData(dadosJogoTopWar.getNomeJogo() + "&"
-				+ obterUltimoEvento() + "&" + obterUltRadio());
+		nnpeTO.setData(dadosJogoTopWar.getNomeJogo() + "&" + obterUltimoEvento()
+				+ "&" + obterUltRadio());
 		nnpeTO.setMillisSrv(millisSrv);
 		Object ret = controleCliente.enviarObjeto(nnpeTO);
 		if (!(ret instanceof NnpeTO)) {
@@ -854,20 +856,22 @@ public class JogoCliente {
 			ultRadio = radioMsg.getId();
 		}
 		Set<ObjTopWar> avatarTopWars = (HashSet<ObjTopWar>) DadosAvatar
-				.desEmpacotarLista(retorno.get(ConstantesTopWar.LISTA_AVATARES));
-		for (Iterator iterator = avatarTopWars.iterator(); iterator.hasNext();) {
+				.desEmpacotarLista(
+						retorno.get(ConstantesTopWar.LISTA_AVATARES));
+		for (Iterator iterator = avatarTopWars.iterator(); iterator
+				.hasNext();) {
 			ObjTopWar avatarTopWar = (ObjTopWar) iterator.next();
 			for (Iterator iterator2 = avatarClientes.iterator(); iterator2
 					.hasNext();) {
 				AvatarCliente avatarCliente = (AvatarCliente) iterator2.next();
-				if (avatarTopWar.getNomeJogador().equals(
-						avatarCliente.getNomeJogador())) {
-					avatarCliente.setPontoAvatarOld(avatarCliente
-							.getPontoAvatar());
+				if (avatarTopWar.getNomeJogador()
+						.equals(avatarCliente.getNomeJogador())) {
+					avatarCliente
+							.setPontoAvatarOld(avatarCliente.getPontoAvatar());
 					avatarCliente.setAvatarTopWar(avatarTopWar);
 					if (controleCliente.getNomeJogador() != null
-							&& controleCliente.getNomeJogador().equals(
-									avatarTopWar.getNomeJogador())) {
+							&& controleCliente.getNomeJogador()
+									.equals(avatarTopWar.getNomeJogador())) {
 						avatarCliente.setLocal(true);
 						anguloServidor = avatarCliente.getAngulo();
 						time = avatarCliente.getTime();
@@ -892,7 +896,8 @@ public class JogoCliente {
 				avatarClientes.add(avatarCliente);
 			}
 		}
-		for (Iterator iterator = avatarClientes.iterator(); iterator.hasNext();) {
+		for (Iterator iterator = avatarClientes.iterator(); iterator
+				.hasNext();) {
 			AvatarCliente avatarCliente = (AvatarCliente) iterator.next();
 			if (!avatarTopWars.contains(avatarCliente.getAvatarTopWar())) {
 				if (ConstantesTopWar.OBJ_ROCKET == avatarCliente.getArma()) {
@@ -936,8 +941,8 @@ public class JogoCliente {
 		}
 		Point p = null;
 		Point descontoCentraliza = painelTopWar.getDescontoCentraliza();
-		p = new Point(e.getX() + descontoCentraliza.x, e.getY()
-				+ descontoCentraliza.y);
+		p = new Point(e.getX() + descontoCentraliza.x,
+				e.getY() + descontoCentraliza.y);
 		clickTime = System.currentTimeMillis();
 		return p;
 	}

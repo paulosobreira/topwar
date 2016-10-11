@@ -74,7 +74,7 @@ public class JogoServidor {
 			@Override
 			public void run() {
 				while (!finalizado) {
-					processaClicoJogoServidor();
+					processaCicloJogoServidor();
 					if (verificaFinalizado()) {
 						finalizado = true;
 					}
@@ -146,7 +146,7 @@ public class JogoServidor {
 		this.finalizado = finalizado;
 	}
 
-	protected void processaClicoJogoServidor() {
+	protected void processaCicloJogoServidor() {
 		synchronized (avatarTopWars) {
 			for (Iterator iterator = avatarTopWars.keySet().iterator(); iterator
 					.hasNext();) {
@@ -154,16 +154,16 @@ public class JogoServidor {
 				ObjTopWar avatarTopWar = avatarTopWars.get(nmAv);
 				long tempDesdeUltMorte = System.currentTimeMillis()
 						- avatarTopWar.getUltimaMorte();
-				processaClicoJogoServidorSetarOrigem(avatarTopWar,
+				processaCicloJogoServidorSetarOrigem(avatarTopWar,
 						tempDesdeUltMorte);
-				processaClicoJogoServidorInvencibilidade(avatarTopWar,
+				processaCicloJogoServidorInvencibilidade(avatarTopWar,
 						tempDesdeUltMorte);
-				processaClicoJogoServidorMover(avatarTopWar);
+				processaCicloJogoServidorMover(avatarTopWar);
 			}
 		}
 	}
 
-	private void processaClicoJogoServidorMover(ObjTopWar avatarTopWar) {
+	private void processaCicloJogoServidorMover(ObjTopWar avatarTopWar) {
 		if (avatarTopWar.getPontoDestinoMover() != null
 				&& !avatarTopWar.verificaObj() && avatarTopWar.getVida() > 0) {
 			double distaciaEntrePontos = GeoUtil.distaciaEntrePontos(
@@ -192,7 +192,7 @@ public class JogoServidor {
 		}
 	}
 
-	private void processaClicoJogoServidorSetarOrigem(ObjTopWar avatarTopWar,
+	private void processaCicloJogoServidorSetarOrigem(ObjTopWar avatarTopWar,
 			long tempDesdeUltMorte) {
 		if (avatarTopWar.getVida() <= 0 && tempDesdeUltMorte > 5000) {
 			avatarTopWar.setMortoPor(null);
@@ -207,7 +207,7 @@ public class JogoServidor {
 		}
 	}
 
-	private void processaClicoJogoServidorInvencibilidade(
+	private void processaCicloJogoServidorInvencibilidade(
 			ObjTopWar avatarTopWar, long tempDesdeUltMorte) {
 		if (avatarTopWar.getVida() > 0 && tempDesdeUltMorte < 12000) {
 			avatarTopWar.setInvencivel(true);

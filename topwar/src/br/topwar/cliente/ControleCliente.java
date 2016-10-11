@@ -288,9 +288,6 @@ public class ControleCliente extends NnpeChatCliente {
 
 	public boolean verificaDelay(String chave) {
 		Long delay = ConstantesTopWar.delayPadrao(chave);
-		if (jogoCliente.verificaLag()) {
-			return true;
-		}
 		Long ultAcao = ultAcaoMapa.get(chave);
 		if (ultAcao == null) {
 			ultAcao = 0l;
@@ -340,6 +337,7 @@ public class ControleCliente extends NnpeChatCliente {
 		nnpeTO.setComando(ConstantesTopWar.ATACAR);
 		nnpeTO.setData(acaoClienteTopWar);
 		Object ret = enviarObjeto(nnpeTO);
+		Logger.logar("ControleCliente enviarObjeto");
 		return ret;
 	}
 
