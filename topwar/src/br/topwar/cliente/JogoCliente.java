@@ -1140,7 +1140,8 @@ public class JogoCliente {
 		if (controleCliente == null) {
 			return false;
 		}
-		return controleCliente.getLatenciaReal() > 50;
+		return controleCliente
+				.getLatenciaReal() > ConstantesTopWar.LATENCIA_MIN;
 	}
 
 	public int getLag() {

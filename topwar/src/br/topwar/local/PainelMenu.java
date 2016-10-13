@@ -425,7 +425,7 @@ public class PainelMenu {
 			desenhaMenuJogar(g2d);
 			desenhaMenuDemo(g2d);
 			desenhaMenuSobre(g2d);
-			desenhaFPS(g2d, getWidth() - 70, getHeight() - 50);
+			//desenhaFPS(g2d, getWidth() - 70, getHeight() - 50);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Logger.logarExept(e);

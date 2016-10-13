@@ -35,12 +35,6 @@ public class ProxyComandos extends NnpeProxyComandos {
 
 	public Object processarObjeto(Object object) {
 		NnpeTO nnpeTO = (NnpeTO) object;
-		try {
-			Thread.sleep(Util.intervalo(150, 300));
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		if (ConstantesTopWar.ATUALIZAR_LISTA_AVS.equals(nnpeTO.getComando())) {
 			return atualizarListaAvatares(nnpeTO);
 		} else if (ConstantesTopWar.MOVER_PONTO.equals(nnpeTO.getComando())) {

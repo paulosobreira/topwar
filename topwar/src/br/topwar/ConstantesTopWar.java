@@ -7,7 +7,7 @@ import br.nnpe.cliente.NnpeApplet;
 public class ConstantesTopWar {
 
 	public static final int LATENCIA_MAX = 400;
-	public static final int LATENCIA_MIN = 200;
+	public static final int LATENCIA_MIN = 50;
 	/**
 	 * Rede
 	 */
@@ -145,9 +145,6 @@ public class ConstantesTopWar {
 
 	public static Long delayPadrao(String chave) {
 		Long delay = new Long(LATENCIA_MIN);
-		if (ConstantesTopWar.ATACAR.equals(chave)) {
-			delay = 100l;
-		}
 		if (ConstantesTopWar.RADIO_JOGO.equals(chave)) {
 			delay = 1000l;
 		}
