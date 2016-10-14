@@ -859,9 +859,11 @@ public class PainelTopWar {
 				Runnable runnable = new Runnable() {
 					@Override
 					public void run() {
-						backGround = ImageUtil.carregaImagemWebContent(
-								mapaTopWar.getBackGround(),
-								jogoCliente.getApplet(), "br/topwar/recursos/");
+						backGround = ImageUtil.toCompatibleImage(
+								ImageUtil.carregaImagemWebContent(
+										mapaTopWar.getBackGround(),
+										jogoCliente.getApplet(),
+										"br/topwar/recursos/"));
 						if (backGround != null) {
 							backGround.setAccelerationPriority(1);
 						}

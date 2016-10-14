@@ -19,6 +19,7 @@ public class AvatarCliente {
 	private long lastAnim;
 	private long lastAnimMorte;
 	private Point pontoAvatarSuave;
+	private double anguloSuave;
 	private Point pontoAvatarOld;
 	private ObjTopWar avatarTopWar;
 
@@ -310,6 +311,14 @@ public class AvatarCliente {
 
 	public double getLimiteVisao() {
 		return avatarTopWar.getLimiteVisao();
+	}
+
+	public double getAnguloSuave() {
+		return anguloSuave;
+	}
+
+	public void setAnguloSuave(double anguloSuave) {
+		this.anguloSuave = anguloSuave;
 	}
 
 }

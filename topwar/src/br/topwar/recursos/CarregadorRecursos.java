@@ -74,8 +74,8 @@ public class CarregadorRecursos {
 		Logger.logar("inicio  carregaBackGround=" + backGroundStr);
 		BufferedImage backGround = null;
 		try {
-			backGround = ImageIO.read(CarregadorRecursos.class
-					.getResource(backGroundStr));
+			backGround = ImageUtil.toCompatibleImage(ImageIO
+					.read(CarregadorRecursos.class.getResource(backGroundStr)));
 		} catch (IOException e) {
 			Logger.logarExept(e);
 		}
@@ -97,8 +97,8 @@ public class CarregadorRecursos {
 		return this.getClass().getResourceAsStream(string);
 	}
 
-	public static void main(String[] args) throws URISyntaxException,
-			IOException, ClassNotFoundException {
+	public static void main(String[] args)
+			throws URISyntaxException, IOException, ClassNotFoundException {
 		// String val = "tn_2008voi-mclaren.gif";
 		// System.out.println(Util.intervalo(0, 0));
 
@@ -140,8 +140,8 @@ public class CarregadorRecursos {
 		BufferedImage travadaRodaImg = CarregadorRecursos
 				.carregaBufferedImageTranspareciaBranca("travadaRoda.png", 200,
 						50);
-		JOptionPane.showConfirmDialog(null, new JLabel(new ImageIcon(
-				travadaRodaImg)));
+		JOptionPane.showConfirmDialog(null,
+				new JLabel(new ImageIcon(travadaRodaImg)));
 	}
 
 	private static void gerarListaCarrosLado() throws IOException {
@@ -191,8 +191,8 @@ public class CarregadorRecursos {
 			return bufferedImage;
 		}
 		try {
-			bufferedImage = ImageIO.read(CarregadorRecursos.class
-					.getResource(img));
+			bufferedImage = ImageUtil.toCompatibleImage(
+					ImageIO.read(CarregadorRecursos.class.getResource(img)));
 		} catch (IOException e) {
 			Logger.logarExept(e);
 		}
@@ -222,7 +222,8 @@ public class CarregadorRecursos {
 
 				Color c = new Color(argbArray[0], argbArray[1], argbArray[2],
 						argbArray[3]);
-				if (c.getRed() > 250 && c.getGreen() > 250 && c.getBlue() > 250) {
+				if (c.getRed() > 250 && c.getGreen() > 250
+						&& c.getBlue() > 250) {
 					argbArray[3] = 0;
 				} else {
 					argbArray[3] = 100;
@@ -268,12 +269,18 @@ public class CarregadorRecursos {
 	}
 
 	public static BufferedImage carregaImagem(String file) {
+		BufferedImage bufferedImage = (BufferedImage) bufferImages.get(file);
+		if (bufferedImage != null) {
+			return bufferedImage;
+		}
 		try {
-			return ImageIO.read(CarregadorRecursos.class.getResource(file));
+			bufferedImage = ImageUtil.toCompatibleImage(
+					ImageIO.read(CarregadorRecursos.class.getResource(file)));
 		} catch (IOException e) {
 			Logger.logar(e);
 		}
-		return null;
+		bufferImages.put(file, bufferedImage);
+		return bufferedImage;
 	}
 
 }
