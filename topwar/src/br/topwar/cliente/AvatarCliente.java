@@ -19,7 +19,7 @@ public class AvatarCliente {
 	private long lastAnim;
 	private long lastAnimMorte;
 	private Point pontoAvatarSuave;
-	private double anguloSuave;
+	private Double anguloSuave;
 	private Point pontoAvatarOld;
 	private ObjTopWar avatarTopWar;
 
@@ -74,11 +74,14 @@ public class AvatarCliente {
 	public Shape gerarCabeca() {
 		AffineTransform afRotate = new AffineTransform();
 		double angulo = getAngulo();
+		if (getAnguloSuave() != null) {
+			angulo = getAnguloSuave();
+		}
 		double rad = Math.toRadians((double) angulo);
 		Shape cabeca = desenhaCabeca(getPontoAvatar());
 		GeneralPath gpCabeca = new GeneralPath(cabeca);
-		afRotate.setToRotation(rad, gpCabeca.getBounds().getCenterX(), gpCabeca
-				.getBounds().getCenterY());
+		afRotate.setToRotation(rad, gpCabeca.getBounds().getCenterX(),
+				gpCabeca.getBounds().getCenterY());
 		return gpCabeca.createTransformedShape(afRotate);
 	}
 
@@ -98,14 +101,14 @@ public class AvatarCliente {
 	public Shape obeterAreaAvatar() {
 		Point desenha = getPontoDesenha();
 		Rectangle areaAvatar = new Rectangle(desenha.x, desenha.y,
-				ConstantesTopWar.LARGURA_AVATAR, ConstantesTopWar.ALTURA_AVATAR);
+				ConstantesTopWar.LARGURA_AVATAR,
+				ConstantesTopWar.ALTURA_AVATAR);
 		return areaAvatar;
 	}
 
 	public Point getPontoDesenha() {
 		Point pontoAvatar = getPontoAvatar();
-		return new Point(
-				pontoAvatar.x - (ConstantesTopWar.LARGURA_AREA_AVATAR),
+		return new Point(pontoAvatar.x - (ConstantesTopWar.LARGURA_AREA_AVATAR),
 				pontoAvatar.y - (ConstantesTopWar.ALTURA_AREA_AVATAR));
 
 	}
@@ -114,10 +117,13 @@ public class AvatarCliente {
 		AffineTransform afRotate = new AffineTransform();
 		Shape corpo = desenhaCorpo(getPontoAvatar());
 		double angulo = getAngulo();
+		if (getAnguloSuave() != null) {
+			angulo = getAnguloSuave();
+		}
 		double rad = Math.toRadians((double) angulo);
 		GeneralPath gpCorpo = new GeneralPath(corpo);
-		afRotate.setToRotation(rad, gpCorpo.getBounds().getCenterX(), gpCorpo
-				.getBounds().getCenterY());
+		afRotate.setToRotation(rad, gpCorpo.getBounds().getCenterX(),
+				gpCorpo.getBounds().getCenterY());
 		return gpCorpo.createTransformedShape(afRotate);
 	}
 
@@ -129,23 +135,27 @@ public class AvatarCliente {
 		}
 		Shape corpo = desenhaCorpo(pontoAvatar);
 		double angulo = getAngulo();
+		if (getAnguloSuave() != null) {
+			angulo = getAnguloSuave();
+		}
 		double rad = Math.toRadians((double) angulo);
 		GeneralPath gpCorpo = new GeneralPath(corpo);
-		afRotate.setToRotation(rad, gpCorpo.getBounds().getCenterX(), gpCorpo
-				.getBounds().getCenterY());
+		afRotate.setToRotation(rad, gpCorpo.getBounds().getCenterX(),
+				gpCorpo.getBounds().getCenterY());
 		return gpCorpo.createTransformedShape(afRotate);
 	}
 
 	public Shape gerarEscudo() {
 		double angulo = getAngulo();
 		int distEscudo = 3;
-		Point centroCorpo = new Point((int) gerarCorpo().getBounds()
-				.getCenterX(), (int) gerarCorpo().getBounds().getCenterY());
+		Point centroCorpo = new Point(
+				(int) gerarCorpo().getBounds().getCenterX(),
+				(int) gerarCorpo().getBounds().getCenterY());
 		Point front = GeoUtil.calculaPonto(angulo, distEscudo, centroCorpo);
 		Ellipse2D ellipse2d = new Ellipse2D.Double(front.x - 20, front.y - 20,
 				40, 10);
-		AffineTransform affineTransform = AffineTransform
-				.getScaleInstance(1, 1);
+		AffineTransform affineTransform = AffineTransform.getScaleInstance(1,
+				1);
 		GeneralPath generalPath = new GeneralPath(ellipse2d);
 		generalPath.transform(affineTransform);
 		double rad = Math.toRadians((double) angulo);
@@ -273,7 +283,8 @@ public class AvatarCliente {
 			return obeterAreaAvatar();
 		}
 		Rectangle areaAvatar = new Rectangle(desenha.x, desenha.y,
-				ConstantesTopWar.LARGURA_AVATAR, ConstantesTopWar.ALTURA_AVATAR);
+				ConstantesTopWar.LARGURA_AVATAR,
+				ConstantesTopWar.ALTURA_AVATAR);
 		return areaAvatar;
 	}
 
@@ -281,9 +292,9 @@ public class AvatarCliente {
 		if (pontoAvatarSuave == null) {
 			return null;
 		}
-		return new Point(pontoAvatarSuave.x
-				- (ConstantesTopWar.LARGURA_AREA_AVATAR), pontoAvatarSuave.y
-				- (ConstantesTopWar.ALTURA_AREA_AVATAR));
+		return new Point(
+				pontoAvatarSuave.x - (ConstantesTopWar.LARGURA_AREA_AVATAR),
+				pontoAvatarSuave.y - (ConstantesTopWar.ALTURA_AREA_AVATAR));
 	}
 
 	public String getClasse() {
@@ -313,11 +324,11 @@ public class AvatarCliente {
 		return avatarTopWar.getLimiteVisao();
 	}
 
-	public double getAnguloSuave() {
+	public Double getAnguloSuave() {
 		return anguloSuave;
 	}
 
-	public void setAnguloSuave(double anguloSuave) {
+	public void setAnguloSuave(Double anguloSuave) {
 		this.anguloSuave = anguloSuave;
 	}
 

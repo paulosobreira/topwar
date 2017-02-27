@@ -275,6 +275,30 @@ public class JogoCliente {
 							}
 							if (avatarCliente.isLocal()) {
 								avatarLocal = avatarCliente;
+								if (avatarLocal.getAnguloSuave() == null) {
+									avatarLocal.setAnguloSuave(
+											avatarCliente.getAngulo());
+								} else if (avatarCliente
+										.getAngulo() < avatarLocal
+												.getAnguloSuave() - 10) {
+									avatarLocal.setAnguloSuave(
+											avatarLocal.getAnguloSuave() - 2);
+								} else if (avatarCliente
+										.getAngulo() < avatarLocal
+												.getAnguloSuave()) {
+									avatarLocal.setAnguloSuave(
+											avatarLocal.getAnguloSuave() - 1);
+								} else if (avatarCliente
+										.getAngulo() > avatarLocal
+												.getAnguloSuave() + 10) {
+									avatarLocal.setAnguloSuave(
+											avatarLocal.getAnguloSuave() + 2);
+								} else if (avatarCliente
+										.getAngulo() > avatarLocal
+												.getAnguloSuave()) {
+									avatarLocal.setAnguloSuave(
+											avatarLocal.getAnguloSuave() + 1);
+								}
 							}
 							if (avatarCliente.getPontoAvatarSuave() == null) {
 								avatarCliente.setPontoAvatarSuave(

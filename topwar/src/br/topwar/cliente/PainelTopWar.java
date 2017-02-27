@@ -1011,6 +1011,9 @@ public class PainelTopWar {
 				continue;
 			}
 			double angulo = avatarCliente.getAngulo();
+			if (avatarCliente.getAnguloSuave() != null) {
+				angulo = avatarCliente.getAnguloSuave();
+			}
 			/**
 			 * angulo > 90 && angulo < 300 - cima resto baixo
 			 */
@@ -2097,6 +2100,9 @@ public class PainelTopWar {
 		int aniMorte = avatarCliente.getQuadroAnimacaoMorte();
 		String time = avatarCliente.getTime();
 		double angulo = avatarCliente.getAngulo();
+		if (avatarCliente.getAnguloSuave() != null) {
+			angulo = avatarCliente.getAnguloSuave();
+		}
 		if (angulo < 0) {
 			angulo = 360 + angulo;
 		}
@@ -2344,8 +2350,11 @@ public class PainelTopWar {
 							- descontoCentraliza.x,
 					avatarCliente.getPontoAvatarSuave().y
 							- descontoCentraliza.y);
-			back = GeoUtil.calculaPonto(avatarCliente.getAngulo() + 180, 30,
-					back);
+			double angulo = avatarCliente.getAngulo();
+			if (avatarCliente.getAnguloSuave() != null) {
+				angulo = avatarCliente.getAnguloSuave();
+			}
+			back = GeoUtil.calculaPonto(angulo + 180, 30, back);
 			ellipse2dCostas = new Ellipse2D.Double(back.x - 25, back.y - 25, 50,
 					50);
 			visao = processaAreaCampoVisao(
