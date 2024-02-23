@@ -1,4 +1,4 @@
-package br.topwar.cliente;
+package br.topwar.local;
 
 import java.awt.Component;
 import java.awt.Frame;

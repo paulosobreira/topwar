@@ -10,7 +10,6 @@ import br.nnpe.tos.NnpeTO;
 import br.nnpe.tos.SessaoCliente;
 import br.topwar.ProxyComandos;
 import br.topwar.cliente.ControleCliente;
-import br.topwar.cliente.TopWarAppletLocal;
 import br.topwar.recursos.idiomas.Lang;
 
 public class ClienteLocal extends ControleCliente {

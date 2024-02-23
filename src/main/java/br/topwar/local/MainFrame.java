@@ -21,7 +21,6 @@ import javax.swing.WindowConstants;
 import br.nnpe.Logger;
 import br.topwar.ProxyComandos;
 import br.topwar.cliente.JogoCliente;
-import br.topwar.cliente.TopWarAppletLocal;
 import br.topwar.recursos.idiomas.Lang;
 
 public class MainFrame {
