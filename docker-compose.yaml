@@ -1,7 +1,7 @@
 version: '3.8'
 services:
-  mesa11:
-    image: sowbreira/mesa11
+  topwar:
+    image: sowbreira/topwar
     restart: always
     ports:
       - "80:8080"
@@ -12,8 +12,8 @@ services:
     command: --default-authentication-plugin=mysql_native_password
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: mesa11
-      MYSQL_DATABASE: mesa11
+      MYSQL_ROOT_PASSWORD: topwar
+      MYSQL_DATABASE: topwar
 
   phpmyadmin:
     image: phpmyadmin

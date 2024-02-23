@@ -155,12 +155,7 @@ A:hover {
 		<tr>
 			<td class="c1"><a href="topwar?act=create_schema"> Create
 			Schema </a></td>
-			<td class="c2"><a href="topwar?act=update_schema"> Update
-			Schema </a></td>
-		</tr>
-		<tr>
 			<td class="c1"><a href="topwar?act=x"> Exceptions </a></td>
-			<td class="c1"><a href="topwar?act=backup"> Imagens </a></td>
 		</tr>
 	</tbody>
 </table>

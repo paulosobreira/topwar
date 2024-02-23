@@ -1,10 +1,10 @@
 package br.nnpe.persistencia;
 
-import com.fasterxml.classmate.AnnotationConfiguration;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 
-import br.nnpe.Logger;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  * @author Paulo Sobreira [sowbreira@gmail.com]
@@ -12,39 +12,15 @@ import br.nnpe.Logger;
  */
 public class HibernateUtil {
 
-    private static SessionFactory sessionFactory;
+    private static EntityManagerFactory factory;
 
-
-    public static SessionFactory getSessionFactory() {
-        if (sessionFactory != null && Logger.novaSession) {
-            sessionFactory.close();
+    public static Session getSession() {
+        if (factory == null) {
+            factory = Persistence.createEntityManagerFactory("topwar-jpa");
         }
-        if (Logger.novaSession) {
-            try {
-
-                Logger.novaSession = false;
-            } catch (Throwable e) {
-                Logger.logarExept(e);
-            }
-        }
-        return sessionFactory;
+        EntityManager entityManager = factory.createEntityManager();
+        System.out.println(factory.getProperties());
+        return entityManager.unwrap(org.hibernate.Session.class);
     }
 
-    public static final ThreadLocal sessionThreadLocal = new ThreadLocal();
-
-    public static Session currentSession() {
-        Session s = (Session) sessionThreadLocal.get();
-        if (s == null) {
-            s = getSessionFactory().openSession();
-            sessionThreadLocal.set(s);
-        }
-        return s;
-    }
-
-    public static void closeSession() {
-        Session s = (Session) sessionThreadLocal.get();
-        if (s != null && s.isOpen())
-            s.close();
-        sessionThreadLocal.set(null);
-    }
 }

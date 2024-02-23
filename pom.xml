@@ -98,7 +98,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>br.mesa11.MainFrame</mainClass>
+                            <mainClass>br.topwar.local.MainFrame</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

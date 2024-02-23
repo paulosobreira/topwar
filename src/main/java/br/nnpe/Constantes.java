@@ -42,6 +42,7 @@ public class Constantes {
 	public static final String NOVO_USUARIO = "NOVO_USUARIO";
 	public static final String RECUPERA_SENHA = "RECUPERA_SENHA";
 	public static final String LOGAR = "LOGAR";
+	public static final String LOGAR_GUEST = "LOGAR_GUEST";
 
 	private Constantes() {
 	}

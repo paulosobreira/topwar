@@ -2,5 +2,5 @@
 docker compose down
 mvn clean package
 mvn war:war
-docker build -f mesa11.dockerfile . -t sowbreira/mesa11
+docker build -f topwar.dockerfile . -t sowbreira/topwar
 docker compose up

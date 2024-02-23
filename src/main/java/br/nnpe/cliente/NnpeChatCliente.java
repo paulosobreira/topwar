@@ -98,6 +98,20 @@ public abstract class NnpeChatCliente {
         }
     }
 
+    public void logarGuest() {
+        NnpeTO nnpeTO = new NnpeTO();
+        NnpeCliente nnpeCliente = new NnpeCliente();
+        nnpeTO.setData(nnpeCliente);
+        nnpeTO.setComando(Constantes.LOGAR_GUEST);
+        Object ret = nnpeApplet.enviarObjeto(nnpeTO);
+        if (ret instanceof NnpeTO) {
+            nnpeTO = (NnpeTO) ret;
+            SessaoCliente cliente = (SessaoCliente) nnpeTO.getData();
+            this.sessaoCliente = cliente;
+        }
+        atualizaVisao();
+
+    }
 
     private boolean logarRecuperarLembrar() {
         NnpeTO nnpeTO = new NnpeTO();
@@ -172,7 +186,7 @@ public abstract class NnpeChatCliente {
 
     public void enviarTexto(String text) {
         if (sessaoCliente == null) {
-            logar();
+            logarGuest();
             return;
         }
         NnpeCliente nnpeCliente = new NnpeCliente(sessaoCliente);

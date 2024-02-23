@@ -27,6 +27,7 @@ public abstract class NnpeProxyComandos {
     protected NnpeDados nnpeDados;
     protected NnpeChatServidor nnpeChatServidor;
     private NnpeMonitorAtividadeChat nnpeMonitorAtividadeChat;
+    private int contadorVistantes = 1;
 
     public abstract Session getSession();
 
@@ -47,6 +48,8 @@ public abstract class NnpeProxyComandos {
             return receberTexto((NnpeCliente) nnpeTO.getData());
         } else if (Constantes.LOGAR.equals(nnpeTO.getComando())) {
             return logar((NnpeCliente) nnpeTO.getData());
+        } else if (Constantes.LOGAR_GUEST.equals(nnpeTO.getComando())) {
+            return criarSessaoVisitante((NnpeCliente) nnpeTO.getData());
         } else if (Constantes.NOVO_USUARIO.equals(nnpeTO.getComando())) {
             return cadastrarUsuario((NnpeCliente) nnpeTO.getData());
         } else if (Constantes.RECUPERA_SENHA.equals(nnpeTO.getComando())) {
@@ -56,6 +59,16 @@ public abstract class NnpeProxyComandos {
         }
 
         return null;
+    }
+
+    public Object criarSessaoVisitante(NnpeCliente data) {
+        SessaoCliente sessaoCliente = new SessaoCliente();
+        sessaoCliente.setNomeJogador("Topwar-" + (contadorVistantes++));
+        nnpeDados.getClientes().add(sessaoCliente);
+        sessaoCliente.setUlimaAtividade(System.currentTimeMillis());
+        NnpeTO nnpeTO = new NnpeTO();
+        nnpeTO.setData(sessaoCliente);
+        return nnpeTO;
     }
 
     private Object encerrarSessao(NnpeCliente nnpeCliente) {
@@ -228,7 +241,7 @@ public abstract class NnpeProxyComandos {
             }
             return criarSessao(usuario);
         } finally {
-            HibernateUtil.closeSession();
+            session.close();
         }
 
     }

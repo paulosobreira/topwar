@@ -270,16 +270,6 @@ public class NnpeChatWindow {
 		chatPanel.add(textAreaScrollPane, BorderLayout.CENTER);
 	}
 
-	public static void main(String[] args) {
-		NnpeChatWindow nnpeChatWindow = new NnpeChatWindow(null);
-		JFrame frame = new JFrame();
-		frame.getContentPane().add(nnpeChatWindow.getMainPanel());
-		// frame.setSize(820, 380);
-		frame.pack();
-		frame.setVisible(true);
-		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-	}
-	
 	protected void verLogs() {
 		JTextArea area = new JTextArea(20, 50);
 		Set top = Logger.topExceptions.keySet();

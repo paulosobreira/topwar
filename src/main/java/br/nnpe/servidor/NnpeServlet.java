@@ -3,9 +3,7 @@ package br.nnpe.servidor;
 import br.nnpe.Constantes;
 import br.nnpe.Logger;
 import br.nnpe.ZipUtil;
-import br.nnpe.persistencia.HibernateUtil;
 import br.topwar.recursos.idiomas.Lang;
-import org.hibernate.SessionFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -26,7 +24,6 @@ public class NnpeServlet extends HttpServlet {
     public static String webDir;
     protected NnpeProxyComandos proxyComandos;
 
-    public static String mediaDir;
     protected static SimpleDateFormat dateFormat = new SimpleDateFormat(
             "dd/MM/yyyy");
 
@@ -34,7 +31,6 @@ public class NnpeServlet extends HttpServlet {
         super.init();
         webDir = getServletContext().getRealPath("") + File.separator;
         webInfDir = webDir + "WEB-INF" + File.separator;
-        mediaDir = webDir + "midia" + File.separator;
         Lang.setSrvgame(true);
     }
 

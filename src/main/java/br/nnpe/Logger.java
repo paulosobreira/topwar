@@ -11,10 +11,8 @@ public class Logger {
 	public static Map topExceptions = new HashMap();
 
 	public static boolean ativo = true;
-	public static boolean novaSession = false;
 
 	public static void topExecpts(Exception e) {
-		novaSession = true;
 		if (ativo) {
 			e.printStackTrace();
 		}
@@ -70,7 +68,6 @@ public class Logger {
 	public static void logarExept(Throwable e) {
 		if (ativo) {
 			e.printStackTrace();
-			novaSession = true;
 		} else if (e instanceof Exception) {
 			topExecpts((Exception) e);
 		}
