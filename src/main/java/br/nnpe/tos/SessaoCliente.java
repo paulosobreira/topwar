@@ -32,6 +32,7 @@ public class SessaoCliente implements Serializable {
 		this.nomeJogador = apelido;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (nomeJogador == null) {
 			return super.equals(obj);

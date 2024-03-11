@@ -48,7 +48,7 @@ public class ControleCliente extends NnpeChatCliente {
 
     public void criarJogo() {
         if (sessaoCliente == null) {
-            logarGuest();
+            logar();
             return;
         }
         criarJogoLogadoChatWindow(false);
@@ -203,7 +203,7 @@ public class ControleCliente extends NnpeChatCliente {
 
     public void entrarJogo() {
         if (sessaoCliente == null) {
-            logarGuest();
+            logar();
             return;
         }
         JPanel classesPanel = new JPanel();

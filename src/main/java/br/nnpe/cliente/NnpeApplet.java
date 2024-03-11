@@ -61,12 +61,12 @@ public abstract class NnpeApplet extends JFrame {
                     "/application.properties"));
             this.urlSufix = properties.getProperty("servidor");
             this.versao = properties.getProperty("versao");
+            setSize(820, 380);
+            setVisible(true);
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    getNnpeChatCliente().logarGuest();
-                    setSize(820, 380);
-                    setVisible(true);
+                    getNnpeChatCliente().logar();
                 }
             });
             thread.start();

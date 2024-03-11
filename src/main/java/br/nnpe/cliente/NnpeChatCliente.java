@@ -95,6 +95,8 @@ public abstract class NnpeChatCliente {
         if (JOptionPane.OK_OPTION == result) {
             logarRecuperarLembrar();
             atualizaVisao();
+        }else{
+            logarGuest();
         }
     }
 
@@ -176,6 +178,9 @@ public abstract class NnpeChatCliente {
             nnpeTO = (NnpeTO) ret;
             SessaoCliente cliente = (SessaoCliente) nnpeTO.getData();
             this.sessaoCliente = cliente;
+            if (sessaoCliente.getSenhaCriada() != null) {
+                nnpeChatWindow.getTextAreaChat().append(Lang.msg("guardeSenhaGerada") + " - " + Lang.msg("senhaGerada", new String[]{sessaoCliente.getNomeJogador(), sessaoCliente.getSenhaCriada()}));
+            }
         }
         return true;
     }
@@ -186,7 +191,7 @@ public abstract class NnpeChatCliente {
 
     public void enviarTexto(String text) {
         if (sessaoCliente == null) {
-            logarGuest();
+            logar();
             return;
         }
         NnpeCliente nnpeCliente = new NnpeCliente(sessaoCliente);

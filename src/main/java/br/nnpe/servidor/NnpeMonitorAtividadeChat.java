@@ -11,41 +11,42 @@ import br.nnpe.tos.SessaoCliente;
  */
 public class NnpeMonitorAtividadeChat extends Thread {
 
-	private NnpeProxyComandos proxyComandos;
-	private boolean viva = true;
+    private NnpeProxyComandos proxyComandos;
+    private boolean viva = true;
 
-	public NnpeMonitorAtividadeChat(NnpeProxyComandos proxyComandos) {
-		this.proxyComandos = proxyComandos;
-	}
+    public NnpeMonitorAtividadeChat(NnpeProxyComandos proxyComandos) {
+        this.proxyComandos = proxyComandos;
+    }
 
-	/**
-	 * @see java.lang.Runnable#run()
-	 */
-	public void run() {
-		while (viva) {
-			try {
-				sleep(5000);
-				long timeNow = System.currentTimeMillis();
-				Collection<SessaoCliente> clientes = proxyComandos
-						.getNnpeDadosChat().getClientes();
-				SessaoCliente sessaoClienteRemover = null;
-				for (Iterator iter = clientes.iterator(); iter.hasNext();) {
-					SessaoCliente sessaoCliente = (SessaoCliente) iter.next();
-					if ((timeNow - sessaoCliente.getUlimaAtividade()) > 10000) {
-						sessaoClienteRemover = sessaoCliente;
-						break;
-					}
-				}
-				if (sessaoClienteRemover != null) {
-					proxyComandos.removerClienteInativo(sessaoClienteRemover);
-				}
-				proxyComandos.ganchoMonitorAtividade();
-			} catch (Exception e) {
-				viva = false;
-				Logger.logarExept(e);
-			}
-		}
+    /**
+     * @see java.lang.Runnable#run()
+     */
+    public void run() {
+        while (viva) {
+            try {
+                sleep(5000);
+                long timeNow = System.currentTimeMillis();
+                Collection<SessaoCliente> clientes = proxyComandos
+                        .getNnpeDados().getClientes();
+                SessaoCliente sessaoClienteRemover = null;
+                for (Iterator iter = clientes.iterator(); iter.hasNext(); ) {
+                    SessaoCliente sessaoCliente = (SessaoCliente) iter.next();
+                    if ((timeNow - sessaoCliente.getUlimaAtividade()) > 100000) {
+                        sessaoClienteRemover = sessaoCliente;
+                        break;
+                    }
+                }
+                if (sessaoClienteRemover != null) {
+                    proxyComandos.removerClienteInativo(sessaoClienteRemover);
+                    Logger.logar("sessaoClienteRemover " + sessaoClienteRemover.getNomeJogador());
+                }
+                proxyComandos.ganchoMonitorAtividade();
+            } catch (Exception e) {
+                viva = false;
+                Logger.logarExept(e);
+            }
+        }
 
-	}
+    }
 
 }

@@ -52,8 +52,6 @@ public abstract class NnpeProxyComandos {
             return criarSessaoVisitante((NnpeCliente) nnpeTO.getData());
         } else if (Constantes.NOVO_USUARIO.equals(nnpeTO.getComando())) {
             return cadastrarUsuario((NnpeCliente) nnpeTO.getData());
-        } else if (Constantes.RECUPERA_SENHA.equals(nnpeTO.getComando())) {
-            return recuperaSenha((NnpeCliente) nnpeTO.getData());
         } else if (Constantes.ENCERRAR_SESSAO.equals(nnpeTO.getComando())) {
             return encerrarSessao((NnpeCliente) nnpeTO.getData());
         }
@@ -110,56 +108,6 @@ public abstract class NnpeProxyComandos {
         return nnpeTO;
     }
 
-    private Object recuperaSenha(NnpeCliente nnpeCliente) {
-        // Boolean validateResponseForID = capcha.validateResponseForID(
-        // nnpeCliente.getChaveCapcha(), nnpeCliente.getTextoCapcha());
-        // if (!validateResponseForID) {
-        // return new MsgSrv(Lang.msg("capchaInvalido"));
-        // }
-        NnpeUsuario usuario = new NnpeUsuario();
-        Session session = getSession();
-        List usuarios = session.createCriteria(NnpeUsuario.class)
-                .add(Restrictions.eq("login", nnpeCliente.getNomeJogador()))
-                .list();
-        usuario = (NnpeUsuario) (usuarios.isEmpty() ? null : usuarios.get(0));
-        if (usuario == null) {
-            usuarios = session.createCriteria(NnpeUsuario.class).add(
-                            Restrictions.eq("email", nnpeCliente.getEmailJogador()))
-                    .list();
-            usuario = (NnpeUsuario) (usuarios.isEmpty()
-                    ? null
-                    : usuarios.get(0));
-        }
-        if (usuario == null) {
-            return new MsgSrv(Lang.msg("usuarioNaoEncontrado"));
-        }
-        if ((System.currentTimeMillis()
-                - usuario.getUltimaRecuperacao()) < 300000) {
-            return new MsgSrv(Lang.msg("limiteTempo"));
-        }
-        String senha = null;
-        try {
-            senha = geraSenha(usuario);
-        } catch (Exception e) {
-            Logger.logarExept(e);
-        }
-        try {
-            mandaMailSenha(usuario.getLogin(), usuario.getEmail(), senha);
-        } catch (Exception e1) {
-            Logger.logarExept(e1);
-        }
-        String email = usuario.getEmail();
-        Transaction transaction = session.beginTransaction();
-        try {
-            session.saveOrUpdate(usuario);
-            transaction.commit();
-        } catch (Exception e) {
-            transaction.rollback();
-            return new ErroServ(e);
-        }
-        return new MsgSrv(Lang.msg("senhaEnviada", new String[]{email}));
-    }
-
     private Object cadastrarUsuario(NnpeCliente nnpeCliente) {
         NnpeUsuario usuario = null;
         Session session = getSession();
@@ -187,11 +135,6 @@ public abstract class NnpeProxyComandos {
         } catch (Exception e) {
             return new ErroServ(e);
         }
-        try {
-            mandaMailSenha(usuario.getLogin(), usuario.getEmail(), senha);
-        } catch (Exception e1) {
-            Logger.logarExept(e1);
-        }
         Transaction transaction = session.beginTransaction();
         try {
             if (Util.isNullOrEmpty(usuario.getLoginCriador())) {
@@ -215,11 +158,7 @@ public abstract class NnpeProxyComandos {
         return senha;
     }
 
-    private void mandaMailSenha(String nome, String email, String senha) {
-        Logger.logar("Senha para  :" + nome + " : " + senha);
-    }
-
-    public NnpeDados getNnpeDadosChat() {
+    public NnpeDados getNnpeDados() {
         return nnpeDados;
     }
 

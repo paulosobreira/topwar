@@ -45,7 +45,7 @@ public class ServletTopWar extends NnpeServlet {
                 @Override
                 public void run() {
                     try {
-                        Thread.sleep(10000);
+                        Thread.sleep(20000);
                         createSchema(null);
                     } catch (Exception e) {
                         e.printStackTrace();

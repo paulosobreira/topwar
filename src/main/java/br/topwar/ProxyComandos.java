@@ -28,6 +28,7 @@ public class ProxyComandos extends NnpeProxyComandos {
 
 	public ProxyComandos(String webDir, String webInfDir) {
 		super(webDir, webInfDir);
+		this.removeInativos = true;
 		controlePersistencia = new ControlePersistencia(webDir, webInfDir);
 		controleJogosServidor = new ControleJogosServidor(nnpeDados,
 				controlePersistencia, this);

@@ -2,7 +2,7 @@ package br.nnpe;
 
 public class Constantes {
 
-	public static boolean modoZip = true;
+	public static boolean modoZip = false;
 
 	public static final String CONFIG = "configuracoes";
 	public final static String CRYPTOGRAPHY = "_CRYPTOGRAPHY_";
@@ -40,7 +40,6 @@ public class Constantes {
 	public static final String ATUALIZAR_VISAO = "ATUALIZAR_VISAO";
 	public static final String ENCERRAR_SESSAO = "ENCERRAR_SESSAO";
 	public static final String NOVO_USUARIO = "NOVO_USUARIO";
-	public static final String RECUPERA_SENHA = "RECUPERA_SENHA";
 	public static final String LOGAR = "LOGAR";
 	public static final String LOGAR_GUEST = "LOGAR_GUEST";
 
