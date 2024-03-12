@@ -52,7 +52,7 @@ public class ServletTopWar extends NnpeServlet {
                     }
                 }
             });
-            thread.run();
+            thread.start();
         } catch (Exception e) {
             Logger.logarExept(e);
         }
